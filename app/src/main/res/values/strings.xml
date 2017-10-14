@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">好看锁屏</string>
+    <string name="accessibility_service_description">好看锁屏辅助功能, 请放心开启, 不会威胁您的手机安全, 不会泄漏您的隐私信息</string>
+</resources>
