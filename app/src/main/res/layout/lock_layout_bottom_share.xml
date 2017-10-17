@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.haokan.pubic.detailpage.CV_ShareBgImageView
+        android:id="@+id/blurbgview"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        />
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:background="@color/hei_30"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:id="@+id/cancel"
+            android:text="@string/cancel"
+            android:textColor="#cfcfcf"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"/>
+
+        <View
+            android:id="@id/divider"
+            android:background="@color/bai_20"
+            android:layout_above="@id/cancel"
+            android:layout_width="match_parent"
+            android:layout_height="1px"/>
+
+        <!--<ViewStub-->
+        <!--android:id="@+id/content_zh"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="190dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout="@layout/lock_layout_bottom_share_content_zh"-->
+        <!--/>-->
+
+        <LinearLayout
+            android:id="@+id/ll1"
+            android:layout_above="@id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <TextView
+                android:id="@+id/share_weixin_circle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/bg_share_friends_click"
+                android:drawablePadding="10dp"
+                android:text="@string/share_circle"
+                android:paddingTop="25dp"
+                android:paddingBottom="25dp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/bai"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/share_weixin"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/bg_share_weixin_click"
+                android:drawablePadding="10dp"
+                android:text="@string/share_weixin"
+                android:paddingTop="25dp"
+                android:paddingBottom="25dp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/bai"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/share_qq"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/bg_share_qq_click"
+                android:drawablePadding="10dp"
+                android:text="@string/share_qq"
+                android:paddingTop="25dp"
+                android:paddingBottom="25dp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/bai"
+                android:textSize="11sp" />
+
+
+            <TextView
+                android:id="@+id/share_sina"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/bg_share_sina_click"
+                android:drawablePadding="10dp"
+                android:text="@string/share_sina"
+                android:paddingTop="25dp"
+                android:paddingBottom="25dp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/bai"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/share_qqzone"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/icon_qqspacep"
+                android:drawablePadding="10dp"
+                android:text="@string/share_qqzone"
+                android:paddingTop="25dp"
+                android:paddingBottom="25dp"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/bai"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginLeft="24dp"
+            android:layout_above="@id/ll1"
+            android:text="分享至"
+            android:textSize="13sp"
+            android:textColor="#cfcfcf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </RelativeLayout>
+
+    <!---->
+    <!--<ViewStub-->
+        <!--android:id="@+id/content_en"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="178dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout="@layout/lock_layout_bottom_share_content_en"-->
+        <!--/>-->
+</RelativeLayout>

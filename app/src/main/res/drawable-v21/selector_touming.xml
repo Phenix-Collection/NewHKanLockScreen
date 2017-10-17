@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+        android:color="#ff999999">
+    <!--生存波纹的遮罩色, 波纹的颜色会根据基础 #ff999999和下面的mask色共同生成
+        而且此条目还有控制是否波纹超出控件边界的作用, 如果此条目不写, 那么波纹自动超边界-->
+    <item android:id="@android:id/mask">
+        <color android:color="@color/bai" />
+    </item>
+    <!--正常的背景色, 可以不写, 不写的话就是透明无色-->
+    <!--<item>-->
+        <!--<color android:color="#ff0000" />-->
+    <!--</item>-->
+</ripple>

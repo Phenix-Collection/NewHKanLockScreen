@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
 
-    <com.haokan.hklockscreen.views.ScanRadarView
+    <com.haokan.hklockscreen.autoset.ScanRadarView
         android:id="@+id/radarview"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
@@ -22,7 +22,7 @@
         android:padding="15dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/drawable_selector_setlockscreen_btnbg"
+        android:background="@drawable/selector_setlockscreen_btnbg"
         android:gravity="center"
         android:text="立即设置"
         android:textColor="@color/bai"

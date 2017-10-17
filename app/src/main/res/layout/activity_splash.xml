@@ -69,7 +69,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="36dp"
-        android:background="@drawable/drawable_selector_splash_jumpbtn"
+        android:background="@drawable/selector_splash_jumpbtn"
         android:gravity="center"
         android:text="跳过"
         android:textColor="@color/bai"

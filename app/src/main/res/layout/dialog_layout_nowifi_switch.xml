@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_switch_dialog">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:lineSpacingExtra="3dp"
+            android:text="        当前在非wifi环境下, 将会耗费您的移动流量更新图片"
+            android:textColor="#666666"
+            android:textSize="13sp" />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:checked="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:text="不再提醒"
+            android:textColor="#666666"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkbox"
+            android:layout_marginLeft="25dp"
+            android:background="@drawable/selector_touming_borderless"
+            android:padding="10dp"
+            android:text="@string/cancel"
+            android:textColor="#999999"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/checkbox"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/selector_touming_borderless"
+            android:padding="10dp"
+            android:text="@string/confirm"
+            android:textColor="#ff006600"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</RelativeLayout>

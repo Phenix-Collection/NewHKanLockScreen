@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/layout_switch"
+        android:background="@drawable/bg_screen_up"
+        android:layout_width="match_parent"
+        android:layout_height="74dp">
+
+        <LinearLayout
+            android:id="@+id/ll_switch"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:paddingRight="15dp"
+            android:layout_marginTop="34dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp">
+
+            <ImageView
+                android:id="@+id/iv_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_change"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="换一换"
+                android:textColor="@color/selector_click_bai"
+                android:textSize="13sp"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <!--底部显示时间的区域-->
+    <LinearLayout
+        android:id="@+id/layout_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/nowifi_switch_dialog">
+
+        <TextView
+            android:text="向上滑动解锁"
+            android:textSize="13sp"
+            android:textColor="@color/bai_60"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/bai"
+            android:text="12:00"
+            android:textSize="60sp" />
+
+        <TextView
+            android:id="@+id/tv_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="星期三   8月20"
+            android:textColor="@color/bai_90"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="@color/bai_50" />
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="挪威斯瓦尔巴群岛"
+                android:textColor="@color/bai"
+                android:textSize="15sp" />
+
+            <!---->
+            <TextView
+                android:id="@+id/tv_link"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="1dp"
+                android:text="查看详情"
+                android:textColor="@color/selector_click_bai"
+                android:textSize="13sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <include
+        android:visibility="gone"
+        android:id="@+id/nowifi_switch_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        layout="@layout/dialog_layout_nowifi_switch"/>
+
+    <ViewStub
+        android:id="@+id/guide_slide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/layout_gesture_guide_slide"
+        android:visibility="gone"/>
+
+    <ViewStub
+        android:id="@+id/guide_switch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/layout_gesture_guide_switch"
+        android:visibility="gone"/>
+</RelativeLayout>

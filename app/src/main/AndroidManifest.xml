@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <application
+        android:name="com.haokan.pubic.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -22,8 +23,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--使glide使用okhttp来访问网络-->
+        <meta-data
+            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+            android:value="GlideModule" />
+        <!--使glide加载的图片高质量-->
+        <meta-data
+            android:name="com.haokan.pubic.glide.HkGlideModule"
+            android:value="GlideModule" />
+
         <activity
-            android:name=".activity.ActivitySplash"
+            android:name="com.haokan.hklockscreen.splash.ActivitySplash"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,18 +42,45 @@
         </activity>
 
         <activity
-            android:name=".activity.ActivitySetLockScreen"
+            android:name=".autoset.ActivityAutoSetLockScreen"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".activity.ActivityPrompt_AutoStart"
+            android:name=".autoset.ActivityPrompt_AutoStart"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".lockscreen.activity.ActivityLockScreen"
+                  android:launchMode="singleInstance"
+                  android:theme="@style/myTransparent"
+                  android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name="com.haokan.pubic.activity.ActivityWebview"
+                  android:screenOrientation="portrait">
+        </activity>
+
         <service
-            android:name=".service.MyAccessibilityService"
+            android:name=".lockscreen.service.ServiceLockScreen"
+            android:enabled="true"
+            android:exported="true" />
+
+        <receiver
+            android:name=".lockscreen.receiver.ReceiverLockScreenBoot"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!--辅助功能的service-->
+        <service
+            android:name=".autoset.ServiceMyAccessibility"
             android:label="好看锁屏"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
