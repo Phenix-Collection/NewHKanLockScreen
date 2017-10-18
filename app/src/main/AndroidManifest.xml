@@ -58,7 +58,7 @@
                   android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name="com.haokan.pubic.activity.ActivityWebview"
+        <activity android:name="com.haokan.pubic.webview.ActivityWebview"
                   android:screenOrientation="portrait">
         </activity>
 

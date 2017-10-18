@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
-import com.haokan.pubic.activity.ActivityWebview;
+import com.haokan.pubic.webview.ActivityWebview;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.customview.ViewPagerTransformer;

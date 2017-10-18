@@ -1,4 +1,4 @@
-package com.haokan.pubic.activity;
+package com.haokan.pubic.webview;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
