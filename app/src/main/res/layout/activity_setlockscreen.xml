@@ -28,4 +28,18 @@
         android:textColor="@color/bai"
         android:textSize="13sp" />
 
+    <TextView
+        android:id="@+id/gomain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/selector_setlockscreen_btnbg"
+        android:gravity="center"
+        android:text="直接进入"
+        android:textColor="@color/bai"
+        android:textSize="13sp" />
+
 </RelativeLayout>
