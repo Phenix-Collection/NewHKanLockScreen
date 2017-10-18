@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
 
-    <com.haokan.hklockscreen.autoset.ScanRadarView
+    <com.haokan.hklockscreen.autoset.CV_ScanRadarView
         android:id="@+id/radarview"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"

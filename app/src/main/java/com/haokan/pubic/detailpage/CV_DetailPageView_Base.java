@@ -33,7 +33,6 @@ import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by wangzixu on 2017/10/16.
@@ -64,7 +63,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected View mShareLayoutContent;
     protected CV_ShareBgImageView mShareBlurBgView;
     protected ArrayList<MainImageBean> mData = new ArrayList<>();
-    protected Adapter_DetailPageView_Base mAdapterVpMain;
+    protected Adapter_DetailPage_Base mAdapterVpMain;
     protected int mInitIndex; //初始在第几页
     protected int mCurrentPosition;
     protected MainImageBean mCurrentImgBean;
@@ -73,7 +72,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected View mLayoutTitleLick;
     protected boolean mIsCaptionShow; //当前是否正在显示图说
     protected boolean mIsAnimnating; //正在执行一些动画, 如显示隐藏图说等
-    protected static final long sAinmDuration = 200; //一些动画的时长, 如显示隐藏图说等
+    protected static final long sAinmDuration = 150; //一些动画的时长, 如显示隐藏图说等
 
 
     public CV_DetailPageView_Base(@NonNull Context context) {
@@ -177,20 +176,12 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mVpMain.setPageTransformer(true, new ViewPagerTransformer.ParallaxTransformer(R.id.iv_image));
         mVpMain.addOnPageChangeListener(this);
 
-        mAdapterVpMain = new Adapter_DetailPageView_Base(mContext, mData, this, this);
-        mVpMain.setAdapter(mAdapterVpMain);
+        setVpAdapter();
     }
 
-//    public void setVpAdapter() {
-//        //为主vp设置监听器
-//        mAdapterVpMain = new Adapter_DetailPageView_Base(mContext, mData, this, this);
-//        mVpMain.setAdapter(mAdapterVpMain);
-//    }
-
-    public void refreshData(List<MainImageBean> data) {
-        mData.clear();
-        mData.addAll(data);
-        mAdapterVpMain = new Adapter_DetailPageView_Base(mContext, mData, this, this);
+    public void setVpAdapter() {
+        //为主vp设置监听器
+        mAdapterVpMain = new Adapter_DetailPage_Base(mContext, mData, this, this);
         mVpMain.setAdapter(mAdapterVpMain);
 
         if (mInitIndex >= mData.size()) {
@@ -218,8 +209,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
     @Override
     public void onPageSelected(int position) {
-        removeCallbacks(mPageSelectedDelayRunnable);
-        mCurrentPosition = position;
+        mCurrentPosition = position%mData.size();
+        App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
         mCurrentImgBean = mData.get(mCurrentPosition);
         if (mCurrentImgBean == null) {
             return;
@@ -245,11 +236,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
         switch (v.getId()) {
             case R.id.iv_image:
-                if (mIsCaptionShow) {
-                    hideCaption();
-                } else {
-                    showCaption();
-                }
+                onClickBigImage();
                 break;
             case R.id.tv_link:
                 {
@@ -262,6 +249,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 }
                 break;
             case R.id.bottom_back:
+                onClickBack();
                 break;
             case R.id.bottom_like:
                 break;
@@ -288,6 +276,18 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 break;
             default:
                 break;
+        }
+    }
+
+    protected void onClickBack() {
+
+    }
+
+    protected void onClickBigImage() {
+        if (mIsCaptionShow) {
+            hideCaption();
+        } else {
+            showCaption();
         }
     }
 

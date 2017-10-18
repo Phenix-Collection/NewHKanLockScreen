@@ -4,9 +4,24 @@ package com.haokan.pubic.util;
  * 应用用到的一些常量
  */
 public class Values {
+    //应用包名
+    public static final String PACKAGE_NAME = "com.haokanhaokan.lockscreen";
+
     //一些文件路径相关的位置
     public static class Path{
+        public static final String PATH_BASE = "/Levect/" + PACKAGE_NAME + "/";
+
         public static final String PATH_CLIP_AVATAR = "/Levect/user_avatar"; //剪裁的头像存储的位置
+
+        /**
+         * 锁屏存储本地相册图片的数据
+         */
+        public static final String PATH_LOCALIMG_DIR = PATH_BASE + ".localphoto/";
+
+        /**
+         * 离线图片
+         */
+        public static final String PATH_OFFLINE_DIR = PATH_BASE + ".offline/";
     }
 
     /**
@@ -18,7 +33,12 @@ public class Values {
 
     public static class AcacheKey {
         /**
-         * 锁屏用的离线图片json对象key
+         * 锁屏存储本地相册图片的数据json对象key
+         */
+        public static final String KEY_ACACHE_LOCALIMG_JSONNAME = "localphoto_json";
+
+        /**
+         * 离线图片
          */
         public static final String KEY_ACACHE_OFFLINE_JSONNAME = "offline_json";
     }

@@ -15,14 +15,14 @@ import com.haokan.pubic.bean.MainImageBean;
 
 import java.util.ArrayList;
 
-public class Adapter_DetailPageView_Base extends PagerAdapter implements View.OnClickListener {
+public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClickListener {
     protected final Context mContext; //用activity，利用glide的生命周期控制系统
     protected ArrayList<MainImageBean> mData;
     protected ArrayList<ViewHolder> mHolders = new ArrayList<>();
-    private View.OnClickListener mOnClickListener;
-    private View.OnLongClickListener mOnLongClickListener;
+    protected View.OnClickListener mOnClickListener;
+    protected View.OnLongClickListener mOnLongClickListener;
 
-    public Adapter_DetailPageView_Base(Context context, ArrayList<MainImageBean> data
+    public Adapter_DetailPage_Base(Context context, ArrayList<MainImageBean> data
             , View.OnClickListener onClickListener, View.OnLongClickListener longClickListener) {
         mContext = context;
         mData = data;

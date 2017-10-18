@@ -19,6 +19,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -108,6 +109,13 @@ public class CV_UnLockImageView extends AppCompatImageView {
      * 是否在触摸屏幕
      */
     boolean isTouch = false;
+    private long mDownTime;
+
+    private boolean mCanUnLock = true; //是否可以解锁的开关
+
+    public void setCanUnLock(boolean canUnLock) {
+        mCanUnLock = canUnLock;
+    }
 
     public CV_UnLockImageView(Context context) {
         this(context, null);
@@ -129,7 +137,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
         mHeight = realScreenPoint.y;
 //        mWidth = context.getResources().getDisplayMetrics().widthPixels;
 //		mHeight = context.getResources().getDisplayMetrics().heightPixels;
-        mRadius = DisplayUtil.dip2px(mContext, 100);
+        mRadius = DisplayUtil.dip2px(mContext, 30);
         mLockDelta = DisplayUtil.dip2px(mContext, 80);
 
         mBlurRect.set(0, 0, mWidth, mRadius);
@@ -149,6 +157,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
         mCanvas = new Canvas(sBlurBitmap);
     }
 
+
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
         int action = event.getAction();
@@ -159,7 +168,9 @@ public class CV_UnLockImageView extends AppCompatImageView {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                isTouch = false;
                 mMinY = mDownY = y;
+                mDownTime = System.currentTimeMillis();
                 if (mImageBitmap == null) {
                     buildDrawingCache();
                     if (getDrawingCache() != null) {
@@ -171,28 +182,35 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                int deltaY = mDownY - y;
-                if (deltaY > 20 || isTouch) {
-                    isTouch = true;
-//                    int foreGroundbottom = mHeight - mRadius / 2 - deltaY;
-                    int foreGroundbottom = (int) Math.min(mHeight, mHeight - UNLOCK_RADIO * deltaY);
-                    calcDisplayRect(foreGroundbottom);
-                } else {
-                    isTouch = false;
+                if (mCanUnLock) {
+                    int deltaY = mDownY - y;
+                    if (deltaY > 20 || isTouch) {
+                        isTouch = true;
+    //                    int foreGroundbottom = mHeight - mRadius / 2 - deltaY;
+                        int foreGroundbottom = (int) Math.min(mHeight, mHeight - UNLOCK_RADIO * deltaY);
+                        calcDisplayRect(foreGroundbottom);
+                    } else {
+                        isTouch = false;
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                if (mDownY - y > mLockDelta
-                        && y - mMinY < mLockDelta) {
-                    // unLock anim
-                    startAnim(mTopRect.bottom, 0);
-                } else {
-                    // lock anim
-                    startAnim(mTopRect.bottom, mHeight);
+                if (mCanUnLock) {
+                    if (mDownY - y > mLockDelta
+                            && y - mMinY < mLockDelta) {
+                        // unLock anim
+                        startAnim(mTopRect.bottom, 0);
+                    } else {
+                        // lock anim
+                        startAnim(mTopRect.bottom, mHeight);
+                    }
+                }
+                if (mOnLongClickListener != null && Math.abs(mDownY - y) < 30 && System.currentTimeMillis() - mDownTime > 600) {
+                    mOnLongClickListener.onLongClick(this);
+                    return true;
                 }
                 break;
-
             default:
                 break;
         }
@@ -200,6 +218,17 @@ public class CV_UnLockImageView extends AppCompatImageView {
         return isTouch || super.dispatchTouchEvent(event);
         //return true;
     }
+
+    OnLongClickListener mOnLongClickListener;
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener l) {
+        mOnLongClickListener = l;
+    }
+//    OnClickListener mOnClickListener;
+//    @Override
+//    public void setOnClickListener(OnClickListener onClickListener) {
+//        mOnClickListener = onClickListener;
+//    }
 
     /**
      * 此效果分两部分，上面是原图清晰的部分，下面是带遮罩效果的由不透明到全透明的过渡区域，foreGroundbottom
@@ -273,7 +302,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
-        if (isTouch) {
+        if (isTouch && mCanUnLock) {
             drawForeGround(canvas);
         } else {
             super.onDraw(canvas);
@@ -301,7 +330,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
         void onUnLocking(float f);
     }
 
-    private onUnLockListener mOnUnLockListener;
+    public onUnLockListener mOnUnLockListener;
 
     public void setOnUnLockListener(onUnLockListener onUnLockListener) {
         mOnUnLockListener = onUnLockListener;

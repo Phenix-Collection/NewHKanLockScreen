@@ -52,7 +52,7 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".lockscreen.activity.ActivityLockScreen"
+        <activity android:name=".lockscreen.ActivityLockScreen"
                   android:launchMode="singleInstance"
                   android:theme="@style/myTransparent"
                   android:screenOrientation="portrait">
@@ -63,12 +63,12 @@
         </activity>
 
         <service
-            android:name=".lockscreen.service.ServiceLockScreen"
+            android:name=".lockscreen.ServiceLockScreen"
             android:enabled="true"
             android:exported="true" />
 
         <receiver
-            android:name=".lockscreen.receiver.ReceiverLockScreenBoot"
+            android:name=".lockscreen.ReceiverLockScreenBoot"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

@@ -1,7 +1,7 @@
 package com.haokan.pubic.http;
 
-import com.haokan.hklockscreen.lockscreen.bean.RequestBody_Switch;
-import com.haokan.hklockscreen.lockscreen.bean.ResponseBody_Switch;
+import com.haokan.hklockscreen.lockscreen.RequestBody_Switch;
+import com.haokan.hklockscreen.lockscreen.ResponseBody_Switch;
 import com.haokan.pubic.http.request.RequestEntity;
 import com.haokan.pubic.http.response.ResponseEntity;
 

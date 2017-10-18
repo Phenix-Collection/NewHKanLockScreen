@@ -24,7 +24,8 @@ public class MainImageBean {
     public String cpName; //cpName
 
     /**
-     * 自己定义的类型, 0代表网络下载的图片, 1代表添加的本地图说, 因为本地图片没有图说等信息, 所以需要区分开
+     * 自己定义的类型, 0代表需要网络下载的图片, 1代表存储的离线图片, 2代表读取的asset中的默认图片, 3代表添加的本地相册图片
      */
     public int myType;
+    public String localUrl;//当图片类型为1时, 为存储的离线图片, 用此地址
  }

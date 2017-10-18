@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreen.bean;
+package com.haokan.hklockscreen.lockscreen;
 
 /**
  * Created by wangzixu on 2017/10/17.

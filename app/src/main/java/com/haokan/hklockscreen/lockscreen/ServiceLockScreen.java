@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreen.service;
+package com.haokan.hklockscreen.lockscreen;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,12 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
-import android.util.Log;
-import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreen.activity.ActivityLockScreen;
-import com.haokan.hklockscreen.lockscreen.detailpage.CV_DetailPage_LockScreen;
-import com.haokan.hklockscreen.lockscreen.receiver.ReceiverLockScreen;
 
+import com.haokan.hklockscreen.R;
+import com.haokan.pubic.util.LogHelper;
 
 
 public class ServiceLockScreen extends Service {
@@ -59,7 +56,7 @@ public class ServiceLockScreen extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand type");
+        LogHelper.d("wangzixu", "lockservice onStartCommand type");
         return START_STICKY;
     }
 

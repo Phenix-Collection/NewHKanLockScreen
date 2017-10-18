@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreen.bean;
+package com.haokan.hklockscreen.lockscreen;
 
 import com.haokan.pubic.bean.MainImageBean;
 

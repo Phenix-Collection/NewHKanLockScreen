@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreen.activity.ActivityLockScreen;
+import com.haokan.hklockscreen.autoset.ActivityAutoSetLockScreen;
+import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.util.CommonUtil;
@@ -23,6 +24,8 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
 
         initView();
 
+        Intent i = new Intent(ActivitySplash.this, ServiceLockScreen.class);
+        startService(i);
         App.sMainHanlder.postDelayed(mLaunchHomeRunnable, mStayTime);
     }
 
@@ -50,7 +53,8 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
         }
         mIsDestory = true;
 
-        Intent i = new Intent(ActivitySplash.this, ActivityLockScreen.class);
+//        Intent i = new Intent(ActivitySplash.this, ActivityLockScreen.class);
+        Intent i = new Intent(ActivitySplash.this, ActivityAutoSetLockScreen.class);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);

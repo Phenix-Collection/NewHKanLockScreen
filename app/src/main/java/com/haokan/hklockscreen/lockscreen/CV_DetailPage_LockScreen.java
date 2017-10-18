@@ -1,5 +1,8 @@
-package com.haokan.hklockscreen.lockscreen.detailpage;
+package com.haokan.hklockscreen.lockscreen;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -15,10 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreen.model.ModelLockScreen;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
+import com.haokan.pubic.detailpage.CV_UnLockImageView;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.LogHelper;
@@ -32,7 +35,7 @@ import java.util.List;
  * Created by wangzixu on 2017/10/17.
  * 锁屏用的详情页, 类似一个fragment, 控制锁屏相关view的各种逻辑, 这样就和activity解耦开, 每次开启锁屏activity都可以用同一个锁屏view
  */
-public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
+public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements CV_UnLockImageView.onUnLockListener {
     protected volatile boolean mIsDestory;
     protected boolean mIsLocked; //当前是否是锁屏状态
     private View mLayoutTime;
@@ -42,8 +45,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
     private TextView mTvLockTitle;
     private TextView mTvLockLink;
     public static boolean mIsSwitching = false; //是否在换一换
-    protected ArrayList<MainImageBean> mPhotoData = new ArrayList<>(); //锁屏的数据分成两部分, 一部分是本地添加的照片, 一部分是网络更新的数据
-    protected ArrayList<MainImageBean> mNetData = new ArrayList<>();
+    protected ArrayList<MainImageBean> mLocalImgData = new ArrayList<>(); //锁屏的数据分成两部分, 一部分是本地添加的照片, 一部分是网络更新的数据
+    protected ArrayList<MainImageBean> mSwitchImgData = new ArrayList<>();
+    private int mLocalLockIndex = 0;
+    private boolean mIsFrist = true;
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
         this(context, null);
@@ -59,8 +64,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
         View view = LayoutInflater.from(mContext).inflate(R.layout.cv_detailpage_lockscreen, this, false);
         addView(view);
         initViews(view);
-
-        loadSwitchData();
     }
 
     private void initViews(View rootView) {
@@ -78,6 +81,52 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
         mTvLockTitle = (TextView) mLayoutTime.findViewById(R.id.tv_title);
         mTvLockLink = (TextView) mLayoutTime.findViewById(R.id.tv_link);
         mTvLockLink.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (mIsLocked) {
+            //nothing
+        } else {
+            super.onLongClick(v);
+        }
+        return true;
+    }
+
+    @Override
+    protected void onClickBigImage() {
+        if (mIsLocked) {//点击解锁
+            showCaption();
+            hideTimeLayout();
+            ((Adapter_DetailPage_LockScreen)mAdapterVpMain).setCanUnLock(false);
+            mIsLocked = false;
+        } else {
+            super.onClickBigImage();
+        }
+    }
+
+    @Override
+    protected void onClickBack() {
+        if (!mIsLocked) {
+            hideCaption();
+            showTimeLayout();
+            ((Adapter_DetailPage_LockScreen)mAdapterVpMain).setCanUnLock(true);
+            mIsLocked = true;
+        }
+    }
+
+    @Override
+    public void setVpAdapter() {
+        mAdapterVpMain = new Adapter_DetailPage_LockScreen(mContext, mData, this, this);
+        mVpMain.setAdapter(mAdapterVpMain);
+
+        if (mData.size() > 0) {
+            if (mInitIndex == 0) {
+                onPageSelected(0);
+            } else {
+                mVpMain.setCurrentItem(mInitIndex, false);
+            }
+        }
     }
 
     @Override
@@ -130,12 +179,11 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
     }
 
     /**
-     * 显示锁屏界面
+     * 显示锁屏界面, 是否自动轮播到下一张
      */
-    public void showLockScreenLayout() {
+    public void showLockScreenLayout(boolean scrollNext) {
         LogHelper.d("wangzixu", "lockscreenview screenOff");
         mIsLocked = true;
-        App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
 
         //隐藏分享界面
         if (mShareLayout.getVisibility() == VISIBLE) {
@@ -165,7 +213,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
         mLayoutMainTop.setVisibility(GONE);
         mLayoutMainBottom.setVisibility(GONE);
         mIsAnimnating = false;
-        mIsCaptionShow = true;
+        mIsCaptionShow = false;
 
         if (mCurrentImgBean != null) {
             String linkTitle = mCurrentImgBean.linkTitle;
@@ -187,125 +235,31 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
             }
         }
 
-        App.sMainHanlder.postDelayed(mSwitchImageRunnable, 300);
+        //自动换下一张的逻辑
+        if (scrollNext) {
+            if (mData.size() <= 0) {
+                return;
+            }
+            if (mLocalImgData.size() > 0) {
+                mInitIndex = mData.size()*10 + mLocalLockIndex;
+                mLocalLockIndex = (mLocalLockIndex+1)%mLocalImgData.size();
+            } else {
+                int indexOf = mData.indexOf(mCurrentImgBean);
+                indexOf = indexOf + 1;
+                if (indexOf >= mData.size()) {
+                    indexOf = 0;
+                }
+                mInitIndex = mData.size()*10 + indexOf;
+            }
+            App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
+            mVpMain.setCurrentItem(mInitIndex, false);
+        }
     }
 
-    private Runnable mSwitchImageRunnable = new Runnable() {
-        @Override
-        public void run() {
-            //新换图逻辑bein------------------------------------
-            if (mLockImageBean == null) {//没锁定时
-                LogHelper.e("times", "reset mLockImageBean == null");
-                mData.clear();
-                mData.addAll(mOfflineData);
-                mData.addAll(mLocalData);
-
-                if (mRefreshLocalImage) {
-                    mRefreshLocalImage = false;
-                    mInitIndex = mData.size() - 1;
-                } else {
-                    final int indexOf = mData.indexOf(mCurrentImgBean);
-                    mInitIndex = indexOf + 1;
-                    if (mInitIndex >= mData.size()) {
-                        mInitIndex = 0;
-                    }
-                }
-
-                mAdapterVpMain.notifyDataSetChanged();
-                int offset = mData.size() * 10;
-                mLockPositon = mInitIndex + offset;
-                mVpMain.setCurrentItem(mLockPositon, false);
-                mCurrentImgBean = mData.get(mInitIndex);
-            } else {
-                LogHelper.e("times", "reset pai xu111");
-                boolean isLockedLocal = mLockImageBean.type == 3 && mLockImageBean.originalImagurl != null;
-                boolean isLockedOffline = mLockImageBean.image_id != null && !mCurrentImgBean.image_id.equals(mLockImageBean.image_id);
-
-                if (isLockedLocal || isLockedOffline) {//判断imgId
-                    LogHelper.e("times", "reset pai xu22");
-                    mData.clear();
-                    mData.addAll(mOfflineData);
-                    mData.addAll(mLocalData);
-
-                    if (mRefreshLocalImage) {
-                        mRefreshLocalImage = false;
-                        mData.add(0, mLockImageBean);
-                        mInitIndex = mData.size() - 1;
-                    } else {
-                        final int indexOf = mData.indexOf(mCurrentImgBean);
-                        mInitIndex = indexOf + 1;
-                        if (mInitIndex >= mData.size()) {
-                            mInitIndex = 0;
-                        }
-                        mData.add(mInitIndex, mLockImageBean);
-                    }
-
-                    mAdapterVpMain = new AdapterVp_DetailMainView(mLocalResContext, mRemoteAppContext, mData, DetailPage_MainView.this, DetailPage_MainView.this, true, mLockImageBean, mAdData);
-                    mVpMain.setAdapter(mAdapterVpMain);
-//                mAdapterVpMain.notifyDataSetChanged();
-                    int offset = mData.size() * 10;
-                    mLockPositon = mInitIndex + offset;
-                    mCurrentImgBean = mData.get(mInitIndex);
-
-                    if (isLockedLocal && mLockImageBean != null && (!mLockImageBean.image_url.equals(mCurrentImgBean.image_url))) {//解决添加并锁定bug
-                        for (int i = 0; i < mData.size(); i++) {
-                            if (mData.get(i).image_url.equals(mLockImageBean.image_url)) {
-                                mInitIndex = i;
-                            }
-                        }
-                        mCurrentImgBean = mData.get(mInitIndex);
-                        mLockPositon = mInitIndex + offset;
-                    }
-
-                    mVpMain.setCurrentItem(mLockPositon, false);
-
-                    if (mLockImageBean == mCurrentImgBean) {
-                        LogHelper.e("times", "----mLockImageBean == mCurrentImgBean");
-                        mUnLockImg.setVisibility(VISIBLE);
-                    }
-                } else { //当前的图片就是锁定的图片, 所以队列不用变
-                    LogHelper.e("times", "no reset mRefreshLocalImage == null");
-                    //nothing
-                    if (mRefreshLocalImage) {
-                        mRefreshLocalImage = false;
-                        mData.clear();
-                        mData.add(mLockImageBean);
-                        mData.addAll(mOfflineData);
-                        mData.addAll(mLocalData);
-                        mInitIndex = mData.size() - 1;
-
-                        mAdapterVpMain = new AdapterVp_DetailMainView(mLocalResContext, mRemoteAppContext, mData, DetailPage_MainView.this, DetailPage_MainView.this, true, mLockImageBean, mAdData);
-                        mVpMain.setAdapter(mAdapterVpMain);
-//                mAdapterVpMain.notifyDataSetChanged();
-                        int offset = mData.size() * 10;
-                        mLockPositon = mInitIndex + offset;
-                        mVpMain.setCurrentItem(mLockPositon, false);
-                        mCurrentImgBean = mData.get(mInitIndex);
-                    } else {
-                        mUnLockImg.setVisibility(VISIBLE);
-                    }
-                }
-            }
-            String linkTitle = mCurrentImgBean.url_title;
-            if (TextUtils.isEmpty(mCurrentImgBean.getUrl_click())) {
-                linkTitle = "";
-            } else {
-                if (TextUtils.isEmpty(linkTitle)) {
-                    linkTitle = mLocalResContext.getResources().getString(R.string.look_more);
-                }
-            }
-            if (TextUtils.isEmpty(linkTitle)) {
-                mTvTimeClickMore.setVisibility(INVISIBLE);
-                mTvTimeTitle.setVisibility(GONE);
-            } else {
-                mTvTimeClickMore.setVisibility(VISIBLE);
-                mTvTimeClickMore.setText(linkTitle);
-                mTvTimeTitle.setVisibility(VISIBLE);
-                mTvTimeTitle.setText(mCurrentImgBean.getTitle());
-            }
-//            mISystemUiView.setTitleAndUrl(mCurrentImgBean.getTitle(), linkTitle);
-        }
-    };
+    @Override
+    public void onPageSelected(int position) {
+        super.onPageSelected(position);
+    }
 
     protected void loadSwitchData() {
         new ModelLockScreen().getSwitchData(mContext, 1, new onDataResponseListener<List<MainImageBean>>() {
@@ -321,7 +275,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
                 }
                 LogHelper.d("wangzixu", "loadSwitchData onDataSucess");
 
-                refreshData(mainImageBeen);
+                mSwitchImgData.clear();
+                mSwitchImgData.addAll(mainImageBeen);
+
+                mData.clear();
+                mData.addAll(mLocalImgData);
+                mData.addAll(mSwitchImgData);
+                mInitIndex = mData.size() * 10 + mLocalImgData.size();
+                setVpAdapter();
             }
 
             @Override
@@ -341,8 +302,155 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base {
         });
     }
 
+    public void loadLoclImgData() {
+        new ModelLockScreen().getLocalImg(mContext, new onDataResponseListener<List<MainImageBean>>() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onDataSucess(List<MainImageBean> mainImageBeen) {
+                mLocalImgData.clear();
+                mLocalImgData.addAll(mainImageBeen);
+
+                mData.clear();
+                mData.addAll(mLocalImgData);
+                mData.addAll(mSwitchImgData);
+                mInitIndex = mData.size() * 10;
+                setVpAdapter();
+
+            }
+
+            @Override
+            public void onDataEmpty() {
+                mLocalImgData.clear();
+
+                mData.clear();
+                mData.addAll(mSwitchImgData);
+                mInitIndex = mData.size() * 10;
+                setVpAdapter();
+
+                if (mIsFrist) {
+                    mIsFrist = false;
+                    showLockScreenLayout(false);
+                    LogHelper.d("wangzixu", "loadLoclImgData mData = " + mData.size());
+                }
+            }
+
+            @Override
+            public void onDataFailed(String errmsg) {
+
+            }
+
+            @Override
+            public void onNetError() {
+
+            }
+        });
+    }
+
+    public void loadData() {
+        new ModelLockScreen().getOffineLineSwitchData(mContext, new onDataResponseListener<List<MainImageBean>>() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onDataSucess(List<MainImageBean> mainImageBeen) {
+                mSwitchImgData.clear();
+                mSwitchImgData.addAll(mainImageBeen);
+                LogHelper.d("wangzixu", "loadData mData = " + mSwitchImgData.size());
+                loadLoclImgData();
+            }
+
+            @Override
+            public void onDataEmpty() {
+
+            }
+
+            @Override
+            public void onDataFailed(String errmsg) {
+
+            }
+
+            @Override
+            public void onNetError() {
+
+            }
+        });
+    }
+
 
     public void onDestory() {
         mIsDestory = true;
+    }
+
+    @Override
+    public void onUnLockSuccess() {
+        if (mActivity != null) {
+            mActivity.finish();
+        }
+        CV_DetailPage_LockScreen.this.setVisibility(INVISIBLE);
+        App.sMainHanlder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CV_DetailPage_LockScreen.this.setVisibility(VISIBLE);
+                mLayoutTime.setAlpha(1.0f);
+            }
+        }, 500);
+    }
+
+    @Override
+    public void onUnLockFailed() {
+        mLayoutTime.setAlpha(1.0f);
+    }
+
+    @Override
+    public void onUnLocking(float f) {
+        float ff = 3.3f * f - 2.3f;
+        mLayoutTime.setAlpha(ff);
+    }
+
+    /**
+     * 显示图说
+     */
+    public void showTimeLayout() {
+        mLayoutTime.setVisibility(View.VISIBLE);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+        valueAnimator.setDuration(sAinmDuration);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float f = (float) animation.getAnimatedValue();
+                mLayoutTime.setAlpha(f);
+            }
+        });
+        valueAnimator.start();
+    }
+
+
+    /**
+     * 隐藏图说
+     */
+    public void hideTimeLayout() {
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
+        valueAnimator.setDuration(sAinmDuration);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float f = (float) animation.getAnimatedValue();
+                mLayoutTime.setAlpha(1.0f-f);
+            }
+        });
+
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLayoutTime.setVisibility(View.GONE);
+            }
+        });
+        valueAnimator.start();
     }
 }

@@ -1,10 +1,9 @@
-package com.haokan.hklockscreen.lockscreen.receiver;
+package com.haokan.hklockscreen.lockscreen;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.haokan.hklockscreen.lockscreen.service.ServiceLockScreen;
 import com.haokan.pubic.util.LogHelper;
 
 

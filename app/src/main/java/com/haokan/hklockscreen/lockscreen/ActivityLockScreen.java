@@ -1,5 +1,6 @@
-package com.haokan.hklockscreen.lockscreen.activity;
+package com.haokan.hklockscreen.lockscreen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +10,14 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreen.detailpage.CV_DetailPage_LockScreen;
-import com.haokan.hklockscreen.lockscreen.service.ServiceLockScreen;
 import com.haokan.pubic.base.ActivityBase;
-import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
+import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.StatusBarUtil;
 
 /**
  * Created by wangzixu on 2017/3/2.
  */
 public class ActivityLockScreen extends ActivityBase implements View.OnClickListener, View.OnSystemUiVisibilityChangeListener {
-    private CV_DetailPageView_Base mViewDetailPage;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +35,16 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             ((ViewGroup)parent).removeView(ServiceLockScreen.sHaokanLockView);
         }
         frameLayout.addView(ServiceLockScreen.sHaokanLockView);
+
+        LogHelper.d("wangzixu", "ActivityLockScreen onCreate");
+        ServiceLockScreen.sHaokanLockView.showLockScreenLayout(true);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        LogHelper.d("wangzixu", "ActivityLockScreen onNewIntent");
+        ServiceLockScreen.sHaokanLockView.showLockScreenLayout(true);
     }
 
     /**
