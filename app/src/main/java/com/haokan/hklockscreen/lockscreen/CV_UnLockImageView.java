@@ -1,4 +1,4 @@
-package com.haokan.pubic.detailpage;
+package com.haokan.hklockscreen.lockscreen;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -274,7 +274,8 @@ public class CV_UnLockImageView extends AppCompatImageView {
 //        }
 
         ValueAnimator anim = ValueAnimator.ofInt(start, end);
-        int d = (Math.min(300, mTopRect.bottom >> 2) > 0) ? Math.min(300, mTopRect.bottom >> 2) : 0;
+        int b = Math.min(300, mTopRect.bottom >> 3);
+        int d = b > 0 ? b : 0;
         anim.setDuration(d);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

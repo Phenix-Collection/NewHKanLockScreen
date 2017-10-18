@@ -123,7 +123,7 @@ public class FileUtil {
      * 删除指定目录下的所有内容
      */
     public static void deleteContents(File dir) {
-        if (dir == null) {
+        if (dir == null || !dir.isDirectory()) {
             return;
         }
         File[] files = dir.listFiles();
@@ -134,9 +134,8 @@ public class FileUtil {
             for (File file : files) {
                 if (file.isDirectory()) {
                     deleteContents(file);
-                }
-                if (!file.delete()) {
-                    throw new IOException("failed to delete file: " + file);
+                } else {
+                    file.delete();
                 }
             }
         } catch (Exception e) {

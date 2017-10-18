@@ -11,7 +11,6 @@ import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.detailpage.Adapter_DetailPage_Base;
-import com.haokan.pubic.detailpage.CV_UnLockImageView;
 import com.haokan.pubic.util.AssetsImageLoader;
 import com.haokan.pubic.util.LogHelper;
 
@@ -64,7 +63,7 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
 
         String url = imageBean.imgBigUrl;
 
-        if (imageBean.myType == 2) {
+        if (imageBean.myType == 2) { // assset中的图片
             AssetsImageLoader.loadAssetsImage(mContext, url, new AssetsImageLoader.onAssetImageLoaderListener() {
                 @Override
                 public void onSuccess(Bitmap bitmap) {
@@ -104,6 +103,9 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
                     holder.loadingView.setVisibility(View.GONE);
                     holder.image.setVisibility(View.VISIBLE);
                     holder.mBitmap = resource;
+                    if (imageBean.myType == 0) { //需要存储到本地的图片
+
+                    }
                     return false;
                 }
             }).into(holder.image);

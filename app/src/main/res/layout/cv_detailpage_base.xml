@@ -186,7 +186,7 @@
                     android:text=""
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/bai"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:layout_marginRight="4dp"
                     />
 
@@ -202,11 +202,11 @@
                     android:paddingBottom="1dp"
                     android:text="查看更多"
                     android:textColor="@color/selector_click_bai"
-                    android:textSize="13sp"/>
+                    android:textSize="14sp"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_desc"
+                android:id="@+id/tv_desc_simple"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/layout_title"

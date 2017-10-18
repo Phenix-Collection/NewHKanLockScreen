@@ -1,10 +1,13 @@
 package com.haokan.hklockscreen.lockscreen;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.google.gson.reflect.TypeToken;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
@@ -16,6 +19,7 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.http.request.RequestEntity;
 import com.haokan.pubic.http.request.RequestHeader;
 import com.haokan.pubic.http.response.ResponseEntity;
+import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.JsonUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.Values;
@@ -35,7 +39,25 @@ import rx.schedulers.Schedulers;
  * Created by wangzixu on 2017/10/16.
  */
 public class ModelLockScreen {
-    public void getOffineLineSwitchData(final Context context, final onDataResponseListener<List<MainImageBean>> listener) {
+    public File getOfflineDir(Context context) {
+        File filesDir = context.getFilesDir();
+        File dir = new File(filesDir, "offline/");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    public File getLocalImageDir(Context context) {
+        File filesDir = context.getFilesDir();
+        File dir = new File(filesDir, "localimage/");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    public void getOffineSwitchData(final Context context, final onDataResponseListener<List<MainImageBean>> listener) {
         if (listener == null) {
             return;
         }
@@ -43,22 +65,15 @@ public class ModelLockScreen {
             @Override
             public void call(Subscriber<? super ArrayList<MainImageBean>> subscriber) {
                 ArrayList<MainImageBean> list = new ArrayList<>();
-
-                String path = Environment.getExternalStorageDirectory().toString() + Values.Path.PATH_OFFLINE_DIR;
-                File dir = new File(path);
-                if (dir.exists()) {
-                    try {
-                        ACache aCache = ACache.get(dir);
-                        Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
-                        if (asObject != null && asObject instanceof ArrayList) {
-                            list = (ArrayList<MainImageBean>) asObject;
-                            LogHelper.d("wangzixu", "getLocalPhptoData list = " + list);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                try {
+                    ACache aCache = ACache.get(context);
+                    Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
+                    if (asObject != null && asObject instanceof ArrayList) {
+                        list = (ArrayList<MainImageBean>) asObject;
+                        LogHelper.d("wangzixu", "getOffineSwitchData list = " + list);
                     }
-                } else {
-                    dir.mkdirs();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 if (list != null && list.size() > 0) {
@@ -69,6 +84,8 @@ public class ModelLockScreen {
                             File file = new File(bean.localUrl);
                             if (file.exists()) {
                                 bean.myType = 1;
+                                bean.imgBigUrl = bean.localUrl;
+                                bean.imgSmallUrl = bean.localUrl;
                             }
                         }
                     }
@@ -120,7 +137,7 @@ public class ModelLockScreen {
     /**
      * 获取本地相册的图片
      */
-    public void getLocalImg(Context context, @NonNull final onDataResponseListener<List<MainImageBean>> listener) {
+    public void getLocalImg(final Context context, @NonNull final onDataResponseListener<List<MainImageBean>> listener) {
         if (listener == null) {
             return;
         }
@@ -132,15 +149,14 @@ public class ModelLockScreen {
                     return;
                 }
 
-                String path = Environment.getExternalStorageDirectory().toString() + Values.Path.PATH_LOCALIMG_DIR;
-                File dir = new File(path);
+                File dir = getLocalImageDir(context);
                 ArrayList<MainImageBean> list = new ArrayList<>();
                 if (dir.exists()) {
                     try {
                         File[] files=dir.listFiles(new FilenameFilter() {
                             @Override
                             public boolean accept(File dir, String name) {
-                                if (name.startsWith(".img")) { //存本地图片时一定要以.img开头命名
+                                if (name.startsWith("img")) { //存本地图片时一定要以img开头命名
                                     return true;
                                 }
                                 return false;
@@ -244,6 +260,71 @@ public class ModelLockScreen {
                         }
                     }
                 });
+    }
 
+    public void saveSwitchData(final Context context, final ArrayList<MainImageBean> list) {
+        Observable.create(new Observable.OnSubscribe<ArrayList<MainImageBean>>() {
+            @Override
+            public void call(Subscriber<? super ArrayList<MainImageBean>> subscriber) {
+                try {
+                    if (list != null && list.size() > 0) {
+                        //存储数据json
+                        ACache aCache = ACache.get(context);
+                        aCache.put(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME, list);
+
+                        //存储图片文件
+                        File offlineDir = getOfflineDir(context);
+                        FileUtil.deleteContents(offlineDir);
+                        for (int i = 0; i < list.size(); i++) {
+                            MainImageBean imageBean = list.get(i);
+                            String url = imageBean.imgBigUrl;
+                            String name;
+                            if (TextUtils.isEmpty(imageBean.imgId)) {
+                                name = "img_" + System.currentTimeMillis()+".jpg";
+                            } else {
+                                name = "img_" + imageBean.imgId + ".jpg";
+                            }
+
+                            File file = new File(offlineDir, name);
+                            if (!file.exists()) { //图片文件不存在, 就下载
+                                try {
+                                    Bitmap bitmap = Glide.with(context).load(url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                                    FileUtil.saveBitmapToFile(context, bitmap, file, false);
+                                } catch (Exception e) {
+                                    if (LogHelper.DEBUG) {
+                                        LogHelper.d("wangzixu", "saveSwitchData ----下载失败了一张 Glide load i = " + i + " , url = " + url);
+                                    }
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+
+                    subscriber.onNext(list);
+                    subscriber.onCompleted();
+                } catch (Exception e) {
+                    subscriber.onError(e);
+                    return;
+                }
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ArrayList<MainImageBean>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        throwable.printStackTrace();
+                        LogHelper.d("wangzixu", "saveSwitchData onError");
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<MainImageBean> list) {
+                        LogHelper.d("wangzixu", "saveSwitchData success");
+                    }
+                });
     }
 }
