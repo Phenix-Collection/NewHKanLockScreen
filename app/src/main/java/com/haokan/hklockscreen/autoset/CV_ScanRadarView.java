@@ -11,8 +11,6 @@ import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.haokan.pubic.util.LogHelper;
-
 import java.util.ArrayList;
 
 
@@ -240,7 +238,6 @@ public class CV_ScanRadarView extends View {
                         if (passTime != 0) {
                             rippleBean.radius = (int) (rippleBean.radius + mEveryMillDis*passTime);
                             rippleBean.alpha = rippleBean.alpha - mEveryMIllAlpha*passTime;
-                            LogHelper.d("wangzixu", "mRippleBeanList mEveryMIllAlpha*passTime = " + rippleBean.alpha);
                             rippleBean.radialGradient = new RadialGradient(mViewSize /2.0f, mViewSize /2.0f, rippleBean.radius, mColors, mPositions, Shader.TileMode.CLAMP);
                             rippleBean.previousTime = currentTimeMillis;
                         }

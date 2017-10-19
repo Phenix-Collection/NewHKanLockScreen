@@ -105,7 +105,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
         //单图区域
         mLayoutCaption = mLayoutMainBottom.findViewById(R.id.layout_caption);
-        mTvDescSimple = (TextView) mLayoutMainBottom.findViewById(R.id.tv_desc);
+        mTvDescSimple = (TextView) mLayoutMainBottom.findViewById(R.id.tv_desc_simple);
         mTvDescSimple.setOnClickListener(this);
         mTvDescAll = (TextView) mLayoutMainBottom.findViewById(R.id.tv_desc_all);
         mTvDescAll.setOnClickListener(this);
@@ -183,16 +183,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         //为主vp设置监听器
         mAdapterVpMain = new Adapter_DetailPage_Base(mContext, mData, this, this);
         mVpMain.setAdapter(mAdapterVpMain);
-
-        if (mInitIndex >= mData.size()) {
-            mInitIndex = 0;
-        }
-
-        if (mInitIndex == 0) {
-            onPageSelected(0);
-        } else {
-            mVpMain.setCurrentItem(mInitIndex, false);
-        }
     }
 
     @Override
@@ -209,8 +199,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
     @Override
     public void onPageSelected(int position) {
-        mCurrentPosition = position%mData.size();
         App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
+        mCurrentPosition = position%mData.size();
         mCurrentImgBean = mData.get(mCurrentPosition);
         if (mCurrentImgBean == null) {
             return;
@@ -247,6 +237,14 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 //                        mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
 //                    }
                 }
+                break;
+            case R.id.tv_desc_all:
+                mTvDescSimple.setVisibility(VISIBLE);
+                mTvDescAll.setVisibility(GONE);
+                break;
+            case R.id.tv_desc_simple:
+                mTvDescAll.setVisibility(VISIBLE);
+                mTvDescSimple.setVisibility(GONE);
                 break;
             case R.id.bottom_back:
                 onClickBack();
@@ -400,6 +398,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             public void onAnimationEnd(Animator animation) {
                 mIsAnimnating = false;
                 mIsCaptionShow = false;
+                mLayoutMainBottom.setAlpha(1.0f);
+                mLayoutMainTop.setAlpha(1.0f);
                 mLayoutMainBottom.setVisibility(View.GONE);
                 mLayoutMainTop.setVisibility(View.GONE);
             }
@@ -554,7 +554,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mInitIndex = initIndex;
     }
 
-    private int[] mLinkBgColors={0xccF8546,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD,0xccBD0FE1};
+    private int[] mLinkBgColors={0xccF8546B,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD,0xccBD0FE1};
     private int mLingBgColorIndex = 0;
     public int getLinkBgColor(){
         int i = mLingBgColorIndex % mLinkBgColors.length;

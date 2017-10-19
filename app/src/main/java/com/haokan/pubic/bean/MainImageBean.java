@@ -1,9 +1,11 @@
 package com.haokan.pubic.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by wangzixu on 2017/3/18.
  */
-public class MainImageBean {
+public class MainImageBean implements Serializable{
     public String imgId; //id
     public String imgSmallUrl; //缩略图url
     public String imgBigUrl; //图片url

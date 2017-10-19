@@ -12,16 +12,6 @@ public class Values {
         public static final String PATH_BASE = "/Levect/" + PACKAGE_NAME + "/";
 
         public static final String PATH_CLIP_AVATAR = "/Levect/user_avatar"; //剪裁的头像存储的位置
-
-        /**
-         * 锁屏存储本地相册图片的数据
-         */
-        public static final String PATH_LOCALIMG_DIR = PATH_BASE + ".localphoto/";
-
-        /**
-         * 离线图片
-         */
-        public static final String PATH_OFFLINE_DIR = PATH_BASE + ".offline/";
     }
 
     /**
