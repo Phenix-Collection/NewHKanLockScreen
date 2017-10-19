@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.base.ActivityBase;
+import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.StatusBarUtil;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class ActivityTimelines extends ActivityBase {
             public int getSpanSize(int position) {
                 //通过获取adapter来获取当前item的itemviewtype
                 int type = mRecyclerView.getAdapter().getItemViewType(position);
-                if (type == ModelTimelines.TYPE_TITLE) {
+                if (type == BeanTimelines.TYPE_TITLE) {
                     //返回2，占一行
                     return gridLayoutManager.getSpanCount();
                 } else {
@@ -45,17 +46,38 @@ public class ActivityTimelines extends ActivityBase {
         initData();
     }
 
+    private int page = 1;
+
     public void initData() {
-        List<ModelTimelines> datas = new ArrayList<>();
-        ModelTimelines data = new ModelTimelines();
-        data.type = ModelTimelines.TYPE_TITLE;
-        datas.add(data);
-        for (int i = 0; i < 60; i++) {
-            data = new ModelTimelines();
-            data.type = ModelTimelines.TYPE_ITEM;
-            datas.add(data);
-        }
-        mAdapter.setData(datas);
-        mAdapter.notifyDataSetChanged();
+        new ModelTimelines().getTimelinesData(this, page, new onDataResponseListener<List<BeanTimelines>>() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onDataSucess(List<BeanTimelines> beanTimelines) {
+                BeanTimelines title = new BeanTimelines();
+                title.type = BeanTimelines.TYPE_TITLE;
+                beanTimelines.add(0, title);
+                mAdapter.setData(beanTimelines);
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onDataEmpty() {
+
+            }
+
+            @Override
+            public void onDataFailed(String errmsg) {
+
+            }
+
+            @Override
+            public void onNetError() {
+
+            }
+        });
     }
 }

@@ -174,9 +174,9 @@
 
         <ImageView
             android:layout_width="7.5dp"
-            android:src="@drawable/ic_launcher"
             android:layout_height="7.5dp"
-            android:layout_marginLeft="3dp" />
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/ic_launcher" />
     </LinearLayout>
 
 </RelativeLayout>

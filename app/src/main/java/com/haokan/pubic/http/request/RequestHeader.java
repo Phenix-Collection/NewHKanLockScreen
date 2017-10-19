@@ -81,6 +81,7 @@ public class RequestHeader<RequestBody> {
         languageCode = "zh";
         countryCode = "cn";
         did=App.sDID;
+        sign = SecurityUtil.md5(timeStamp + imei + companyId);
     }
 
     public static TreeMap<String, Object> beanToMap(Object object){

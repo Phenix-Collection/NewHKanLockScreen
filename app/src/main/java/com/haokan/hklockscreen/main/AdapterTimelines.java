@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.pubic.util.ToastManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +19,15 @@ import java.util.List;
 
 public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRecycleViewHolder> {
     private LayoutInflater mInflater;
-    private List<ModelTimelines> mList = new ArrayList<>();
+    private List<BeanTimelines> mList = new ArrayList<>();
+    private Context context;
 
     public AdapterTimelines(Context context) {
+        this.context = context;
         mInflater = LayoutInflater.from(context);
     }
 
-    public void setData(List<ModelTimelines> model) {
+    public void setData(List<BeanTimelines> model) {
         mList.addAll(model);
     }
 
@@ -32,10 +35,10 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
     public MyRecycleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         MyRecycleViewHolder vh = null;
         switch (viewType) {
-            case ModelTimelines.TYPE_TITLE:
+            case BeanTimelines.TYPE_TITLE:
                 vh = new MyRecycleViewHolderOne(mInflater.inflate(R.layout.item_timeline1, parent, false));
                 break;
-            case ModelTimelines.TYPE_ITEM:
+            case BeanTimelines.TYPE_ITEM:
                 vh = new MyRecycleViewHolderTwo(mInflater.inflate(R.layout.item_timeline2, parent, false));
                 break;
         }
@@ -68,7 +71,7 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
 
         }
 
-        public abstract void bindHolder(ModelTimelines data);
+        public abstract void bindHolder(BeanTimelines data);
     }
 
     public class MyRecycleViewHolderOne extends MyRecycleViewHolder {
@@ -79,19 +82,32 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
         }
 
         @Override
-        public void bindHolder(ModelTimelines data) {
+        public void bindHolder(BeanTimelines data) {
         }
     }
 
     public class MyRecycleViewHolderTwo extends MyRecycleViewHolder {
+        private View relativeLayout3;
 
         public MyRecycleViewHolderTwo(View itemView) {
             super(itemView);
+            relativeLayout3 = itemView.findViewById(R.id.relativeLayout3);
 
         }
 
         @Override
-        public void bindHolder(ModelTimelines data) {
+        public void bindHolder(BeanTimelines data) {
+            if (data.list != null && data.list.size() > 10) {
+                relativeLayout3.setVisibility(View.VISIBLE);
+                relativeLayout3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ToastManager.showShort(context,"don't click");
+                    }
+                });
+            } else {
+                relativeLayout3.setVisibility(View.GONE);
+            }
         }
     }
 
