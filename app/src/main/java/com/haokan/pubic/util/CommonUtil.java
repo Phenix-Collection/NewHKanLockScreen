@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 public class CommonUtil {
     private static final String TAG = "CommonUtil";
@@ -274,5 +275,13 @@ public class CommonUtil {
         PackageManager pm = context.getPackageManager();
         boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission(permissionStr, context.getPackageName()));
         return permission;
+    }
+
+    private static int[] mColors={0xccF8546B
+            ,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD,0xccBD0FE1};
+    public static  int getRandomColor(){
+        Random rand = new Random();
+        int randNum = rand.nextInt(mColors.length);
+        return mColors[randNum];
     }
 }

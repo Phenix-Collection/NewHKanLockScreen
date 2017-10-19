@@ -6,7 +6,7 @@
     android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/rootview"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -18,10 +18,11 @@
             android:layout_height="match_parent">
         </FrameLayout>
 
-        <com.haokan.hklockscreen.lockscreen.CV_RecommendPage
+        <com.haokan.hklockscreen.recommendpage.CV_RecommendPage
             android:id="@+id/cv_recommendpage"
+            android:layout_below="@id/lockscreen_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.haokan.hklockscreen.lockscreen.CV_RecommendPage>
-    </LinearLayout>
+        </com.haokan.hklockscreen.recommendpage.CV_RecommendPage>
+    </RelativeLayout>
 </ScrollView>

@@ -2,7 +2,10 @@ package com.haokan.pubic.http;
 
 import com.haokan.hklockscreen.lockscreen.RequestBody_Switch;
 import com.haokan.hklockscreen.lockscreen.ResponseBody_Switch;
+import com.haokan.hklockscreen.recommendpage.RequestBody_Recommend;
+import com.haokan.hklockscreen.recommendpage.ResponseBody_Recommend;
 import com.haokan.pubic.http.request.RequestEntity;
+import com.haokan.pubic.http.request.RequestEntity_FaGe;
 import com.haokan.pubic.http.response.ResponseEntity;
 
 import retrofit2.http.Body;
@@ -26,6 +29,12 @@ public interface RetrofitHttpService {
      */
     @POST
     Observable<ResponseEntity<ResponseBody_Switch>> getSwitchData(@Url String url, @Body RequestEntity<RequestBody_Switch> requestEntity);
+
+    /**
+     * 点击换一换
+     */
+    @POST
+    Observable<ResponseEntity<ResponseBody_Recommend>> getRecommendData(@Url String url, @Body RequestEntity_FaGe<RequestBody_Recommend> requestEntity);
 
 //    /**
 //     * 获取升级信息

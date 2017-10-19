@@ -109,8 +109,6 @@ public class CV_UnLockImageView extends AppCompatImageView {
      * 是否在触摸屏幕
      */
     boolean isTouch = false;
-    private long mDownTime;
-
     private boolean mCanUnLock = true; //是否可以解锁的开关
 
     public void setCanUnLock(boolean canUnLock) {
@@ -192,7 +190,6 @@ public class CV_UnLockImageView extends AppCompatImageView {
                     postDelayed(mLongClickRunnable, 800);
                 }
 
-                mDownTime = System.currentTimeMillis();
                 if (mImageBitmap == null) {
                     buildDrawingCache();
                     if (getDrawingCache() != null) {

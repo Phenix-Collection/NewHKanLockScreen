@@ -27,4 +27,12 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
+
+    <style name="myLoadingProgressBarStyle">
+        <item name="android:indeterminateDrawable">@drawable/loading_anim</item>
+        <item name="android:maxHeight">22dp</item>
+        <item name="android:minHeight">22dp</item>
+        <item name="android:maxWidth">22dp</item>
+        <item name="android:minWidth">22dp</item>
+    </style>
 </resources>

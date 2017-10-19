@@ -33,4 +33,11 @@ public class UrlsUtil {
     public static String getAutoUpdateImgsUrl() {
         return URL_HOST + "/autoupdate";
     }
+
+    /**
+     * 换一换的地址
+     */
+    public static String getRecommendUrl() {
+        return "http://api-m-gray.levect.com/app/list/img";
+    }
 }

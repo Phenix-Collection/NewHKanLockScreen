@@ -47,6 +47,11 @@
         </activity>
 
         <activity
+            android:name=".lockscreen.ActivityTestRecommend"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name=".autoset.ActivityPrompt_AutoStart"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">

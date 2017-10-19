@@ -12,12 +12,13 @@ import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.recommendpage.CV_RecommendPage;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
+import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.StatusBarUtil;
 
@@ -25,7 +26,7 @@ import com.haokan.pubic.util.StatusBarUtil;
  * Created by wangzixu on 2017/3/2.
  */
 public class ActivityLockScreen extends ActivityBase implements View.OnClickListener, View.OnSystemUiVisibilityChangeListener, CV_DetailPage_LockScreen.OnLockScreenStateChangeListener {
-    private View mRecommendPage;
+    private CV_RecommendPage mRecommendPage;
     private ScrollView mScrollView;
     private View mRootView;
     private FrameLayout mLockScreenLayout;
@@ -46,7 +47,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         setContentView(R.layout.activity_lock);
         hideNavigation();
         disableKeyGuard();
-        mScreenH = getResources().getDisplayMetrics().heightPixels;
+//        mScreenH = getResources().getDisplayMetrics().heightPixels;
+
+        mScreenH = DisplayUtil.getRealScreenPoint(this).y;
 
         initView();
         initLockScreenView();
@@ -63,61 +66,68 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
 
-        mScrollView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                if (mVelocityTracker == null) {
-                    mVelocityTracker = VelocityTracker.obtain();
-                }
-
-                if (action == MotionEvent.ACTION_DOWN) {
-                    mVelocityTracker.clear();
-                    if (mVelocityTracker != null) {
-                        mVelocityTracker.addMovement(event);
-                    }
-                } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    int scrollY = mScrollView.getScrollY();
-                    if (mVelocityTracker != null) {
-                        mVelocityTracker.addMovement(event);
-                    }
-
-                    if (scrollY > 0 && scrollY < mScreenH) {
-                        mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                        int initialVelocity = (int) mVelocityTracker.getYVelocity(); //计算抬手时速度, 向上滑小于0, 向下滑大于0
-                        LogHelper.d("wangzixu", "ActivityLockScreen initialVelocity = " + initialVelocity);
-
-                        if (mIsRecommendPage) {
-                            if (initialVelocity > 1000 || scrollY < mScreenH*3/4) { //下滑fling, 或者下滑过1/4
-                                mScrollView.smoothScrollTo(0, 0);
-                                mIsRecommendPage = false;
-                            } else {
-                                mScrollView.smoothScrollTo(0, mScreenH);
-                                mIsRecommendPage = true;
-                            }
-                        } else {
-                            if (initialVelocity < -1000 || scrollY > mScreenH / 4) {//上滑fling, 或者上滑过1/4
-                                mScrollView.smoothScrollTo(0, mScreenH);
-                                mIsRecommendPage = true;
-                            } else {
-                                mScrollView.smoothScrollTo(0, 0);
-                                mIsRecommendPage = false;
-                            }
-                        }
-                        return true;
-                    }
-                } else {
-                    if (mVelocityTracker != null) {
-                        mVelocityTracker.addMovement(event);
-                    }
-                }
-                return false;
-            }
-        });
+//        mScrollView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                int action = event.getAction();
+//                if (mVelocityTracker == null) {
+//                    mVelocityTracker = VelocityTracker.obtain();
+//                }
+//
+//                if (action == MotionEvent.ACTION_DOWN) {
+//                    mVelocityTracker.clear();
+//                    if (mVelocityTracker != null) {
+//                        mVelocityTracker.addMovement(event);
+//                    }
+//                } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+//                    int scrollY = mScrollView.getScrollY();
+//                    if (mVelocityTracker != null) {
+//                        mVelocityTracker.addMovement(event);
+//                    }
+//
+//                    if (scrollY > 0 && scrollY < mScreenH) {
+//                        mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+//                        int initialVelocity = (int) mVelocityTracker.getYVelocity(); //计算抬手时速度, 向上滑小于0, 向下滑大于0
+//                        LogHelper.d("wangzixu", "ActivityLockScreen initialVelocity = " + initialVelocity);
+//
+//                        if (mIsRecommendPage) {
+//                            if (initialVelocity > 1000 || scrollY < mScreenH*3/4) { //下滑fling, 或者下滑过1/4
+//                                mScrollView.smoothScrollTo(0, 0);
+//                                mIsRecommendPage = false;
+//                            } else {
+//                                mScrollView.smoothScrollTo(0, mScreenH);
+//                                mIsRecommendPage = true;
+//                            }
+//                        } else {
+//                            if (initialVelocity < -1000 || scrollY > mScreenH / 4) {//上滑fling, 或者上滑过1/4
+//                                mScrollView.smoothScrollTo(0, mScreenH);
+//                                mIsRecommendPage = true;
+//                                mRecommendPage.show("美女");
+//                            } else {
+//                                mScrollView.smoothScrollTo(0, 0);
+//                                mIsRecommendPage = false;
+//                            }
+//                        }
+//                        return true;
+//                    }
+//                } else {
+//                    if (mVelocityTracker != null) {
+//                        mVelocityTracker.addMovement(event);
+//                    }
+//                }
+//                return false;
+//            }
+//        });
     }
 
     private void initLockScreenView() {
         mLockScreenLayout = (FrameLayout) findViewById(R.id.lockscreen_content);
+        ViewGroup.LayoutParams params = mLockScreenLayout.getLayoutParams();
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
+        }
+        params.height = mScreenH;
+        mLockScreenLayout.setLayoutParams(params);
 
         if (ServiceLockScreen.sHaokanLockView == null) {
             ServiceLockScreen.sHaokanLockView = new CV_DetailPage_LockScreen(this.getApplicationContext());
@@ -132,23 +142,78 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         ServiceLockScreen.sHaokanLockView.intoLockScreenState(true);
 
 
-        ViewGroup.LayoutParams params = ServiceLockScreen.sHaokanLockView.getLayoutParams();
-        if (params == null) {
-            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
-        }
-        params.height = mScreenH;
-        ServiceLockScreen.sHaokanLockView.setLayoutParams(params);
+//        ViewGroup.LayoutParams params = ServiceLockScreen.sHaokanLockView.getLayoutParams();
+//        if (params == null) {
+//            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
+//        }
+//        params.height = mScreenH;
+//        ServiceLockScreen.sHaokanLockView.setLayoutParams(params);
     }
 
     private void initRecommendPageView() {
-        mRecommendPage = findViewById(R.id.cv_recommendpage);
+        mRecommendPage = (CV_RecommendPage) findViewById(R.id.cv_recommendpage);
+        mRecommendPage.setActivityLockScreen(this);
+        mRecommendPage.onHide();
 
         ViewGroup.LayoutParams params = mRecommendPage.getLayoutParams();
         if (params == null) {
-            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
         }
         params.height = mScreenH;
         mRecommendPage.setLayoutParams(params);
+
+//        RecyclerView recyclerView = mRecommendPage.getRecyclerView();
+//        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                int action = event.getAction();
+//                if (mVelocityTracker == null) {
+//                    mVelocityTracker = VelocityTracker.obtain();
+//                }
+//
+//                if (action == MotionEvent.ACTION_DOWN) {
+//                    mVelocityTracker.clear();
+//                    if (mVelocityTracker != null) {
+//                        mVelocityTracker.addMovement(event);
+//                    }
+//                } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+//                    int scrollY = mScrollView.getScrollY();
+//                    if (mVelocityTracker != null) {
+//                        mVelocityTracker.addMovement(event);
+//                    }
+//
+//                    if (scrollY > 0 && scrollY < mScreenH) {
+//                        mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+//                        int initialVelocity = (int) mVelocityTracker.getYVelocity(); //计算抬手时速度, 向上滑小于0, 向下滑大于0
+//                        LogHelper.d("wangzixu", "ActivityLockScreen recyclerView initialVelocity = " + initialVelocity);
+//
+//                        if (mIsRecommendPage) {
+//                            if (initialVelocity > 1000 || scrollY < mScreenH*3/4) { //下滑fling, 或者下滑过1/4
+//                                mScrollView.smoothScrollTo(0, 0);
+//                                mIsRecommendPage = false;
+//                            } else {
+//                                mScrollView.smoothScrollTo(0, mScreenH);
+//                                mIsRecommendPage = true;
+//                            }
+//                        } else {
+//                            if (initialVelocity < -1000 || scrollY > mScreenH / 4) {//上滑fling, 或者上滑过1/4
+//                                mScrollView.smoothScrollTo(0, mScreenH);
+//                                mIsRecommendPage = true;
+//                            } else {
+//                                mScrollView.smoothScrollTo(0, 0);
+//                                mIsRecommendPage = false;
+//                            }
+//                        }
+//                        return true;
+//                    }
+//                } else {
+//                    if (mVelocityTracker != null) {
+//                        mVelocityTracker.addMovement(event);
+//                    }
+//                }
+//                return false;
+//            }
+//        });
     }
 
     @Override
@@ -159,55 +224,73 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
 
     //控制向上滑动的逻辑begin
-    private float mDownY;
-    private boolean mIsScroll;
-    private boolean mIntercepe;
+    private float mLastY;
+//    private boolean mIntercepte;
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
+    public boolean dispatchTouchEvent(MotionEvent event) {
         if (ServiceLockScreen.sHaokanLockView.isLocked()) {
-            return mLockScreenLayout.dispatchTouchEvent(ev);
+            return mLockScreenLayout.dispatchTouchEvent(event);
         } else {
-//            int action = ev.getAction();
-//            float y = ev.getY();
-//            switch (action) {
-//                case MotionEvent.ACTION_DOWN:
-//                    mDownY = y;
-//                    mIntercepe = mRootView.dispatchTouchEvent(ev);
-//                    return mIntercepe;
-//                case MotionEvent.ACTION_MOVE:
-//                    float deltaY = mDownY - y;
-//                    if (deltaY > 20 || mIsScroll) {
-//                        mIsScroll = true;
-//                        deltaY = deltaY - 15;
-//                        mScrollView.scrollTo(0, (int) deltaY);
-//                    }
-//                    mIntercepe = mRootView.dispatchTouchEvent(ev);
-//                    return mIntercepe;
-//                case MotionEvent.ACTION_UP:
-//                case MotionEvent.ACTION_CANCEL:
-//                    if (mIsScroll) {
-//                        mIsScroll = false;
-//                        if (mUnLockImageView != null) { //防止当前的imageview响应长按事件
-//                            mUnLockImageView.setStartLongClick(false);
-//                        }
-//
-//                        int scrollY = mScrollView.getScrollY();
-//                        if (scrollY > 100) {
-//                            if (scrollY > mScreenH / 3) {
-//                                mScrollView.smoothScrollTo(0, mScreenH);
-//                            } else {
-//                                mScrollView.smoothScrollTo(0, 0);
-//                            }
-//                        } else {
-//                            mScrollView.scrollTo(0, 0);
-//                        }
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-            return mScrollView.dispatchTouchEvent(ev);
+            int action = event.getAction();
+            if (mVelocityTracker == null) {
+                mVelocityTracker = VelocityTracker.obtain();
+            }
+
+            if (action == MotionEvent.ACTION_DOWN) {
+                mLastY = event.getY();
+                mVelocityTracker.clear();
+                if (mVelocityTracker != null) {
+                    mVelocityTracker.addMovement(event);
+                }
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                int scrollY = mScrollView.getScrollY();
+                if (mVelocityTracker != null) {
+                    mVelocityTracker.addMovement(event);
+                }
+
+                //如果当前在推荐和锁屏页中间, 拦截掉事件, 自己处理. 其他情况都交友系统处理
+                if (scrollY > 0 && scrollY < mScreenH) {
+                    mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+                    int initialVelocity = (int) mVelocityTracker.getYVelocity(); //计算抬手时速度, 向上滑小于0, 向下滑大于0
+                    LogHelper.d("wangzixu", "ActivityLockScreen recyclerView initialVelocity = " + initialVelocity);
+
+                    if (mIsRecommendPage) {
+                        if (initialVelocity > 1000 || scrollY < mScreenH*3/4) { //下滑fling, 或者下滑过1/4
+                            mScrollView.smoothScrollTo(0, 0);
+                            mIsRecommendPage = false;
+                            mRecommendPage.onHide();
+                        } else {
+                            mScrollView.smoothScrollTo(0, mScreenH);
+                            mIsRecommendPage = true;
+                        }
+                    } else {
+                        if (initialVelocity < -1000 || scrollY > mScreenH / 4) {//上滑fling, 或者上滑过1/4
+                            mScrollView.smoothScrollTo(0, mScreenH);
+                            mIsRecommendPage = true;
+                            mRecommendPage.onShow("美女");
+                        } else {
+                            mScrollView.smoothScrollTo(0, 0);
+                            mIsRecommendPage = false;
+                        }
+                    }
+                    return true;
+                }
+            } else {
+                float y = event.getY();
+                if (mVelocityTracker != null) {
+                    mVelocityTracker.addMovement(event);
+                }
+                int scrollY = mScrollView.getScrollY();
+//                LogHelper.d("wangzixu", "ActivityLockScreen recyclerView scrollY = " + scrollY);
+                if ((scrollY > 0 && scrollY < mScreenH)) { //如果当前在推荐和锁屏页中间, 拦截掉事件, 自己处理. 其他情况都交友系统处理
+                    mScrollView.scrollBy(0, (int) (mLastY - y));
+                    mLastY = y;
+                    return true;
+                }
+                mLastY = y;
+            }
+            return mScrollView.dispatchTouchEvent(event);
         }
     }
     //控制向上滑动的逻辑end
@@ -220,6 +303,15 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         } else {
             promptRecommenAnim();
         }
+    }
+
+    public void backToDetailPage() {
+        mScrollView.smoothScrollTo(0, 0);
+    }
+
+    public void backToLockScreenPage() {
+        ServiceLockScreen.sHaokanLockView.intoLockScreenState(false);
+        backToDetailPage();
     }
 
     public void promptRecommenAnim() {
