@@ -27,7 +27,7 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
         mInflater = LayoutInflater.from(context);
     }
 
-    public void setData(List<BeanTimelines> model) {
+    public void addData(List<BeanTimelines> model) {
         mList.addAll(model);
     }
 

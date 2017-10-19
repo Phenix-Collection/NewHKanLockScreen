@@ -40,10 +40,11 @@ public class ModelTimelines {
         body.imgBigUrlSize = App.sImgSize_Big;
 
         RequestHeader<RequestBody_Timelines> header = new RequestHeader(body);
+        header.isFageHttp(true);
         requestEntity.setHeader(header);
         requestEntity.setBody(body);
 
-        Observable<ResponseEntity<ResponseBody_Timelines>> observable = HttpRetrofitManager.getInstance().getRetrofitService().getTimelinesData("http://172.18.0.114:3009/app/list", requestEntity);
+        Observable<ResponseEntity<ResponseBody_Timelines>> observable = HttpRetrofitManager.getInstance().getRetrofitService().getTimelinesData(UrlsUtil.getTimelineUrl(), requestEntity);
         observable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
