@@ -199,8 +199,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
     @Override
     public void onPageSelected(int position) {
-        mCurrentPosition = position%mData.size();
         App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
+        mCurrentPosition = position%mData.size();
         mCurrentImgBean = mData.get(mCurrentPosition);
         if (mCurrentImgBean == null) {
             return;
@@ -398,6 +398,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             public void onAnimationEnd(Animator animation) {
                 mIsAnimnating = false;
                 mIsCaptionShow = false;
+                mLayoutMainBottom.setAlpha(1.0f);
+                mLayoutMainTop.setAlpha(1.0f);
                 mLayoutMainBottom.setVisibility(View.GONE);
                 mLayoutMainTop.setVisibility(View.GONE);
             }

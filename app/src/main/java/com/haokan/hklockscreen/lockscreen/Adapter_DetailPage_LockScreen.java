@@ -40,6 +40,21 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
         }
     }
 
+    public CV_UnLockImageView getCurrentImageView(int position) {
+        ViewHolder holder = null;
+        for (int i = 0; i < mHolders.size(); i++) {
+            ViewHolder temp = mHolders.get(i);
+            if (temp.position == position) {
+                holder = temp;
+                break;
+            }
+        }
+        if (holder != null) {
+            return (CV_UnLockImageView) holder.image;
+        }
+        return null;
+    }
+
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         position = position%mData.size();

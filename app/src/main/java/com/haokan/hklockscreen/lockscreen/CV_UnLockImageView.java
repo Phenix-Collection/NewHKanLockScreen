@@ -158,18 +158,40 @@ public class CV_UnLockImageView extends AppCompatImageView {
     }
 
 
+    private boolean mStartLongClick;
+    private boolean mHasLongClicked;
+    public void setStartLongClick(boolean startLongClick) {
+        mStartLongClick = startLongClick;
+    }
+    private Runnable mLongClickRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mStartLongClick && mOnLongClickListener != null) {
+                mOnLongClickListener.onLongClick(CV_UnLockImageView.this);
+                mHasLongClicked = true;
+            }
+        }
+    };
+
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
         int action = event.getAction();
-        int y = (int) event.getY();
+        int y = (int) event.getRawY();
         if (y < mMinY) {
             mMinY = y;
         }
 
+//        LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION = " + y);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 isTouch = false;
                 mMinY = mDownY = y;
+                mStartLongClick = true;
+
+                if (!mCanUnLock) {
+                    postDelayed(mLongClickRunnable, 800);
+                }
+
                 mDownTime = System.currentTimeMillis();
                 if (mImageBitmap == null) {
                     buildDrawingCache();
@@ -184,13 +206,20 @@ public class CV_UnLockImageView extends AppCompatImageView {
             case MotionEvent.ACTION_MOVE:
                 if (mCanUnLock) {
                     int deltaY = mDownY - y;
-                    if (deltaY > 20 || isTouch) {
+                    if (deltaY > 15 || isTouch) {
                         isTouch = true;
+                        deltaY = deltaY - 15;
     //                    int foreGroundbottom = mHeight - mRadius / 2 - deltaY;
                         int foreGroundbottom = (int) Math.min(mHeight, mHeight - UNLOCK_RADIO * deltaY);
                         calcDisplayRect(foreGroundbottom);
                     } else {
                         isTouch = false;
+                    }
+                } else {
+                    if (mStartLongClick) {
+                        if (Math.abs(mDownY - y) >= 20) {
+                            mStartLongClick = false;
+                        }
                     }
                 }
                 break;
@@ -206,8 +235,10 @@ public class CV_UnLockImageView extends AppCompatImageView {
                         startAnim(mTopRect.bottom, mHeight);
                     }
                 }
-                if (mOnLongClickListener != null && Math.abs(mDownY - y) < 30 && System.currentTimeMillis() - mDownTime > 600) {
-                    mOnLongClickListener.onLongClick(this);
+                mStartLongClick = false;
+                removeCallbacks(mLongClickRunnable);
+                if (mHasLongClicked) {
+                    mHasLongClicked = false;
                     return true;
                 }
                 break;
@@ -257,6 +288,8 @@ public class CV_UnLockImageView extends AppCompatImageView {
         // 4,原图的下半部分，我们需要根据目标屏幕中下半部分方框高所占的比例，来计算出原图中半透明区域的高度：
         float radiusInBitmap = mBitmapH * ((float) mRadius / mHeight);
         mSrcBlurRect.set(0, (int) bottom, mBitmapW, (int) (bottom + radiusInBitmap));
+
+        invalidate();
     }
 
     private void startAnim(int start, final int end) {
