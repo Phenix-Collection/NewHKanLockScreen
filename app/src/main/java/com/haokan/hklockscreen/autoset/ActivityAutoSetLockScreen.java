@@ -7,6 +7,7 @@ import android.provider.Settings;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.main.ActivityTimelines;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.util.CommonUtil;
@@ -33,6 +34,7 @@ public class ActivityAutoSetLockScreen extends ActivityBase implements View.OnCl
     private void initView() {
         mBtnGoSet = findViewById(R.id.goset);
         mBtnGoSet.setOnClickListener(this);
+        findViewById(R.id.gomain).setOnClickListener(this);
 
         mRadarView = (CV_ScanRadarView) findViewById(R.id.radarview);
 //        radarView.setRadarRadius(DisplayUtil.dip2px(this, 170));
@@ -58,9 +60,13 @@ public class ActivityAutoSetLockScreen extends ActivityBase implements View.OnCl
             return;
         }
         switch (v.getId()) {
+            case R.id.gomain:
+                Intent i = new Intent(this, ActivityTimelines.class);
+                startActivity(i);
+                break;
             case R.id.goset:
                 try {
-                    Intent i = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                    i = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
                     startActivityForResult(i, 101);
                     overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
 
