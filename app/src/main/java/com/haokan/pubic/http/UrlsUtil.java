@@ -40,4 +40,19 @@ public class UrlsUtil {
     public static String getRecommendUrl() {
         return "http://api-m-gray.levect.com/app/list/img";
     }
+
+
+    /**
+     * 发哥的接口域名
+     */
+    public static final String URL_HOST_fage = "http://172.18.0.114:3009/app"; //测试地址
+
+    /**
+     * Timelines的网络地址
+     *
+     * @return
+     */
+    public static String getTimelineUrl() {
+        return URL_HOST_fage + "/list";
+    }
 }

@@ -190,4 +190,14 @@ public class RequestHeader<RequestBody> {
     public void setDid(String did) {
         this.did = did;
     }
+
+    /**
+     * 如果是发哥写的接口需要改变签名规则
+     * @param isFage
+     */
+    public void isFageHttp(boolean isFage) {
+        if (isFage){
+            sign = SecurityUtil.md5(timeStamp + imei + companyId);
+        }
+    }
 }
