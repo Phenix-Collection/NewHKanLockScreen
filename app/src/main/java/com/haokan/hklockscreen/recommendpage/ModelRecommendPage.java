@@ -7,8 +7,8 @@ import com.haokan.pubic.http.HttpRetrofitManager;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.UrlsUtil;
 import com.haokan.pubic.http.onDataResponseListener;
-import com.haokan.pubic.http.request.RequestEntity_FaGe;
-import com.haokan.pubic.http.request.RequestHeader_FaGe;
+import com.haokan.pubic.http.request.RequestEntity;
+import com.haokan.pubic.http.request.RequestHeader;
 import com.haokan.pubic.http.response.ResponseEntity;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class ModelRecommendPage {
 
         listener.onStart();
 
-        final RequestEntity_FaGe<RequestBody_Recommend> requestEntity = new RequestEntity_FaGe<>();
+        final RequestEntity<RequestBody_Recommend> requestEntity = new RequestEntity<>();
         final RequestBody_Recommend body = new RequestBody_Recommend();
         body.imageSize = App.sImgSize_Small;
         body.eid = App.sEID;
@@ -37,7 +37,8 @@ public class ModelRecommendPage {
         body.size = 10;
         body.typeName = typeName;
 
-        RequestHeader_FaGe<RequestBody_Recommend> header = new RequestHeader_FaGe(body);
+        RequestHeader<RequestBody_Recommend> header = new RequestHeader(body);
+        header.isFageHttp(true);
         requestEntity.setHeader(header);
         requestEntity.setBody(body);
 

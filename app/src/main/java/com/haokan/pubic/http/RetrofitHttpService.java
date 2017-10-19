@@ -35,7 +35,7 @@ public interface RetrofitHttpService {
      * 点击换一换
      */
     @POST
-    Observable<ResponseEntity<ResponseBody_Recommend>> getRecommendData(@Url String url, @Body RequestEntity_FaGe<RequestBody_Recommend> requestEntity);
+    Observable<ResponseEntity<ResponseBody_Recommend>> getRecommendData(@Url String url, @Body RequestEntity<RequestBody_Recommend> requestEntity);
 
     /**
      * 点击换一换
