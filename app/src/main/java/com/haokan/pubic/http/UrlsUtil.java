@@ -45,7 +45,7 @@ public class UrlsUtil {
     /**
      * 发哥的接口域名
      */
-    public static final String URL_HOST_fage = "http://172.18.0.114:3009/app"; //测试地址
+    public static final String URL_HOST_fage = "http://api-m-gray.levect.com/app"; //测试地址
 
     /**
      * Timelines的网络地址
