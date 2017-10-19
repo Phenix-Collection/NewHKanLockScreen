@@ -19,7 +19,7 @@
             android:background="#999999" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -31,22 +31,22 @@
             android:textSize="28sp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tv_year_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView"
-            android:layout_alignBottom="@+id/textView"
-            android:layout_toEndOf="@+id/textView"
+            android:layout_alignBaseline="@+id/tv_day"
+            android:layout_alignBottom="@+id/tv_day"
+            android:layout_toEndOf="@+id/tv_day"
             android:text="2017年10月"
             android:textColor="#333333"
             android:textSize="11sp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/tv_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/textView3"
-            android:layout_alignStart="@+id/textView3"
+            android:layout_above="@+id/tv_year_month"
+            android:layout_alignStart="@+id/tv_year_month"
             android:text="Monday"
             android:textColor="#333333"
             android:textSize="12sp" />
@@ -115,51 +115,6 @@
                 android:scaleType="centerCrop" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="96.5dp"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="96.5dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="#d8d8d8"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="96.5dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="#d8d8d8"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="96.5dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="#d8d8d8"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="96.5dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="#d8d8d8"
-                android:scaleType="centerCrop" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="96.5dp"
-                android:layout_weight="1"
-                android:background="#d8d8d8"
-                android:scaleType="centerCrop" />
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -175,6 +130,7 @@
         android:paddingTop="10dp">
 
         <TextView
+            android:id="@+id/tv_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="全部"

@@ -37,6 +37,11 @@ public class AdapterTimelinesImages extends RecyclerView.Adapter<AdapterTimeline
         mList.addAll(model);
     }
 
+    public void setData(List<MainImageBean> model) {
+        mList.clear();
+        mList.addAll(model);
+    }
+
     @Override
     public MyRecycleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 

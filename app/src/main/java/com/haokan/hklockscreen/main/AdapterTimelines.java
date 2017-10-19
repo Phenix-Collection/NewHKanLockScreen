@@ -14,7 +14,10 @@ import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.ToastManager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,10 +43,10 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
         MyRecycleViewHolder vh = null;
         switch (viewType) {
             case BeanTimelines.TYPE_TITLE:
-                vh = new MyRecycleViewHolderOne(mInflater.inflate(R.layout.item_timeline1, parent, false));
+                vh = new MyRecycleViewHolderTitle(mInflater.inflate(R.layout.item_timeline1, parent, false));
                 break;
             case BeanTimelines.TYPE_ITEM:
-                vh = new MyRecycleViewHolderTwo(mInflater.inflate(R.layout.item_timeline2, parent, false));
+                vh = new MyRecycleViewHolderImages(mInflater.inflate(R.layout.item_timeline2, parent, false));
                 break;
         }
         return vh;
@@ -78,9 +81,9 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
         public abstract void bindHolder(BeanTimelines data);
     }
 
-    public class MyRecycleViewHolderOne extends MyRecycleViewHolder {
+    public class MyRecycleViewHolderTitle extends MyRecycleViewHolder {
 
-        public MyRecycleViewHolderOne(View itemView) {
+        public MyRecycleViewHolderTitle(View itemView) {
             super(itemView);
 
         }
@@ -90,14 +93,47 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
         }
     }
 
-    public class MyRecycleViewHolderTwo extends MyRecycleViewHolder {
+    public class MyRecycleViewHolderImages extends MyRecycleViewHolder {
         private View relativeLayout3;
         private RecyclerView rv_images;
         private AdapterTimelinesImages myAdapter;
+        private TextView tv_all;
+        private TextView tv_day, tv_year_month, tv_week;
 
-        public MyRecycleViewHolderTwo(View itemView) {
+        private int showCount = 5;
+        private List<MainImageBean> allListData;
+        private List<MainImageBean> showListData;
+        private boolean isShowAll;
+
+        public MyRecycleViewHolderImages(View itemView) {
             super(itemView);
             relativeLayout3 = itemView.findViewById(R.id.relativeLayout3);
+            relativeLayout3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (allListData != null && allListData.size() > 0 && showListData != null && showListData.size() > 0) {
+                        if (isShowAll) {
+                            myAdapter.setData(showListData);
+                            myAdapter.notifyDataSetChanged();
+                            isShowAll = false;
+                            tv_all.setText("全部");
+                            // TODO: 2017/10/19
+                        } else {
+                            myAdapter.setData(allListData);
+                            myAdapter.notifyDataSetChanged();
+                            isShowAll = true;
+                            tv_all.setText("收起");
+                            // TODO: 2017/10/19
+                        }
+                    }
+                }
+            });
+
+            tv_all = (TextView) itemView.findViewById(R.id.tv_all);
+            tv_day = (TextView) itemView.findViewById(R.id.tv_day);
+            tv_year_month = (TextView) itemView.findViewById(R.id.tv_year_month);
+            tv_week = (TextView) itemView.findViewById(R.id.tv_week);
+
             rv_images = (RecyclerView) itemView.findViewById(R.id.rv_images);
             rv_images.setLayoutManager(new GridLayoutManager(context, 5));
             rv_images.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -118,27 +154,39 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
             rv_images.setAdapter(myAdapter);
         }
 
-        private int maxShowCount = 5;
-        private int showCount;
-
         @Override
         public void bindHolder(final BeanTimelines data) {
-            List<MainImageBean> list = data.list.subList(0, maxShowCount);
-            showCount = showCount + list.size();
-            myAdapter.addData(list);
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = sdf.parse(data.createdAt);
+                sdf = new SimpleDateFormat("yyyy年MM月|dd|E");
+                String ddd = sdf.format(date);
+                String[] ss = ddd.split("\\|");
+                tv_year_month.setText(ss[0]);
+                tv_day.setText(ss[1]);
+                tv_week.setText(ss[2]);
+            } catch (ParseException e) {
+                ToastManager.showShort(context, "日期转换失败了，请联系管理员处理");
+                e.printStackTrace();
+            } catch (Exception e) {
+                ToastManager.showShort(context, "日期转换失败了，请联系管理员处理");
+                e.printStackTrace();
+            }
+
+            showListData = data.list.subList(0, showCount);
+            allListData = data.list;
+            myAdapter.addData(showListData);
+
 
             if (data.list != null && data.list.size() > showCount) {
                 relativeLayout3.setVisibility(View.VISIBLE);
-                relativeLayout3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        List<MainImageBean> list = data.list.subList(maxShowCount, data.list.size());
-                        showCount = showCount + list.size();
-                        myAdapter.addData(list);
-                        myAdapter.notifyDataSetChanged();
-                        relativeLayout3.setVisibility(View.GONE);
-                    }
-                });
+                if (isShowAll) {
+                    tv_all.setText("收起");
+                    // TODO: 2017/10/19
+                } else {
+                    tv_all.setText("全部");
+                    // TODO: 2017/10/19
+                }
             } else {
                 relativeLayout3.setVisibility(View.GONE);
             }
