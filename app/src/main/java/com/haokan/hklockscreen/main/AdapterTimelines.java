@@ -118,18 +118,22 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
             rv_images.setAdapter(myAdapter);
         }
 
-        int maxShowCount = 5;
+        private int maxShowCount = 5;
+        private int showCount;
+
         @Override
         public void bindHolder(final BeanTimelines data) {
             List<MainImageBean> list = data.list.subList(0, maxShowCount);
+            showCount = showCount + list.size();
             myAdapter.addData(list);
 
-            if (data.list != null && data.list.size() > maxShowCount) {
+            if (data.list != null && data.list.size() > showCount) {
                 relativeLayout3.setVisibility(View.VISIBLE);
                 relativeLayout3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         List<MainImageBean> list = data.list.subList(maxShowCount, data.list.size());
+                        showCount = showCount + list.size();
                         myAdapter.addData(list);
                         myAdapter.notifyDataSetChanged();
                         relativeLayout3.setVisibility(View.GONE);

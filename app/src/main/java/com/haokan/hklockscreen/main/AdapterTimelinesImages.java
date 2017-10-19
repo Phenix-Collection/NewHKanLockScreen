@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.util.DisplayUtil;
@@ -78,7 +79,7 @@ public class AdapterTimelinesImages extends RecyclerView.Adapter<AdapterTimeline
         }
 
         public void bindHolder(MainImageBean data) {
-
+            Glide.with(context).load(data.imgBigUrl).into(iv_image);
         }
     }
 
