@@ -40,7 +40,7 @@ public class ActivityTimelines extends ActivityBase {
                 }
             }
         });
-        layoutManager = new LinearLayoutManager(this, GridLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new AdapterTimelines(this);
         mRecyclerView.setAdapter(mAdapter);
