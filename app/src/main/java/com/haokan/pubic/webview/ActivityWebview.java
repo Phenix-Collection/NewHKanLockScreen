@@ -316,7 +316,7 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
                 break;
             case R.id.close:
                 finish();
-                overridePendingTransition(R.anim.activity_in_left2right, R.anim.activity_out_left2right);
+                closeActivityAnim();
                 break;
             default:
                 break;
@@ -329,23 +329,8 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
             mWebView.goBack();
         } else {
             super.onBackPressed();
-            overridePendingTransition(R.anim.activity_in_left2right, R.anim.activity_out_left2right);
+            closeActivityAnim();
         }
-    }
-
-    @Override
-    public void finish() {
-        LogHelper.i("WebViewActivity", "finish ----");
-        //出现缩放放大按钮时切换activity会内存泄露，必须先移除所有view
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                ViewGroup view = (ViewGroup) getWindow().getDecorView();
-//                view.removeAllViews();
-//            }
-//        }, 300);
-        super.finish();
-        overridePendingTransition(R.anim.activity_in_left2right, R.anim.activity_out_left2right);
     }
 
     @Override

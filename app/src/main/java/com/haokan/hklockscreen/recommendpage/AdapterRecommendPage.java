@@ -1,8 +1,6 @@
 package com.haokan.hklockscreen.recommendpage;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
-import com.haokan.pubic.webview.ActivityWebview;
 
 import java.util.ArrayList;
 
@@ -23,11 +20,13 @@ import java.util.ArrayList;
 public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter<AdapterRecommendPage.ViewHolder> {
     private ArrayList<BeanRecommendItem> mData = new ArrayList<>();
     private Context mContext;
+    private CV_RecommendPage mRecommendPage;
 //    private int mItemW;
 
-    public AdapterRecommendPage(Context context, ArrayList<BeanRecommendItem> data) {
+    public AdapterRecommendPage(Context context, ArrayList<BeanRecommendItem> data, CV_RecommendPage recommendPage) {
         mContext = context;
         mData = data;
+        mRecommendPage = recommendPage;
 //        mItemW = context.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(context,20);
     }
 
@@ -146,12 +145,7 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(mContext, ActivityWebview.class);
-            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBean.urlClick);
-            mContext.startActivity(intent);
-            if (mContext instanceof Activity) {
-                ((Activity)mContext).overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
-            }
+            mRecommendPage.startWebview(mBean.urlClick);
         }
     }
 }

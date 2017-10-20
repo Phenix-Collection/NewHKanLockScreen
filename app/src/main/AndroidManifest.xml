@@ -52,13 +52,18 @@
         </activity>
 
         <activity
+            android:name=".lockscreensetting.ActivityLockSetting"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name=".autoset.ActivityPrompt_AutoStart"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
 
         <activity android:name=".lockscreen.ActivityLockScreen"
-                  android:launchMode="singleInstance"
+                  android:launchMode="singleTop"
                   android:theme="@style/myTransparent"
                   android:screenOrientation="portrait">
         </activity>

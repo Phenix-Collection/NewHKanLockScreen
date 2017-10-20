@@ -6,7 +6,7 @@
         <!--android:toYDelta="0%p"-->
         <!--android:duration="500"/>-->
     <alpha
-        android:interpolator="@android:interpolator/accelerate_cubic"
+        android:interpolator="@android:interpolator/linear"
         android:fromAlpha="1.0"
         android:toAlpha="1.0" />
 

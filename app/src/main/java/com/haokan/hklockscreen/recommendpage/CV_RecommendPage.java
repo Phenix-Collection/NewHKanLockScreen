@@ -1,6 +1,7 @@
 package com.haokan.hklockscreen.recommendpage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.ToastManager;
+import com.haokan.pubic.webview.ActivityWebview;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +103,7 @@ public class CV_RecommendPage extends FrameLayout implements View.OnClickListene
             }
         });
 
-        mAdapter = new AdapterRecommendPage(mContext, mData);
+        mAdapter = new AdapterRecommendPage(mContext, mData, this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -297,6 +299,17 @@ public class CV_RecommendPage extends FrameLayout implements View.OnClickListene
     ActivityLockScreen mActivityLockScreen;
     public void setActivityLockScreen(ActivityLockScreen activityLockScreen) {
         mActivityLockScreen = activityLockScreen;
+    }
+
+    public void startWebview(String url) {
+        Intent intent = new Intent(mContext, ActivityWebview.class);
+        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, url);
+        if (mActivityLockScreen != null) {
+            mActivityLockScreen.startActivity(intent);
+            mActivityLockScreen.startActivityAnim();
+        } else {
+            mContext.startActivity(intent);
+        }
     }
 
     @Override

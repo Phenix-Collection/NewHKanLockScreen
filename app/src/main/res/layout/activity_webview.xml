@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/back"
-            android:layout_width="44dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:scaleType="center"
             android:background="@drawable/selector_touming_borderless"
@@ -24,7 +24,8 @@
 
         <ImageView
             android:id="@+id/close"
-            android:layout_width="38dp"
+            android:layout_width="35dp"
+            android:layout_marginRight="5dp"
             android:layout_height="match_parent"
             android:scaleType="center"
             android:background="@drawable/selector_touming_borderless"

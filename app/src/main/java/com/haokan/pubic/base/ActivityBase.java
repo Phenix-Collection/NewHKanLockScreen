@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.haokan.hklockscreen.R;
 import com.umeng.analytics.MobclickAgent;
 
 
@@ -41,6 +42,14 @@ public class ActivityBase extends AppCompatActivity {
 
     public boolean isDestory() {
         return mIsDestory;
+    }
+
+    public void startActivityAnim() {
+        overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+    }
+
+    public void closeActivityAnim() {
+        overridePendingTransition(R.anim.activity_in_left2right, R.anim.activity_out_left2right);
     }
 
     //*******************4种提示框相关的布局 begin*************************

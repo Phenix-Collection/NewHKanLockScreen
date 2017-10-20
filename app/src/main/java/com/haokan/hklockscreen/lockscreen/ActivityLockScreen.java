@@ -1,7 +1,10 @@
 package com.haokan.hklockscreen.lockscreen;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -12,6 +15,7 @@ import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.haokan.hklockscreen.R;
@@ -31,6 +35,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private View mRootView;
     private FrameLayout mLockScreenLayout;
     private int mScreenH;
+    private int mScreenW;
     private boolean mIsRecommendPage;
 
     private int mTouchSlop;
@@ -49,7 +54,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         disableKeyGuard();
 //        mScreenH = getResources().getDisplayMetrics().heightPixels;
 
-        mScreenH = DisplayUtil.getRealScreenPoint(this).y;
+        Point point = DisplayUtil.getRealScreenPoint(this);
+        mScreenW = point.x;
+        mScreenH = point.y;
 
         initView();
         initLockScreenView();
@@ -122,16 +129,17 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
     private void initLockScreenView() {
         mLockScreenLayout = (FrameLayout) findViewById(R.id.lockscreen_content);
-        ViewGroup.LayoutParams params = mLockScreenLayout.getLayoutParams();
-        if (params == null) {
-            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
-        }
-        params.height = mScreenH;
-        mLockScreenLayout.setLayoutParams(params);
+//        ViewGroup.LayoutParams params = mLockScreenLayout.getLayoutParams();
+//        if (params == null) {
+//            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
+//        }
+//        params.height = mScreenH;
+//        mLockScreenLayout.setLayoutParams(params);
 
         if (ServiceLockScreen.sHaokanLockView == null) {
             ServiceLockScreen.sHaokanLockView = new CV_DetailPage_LockScreen(this.getApplicationContext());
         }
+
         ServiceLockScreen.sHaokanLockView.setActivity(this);
         ServiceLockScreen.sHaokanLockView.setOnLockScreenStateListener(this);
         ViewParent parent = ServiceLockScreen.sHaokanLockView.getParent();
@@ -139,15 +147,16 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             ((ViewGroup)parent).removeView(ServiceLockScreen.sHaokanLockView);
         }
         mLockScreenLayout.addView(ServiceLockScreen.sHaokanLockView);
+
         ServiceLockScreen.sHaokanLockView.intoLockScreenState(true);
 
 
-//        ViewGroup.LayoutParams params = ServiceLockScreen.sHaokanLockView.getLayoutParams();
-//        if (params == null) {
-//            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
-//        }
-//        params.height = mScreenH;
-//        ServiceLockScreen.sHaokanLockView.setLayoutParams(params);
+        ViewGroup.LayoutParams params = ServiceLockScreen.sHaokanLockView.getLayoutParams();
+        if (params == null) {
+            params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
+        }
+        params.height = mScreenH;
+        ServiceLockScreen.sHaokanLockView.setLayoutParams(params);
     }
 
     private void initRecommendPageView() {
@@ -161,6 +170,15 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         }
         params.height = mScreenH;
         mRecommendPage.setLayoutParams(params);
+
+        //为了处理一个bug --- 锁屏view不触发layout, 第一帧不绘制
+        App.sMainHanlder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mScrollView.scrollTo(0, 1);
+                mScrollView.scrollTo(0, 0);
+            }
+        }, 150);
 
 //        RecyclerView recyclerView = mRecommendPage.getRecyclerView();
 //        recyclerView.setOnTouchListener(new View.OnTouchListener() {
@@ -221,6 +239,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         super.onNewIntent(intent);
         LogHelper.d("wangzixu", "ActivityLockScreen onNewIntent");
         ServiceLockScreen.sHaokanLockView.intoLockScreenState(true);
+        mScrollView.scrollTo(0,0);
+        mRecommendPage.onHide();
     }
 
     //控制向上滑动的逻辑begin
@@ -244,6 +264,10 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     mVelocityTracker.addMovement(event);
                 }
             } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+                if (mIsAnimingPrompt) {
+                    return true;
+                }
+
                 int scrollY = mScrollView.getScrollY();
                 if (mVelocityTracker != null) {
                     mVelocityTracker.addMovement(event);
@@ -277,6 +301,14 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     return true;
                 }
             } else {
+                if (mIsAnimingPrompt) {
+                    return true;
+                }
+
+                if (ServiceLockScreen.sHaokanLockView.isShowLongClickLayout()) {
+                    return true;
+                }
+
                 float y = event.getY();
                 if (mVelocityTracker != null) {
                     mVelocityTracker.addMovement(event);
@@ -301,7 +333,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         if (isLock) {
             mUnLockImageView = ServiceLockScreen.sHaokanLockView.getUnLockView();
         } else {
-            promptRecommenAnim();
+            App.sMainHanlder.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    promptRecommenAnim();
+                }
+            }, 250);
         }
     }
 
@@ -314,8 +351,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         backToDetailPage();
     }
 
+    private boolean mIsAnimingPrompt;
     public void promptRecommenAnim() {
-        final ValueAnimator animator = ValueAnimator.ofInt(0, 100);
+        final ValueAnimator animator = ValueAnimator.ofInt(0, DisplayUtil.dip2px(this, 40));
         animator.setDuration(300);
         animator.setRepeatMode(ValueAnimator.REVERSE);
         animator.setRepeatCount(1);
@@ -328,9 +366,17 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             }
         });
 
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsAnimingPrompt = false;
+            }
+        });
+
         App.sMainHanlder.post(new Runnable() {
             @Override
             public void run() {
+                mIsAnimingPrompt = true;
                 animator.start();
             }
         });

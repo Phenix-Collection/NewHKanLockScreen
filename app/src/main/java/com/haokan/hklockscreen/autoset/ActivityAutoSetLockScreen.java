@@ -7,7 +7,7 @@ import android.provider.Settings;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreen.ActivityTestRecommend;
+import com.haokan.hklockscreen.lockscreensetting.ActivityLockSetting;
 import com.haokan.hklockscreen.main.ActivityTimelines;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
@@ -68,7 +68,7 @@ public class ActivityAutoSetLockScreen extends ActivityBase implements View.OnCl
             case R.id.goset:
                 try {
 //                    i = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                    i = new Intent(this, ActivityTestRecommend.class);
+                    i = new Intent(this, ActivityLockSetting.class);
                     startActivityForResult(i, 101);
                     overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
 

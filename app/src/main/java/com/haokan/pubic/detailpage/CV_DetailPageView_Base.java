@@ -51,8 +51,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     //外链需要随机的背景色, 所以new个背景, 随机设置颜色
     protected GradientDrawable mTvLinkBg;
     protected View mBottomBar;
-    protected View mTvBottomLikeParent;
-    protected TextView mTvBottomLike;
+    protected View mTvBottomDownloadParent;
+    protected TextView mTvBottomDownload;
     protected View mDownloadLayout;
     protected View mDownloadLayoutContent;
     protected View mDownloadLayoutBgView;
@@ -105,10 +105,11 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
         //单图区域
         mLayoutCaption = mLayoutMainBottom.findViewById(R.id.layout_caption);
+        mLayoutCaption.setOnClickListener(this);
         mTvDescSimple = (TextView) mLayoutMainBottom.findViewById(R.id.tv_desc_simple);
-        mTvDescSimple.setOnClickListener(this);
         mTvDescAll = (TextView) mLayoutMainBottom.findViewById(R.id.tv_desc_all);
-        mTvDescAll.setOnClickListener(this);
+//        mTvDescSimple.setOnClickListener(this);
+//        mTvDescAll.setOnClickListener(this);
 
         mLayoutTitleLick = mLayoutMainBottom.findViewById(R.id.layout_title);
         mTvTitlle = (TextView) mLayoutTitleLick.findViewById(R.id.tv_title);
@@ -123,9 +124,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mLayoutMainBottom.findViewById(R.id.bottom_back).setOnClickListener(this);//返回
         mLayoutMainBottom.findViewById(R.id.setting).setOnClickListener(this);//设置
 
-        mTvBottomLikeParent = mLayoutMainBottom.findViewById(R.id.bottom_like);//赞
-        mTvBottomLike = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_like_title);
-        mTvBottomLikeParent.setOnClickListener(this);
+        mTvBottomDownloadParent = mLayoutMainBottom.findViewById(R.id.bottom_download);//赞
+        mTvBottomDownload = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_download_title);
+        mTvBottomDownloadParent.setOnClickListener(this);
         mTvBottomCollectParent = mLayoutMainBottom.findViewById(R.id.bottom_collect);//收藏
         mTvBottomCollect = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_collect_title);
         mTvBottomCollect.setOnClickListener(this);
@@ -215,8 +216,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
     @Override
     public boolean onLongClick(View v) {
-        showDownloadLayout();
-        return true;
+        return false;
     }
 
     @Override
@@ -229,13 +229,16 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 onClickBigImage();
                 break;
             case R.id.tv_link:
+            case R.id.layout_caption:
                 {
                     Intent intent = new Intent(mContext, ActivityWebview.class);
                     intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
-                    mContext.startActivity(intent);
-//                    if (mActivity != null) {
-//                        mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
-//                    }
+                    if (mActivity != null) {
+                        mActivity.startActivity(intent);
+                        mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+                    } else {
+                        mContext.startActivity(intent);
+                    }
                 }
                 break;
             case R.id.tv_desc_all:
@@ -249,7 +252,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             case R.id.bottom_back:
                 onClickBack();
                 break;
-            case R.id.bottom_like:
+            case R.id.bottom_download:
+                //                downloadImage(mCurrentImgBean);
                 break;
             case R.id.bottom_collect:
                 break;
@@ -295,7 +299,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
 
         //处理点赞和收藏了
-        refreshLikedNum(mCurrentImgBean);
         refreshCollectNum(mCurrentImgBean);
 
         String desc = mCurrentImgBean.imgDesc;
@@ -321,10 +324,10 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mTvLink.setBackground(mTvLinkBg);
 
         if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-            mTvLink.setOnClickListener(null);
+//            mTvLink.setOnClickListener(null);
             mTvLink.setVisibility(View.GONE);
         } else {
-            mTvLink.setOnClickListener(this);
+//            mTvLink.setOnClickListener(this);
             mTvLink.setVisibility(View.VISIBLE);
         }
 
@@ -531,16 +534,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             }
         });
         animator.start();
-    }
-
-    /**
-     * 本图是否喜欢
-     */
-    public void refreshLikedNum(MainImageBean bean) {
-        if (bean == null) {
-            return;
-        }
-        mTvBottomLikeParent.setSelected(bean.isLike != 0);
     }
 
     public void refreshCollectNum(MainImageBean bean) {

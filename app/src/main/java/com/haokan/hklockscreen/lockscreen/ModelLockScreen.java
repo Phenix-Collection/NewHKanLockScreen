@@ -214,7 +214,8 @@ public class ModelLockScreen {
 
         final RequestEntity<RequestBody_Switch> requestEntity = new RequestEntity<>();
         final RequestBody_Switch body = new RequestBody_Switch();
-        body.cpIds = "10002,10014,10228";
+        body.cpIds = "10002,10008,10415,10228,10501";
+//        body.cpIds = "";
         body.imageSize = App.sImgSize_Big;
         body.imgSmallSize = App.sImgSize_Small;
         body.eid = App.sEID;

@@ -165,8 +165,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
         @Override
         public void run() {
             if (mStartLongClick && mOnLongClickListener != null) {
-                mOnLongClickListener.onLongClick(CV_UnLockImageView.this);
-                mHasLongClicked = true;
+                mHasLongClicked = mOnLongClickListener.onLongClick(CV_UnLockImageView.this);
             }
         }
     };

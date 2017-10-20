@@ -64,6 +64,7 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
         final ViewHolder holder = new ViewHolder(view);
         CV_UnLockImageView unLockImageView = (CV_UnLockImageView) holder.image;
         unLockImageView.setCanUnLock(mCanUnLock);
+        unLockImageView.setOnLongClickListener(null);//暂时不响应长按, 所以设置为null
         if (mOnLongClickListener != null && mOnLongClickListener instanceof CV_UnLockImageView.onUnLockListener) {
             unLockImageView.setOnUnLockListener((CV_UnLockImageView.onUnLockListener) mOnLongClickListener);
         }

@@ -315,7 +315,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 linkTitle = "";
             } else {
                 if (TextUtils.isEmpty(linkTitle)) {
-                    linkTitle = "查看更过";
+                    linkTitle = "查看更多";
                 }
             }
 
@@ -369,9 +369,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         }
     }
 
+    private int mSwitchDataPage = 1;
     protected void loadSwitchData() {
         final ModelLockScreen modelLockScreen = new ModelLockScreen();
-        modelLockScreen.getSwitchData(mContext, 1, new onDataResponseListener<List<MainImageBean>>() {
+        modelLockScreen.getSwitchData(mContext, mSwitchDataPage, new onDataResponseListener<List<MainImageBean>>() {
             @Override
             public void onStart() {
                 setIvSwitching(true);
@@ -401,8 +402,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 }
 
                 setIvSwitching(false);
-
                 modelLockScreen.saveSwitchData(mContext, mSwitchImgData);
+                mSwitchDataPage++;
             }
 
             @Override
@@ -587,6 +588,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             }
         });
         valueAnimator.start();
+    }
+
+    public boolean isShowLongClickLayout() {
+        return mDownloadLayout.getVisibility() == VISIBLE;
     }
 
 
