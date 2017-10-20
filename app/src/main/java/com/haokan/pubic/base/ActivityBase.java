@@ -66,6 +66,14 @@ public class ActivityBase extends AppCompatActivity {
         mNetErrorLayout = netErrorLayout;
         mServeErrorLayout = serveErrorLayout;
         mNoContentLayout = noContentLayout;
+
+        if (this instanceof View.OnClickListener) {
+            View.OnClickListener listener = (View.OnClickListener) this;
+            mLoadingLayout.setOnClickListener(listener);
+            mNetErrorLayout.setOnClickListener(listener);
+            mServeErrorLayout.setOnClickListener(listener);
+            mNoContentLayout.setOnClickListener(listener);
+        }
     }
 
     public void showLoadingLayout() {

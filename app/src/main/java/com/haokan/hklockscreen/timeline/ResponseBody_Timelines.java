@@ -1,6 +1,4 @@
-package com.haokan.hklockscreen.main;
-
-import com.haokan.pubic.bean.MainImageBean;
+package com.haokan.hklockscreen.timeline;
 
 import java.util.List;
 

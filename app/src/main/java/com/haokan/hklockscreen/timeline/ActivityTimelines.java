@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.main;
+package com.haokan.hklockscreen.timeline;
 
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;

@@ -20,12 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/layout_loading"
-        layout="@layout/layout_loading"/>
+        layout="@layout/layout_loading_heibg"/>
 
     <ImageView
         android:visibility="gone"
         android:id="@+id/layout_fail"
-        android:background="@color/loadingbgcolor"
+        android:background="@color/detailpagebgcolor"
         android:src="@drawable/icon_loadimgfail"
         android:scaleType="centerInside"
         android:layout_centerInParent="true"

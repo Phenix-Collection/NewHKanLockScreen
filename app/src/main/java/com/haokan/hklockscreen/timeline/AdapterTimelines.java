@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.main;
+package com.haokan.hklockscreen.timeline;
 
 import android.content.Context;
 import android.graphics.Rect;

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="loadingbgcolor">#08233d</color>
+    <color name="detailpagebgcolor">#08233d</color>
 
     <color name="default_bg_color">#f4f4f4</color>
     <color name="default_color_clicked">#c1c1c1</color>

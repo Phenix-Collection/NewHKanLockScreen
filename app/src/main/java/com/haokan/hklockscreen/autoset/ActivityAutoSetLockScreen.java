@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreensetting.ActivityLockSetting;
-import com.haokan.hklockscreen.main.ActivityTimelines;
+import com.haokan.hklockscreen.timeline.ActivityTimelines;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.util.CommonUtil;

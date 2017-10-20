@@ -280,7 +280,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     LogHelper.d("wangzixu", "ActivityLockScreen recyclerView initialVelocity = " + initialVelocity);
 
                     if (mIsRecommendPage) {
-                        if (initialVelocity > 1000 || scrollY < mScreenH*3/4) { //下滑fling, 或者下滑过1/4
+                        if (initialVelocity > 1000
+//                                || scrollY < mScreenH*3/4
+                                ) { //下滑fling, 或者下滑过1/4
                             mScrollView.smoothScrollTo(0, 0);
                             mIsRecommendPage = false;
                             mRecommendPage.onHide();
@@ -289,7 +291,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             mIsRecommendPage = true;
                         }
                     } else {
-                        if (initialVelocity < -1000 || scrollY > mScreenH / 4) {//上滑fling, 或者上滑过1/4
+                        if (initialVelocity < -1000
+//                                || scrollY > mScreenH / 4
+                                ) {//上滑fling, 或者上滑过1/4
                             mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
                             mRecommendPage.onShow("美女");

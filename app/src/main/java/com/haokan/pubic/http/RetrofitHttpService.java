@@ -4,8 +4,8 @@ import com.haokan.hklockscreen.lockscreen.RequestBody_Switch;
 import com.haokan.hklockscreen.lockscreen.ResponseBody_Switch;
 import com.haokan.hklockscreen.recommendpage.RequestBody_Recommend;
 import com.haokan.hklockscreen.recommendpage.ResponseBody_Recommend;
-import com.haokan.hklockscreen.main.RequestBody_Timelines;
-import com.haokan.hklockscreen.main.ResponseBody_Timelines;
+import com.haokan.hklockscreen.timeline.RequestBody_Timelines;
+import com.haokan.hklockscreen.timeline.ResponseBody_Timelines;
 import com.haokan.pubic.http.request.RequestEntity;
 import com.haokan.pubic.http.response.ResponseEntity;
 

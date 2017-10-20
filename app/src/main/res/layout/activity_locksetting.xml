@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ScrollView
+    <com.haokan.hklockscreen.lockscreen.CV_ScrollView
         android:id="@+id/scrollview"
         android:overScrollMode="never"
         android:scrollbars="none"
@@ -311,7 +311,7 @@
                     android:layout_height="match_parent"/>
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </com.haokan.hklockscreen.lockscreen.CV_ScrollView>
 
     <FrameLayout
         android:id="@+id/header"
@@ -361,10 +361,15 @@
 
     <FrameLayout
         android:id="@+id/header1"
-        android:visibility="gone"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="65dp"
         android:background="@color/bai">
+
+        <View
+            android:background="#7c7c7c"
+            android:layout_width="match_parent"
+            android:layout_height="21dp"/>
 
         <RelativeLayout
             android:layout_gravity="bottom"
@@ -409,4 +414,4 @@
                 android:layout_height="1px"/>
         </RelativeLayout>
     </FrameLayout>
-</FrameLayout>
+</merge>

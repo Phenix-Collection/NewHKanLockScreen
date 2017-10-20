@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_my_collection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:id="@+id/actionbar"
+        android:background="@color/bai"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="46dp"
+            android:layout_height="match_parent"
+            android:paddingStart="13dp"
+            android:paddingEnd="13dp"
+            android:scaleType="center"
+            android:background="@drawable/selector_touming_borderless"
+            android:src="@drawable/icon_nav_back_n" />
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:text="我的收藏"
+            android:textSize="16sp"
+            android:textColor="@color/hei_80"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/edit"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_vertical"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:text="编辑"
+            android:textSize="14sp"
+            android:textColor="#f16b6b"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_below="@+id/actionbar"
+        android:background="#d8d8d8"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyview"
+        android:layout_below="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:paddingBottom="10dp"
+        android:scrollbars="vertical"
+        android:clipToPadding="false"
+        android:layout_marginRight="5dp"/>
+
+    <include
+        layout="@layout/layout_allprompt"
+        android:layout_below="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</RelativeLayout>

@@ -6,7 +6,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyview"
-        android:background="@color/loadingbgcolor"
+        android:background="@color/detailpagebgcolor"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
@@ -15,29 +15,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/layout_loading"
-        layout="@layout/layout_loading"/>
-
-    <include
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_neterror"
-        layout="@layout/layout_error_net"/>
-
-    <include
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_servererror"
-        layout="@layout/layout_error_serve"/>
-
-    <include
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_nocontent"
-        layout="@layout/layout_no_content"/>
+        layout="@layout/layout_allprompt"/>
 
     <FrameLayout
         android:id="@+id/header"
