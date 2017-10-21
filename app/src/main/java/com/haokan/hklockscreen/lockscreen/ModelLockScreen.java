@@ -33,6 +33,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -268,39 +269,7 @@ public class ModelLockScreen {
             @Override
             public void call(Subscriber<? super ArrayList<MainImageBean>> subscriber) {
                 try {
-                    if (list != null && list.size() > 0) {
-                        //存储数据json
-                        ACache aCache = ACache.get(context);
-                        aCache.put(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME, list);
-
-                        //存储图片文件
-                        File offlineDir = getOfflineDir(context);
-                        FileUtil.deleteContents(offlineDir, false);
-                        for (int i = 0; i < list.size(); i++) {
-                            MainImageBean imageBean = list.get(i);
-                            String url = imageBean.imgBigUrl;
-                            String name;
-                            if (TextUtils.isEmpty(imageBean.imgId)) {
-                                name = "img_" + System.currentTimeMillis()+".jpg";
-                            } else {
-                                name = "img_" + imageBean.imgId + ".jpg";
-                            }
-
-                            File file = new File(offlineDir, name);
-                            if (!file.exists()) { //图片文件不存在, 就下载
-                                try {
-                                    Bitmap bitmap = Glide.with(context).load(url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                                    FileUtil.saveBitmapToFile(context, bitmap, file, false);
-                                } catch (Exception e) {
-                                    if (LogHelper.DEBUG) {
-                                        LogHelper.d("wangzixu", "saveSwitchData ----下载失败了一张 Glide load i = " + i + " , url = " + url);
-                                    }
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-
+                    saveSwitchDataSync(context, list);
                     subscriber.onNext(list);
                     subscriber.onCompleted();
                 } catch (Exception e) {
@@ -325,6 +294,109 @@ public class ModelLockScreen {
                     @Override
                     public void onNext(ArrayList<MainImageBean> list) {
                         LogHelper.d("wangzixu", "saveSwitchData success");
+                    }
+                });
+    }
+
+    private void saveSwitchDataSync(Context context, ArrayList<MainImageBean> list) {
+        if (list != null && list.size() > 0) {
+            //存储数据json
+            ACache aCache = ACache.get(context);
+            aCache.put(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME, list);
+
+            //存储图片文件
+            File offlineDir = getOfflineDir(context);
+            FileUtil.deleteContents(offlineDir, false);
+            for (int i = 0; i < list.size(); i++) {
+                MainImageBean imageBean = list.get(i);
+                String url = imageBean.imgBigUrl;
+                String name;
+                if (TextUtils.isEmpty(imageBean.imgId)) {
+                    name = "img_" + System.currentTimeMillis()+".jpg";
+                } else {
+                    name = "img_" + imageBean.imgId + ".jpg";
+                }
+
+                File file = new File(offlineDir, name);
+                if (!file.exists()) { //图片文件不存在, 就下载
+                    try {
+                        Bitmap bitmap = Glide.with(context).load(url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                        FileUtil.saveBitmapToFile(context, bitmap, file, false);
+                    } catch (Exception e) {
+                        if (LogHelper.DEBUG) {
+                            LogHelper.e("wangzixu", "saveSwitchData ----下载失败了一张 Glide load i = " + i + " , url = " + url);
+                        }
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public void getAutoUpdateData(final Context context, final onDataResponseListener<List<MainImageBean>> listener) {
+        if (listener == null || context == null) {
+            return;
+        }
+
+        listener.onStart();
+
+        final RequestEntity<RequestBody_Switch> requestEntity = new RequestEntity<>();
+        final RequestBody_Switch body = new RequestBody_Switch();
+        body.cpIds = "10002,10008,10415,10228,10501";
+        body.imageSize = App.sImgSize_Big;
+        body.imgSmallSize = App.sImgSize_Small;
+        body.eid = App.sEID;
+        body.pid = App.sPID;
+        body.isRecommend = "1";
+
+        RequestHeader<RequestBody_Switch> header = new RequestHeader(body);
+        requestEntity.setHeader(header);
+        requestEntity.setBody(body);
+
+        Observable<ResponseEntity<ResponseBody_Switch>> observable = HttpRetrofitManager.getInstance().getRetrofitService().getSwitchData(UrlsUtil.getAutoUpdateImgsUrl(), requestEntity);
+        observable
+                .map(new Func1<ResponseEntity<ResponseBody_Switch>, ResponseEntity<ResponseBody_Switch>>() {
+                    @Override
+                    public ResponseEntity<ResponseBody_Switch> call(ResponseEntity<ResponseBody_Switch> responseEntity) {
+                        if (responseEntity != null && responseEntity.getHeader().resCode == 0) {
+                            ResponseBody_Switch body1 = responseEntity.getBody();
+                            if (body1.list != null && body1.list.size() > 0) {
+                                saveSwitchDataSync(context, body1.list);
+                            }
+                        }
+                        return responseEntity;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<ResponseEntity<ResponseBody_Switch>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (HttpStatusManager.checkNetWorkConnect(context)) {
+                            e.printStackTrace();
+                            listener.onDataFailed(e.getMessage());
+                        } else {
+                            listener.onNetError();
+                        }
+                    }
+
+                    @Override
+                    public void onNext(ResponseEntity<ResponseBody_Switch> responseEntity) {
+                        if (responseEntity != null && responseEntity.getHeader().resCode == 0) {
+                            ResponseBody_Switch body1 = responseEntity.getBody();
+                            if (body1.list != null && body1.list.size() > 0) {
+                                listener.onDataSucess(body1.list);
+                            } else {
+                                listener.onDataEmpty();
+                            }
+                        } else {
+                            listener.onDataFailed(responseEntity != null ? responseEntity.getHeader().resMsg : "null");
+                        }
                     }
                 });
     }

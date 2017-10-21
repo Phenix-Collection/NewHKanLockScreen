@@ -11,14 +11,7 @@ public class Values {
     public static class Path{
         public static final String PATH_BASE = "/Levect/" + PACKAGE_NAME + "/";
 
-        public static final String PATH_DOWNLOADAPK = PATH_BASE + "updateapp";
-    }
-
-    /**
-     * 自定义的一些action
-     */
-    public static class Action {
-        public static final String SERVICE_GA_SERVICE = "com.haokan.service.gaservice";
+        public static final String PATH_DOWNLOADAPK = "/Levect/" + PACKAGE_NAME + "/";
     }
 
     public static class AcacheKey {
@@ -51,11 +44,16 @@ public class Values {
         /**
          * 是否允许在非wifi环境下换一换
          */
-        public static final String KEY_SP_SWITCH_WIFI = "switchwifi";
+        public static final String KEY_SP_SWITCH_NOWIFI = "switchnowifi";
 
         /**
          * 锁屏开关
          */
         public static final String KEY_SP_OPENLOCKSCREEN = "openlc";
+
+        /**
+         * 是否自动更新锁屏图片
+         */
+        public static final String KEY_SP_AUTOUPDATEIMAGE = "autoimage";
     }
 }

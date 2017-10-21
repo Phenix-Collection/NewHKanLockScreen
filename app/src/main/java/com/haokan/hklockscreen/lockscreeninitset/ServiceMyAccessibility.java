@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.autoset;
+package com.haokan.hklockscreen.lockscreeninitset;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;

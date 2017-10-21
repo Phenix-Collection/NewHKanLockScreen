@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreensetting.ActivityLockSetting;
+import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.hklockscreen.recommendpage.CV_RecommendPage;
 
 /**

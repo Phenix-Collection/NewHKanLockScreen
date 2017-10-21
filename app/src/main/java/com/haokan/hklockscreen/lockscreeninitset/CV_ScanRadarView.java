@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.autoset;
+package com.haokan.hklockscreen.lockscreeninitset;
 
 import android.content.Context;
 import android.graphics.Canvas;

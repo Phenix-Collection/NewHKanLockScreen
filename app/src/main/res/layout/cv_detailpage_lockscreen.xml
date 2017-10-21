@@ -114,13 +114,13 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include
-        android:visibility="gone"
-        android:id="@+id/nowifi_switch_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        layout="@layout/dialog_layout_nowifi_switch"/>
+    <!--<include-->
+        <!--android:visibility="gone"-->
+        <!--android:id="@+id/nowifi_switch_dialog"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center"-->
+        <!--layout="@layout/dialog_layout_nowifi_switch"/>-->
 
     <ViewStub
         android:id="@+id/guide_slide"

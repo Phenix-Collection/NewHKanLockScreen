@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreensetting;
+package com.haokan.hklockscreen.setting;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -38,7 +38,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private RelativeLayout mLayoutlockscreen;
     private ImageView mIvLockscreen;
     private RelativeLayout mLayoutAutoUpdateImage;
-    private ImageView mIvAutoupdate;
+    private ImageView mIvAutoupdateImage;
     private RelativeLayout mLayoutInitset;
     private RelativeLayout mLayoutFadeback;
     private RelativeLayout mLayoutCheckupdate;
@@ -52,6 +52,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private FrameLayout mHeader1;
     private ImageView mBack1;
     private int mHeaderChangeHeigh;
+    private TextView mSettingCollect1;
+    private TextView mTvLocalImageEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +69,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mLayoutlockscreen = (RelativeLayout) findViewById(R.id.layoutlockscreen);
         mIvLockscreen = (ImageView) findViewById(R.id.iv_lockscreen);
         mLayoutAutoUpdateImage = (RelativeLayout) findViewById(R.id.layoutautoupdateimg);
-        mIvAutoupdate = (ImageView) findViewById(R.id.iv_autoupdate);
+        mIvAutoupdateImage = (ImageView) findViewById(R.id.iv_autoupdate);
         mLayoutInitset = (RelativeLayout) findViewById(R.id.layout_initset);
         mLayoutFadeback = (RelativeLayout) findViewById(R.id.layout_fadeback);
         mLayoutCheckupdate = (RelativeLayout) findViewById(R.id.layout_checkupdate);
@@ -78,21 +80,38 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mHeader = (FrameLayout) findViewById(R.id.header);
         mBack = (ImageView) findViewById(R.id.back);
         mSettingCollect = (TextView) findViewById(R.id.setting_collect);
+        mSettingCollect1 = (TextView) findViewById(R.id.setting_collect1);
         mHeader1 = (FrameLayout) findViewById(R.id.header1);
         mBack1 = (ImageView) findViewById(R.id.back1);
+        mTvLocalImageEdit = (TextView) findViewById(R.id.edit);
 
-        boolean aBoolean = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, true);
-        if (aBoolean) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //设置是否打开了锁屏
+        boolean open = preferences.getBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, true);
+        if (open) {
             mIvLockscreen.setSelected(true);
         } else {
             mIvLockscreen.setSelected(false);
         }
 
+        //设置是否自动更新锁屏图片
+        boolean auto = preferences.getBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, true);
+        if (auto) {
+            mIvAutoupdateImage.setSelected(true);
+        } else {
+            mIvAutoupdateImage.setSelected(false);
+        }
+
         mBack.setOnClickListener(this);
         mBack1.setOnClickListener(this);
         mSettingCollect.setOnClickListener(this);
+        mSettingCollect1.setOnClickListener(this);
         mLayoutlockscreen.setOnClickListener(this);
         mLayoutCheckupdate.setOnClickListener(this);
+        mLayoutAboutus.setOnClickListener(this);
+        mLayoutAutoUpdateImage.setOnClickListener(this);
+        mLayoutInitset.setOnClickListener(this);
+        mTvLocalImageEdit.setOnClickListener(this);
 
         //顶部banner高-mHeader1高
         mHeaderChangeHeigh = DisplayUtil.dip2px(this, 220-65);
@@ -125,17 +144,44 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 onBackPressed();
                 break;
             case R.id.layoutlockscreen:
-                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
-                if (mIvLockscreen.isSelected()) {
-                    mIvLockscreen.setSelected(false);
-                    edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, false).apply();
-                } else {
-                    mIvLockscreen.setSelected(true);
-                    edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, true).apply();
+                {
+                    SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+                    if (mIvLockscreen.isSelected()) {
+                        mIvLockscreen.setSelected(false);
+                        edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, false).apply();
+                    } else {
+                        mIvLockscreen.setSelected(true);
+                        edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, true).apply();
+                    }
+                }
+                break;
+            case R.id.layoutautoupdateimg://自动更新锁屏图片
+                {
+                    SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+                    if (mIvAutoupdateImage.isSelected()) {
+                        mIvAutoupdateImage.setSelected(false);
+                        edit.putBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, false).apply();
+                    } else {
+                        mIvAutoupdateImage.setSelected(true);
+                        edit.putBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, true).apply();
+                    }
                 }
                 break;
             case R.id.setting_collect:
-
+            case R.id.setting_collect1:
+                {
+                    Intent intent = new Intent();
+                    intent.setPackage(getPackageName());
+                    intent.setAction("com.haokan.service.autoupdateimage");
+                    startService(intent);
+                }
+                break;
+            case R.id.layout_aboutus:
+                {
+                    Intent intent = new Intent(this, ActivityAboutUs.class);
+                    startActivity(intent);
+                    startActivityAnim();
+                }
                 break;
             case R.id.layout_checkupdate:
                 checkStoragePermission();

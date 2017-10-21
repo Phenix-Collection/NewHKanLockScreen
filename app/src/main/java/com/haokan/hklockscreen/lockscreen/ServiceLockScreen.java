@@ -86,6 +86,9 @@ public class ServiceLockScreen extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogHelper.d("wangzixu", "lockservice onStartCommand type");
+        if (sHaokanLockView == null) {
+            sHaokanLockView = new CV_DetailPage_LockScreen(getApplicationContext());
+        }
         return START_STICKY;
     }
 

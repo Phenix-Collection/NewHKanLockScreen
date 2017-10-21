@@ -42,7 +42,7 @@
         </activity>
 
         <activity
-            android:name=".autoset.ActivityAutoSetLockScreen"
+            android:name=".lockscreeninitset.ActivityAutoSetLockScreen"
             android:screenOrientation="portrait">
         </activity>
 
@@ -52,7 +52,7 @@
         </activity>
 
         <activity
-            android:name=".lockscreensetting.ActivityLockSetting"
+            android:name=".setting.ActivityLockSetting"
             android:screenOrientation="portrait">
         </activity>
 
@@ -62,7 +62,7 @@
         </activity>
 
         <activity
-            android:name=".autoset.ActivityPrompt_AutoStart"
+            android:name=".lockscreeninitset.ActivityPrompt_AutoStart"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
@@ -81,10 +81,23 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".setting.ActivityAboutUs"
+                  android:screenOrientation="portrait">
+        </activity>
+
         <service
             android:name=".lockscreen.ServiceLockScreen"
             android:enabled="true"
             android:exported="true" />
+
+        <service
+            android:name="com.haokan.hklockscreen.lockscreenautoupdateimage.ServiceAutoUpdateImage"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.haokan.service.autoupdateimage" />
+            </intent-filter>
+        </service>
 
         <receiver
             android:name=".lockscreen.ReceiverLockScreenBoot"
@@ -101,7 +114,7 @@
 
         <!--辅助功能的service-->
         <service
-            android:name=".autoset.ServiceMyAccessibility"
+            android:name=".lockscreeninitset.ServiceMyAccessibility"
             android:label="好看锁屏"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

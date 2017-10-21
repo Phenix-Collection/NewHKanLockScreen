@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.autoset;
+package com.haokan.hklockscreen.lockscreeninitset;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.provider.Settings;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreensetting.ActivityLockSetting;
+import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.hklockscreen.timeline.ActivityTimelines;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
