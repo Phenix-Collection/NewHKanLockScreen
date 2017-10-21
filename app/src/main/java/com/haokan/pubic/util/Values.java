@@ -11,7 +11,7 @@ public class Values {
     public static class Path{
         public static final String PATH_BASE = "/Levect/" + PACKAGE_NAME + "/";
 
-        public static final String PATH_CLIP_AVATAR = "/Levect/user_avatar"; //剪裁的头像存储的位置
+        public static final String PATH_DOWNLOADAPK = PATH_BASE + "updateapp";
     }
 
     /**
@@ -52,5 +52,10 @@ public class Values {
          * 是否允许在非wifi环境下换一换
          */
         public static final String KEY_SP_SWITCH_WIFI = "switchwifi";
+
+        /**
+         * 锁屏开关
+         */
+        public static final String KEY_SP_OPENLOCKSCREEN = "openlc";
     }
 }

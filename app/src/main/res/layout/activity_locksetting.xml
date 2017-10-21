@@ -71,7 +71,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/layoutautoupdate"
+                android:id="@+id/layoutautoupdateimg"
                 android:background="@drawable/selector_bai"
                 android:layout_width="match_parent"
                 android:layout_height="56dp">

@@ -97,6 +97,8 @@
             </intent-filter>
         </receiver>
 
+        <service android:name="com.haokan.pubic.checkupdate.ServiceUpdate"/>
+
         <!--辅助功能的service-->
         <service
             android:name=".autoset.ServiceMyAccessibility"
@@ -109,5 +111,16 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/myaccessibility" />
         </service>
+
+        <!--适应7.0以上的应用升级-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.haokanhaokan.lockscreen.fileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>

@@ -20,20 +20,32 @@ public class UrlsUtil {
         return str;
     }
 
+    //******接口系统1 begin, http://srapi.levect.com/api/app/xxxx****
+    //升级用的借口
+    public String getUpdateUrl() {
+        return "http://srapi.levect.com/api/app/configure";
+    }
+    //******接口系统1 end, http://srapi.levect.com/api/app/xxxx****
+
+
+    //******接口系统2 begin, http://srapi.levect.com/lockscreen/mrkd/xxxx****
     /**
      * 换一换的地址
      */
     public static String getSwitchImgsUrl() {
-        return URL_HOST + "/change";
+        return "http://srapi.levect.com/lockscreen/mrkd/change";
     }
 
     /**
      * 换一换的地址
      */
     public static String getAutoUpdateImgsUrl() {
-        return URL_HOST + "/autoupdate";
+        return "http://srapi.levect.com/lockscreen/mrkd/autoupdate";
     }
+    //******接口系统2 end, http://srapi.levect.com/lockscreen/mrkd/xxxx****
 
+
+    //******接口系统3 begin, http://api-m-gray.levect.com/xxxx****
     /**
      * 换一换的地址
      */
@@ -41,18 +53,11 @@ public class UrlsUtil {
         return "http://api-m-gray.levect.com/app/list/img";
     }
 
-
-    /**
-     * 发哥的接口域名
-     */
-    public static final String URL_HOST_fage = "http://api-m-gray.levect.com/app"; //测试地址
-
     /**
      * Timelines的网络地址
-     *
-     * @return
      */
     public static String getTimelineUrl() {
-        return URL_HOST_fage + "/list";
+        return "http://api-m-gray.levect.com/app/list";
     }
+    //******接口系统3 end, http://api-m-gray.levect.com/xxxx****
 }

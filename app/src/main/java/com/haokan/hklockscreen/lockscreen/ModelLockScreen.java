@@ -275,7 +275,7 @@ public class ModelLockScreen {
 
                         //存储图片文件
                         File offlineDir = getOfflineDir(context);
-                        FileUtil.deleteContents(offlineDir);
+                        FileUtil.deleteContents(offlineDir, false);
                         for (int i = 0; i < list.size(); i++) {
                             MainImageBean imageBean = list.get(i);
                             String url = imageBean.imgBigUrl;

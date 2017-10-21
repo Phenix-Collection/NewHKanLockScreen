@@ -31,6 +31,14 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 给下载文件用的,将一个流存文件, 并且可监听进度
+     * @param inputStream
+     * @param file
+     * @param totalSize
+     * @param listener
+     * @return
+     */
     public static boolean writeInputStreamToFile(InputStream inputStream, File file, long totalSize, ProgressListener listener) {
         if (inputStream == null || file == null) {
             LogHelper.d(TAG, "writeInputStreamToFile inputStream or file == null");
@@ -55,7 +63,6 @@ public class FileUtil {
             if (listener != null) {
                 listener.onFailure(e);
             }
-            e.printStackTrace();
             return false;
         } finally {
             try {
@@ -68,7 +75,7 @@ public class FileUtil {
                 outputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                LogHelper.w(TAG, "Cannot flush output stream");
+                LogHelper.w("wangzixu", "writeInputStreamToFile Cannot flush output stream");
             }
         }
         if (listener != null) {
@@ -105,7 +112,7 @@ public class FileUtil {
     public static void deleteFile(File file) {
         if (file != null) {
             if (file.isDirectory()) {
-                deleteContents(file);
+                deleteContents(file, true);
             } else {
                 try {
                     if (!file.delete()) {
@@ -122,7 +129,7 @@ public class FileUtil {
     /**
      * 删除指定目录下的所有内容
      */
-    public static void deleteContents(File dir) {
+    public static void deleteContents(File dir, boolean deleteSelf) {
         if (dir == null || !dir.isDirectory()) {
             return;
         }
@@ -133,7 +140,10 @@ public class FileUtil {
         try {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    deleteContents(file);
+                    deleteContents(file, true);
+                    if (deleteSelf) {
+                        file.delete();
+                    }
                 } else {
                     file.delete();
                 }
