@@ -548,12 +548,17 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         });
     }
 
-
-    public void onDestory() {
-        mIsDestory = true;
-        if (mReceiver != null) {
-            mContext.unregisterReceiver(mReceiver);
-        }
+    @Override
+    protected void onClickSetting() {
+        super.onClickSetting();
+        App.sMainHanlder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mActivity != null) {
+                    mActivity.finish();
+                }
+            }
+        }, 500);
     }
 
     @Override
@@ -634,5 +639,12 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
     public void setOnLockScreenStateListener(OnLockScreenStateChangeListener listener) {
         mOnLockScreenStateChangeListener = listener;
+    }
+
+    public void onDestory() {
+        mIsDestory = true;
+        if (mReceiver != null) {
+            mContext.unregisterReceiver(mReceiver);
+        }
     }
 }

@@ -23,14 +23,15 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
-import com.haokan.pubic.webview.ActivityWebview;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.customview.ViewPagerTransformer;
 import com.haokan.pubic.util.BlurUtil;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
+import com.haokan.pubic.webview.ActivityWebview;
 
 import java.util.ArrayList;
 
@@ -258,6 +259,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             case R.id.bottom_collect:
                 break;
             case R.id.setting:
+                onClickSetting();
                 break;
             case R.id.bottom_share:
                 showShareLayout();
@@ -283,6 +285,16 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
     protected void onClickBack() {
 
+    }
+
+    protected void onClickSetting() {
+        Intent i = new Intent(mContext, ActivityLockSetting.class);
+        if (mActivity != null) {
+            mActivity.startActivity(i);
+            mActivity.startActivityAnim();
+        } else {
+            mContext.startActivity(i);
+        }
     }
 
     protected void onClickBigImage() {
