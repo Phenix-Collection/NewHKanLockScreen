@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
+import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.LogHelper;
@@ -28,18 +28,19 @@ import java.util.List;
 /**
  * Created by wangzixu on 2017/10/18.
  */
-public class CV_RecommendPage extends FrameLayout implements View.OnClickListener {
-    private Context mContext;
-    private RecyclerView mRecyclerView;
-    private GridLayoutManager mManager;
-    private boolean mHasMoreData;
-    private boolean mIsLoading;
-    private ArrayList<BeanRecommendItem> mData = new ArrayList<>();
-    private AdapterRecommendPage mAdapter;
-    private String mTypeName = "";
-    private int mPage = 1;
-    private View mHeaderView;
-    private View mHeaderViewCopy;
+public class CV_RecommendPage extends FrameLayout{
+    protected Context mContext;
+    protected RecyclerView mRecyclerView;
+    protected GridLayoutManager mManager;
+    protected boolean mHasMoreData;
+    protected boolean mIsLoading;
+    protected ArrayList<BeanRecommendItem> mData = new ArrayList<>();
+    protected AdapterRecommendPage mAdapter;
+    protected String mTypeName = "";
+    protected int mPage = 1;
+    protected View mHeaderView;
+    protected View mHeaderViewCopy;
+    protected ActivityBase mActivityBase;
 
     public CV_RecommendPage(@NonNull Context context) {
         this(context, null);
@@ -53,8 +54,6 @@ public class CV_RecommendPage extends FrameLayout implements View.OnClickListene
         super(context, attrs, defStyleAttr);
         mContext = context;
         init();
-
-//        loadData(true);
     }
 
     public RecyclerView getRecyclerView() {
@@ -69,16 +68,7 @@ public class CV_RecommendPage extends FrameLayout implements View.OnClickListene
         View netErrorView = findViewById(R.id.layout_neterror);
         View serveErrorView = findViewById(R.id.layout_servererror);
         View nocontentView = findViewById(R.id.layout_nocontent);
-        loadingLayout.setOnClickListener(this);
-        netErrorView.setOnClickListener(this);
-        serveErrorView.setOnClickListener(this);
-        nocontentView.setOnClickListener(this);
         setPromptLayout(loadingLayout, netErrorView, serveErrorView, nocontentView);
-
-        findViewById(R.id.back).setOnClickListener(this);
-        findViewById(R.id.backlockscreen).setOnClickListener(this);
-        mHeaderView = findViewById(R.id.header);
-        mHeaderViewCopy = findViewById(R.id.headercopy);
 
         //RecyView相关
         mRecyclerView = (RecyclerView) findViewById(R.id.recyview);
@@ -128,8 +118,8 @@ public class CV_RecommendPage extends FrameLayout implements View.OnClickListene
         });
     }
 
-    public void onShow(String typeName) {
-        showHeader();
+
+    public void setTypeName(String typeName) {
         if (typeName.equals(mTypeName)) {
             //nothing
         }else {
@@ -138,125 +128,93 @@ public class CV_RecommendPage extends FrameLayout implements View.OnClickListene
         }
     }
 
-    public void onHide() {
-        hideHeader();
-    }
+    private boolean mRefrsh;
+    onDataResponseListener mOnDataResponseListener = new onDataResponseListener<List<BeanRecommendItem>>() {
+        @Override
+        public void onStart() {
+            if (mRefrsh) {
+                mRefrsh = false;
+                mData.clear();
+                mAdapter.notifyDataSetChanged();
+            }
+            if (mData.size() == 0) {
+                showLoadingLayout();
+            }
+            mIsLoading = true;
+        }
 
-    private void loadData(final boolean mRefrsh) {
-        if (mRefrsh) {
+        @Override
+        public void onDataSucess(List<BeanRecommendItem> beanRecommendItems) {
+            LogHelper.d("wangzixu", "recompage loadData onDataSucess size = " + beanRecommendItems.size());
+
+            int start = mData.size();
+            mData.addAll(beanRecommendItems);
+            mAdapter.notifyContentItemRangeInserted(start, beanRecommendItems.size());
+            mAdapter.hideFooter();
+            dismissAllPromptLayout();
+
+            mPage++;
+            mIsLoading = false;
+            mHasMoreData = true;
+        }
+
+        @Override
+        public void onDataEmpty() {
+            LogHelper.d("wangzixu", "recompage loadData onDataEmpty");
+            dismissAllPromptLayout();
+            mAdapter.hideFooter();
+            if (mData.size() == 0) {
+                showNoContentLayout();
+            } else {
+                mAdapter.setFooterNoMore();
+            }
+
+            mIsLoading = false;
+            mHasMoreData = false;
+        }
+
+        @Override
+        public void onDataFailed(String errmsg) {
+            LogHelper.d("wangzixu", "recompage loadData onDataFailed errmsg = " + errmsg);
+            ToastManager.showShort(mContext, "onDataFailed errmsg = " + errmsg);
+            dismissAllPromptLayout();
+            mAdapter.hideFooter();
+            if (mData.size() == 0) {
+                showServeErrorLayout();
+            }
+
+            mIsLoading = false;
+            mHasMoreData = true;
+        }
+
+        @Override
+        public void onNetError() {
+            LogHelper.d("wangzixu", "recompage loadData onNetError");
+            ToastManager.showNetErrorToast(mContext);
+            dismissAllPromptLayout();
+            mAdapter.hideFooter();
+            if (mData.size() == 0) {
+                showNetErrorLayout();
+            }
+
+            mIsLoading = false;
+            mHasMoreData = true;
+        }
+    };
+
+    public void loadData(final boolean refrsh) {
+        if (refrsh) {
+            mRefrsh = true;
             mPage = 1;
         }
-        new ModelRecommendPage().getRecommendData(mContext, mTypeName, mPage, new onDataResponseListener<List<BeanRecommendItem>>() {
-            @Override
-            public void onStart() {
-                if (mRefrsh) {
-                    mData.clear();
-                    mAdapter.notifyDataSetChanged();
-                }
-                if (mData.size() == 0) {
-                    showLoadingLayout();
-                }
-                mIsLoading = true;
-            }
-
-            @Override
-            public void onDataSucess(List<BeanRecommendItem> beanRecommendItems) {
-                LogHelper.d("wangzixu", "recompage loadData onDataSucess size = " + beanRecommendItems.size());
-
-                int start = mData.size();
-                mData.addAll(beanRecommendItems);
-                mAdapter.notifyContentItemRangeInserted(start, beanRecommendItems.size());
-                mAdapter.hideFooter();
-                dismissAllPromptLayout();
-
-                mPage++;
-                mIsLoading = false;
-                mHasMoreData = true;
-            }
-
-            @Override
-            public void onDataEmpty() {
-                LogHelper.d("wangzixu", "recompage loadData onDataEmpty");
-                dismissAllPromptLayout();
-                mAdapter.hideFooter();
-                if (mData.size() == 0) {
-                    showNoContentLayout();
-                } else {
-                    mAdapter.setFooterNoMore();
-                }
-
-                mIsLoading = false;
-                mHasMoreData = false;
-            }
-
-            @Override
-            public void onDataFailed(String errmsg) {
-                LogHelper.d("wangzixu", "recompage loadData onDataFailed errmsg = " + errmsg);
-                ToastManager.showShort(mContext, "onDataFailed errmsg = " + errmsg);
-                dismissAllPromptLayout();
-                mAdapter.hideFooter();
-                if (mData.size() == 0) {
-                    showServeErrorLayout();
-                }
-
-                mIsLoading = false;
-                mHasMoreData = true;
-            }
-
-            @Override
-            public void onNetError() {
-                LogHelper.d("wangzixu", "recompage loadData onNetError");
-                ToastManager.showNetErrorToast(mContext);
-                dismissAllPromptLayout();
-                mAdapter.hideFooter();
-                if (mData.size() == 0) {
-                    showNetErrorLayout();
-                }
-
-                mIsLoading = false;
-                mHasMoreData = true;
-            }
-        });
-    }
-
-    private void showHeader() {
-        mHeaderView.setVisibility(VISIBLE);
-        mHeaderViewCopy.setVisibility(GONE);
-//        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
-//        valueAnimator.setDuration(200);
-//        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                float f = (float) animation.getAnimatedValue();
-//                mHeaderView.setAlpha(f);
-//                mHeaderViewCopy.setAlpha(1.0f - f);
-//            }
-//        });
-//        valueAnimator.start();
-    }
-
-    private void hideHeader() {
-        mHeaderView.setVisibility(GONE);
-        mHeaderViewCopy.setVisibility(VISIBLE);
-
-//        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
-//        valueAnimator.setDuration(200);
-//        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                float f = (float) animation.getAnimatedValue();
-//                mHeaderView.setAlpha(1.0f - f);
-//                mHeaderViewCopy.setAlpha(f);
-//            }
-//        });
-//        valueAnimator.start();
+        new ModelRecommendPage().getRecommendData(mContext, mTypeName, mPage, mOnDataResponseListener);
     }
 
     //*******************4种提示框相关的布局 begin*************************
-    private View mNetErrorLayout;
-    private View mLoadingLayout;
-    private View mNoContentLayout;
-    private View mServeErrorLayout;
+    protected View mNetErrorLayout;
+    protected View mLoadingLayout;
+    protected View mNoContentLayout;
+    protected View mServeErrorLayout;
     final public void setPromptLayout(View loadingLayout, View netErrorLayout, View serveErrorLayout , View noContentLayout) {
         mLoadingLayout = loadingLayout;
         mNetErrorLayout = netErrorLayout;
@@ -296,37 +254,18 @@ public class CV_RecommendPage extends FrameLayout implements View.OnClickListene
     }
     //*******************4种提示框相关的布局 end*************************
 
-    ActivityLockScreen mActivityLockScreen;
-    public void setActivityLockScreen(ActivityLockScreen activityLockScreen) {
-        mActivityLockScreen = activityLockScreen;
+    public void setActivityBase(ActivityBase activityBase) {
+        mActivityBase = activityBase;
     }
 
     public void startWebview(String url) {
         Intent intent = new Intent(mContext, ActivityWebview.class);
         intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, url);
-        if (mActivityLockScreen != null) {
-            mActivityLockScreen.startActivity(intent);
-            mActivityLockScreen.startActivityAnim();
+        if (mActivityBase != null) {
+            mActivityBase.startActivity(intent);
+            mActivityBase.startActivityAnim();
         } else {
             mContext.startActivity(intent);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.back: //回到上面的详情页页
-                if (mActivityLockScreen != null) {
-                    mActivityLockScreen.backToDetailPage();
-                }
-                break;
-            case R.id.backlockscreen: //回到上面的详情页页, 并进入锁屏状态
-                if (mActivityLockScreen != null) {
-                    mActivityLockScreen.backToLockScreenPage();
-                }
-                break;
-            default:
-                break;
         }
     }
 }

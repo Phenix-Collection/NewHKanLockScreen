@@ -18,11 +18,11 @@
             android:layout_height="match_parent">
         </FrameLayout>
 
-        <com.haokan.hklockscreen.recommendpage.CV_RecommendPage
+        <com.haokan.hklockscreen.lockscreen.CV_RecommendPage_LockScreen
             android:id="@+id/cv_recommendpage"
             android:layout_below="@id/lockscreen_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.haokan.hklockscreen.recommendpage.CV_RecommendPage>
+        </com.haokan.hklockscreen.lockscreen.CV_RecommendPage_LockScreen>
     </RelativeLayout>
 </ScrollView>

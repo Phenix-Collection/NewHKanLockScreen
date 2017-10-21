@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.recommendpage.CV_RecommendPage;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.util.DisplayUtil;
@@ -30,7 +29,7 @@ import com.haokan.pubic.util.StatusBarUtil;
  * Created by wangzixu on 2017/3/2.
  */
 public class ActivityLockScreen extends ActivityBase implements View.OnClickListener, View.OnSystemUiVisibilityChangeListener, CV_DetailPage_LockScreen.OnLockScreenStateChangeListener {
-    private CV_RecommendPage mRecommendPage;
+    private CV_RecommendPage_LockScreen mRecommendPage;
     private ScrollView mScrollView;
     private View mRootView;
     private FrameLayout mLockScreenLayout;
@@ -160,9 +159,10 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
 
     private void initRecommendPageView() {
-        mRecommendPage = (CV_RecommendPage) findViewById(R.id.cv_recommendpage);
-        mRecommendPage.setActivityLockScreen(this);
+        mRecommendPage = (CV_RecommendPage_LockScreen) findViewById(R.id.cv_recommendpage);
+        mRecommendPage.setActivityBase(this);
         mRecommendPage.onHide();
+        mRecommendPage.setTypeName("美女");
 
         ViewGroup.LayoutParams params = mRecommendPage.getLayoutParams();
         if (params == null) {
@@ -296,7 +296,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                                 ) {//上滑fling, 或者上滑过1/4
                             mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
-                            mRecommendPage.onShow("美女");
+                            mRecommendPage.onShow();
+                            mRecommendPage.setTypeName("美女");
                         } else {
                             mScrollView.smoothScrollTo(0, 0);
                             mIsRecommendPage = false;
@@ -348,6 +349,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
     public void backToDetailPage() {
         mScrollView.smoothScrollTo(0, 0);
+        mIsRecommendPage = false;
+        mRecommendPage.onHide();
     }
 
     public void backToLockScreenPage() {

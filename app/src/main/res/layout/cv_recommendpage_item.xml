@@ -13,25 +13,10 @@
         android:background="@drawable/bg_screen_b"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
-        android:layout_height="80dp">
-        <TextView
-            android:id="@+id/tv_title"
-            android:textSize="14sp"
-            android:text=""
-            android:textColor="@color/bai"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginRight="10dp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
+        android:layout_height="90dp">
         <TextView
             android:id="@+id/collect"
             android:gravity="center_vertical"
-            android:layout_below="@id/tv_title"
-            android:layout_marginTop="10dp"
             android:textSize="11sp"
             android:text=""
             android:layout_marginLeft="15dp"
@@ -39,12 +24,14 @@
             android:drawableLeft="@drawable/icon_recommed_collect"
             android:textColor="@color/bai"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/share"/>
 
         <TextView
             android:id="@+id/share"
             android:gravity="center_vertical"
-            android:layout_below="@id/tv_title"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
             android:layout_toRightOf="@id/collect"
             android:layout_marginTop="10dp"
             android:textSize="11sp"
@@ -54,6 +41,21 @@
             android:drawableLeft="@drawable/icon_recommend_share"
             android:textColor="@color/bai"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_above="@id/collect"
+            android:layout_marginBottom="6dp"
+            android:lineSpacingExtra="2dp"
+            android:textSize="13sp"
+            android:text=""
+            android:textColor="@color/bai"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 </FrameLayout>

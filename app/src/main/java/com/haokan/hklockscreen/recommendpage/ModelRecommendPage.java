@@ -31,7 +31,8 @@ public class ModelRecommendPage {
 
         final RequestEntity<RequestBody_Recommend> requestEntity = new RequestEntity<>();
         final RequestBody_Recommend body = new RequestBody_Recommend();
-        body.imageSize = App.sImgSize_Small;
+//        body.imageSize = App.sImgSize_Small;
+        body.imageSize = App.sImgSize_Big;
         body.eid = App.sEID;
         body.page = page;
         body.size = 10;
