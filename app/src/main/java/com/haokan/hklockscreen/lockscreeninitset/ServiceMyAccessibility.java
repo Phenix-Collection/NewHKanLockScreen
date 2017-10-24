@@ -49,7 +49,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
 
-        if (ActivityAutoSetLockScreen.sIsAutoSet) {
+        if (CV_LockInitSetView.sIsAutoSet) {
             try {
                 int eventType = event.getEventType();
                 if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
@@ -80,7 +80,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 //                                        info.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                                     }
                                 }
-                                ActivityAutoSetLockScreen.sIsAutoSet = false;
+                                CV_LockInitSetView.sIsAutoSet = false;
                             }
                         }, 500);
 
@@ -101,7 +101,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                     }
                 }
             } catch (Exception e) {
-                ActivityAutoSetLockScreen.sIsAutoSet = false;
+                CV_LockInitSetView.sIsAutoSet = false;
                 LogHelper.d("wangzixu", "onAccessibilityEvent error e = " + e.getMessage());
                 e.printStackTrace();
             }

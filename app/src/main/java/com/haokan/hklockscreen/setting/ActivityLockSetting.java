@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
+import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
@@ -185,6 +186,13 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 break;
             case R.id.layout_checkupdate:
                 checkStoragePermission();
+                break;
+            case R.id.layout_initset:
+            {
+                Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
+                startActivity(intent);
+                startActivityAnim();
+            }
                 break;
             default:
                 break;

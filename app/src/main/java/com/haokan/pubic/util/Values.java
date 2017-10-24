@@ -55,5 +55,10 @@ public class Values {
          * 是否自动更新锁屏图片
          */
         public static final String KEY_SP_AUTOUPDATEIMAGE = "autoimage";
+        /**
+         *
+         * 是否是第一次安装
+         */
+        public static final String KEY_SP_FIRSTINSTALL = "firstinstall";
     }
 }

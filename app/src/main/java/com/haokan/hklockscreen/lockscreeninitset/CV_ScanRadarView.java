@@ -27,6 +27,7 @@ public class CV_ScanRadarView extends View {
     private Paint mPaintRadar;//雷达用的画笔
     private float mDegress = 0f; //雷达的角度
     private Matrix mMatrix = new Matrix();
+    private boolean mIsRadar = true; //是否开启雷达
 
     //波纹区域, 波纹是一个先生产, 后扩散, 两个过程
     //波纹扩散
@@ -40,6 +41,7 @@ public class CV_ScanRadarView extends View {
     private float mEveryMillDis;
     private float mEveryMIllAlpha;
     private long mRippleDuration = 3000; //波纹从开始扩散到消失的时长
+    private boolean mIsRipple = true; //是否开启波纹
 
     //波纹生成, 是一个在一定时间内
     private long mRippleCreateDuration = 1500; //波纹产生的时长
@@ -141,26 +143,30 @@ public class CV_ScanRadarView extends View {
     protected void onDraw(Canvas canvas) {
 
         //绘制波纹扩散圆环
-        for (int i = 0; i < mRippleBeanList.size(); i++) {
-            RippleBean rippleBean = mRippleBeanList.get(i);
-            if (rippleBean.radius > 0) {
-                mPaintRipple.setShader(rippleBean.radialGradient);
-                mPaintRipple.setAlpha((int) rippleBean.alpha);
-                canvas.drawCircle(mViewSize /2.0f, mViewSize /2.0f, rippleBean.radius, mPaintRipple);
+        if (mIsRipple) {
+            for (int i = 0; i < mRippleBeanList.size(); i++) {
+                RippleBean rippleBean = mRippleBeanList.get(i);
+                if (rippleBean.radius > 0) {
+                    mPaintRipple.setShader(rippleBean.radialGradient);
+                    mPaintRipple.setAlpha((int) rippleBean.alpha);
+                    canvas.drawCircle(mViewSize /2.0f, mViewSize /2.0f, rippleBean.radius, mPaintRipple);
+                }
             }
+
+            //波纹产生绘制过程
+            mPaintRipple.setShader(mRippleCreatGradient);
+            mPaintRipple.setAlpha(mRippleCreateAlpha);
+            canvas.drawCircle(mViewSize /2.0f, mViewSize /2.0f, mRippleCreateRadius, mPaintRipple);
         }
 
-        //波纹产生绘制过程
-        mPaintRipple.setShader(mRippleCreatGradient);
-        mPaintRipple.setAlpha(mRippleCreateAlpha);
-        canvas.drawCircle(mViewSize /2.0f, mViewSize /2.0f, mRippleCreateRadius, mPaintRipple);
-
-        //把画布的多有对象与matrix联系起来
-        if(mMatrix != null){
-            canvas.concat(mMatrix);
+        if (mIsRadar) {
+            //把画布的多有对象与matrix联系起来
+            if(mMatrix != null){
+                canvas.concat(mMatrix);
+            }
+            //绘制颜色渐变圆
+            canvas.drawCircle(mViewSize /2.0f, mViewSize /2.0f, mRadarRadius, mPaintRadar);
         }
-        //绘制颜色渐变圆
-        canvas.drawCircle(mViewSize /2.0f, mViewSize /2.0f, mRadarRadius, mPaintRadar);
 
         super.onDraw(canvas);
     }
@@ -253,60 +259,12 @@ public class CV_ScanRadarView extends View {
         }
     }
 
-    //从0 - 1.0 共画4个圈, 每个圈的生命周期是[0-0.25, 0.25-1.0f]两部分, 分别是产生圈的过程, 和圈扩大的过程, 直接扩大的话, 圈产生时突然出现会很突兀
-    private void prepareRippleGradient(float inf) {
-//        for (int i = 0; i < mRippleBeanList.size(); i++) {
-//            RippleBean rippleBean = mRippleBeanList.get(i);
-//            float rate = inf - 0.25f*i;
-//
-//            LogHelper.d("wangzixu", "prepareRippleGradient i = " + i + ", rate = " + rate);
-//            if (rate >= 0f) {
-//                if (rate >= 0.25f) {
-//                    int rippleRadius = (int) (mRippleRadiusStart + (4*rate-1) * mRippleRadiusDistence * 0.333); //在一定时间内走一定的距离, 所以可根据时间算出当前走了多少距离
-//                    int ialpha = (int) ((1.0f - rate) * 255);
-//                    RadialGradient radialGradient = new RadialGradient(mViewSize /2.0f, mViewSize /2.0f, rippleRadius, mColors, mPositions, Shader.TileMode.CLAMP);
-//
-//                    rippleBean.radius = rippleRadius;
-//                    rippleBean.alpha = ialpha;
-//                    rippleBean.radialGradient = radialGradient;
-//                    rippleBean.rate = rate;
-//                } else {
-//                    int rippleRadius = mRippleRadiusStart; //在一定时间内走一定的距离, 所以可根据时间算出当前走了多少距离
-//                    int ialpha = (int) ((4*rate) * 255);
-//                    RadialGradient radialGradient = new RadialGradient(mViewSize /2.0f, mViewSize /2.0f, rippleRadius, mColors, mPositions, Shader.TileMode.CLAMP);
-//
-//                    rippleBean.radius = rippleRadius;
-//                    rippleBean.alpha = ialpha;
-//                    rippleBean.radialGradient = radialGradient;
-//                    rippleBean.rate = rate;
-//                }
-//            }
-//            else {
-//                if (rippleBean.radius > 0) {
-//                    rate = 1.0f + rate;
-//
-//                    if (rate >= 0.25f) {
-//                        int rippleRadius = (int) (mRippleRadiusStart + (4*rate-1) * mRippleRadiusDistence * 0.333); //在一定时间内走一定的距离, 所以可根据时间算出当前走了多少距离
-//                        int ialpha = (int) ((1.0f - rate) * 255);
-//                        RadialGradient radialGradient = new RadialGradient(mViewSize /2.0f, mViewSize /2.0f, rippleRadius, mColors, mPositions, Shader.TileMode.CLAMP);
-//
-//                        rippleBean.radius = rippleRadius;
-//                        rippleBean.alpha = ialpha;
-//                        rippleBean.radialGradient = radialGradient;
-//                        rippleBean.rate = rate;
-//                    } else {
-//                        int rippleRadius = mRippleRadiusStart; //在一定时间内走一定的距离, 所以可根据时间算出当前走了多少距离
-//                        int ialpha = (int) ((4*rate) * 255);
-//                        RadialGradient radialGradient = new RadialGradient(mViewSize /2.0f, mViewSize /2.0f, rippleRadius, mColors, mPositions, Shader.TileMode.CLAMP);
-//
-//                        rippleBean.radius = rippleRadius;
-//                        rippleBean.alpha = ialpha;
-//                        rippleBean.radialGradient = radialGradient;
-//                        rippleBean.rate = rate;
-//                    }
-//                }
-//            }
-//        }
+    public void setRadar(boolean radar) {
+        mIsRadar = radar;
+    }
+
+    public void setRipple(boolean ripple) {
+        mIsRipple = ripple;
     }
 
     class RippleBean {

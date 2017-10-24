@@ -1,4 +1,4 @@
-package com.haokan.pubic.util;
+package com.haokan.hklockscreen.lockscreeninitset;
 
 import android.content.ComponentName;
 import android.content.Intent;
