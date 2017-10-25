@@ -4,6 +4,8 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
 
+import com.haokan.pubic.util.LogHelper;
+
 /**
  * Created by wangzixu on 2017/10/11.
  */
@@ -14,20 +16,21 @@ public class SystemIntentUtil {
         String cls = "com.miui.permcenter.autostart.AutoStartManagementActivity";
 
         String manufacturer = Build.MANUFACTURER;
+        LogHelper.d("wangzixu", "SystemIntentUtil manufacturer = " + manufacturer);
+
         if (manufacturer.equalsIgnoreCase("xiaomi")) {
             pkg = "com.miui.securitycenter";
             cls = "com.miui.permcenter.autostart.AutoStartManagementActivity";
 //            cls = "com.miui.permcenter.autostart.AutoStartDetailManagementActivity";
-
-        } else if (android.os.Build.MANUFACTURER.equals("huawei")) {
+        } else if (manufacturer.equalsIgnoreCase("huawei")) {
             pkg = "com.huawei.systemmanager";
             cls = "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity";
 
-        } else if (android.os.Build.MANUFACTURER.equals("oppo")) {
-            pkg = "com.coloros.oppoguardelf";
-            cls = "com.coloros.powermanager.fuelgaue.PowerUsageModelActivity";
+        } else if (manufacturer.equalsIgnoreCase("oppo")) {
+            pkg = "com.coloros.safecenter";
+            cls = "com.coloros.safecenter.startupapp.StartupAppListActivity";
 
-        } else if (android.os.Build.MANUFACTURER.equals("vivo")) {
+        } else if (manufacturer.equalsIgnoreCase("vivo")) {
             pkg = "com.iqoo.secure";
             cls = ".ui.phoneoptimize.AddWhiteListActivity";
         }

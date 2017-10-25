@@ -197,7 +197,10 @@ public class CV_RecommendPage extends FrameLayout{
     }
 
     public void refreshIfChangeType(String typeName) {
-        if (typeName.equals(mTypeName)) {
+        if (typeName == null) {
+            typeName = "";
+        }
+        if (mTypeName.equals(typeName)) {
             return;
         } else {
             mTypeName = typeName;

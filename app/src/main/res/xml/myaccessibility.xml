@@ -3,7 +3,7 @@
     android:description="@string/accessibility_service_description"
     android:accessibilityEventTypes="typeAllMask"
     android:accessibilityFeedbackType="feedbackGeneric"
-    android:packageNames="com.miui.securitycenter"
+    android:packageNames="com.coloros.safecenter,com.miui.securitycenter"
     android:notificationTimeout="100"
     android:accessibilityFlags=""
     android:canRetrieveWindowContent="true"/>
