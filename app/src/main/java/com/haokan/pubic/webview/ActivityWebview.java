@@ -37,6 +37,8 @@ import com.haokan.pubic.util.ToastManager;
 
 public class ActivityWebview extends ActivityBase implements View.OnClickListener {
     public static final String KEY_INTENT_WEB_URL = "url";
+    public static final String KEY_INTENT_WEB_TITLE = "title";
+    private boolean mHasFixedTitle;
     private TextView mTvTitle;
     private String mTitleText = "";
     private ProgressBar mProgressHorizontal;
@@ -76,7 +78,14 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
 //        mShareBg = mBottomShare.findViewById(R.id.bg);
 //        mShareBg.setOnClickListener(this);
 
+
         mTvTitle = (TextView) findViewById(R.id.title);
+        String title = getIntent().getStringExtra(KEY_INTENT_WEB_TITLE);
+        if (!TextUtils.isEmpty(title)) {
+            mTvTitle.setText(title);
+            mHasFixedTitle = true;
+        }
+
         mProgressHorizontal = (ProgressBar) findViewById(R.id.progress_horizontal);
         mWebView = (WebView) findViewById(R.id.webView);
         mBigViedioParent = (ViewGroup) findViewById(R.id.bigvideoview);
@@ -193,15 +202,12 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                String title = mWebView.getTitle();
-                LogHelper.i("WebViewActivity", "onPageFinished mweburl = " + url + ", title = " + title);
-                if (!TextUtils.isEmpty(title)) {
-                    if (!title.equals(mTitleText)) {
-                        mTitleText = title;
-                        mTvTitle.setText(mTitleText);
-                    }
+                if (mHasFixedTitle) {
+
                 } else {
-                    mTvTitle.setText("");
+                    String title = mWebView.getTitle();
+                    LogHelper.i("WebViewActivity", "onPageFinished mweburl = " + url + ", title = " + title);
+                    mTvTitle.setText(title);
                 }
             }
 

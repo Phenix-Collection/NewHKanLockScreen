@@ -3,6 +3,7 @@ package com.haokan.pubic.detailpage;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,9 +29,11 @@ import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.customview.ViewPagerTransformer;
+import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.BlurUtil;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
+import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 
 import java.util.ArrayList;
@@ -69,7 +72,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected int mCurrentPosition;
     protected MainImageBean mCurrentImgBean;
     protected View mTvBottomCollectParent;
-    protected TextView mTvBottomCollect;
+    protected View mTvBottomCollect;
+    protected TextView mTvBottomCollectTitle;
     protected View mLayoutTitleLick;
     protected boolean mIsCaptionShow; //当前是否正在显示图说
     protected boolean mIsAnimnating; //正在执行一些动画, 如显示隐藏图说等
@@ -129,7 +133,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mTvBottomDownload = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_download_title);
         mTvBottomDownloadParent.setOnClickListener(this);
         mTvBottomCollectParent = mLayoutMainBottom.findViewById(R.id.bottom_collect);//收藏
-        mTvBottomCollect = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_collect_title);
+        mTvBottomCollect = mLayoutMainBottom.findViewById(R.id.bottom_collect);
+        mTvBottomCollectTitle = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_collect_title);
         mTvBottomCollect.setOnClickListener(this);
         mLayoutMainBottom.findViewById(R.id.bottom_share).setOnClickListener(this);//分享
 
@@ -145,7 +150,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mTvSetWallpager = (TextView) mDownloadLayoutContent.findViewById(R.id.set_wallpaper);
         mTvSaveImg = (TextView) mDownloadLayoutContent.findViewById(R.id.save_img);
         mDownloadLayoutContent.findViewById(R.id.cancel).setOnClickListener(this);
-
         //************底部下载layout相关 end *****************
 
         //*****底部分享区域begin*********
@@ -185,6 +189,10 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         //为主vp设置监听器
         mAdapterVpMain = new Adapter_DetailPage_Base(mContext, mData, this, this);
         mVpMain.setAdapter(mAdapterVpMain);
+    }
+
+    public MainImageBean getCurrentImageBean() {
+        return mCurrentImgBean;
     }
 
     @Override
@@ -232,8 +240,12 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             case R.id.tv_link:
             case R.id.layout_caption:
                 {
+                    if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+                        return;
+                    }
                     Intent intent = new Intent(mContext, ActivityWebview.class);
                     intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
                     if (mActivity != null) {
                         mActivity.startActivity(intent);
                         mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
@@ -254,9 +266,10 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 onClickBack();
                 break;
             case R.id.bottom_download:
-                //                downloadImage(mCurrentImgBean);
+                downloadImage(mCurrentImgBean);
                 break;
             case R.id.bottom_collect:
+                v.setSelected(!v.isSelected());
                 break;
             case R.id.setting:
                 onClickSetting();
@@ -553,6 +566,50 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             return;
         }
         mTvBottomCollectParent.setSelected(bean.isCollect != 0);
+    }
+
+    ProgressDialog mProgressDialog;
+    public void downloadImage(@NonNull MainImageBean bean) {
+        ModelDownLoadImage.downLoadImg(mContext, bean, new onDataResponseListener() {
+            @Override
+            public void onStart() {
+                if (mActivity != null) {
+                    mProgressDialog = new ProgressDialog(mActivity);
+                    mProgressDialog.show();
+                }
+            }
+
+            @Override
+            public void onDataSucess(Object o) {
+                if (mProgressDialog != null) {
+                    mProgressDialog.dismiss();
+                    mProgressDialog = null;
+                }
+                ToastManager.showShort(mContext, "下载成功");
+            }
+
+            @Override
+            public void onDataEmpty() {
+            }
+
+            @Override
+            public void onDataFailed(String errmsg) {
+                if (mProgressDialog != null) {
+                    mProgressDialog.dismiss();
+                    mProgressDialog = null;
+                }
+                ToastManager.showShort(mContext, "下载失败 : " + errmsg);
+            }
+
+            @Override
+            public void onNetError() {
+                if (mProgressDialog != null) {
+                    mProgressDialog.dismiss();
+                    mProgressDialog = null;
+                }
+                ToastManager.showNetErrorToast(mContext);
+            }
+        });
     }
 
     public void setInitIndex(int initIndex) {

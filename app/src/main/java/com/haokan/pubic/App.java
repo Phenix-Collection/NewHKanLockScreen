@@ -9,6 +9,8 @@ import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.Locale;
+
 public class App extends Application {
     public static String APP_VERSION_NAME = "";
     public static int APP_VERSION_CODE;
@@ -17,8 +19,11 @@ public class App extends Application {
     public static String sEID = "0"; //默认值
     public static String sPhoneModel = "defaultPhone";
     public static String sImgSize_Big = "1080x1920";
-    public static String sImgSize_Small = "360x640";
-
+//    public static String sImgSize_Small = "360x640";
+//    public static String sImgSize_Small = "720x1080";
+    public static String sImgSize_Small = "540x960";
+    public static String sLanguageCode = "zh";
+    public static String sCountryCode = "CN";
 
     public static final Handler sMainHanlder = new Handler(Looper.getMainLooper());
     public static String sReview = "0"; //1表示review, 0表示没有
@@ -46,6 +51,10 @@ public class App extends Application {
         sDID = CommonUtil.getDid(context);
         sPID = CommonUtil.getPid(context);
         sPhoneModel = CommonUtil.getPhoneModel(context);
-        LogHelper.d("wangzixu", "app init APP_VERSION_CODE = " + APP_VERSION_CODE);
+
+        Locale locale = Locale.getDefault();
+        sLanguageCode = locale.getLanguage();
+        sCountryCode = locale.getCountry();
+        LogHelper.d("wangzixu", "app init sLanguageCode = " + sLanguageCode + ", sCountryCode = " + sCountryCode);
     }
 }

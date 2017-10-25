@@ -79,7 +79,7 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
 
         String url = imageBean.imgBigUrl;
 
-        if (imageBean.myType == 2) { // assset中的图片
+        if (url.startsWith("hk_def_imgs")) { // assset中的图片
             AssetsImageLoader.loadAssetsImage(mContext, url, new AssetsImageLoader.onAssetImageLoaderListener() {
                 @Override
                 public void onSuccess(Bitmap bitmap) {
@@ -119,9 +119,6 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
                     holder.loadingView.setVisibility(View.GONE);
                     holder.image.setVisibility(View.VISIBLE);
                     holder.mBitmap = resource;
-                    if (imageBean.myType == 0) { //需要存储到本地的图片
-
-                    }
                     return false;
                 }
             }).into(holder.image);

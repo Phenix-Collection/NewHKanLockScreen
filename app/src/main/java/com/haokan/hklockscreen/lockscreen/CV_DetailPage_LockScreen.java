@@ -99,12 +99,18 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         mTvLockLink.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+                    return;
+                }
                 Intent intent = new Intent(mContext, ActivityWebview.class);
                 intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
-                mContext.startActivity(intent);
-//                    if (mActivity != null) {
-//                        mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
-//                    }
+                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
+                if (mActivity != null) {
+                    mActivity.startActivity(intent);
+                    mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+                } else {
+                    mContext.startActivity(intent);
+                }
             }
         });
 

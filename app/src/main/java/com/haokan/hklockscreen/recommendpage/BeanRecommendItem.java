@@ -22,5 +22,5 @@ public class BeanRecommendItem {
     public String urlClick;
     public String cover;
     public int favNum;
-    public int likeNum;
+    public int shareNum;
 }

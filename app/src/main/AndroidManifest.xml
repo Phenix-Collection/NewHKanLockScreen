@@ -54,6 +54,7 @@
 
         <activity
             android:name=".setting.ActivityLockSetting"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait">
         </activity>
 
@@ -76,7 +77,7 @@
 
 
         <activity android:name=".lockscreen.ActivityLockScreen"
-                  android:launchMode="singleTop"
+                  android:launchMode="singleInstance"
                   android:theme="@style/myTransparent"
                   android:screenOrientation="portrait">
         </activity>

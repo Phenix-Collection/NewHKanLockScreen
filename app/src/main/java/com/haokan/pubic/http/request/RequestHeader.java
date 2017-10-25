@@ -78,8 +78,8 @@ public class RequestHeader<RequestBody> {
         version = App.APP_VERSION_CODE+"";
         imei = App.sDID;
         companyId = UrlsUtil.COMPANYID;
-        languageCode = "zh";
-        countryCode = "cn";
+        languageCode = App.sLanguageCode;
+        countryCode = App.sCountryCode;
         did=App.sDID;
     }
 

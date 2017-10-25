@@ -118,16 +118,6 @@ public class CV_RecommendPage extends FrameLayout{
         });
     }
 
-
-    public void setTypeName(String typeName) {
-        if (typeName.equals(mTypeName)) {
-            //nothing
-        }else {
-            mTypeName = typeName;
-            loadData(true);
-        }
-    }
-
     private boolean mRefrsh;
     onDataResponseListener mOnDataResponseListener = new onDataResponseListener<List<BeanRecommendItem>>() {
         @Override
@@ -202,6 +192,19 @@ public class CV_RecommendPage extends FrameLayout{
         }
     };
 
+    public void setTypeName(String typeName) {
+        mTypeName = typeName;
+    }
+
+    public void refreshIfChangeType(String typeName) {
+        if (typeName.equals(mTypeName)) {
+            return;
+        } else {
+            mTypeName = typeName;
+            loadData(true);
+        }
+    }
+
     public void loadData(final boolean refrsh) {
         if (refrsh) {
             mRefrsh = true;
@@ -258,9 +261,10 @@ public class CV_RecommendPage extends FrameLayout{
         mActivityBase = activityBase;
     }
 
-    public void startWebview(String url) {
+    public void startWebview(String url, String imgTitle) {
         Intent intent = new Intent(mContext, ActivityWebview.class);
         intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, url);
+        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, imgTitle);
         if (mActivityBase != null) {
             mActivityBase.startActivity(intent);
             mActivityBase.startActivityAnim();

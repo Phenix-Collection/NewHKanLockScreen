@@ -45,7 +45,7 @@ public class AssetsImageLoader {
         });
     }
 
-    private static Bitmap loadAssetsImageBitmap(final Context context, final String url){
+    public static Bitmap loadAssetsImageBitmap(final Context context, final String url){
         try{
             InputStream open = context.getAssets().open(url);
             Bitmap bitmap = BitmapFactory.decodeStream(open);

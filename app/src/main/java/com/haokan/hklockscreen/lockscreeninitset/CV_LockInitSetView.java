@@ -36,6 +36,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     private View mTvAutoStartSet;
     private View mTvManualSet;
     private View mLoadingLayout;
+    private View mAutoCompleteLayout;
     private boolean mHasSetAutoStart;
     private TextView mTvSkip;
     public static boolean sIsAutoSet = false; //是否正在用辅助功能自动设置
@@ -66,11 +67,13 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         mIvGear = (ImageView) mLoadingLayout.findViewById(R.id.iv_gear);
         mTvPercent = (TextView) findViewById(R.id.tv_percent);
 
-
         mCryTvLayout = findViewById(R.id.crytvlayout);
         mCheckTvLayout = findViewById(R.id.checktitlelayout);
         mIvCryLaugh = (ImageView) findViewById(R.id.iv_cry_laugh);
         mTvSkip = (TextView) findViewById(R.id.tv_skip);
+
+        mAutoCompleteLayout = findViewById(R.id.autosetcompletelayout);
+        mAutoCompleteLayout.findViewById(R.id.startlock).setOnClickListener(this);
 
         mTvSkip.setOnClickListener(this);
         findViewById(R.id.tvaccessset).setOnClickListener(this);
@@ -151,8 +154,14 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     mActivityBase.startActivity(i);
                     mActivityBase.finish();
                     mActivityBase.startActivityAnim();
-                } else {
-
+                }
+                break;
+            case R.id.startlock:
+                if (mHasSetAutoStart) {
+                    Intent i = new Intent(mContext, ActivityLockScreen.class);
+                    mActivityBase.startActivity(i);
+                    mActivityBase.finish();
+                    mActivityBase.startActivityAnim();
                 }
                 break;
             case R.id.tv_skip:
@@ -252,6 +261,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             animationDrawable.stop();
             mIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
             mIvCryLaugh.setVisibility(VISIBLE);
+            mAutoCompleteLayout.setVisibility(VISIBLE);
         }
     }
 }

@@ -87,6 +87,37 @@
 
     <LinearLayout
         android:visibility="gone"
+        android:id="@+id/autosetcompletelayout"
+        android:layout_below="@id/iv_cry_laugh"
+        android:layout_marginTop="60dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="锁屏设置已开启"
+            android:textSize="24sp"
+            android:textColor="@color/bai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/startlock"
+            android:layout_marginTop="30dp"
+            android:text="开启锁屏"
+            android:textSize="15sp"
+            android:textColor="@color/bai_80"
+            android:gravity="center"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/selector_lockinit_btnbg"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
         android:id="@+id/crytvlayout"
         android:layout_below="@id/iv_cry_laugh"
         android:layout_marginTop="40dp"

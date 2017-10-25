@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
+import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.StatusBarUtil;
@@ -162,7 +163,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mRecommendPage = (CV_RecommendPage_LockScreen) findViewById(R.id.cv_recommendpage);
         mRecommendPage.setActivityBase(this);
         mRecommendPage.onHide();
-        mRecommendPage.setTypeName("美女");
+//        mRecommendPage.setTypeName("美女");
 
         ViewGroup.LayoutParams params = mRecommendPage.getLayoutParams();
         if (params == null) {
@@ -297,7 +298,11 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
                             mRecommendPage.onShow();
-                            mRecommendPage.setTypeName("美女");
+
+                            MainImageBean bean = ServiceLockScreen.sHaokanLockView.getCurrentImageBean();
+                            if (bean != null) {
+                                mRecommendPage.refreshIfChangeType(bean.typeName);
+                            }
                         } else {
                             mScrollView.smoothScrollTo(0, 0);
                             mIsRecommendPage = false;

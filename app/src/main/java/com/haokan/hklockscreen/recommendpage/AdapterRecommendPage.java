@@ -124,7 +124,7 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
 
             mTvTitle.setText(mBean.imgTitle);
             mTvCollectNum.setText(mBean.favNum+"");
-            mTvShareNum.setText(mBean.likeNum+"");
+            mTvShareNum.setText(mBean.shareNum+"");
 
             String imgUrl = mBean.cover;
             Glide.with(mContext).load(imgUrl)
@@ -145,7 +145,7 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
 
         @Override
         public void onClick(View v) {
-            mRecommendPage.startWebview(mBean.urlClick);
+            mRecommendPage.startWebview(mBean.urlClick, mBean.imgTitle);
         }
     }
 }

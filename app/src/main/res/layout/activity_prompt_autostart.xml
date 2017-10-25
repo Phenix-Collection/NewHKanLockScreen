@@ -15,7 +15,7 @@
         <TextView
             android:textSize="15sp"
             android:textColor="#666666"
-            android:text="请滑动列表, 找到 【好看锁屏】并滑动开启自启动开关."
+            android:text="请滑动列表, 找到 【好看锁屏】, 并开启自启动开关."
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginTop="20dp"
