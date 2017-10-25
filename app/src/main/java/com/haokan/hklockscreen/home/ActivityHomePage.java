@@ -32,6 +32,7 @@ public class ActivityHomePage extends ActivityBase {
 
     private void initView() {
         mCvHomePage = (CV_RecommendPage_HomePage) findViewById(R.id.cv_homepage);
+        mCvHomePage.setActivityBase(this);
     }
 
 

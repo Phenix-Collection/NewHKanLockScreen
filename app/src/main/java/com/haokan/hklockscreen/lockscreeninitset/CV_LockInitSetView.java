@@ -84,12 +84,11 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 if (isAccessibilitySettingsOn(mContext)) {
                     sIsAutoSet = true;
 
+                    mCheckTvLayout.setVisibility(GONE);
                     mLoadingLayout.setVisibility(VISIBLE);
                     AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
                     animationDrawable.start();
 
-                    mIvCryLaugh.setVisibility(GONE);
-                    mCryTvLayout.setVisibility(GONE);
                     mRadarView.setRadar(false);
                     mRadarView.setVisibility(VISIBLE);
                     mRadarView.start();

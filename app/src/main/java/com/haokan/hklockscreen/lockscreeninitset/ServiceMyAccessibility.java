@@ -67,19 +67,19 @@ public class ServiceMyAccessibility extends AccessibilityService {
                             msg.what = 11;
                             msg.obj = list.get(0);
                             LogHelper.d("wangzixu", "xiaomi6 list = " + list.get(0).isScrollable());
-                            mHandler.sendMessageDelayed(msg, 500);
+                            mHandler.sendMessageDelayed(msg, 400);
                         } else {
                             CV_LockInitSetView.sAutoSuccess = false;
                             Message msg = Message.obtain();
                             msg.what = 101;
-                            mHandler.sendMessageDelayed(msg, 500);
+                            mHandler.sendMessageDelayed(msg, 400);
                         }
                     } else if ("com.miui.permcenter.autostart.AutoStartDetailManagementActivity".equals(className)) {//小米自动启动管理详情界面, 点击了条目后会跳转一个新界面, 把里面的两个条目都选中
                         CV_LockInitSetView.sIsAutoSet = false;
                         Message msg = Message.obtain();
                         msg.what = 12;
                         msg.obj = source;
-                        mHandler.sendMessageDelayed(msg, 500);
+                        mHandler.sendMessageDelayed(msg, 400);
                     } else if ("com.coloros.safecenter.startupapp.StartupAppListActivity".equals(className)) { //oppo手机的自启动界面
                         CV_LockInitSetView.sIsAutoSet = false;
                         List<AccessibilityNodeInfo> list = source.findAccessibilityNodeInfosByViewId("android:id/list");//oppo自启动界面的listview
@@ -87,12 +87,12 @@ public class ServiceMyAccessibility extends AccessibilityService {
                             Message msg = Message.obtain();
                             msg.what = 1;
                             msg.obj = list.get(0);
-                            mHandler.sendMessageDelayed(msg, 500);
+                            mHandler.sendMessageDelayed(msg, 400);
                         } else {
                             CV_LockInitSetView.sAutoSuccess = false;
                             Message msg = Message.obtain();
                             msg.what = 101;
-                            mHandler.sendMessageDelayed(msg, 500);
+                            mHandler.sendMessageDelayed(msg, 400);
                         }
                     }
                 }
@@ -165,7 +165,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                     } else {
                         Message messageBack = Message.obtain();
                         messageBack.what = 101; //后退
-                        mHandler.sendMessageDelayed(messageBack, 400);
+                        mHandler.sendMessage(messageBack);
                     }
                 } else {
                     CV_LockInitSetView.sAutoSuccess = false;
@@ -231,7 +231,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                         CV_LockInitSetView.sAutoSuccess = true;
                         Message messageBack = Message.obtain();
                         messageBack.what = 101; //后退
-                        mHandler.sendMessageDelayed(messageBack, 400);
+                        mHandler.sendMessage(messageBack);
                     }
                 } else {
                     CV_LockInitSetView.sAutoSuccess = false;
