@@ -2,6 +2,7 @@ package com.haokan.hklockscreen.splash;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -63,12 +64,16 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
         startActivity(i);
 
         //是否是第一次安装
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean first = preferences.getBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, true);
-        if (first) {
-            preferences.edit().putBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, false).apply();
-            Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
-            startActivity(intent);
+        String manufacturer = Build.MANUFACTURER;
+        if (manufacturer.equalsIgnoreCase("xiaomi")
+                || manufacturer.equalsIgnoreCase("oppo")) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean first = preferences.getBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, true);
+            if (first) {
+                preferences.edit().putBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, false).apply();
+                Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
+                startActivity(intent);
+            }
         }
 
         finish();

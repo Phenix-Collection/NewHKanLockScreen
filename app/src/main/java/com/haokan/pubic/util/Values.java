@@ -11,8 +11,8 @@ public class Values {
     public static class Path{
         public static final String PATH_BASE = "/Levect/" + PACKAGE_NAME + "/";
 
-        public static final String PATH_DOWNLOADAPK = "/Levect/" + PACKAGE_NAME + "/";
-        public static final String PATH_DOWNLOAD_PIC = "/Levect/" + PACKAGE_NAME + "/HkImages/";
+        public static final String PATH_DOWNLOADAPK = PATH_BASE;
+        public static final String PATH_DOWNLOAD_PIC = PATH_BASE + "HkImages/";
     }
 
     public static class AcacheKey {
@@ -60,6 +60,6 @@ public class Values {
          *
          * 是否是第一次安装
          */
-        public static final String KEY_SP_FIRSTINSTALL = "firstinstall";
+        public static final String KEY_SP_FIRSTINSTALL = "firstin";
     }
 }

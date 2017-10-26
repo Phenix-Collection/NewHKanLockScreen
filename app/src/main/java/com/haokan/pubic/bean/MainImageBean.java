@@ -18,9 +18,6 @@ public class MainImageBean implements Serializable{
     public String shareUrl; //分享地址
     public int isCollect; //是否被收藏, 0没有, 1收藏
     public int colNum; //被收藏的数量
-    public int shareNum; //被分享的数量
-    public int isLike; //是否被赞
-    public int likeNum; //赞的数量
     public int commentNum;//评论数量
     public String cpId; //cpid
     public String cpName; //cpName

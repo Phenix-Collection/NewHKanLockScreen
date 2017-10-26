@@ -30,10 +30,10 @@ public class ModelDownLoadImage {
      * @param context
      * @param listener
      */
-    public static void downLoadImg(final Context context, @NonNull final MainImageBean imageBean, @NonNull final onDataResponseListener listener) {
-        Observable.create(new Observable.OnSubscribe<Object>() {
+    public static void downLoadImg(final Context context, @NonNull final MainImageBean imageBean, @NonNull final onDataResponseListener<File> listener) {
+        Observable.create(new Observable.OnSubscribe<File>() {
             @Override
-            public void call(Subscriber<? super Object> subscriber) {
+            public void call(Subscriber<? super File> subscriber) {
                 if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                     subscriber.onError(new Throwable("sd卡不可用"));
                     LogHelper.d("downLoadImg", "sd card none");
@@ -51,29 +51,35 @@ public class ModelDownLoadImage {
                 }
                 File file = new File(dir, name);
 
-                String imgUrl = imageBean.imgBigUrl;
-                try {
-                    Bitmap bitmap;
-                    if (imgUrl.startsWith("hk_def_imgs")) {
-                        bitmap = AssetsImageLoader.loadAssetsImageBitmap(context, imgUrl);
-                    } else {
-                        bitmap = Glide.with(context).load(imgUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                if (file.exists() && file.length() > 0) {
+                    subscriber.onNext(file);
+                    subscriber.onCompleted();
+                } else {
+
+                    String imgUrl = imageBean.imgBigUrl;
+                    try {
+                        Bitmap bitmap;
+                        if (imgUrl.startsWith("hk_def_imgs")) {
+                            bitmap = AssetsImageLoader.loadAssetsImageBitmap(context, imgUrl);
+                        } else {
+                            bitmap = Glide.with(context).load(imgUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                        }
+                        if (bitmap != null) {
+                            FileUtil.saveBitmapToFile(context, bitmap, file, true);
+                            subscriber.onNext(file);
+                            subscriber.onCompleted();
+                        } else {
+                            subscriber.onError(new Throwable("downLoadImg bitmap is null"));
+                        }
+                    } catch (Exception e) {
+                        subscriber.onError(e);
                     }
-                    if (bitmap != null) {
-                        FileUtil.saveBitmapToFile(context, bitmap, file, true);
-                        subscriber.onNext(file.getAbsoluteFile());
-                        subscriber.onCompleted();
-                    } else {
-                        subscriber.onError(new Throwable("downLoadImg bitmap is null"));
-                    }
-                } catch (Exception e) {
-                    subscriber.onError(e);
                 }
             }
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Object>() {
+                .subscribe(new Subscriber<File>() {
                     @Override
                     public void onStart() {
                         listener.onStart();
@@ -89,7 +95,7 @@ public class ModelDownLoadImage {
                     }
 
                     @Override
-                    public void onNext(Object o) {
+                    public void onNext(File o) {
                         listener.onDataSucess(o);
                     }
                 });

@@ -36,4 +36,12 @@
         <item name="android:maxWidth">22dp</item>
         <item name="android:minWidth">22dp</item>
     </style>
+
+    <style name="CustomDialog" parent="Theme.AppCompat.Dialog">
+        <!--背景是否变暗-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="colorAccent">#ffE91E63</item>
+        <!--colorAccent兼容低版本，而不是android:colorAccent-->
+    </style>
 </resources>

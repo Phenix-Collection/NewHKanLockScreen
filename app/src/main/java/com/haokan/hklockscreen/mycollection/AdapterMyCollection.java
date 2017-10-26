@@ -173,23 +173,6 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
         }
     }
 
-    public void changeZan(MainImageBean bean, boolean isAdd) {
-        if (mData != null && bean != null) {
-            for (int i = 0; i < mData.size(); i++) {
-                if (mData.get(i).imgId.equals(bean.imgId)) {
-                    if (isAdd) {
-                        mData.get(i).isLike=1;
-                        mData.get(i).likeNum=mData.get(i).likeNum + 1;
-                    } else {
-                        mData.get(i).isLike=0;
-                        mData.get(i).likeNum=mData.get(i).likeNum - 1;
-                    }
-
-                }
-            }
-        }
-    }
-
     //holder end------------------------------
 
     //***********关于编辑的逻辑 begin***************

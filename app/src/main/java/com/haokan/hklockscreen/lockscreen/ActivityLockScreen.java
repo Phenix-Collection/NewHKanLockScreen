@@ -163,6 +163,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mRecommendPage = (CV_RecommendPage_LockScreen) findViewById(R.id.cv_recommendpage);
         mRecommendPage.setActivityBase(this);
         mRecommendPage.onHide();
+        mIsRecommendPage = false;
 //        mRecommendPage.setTypeName("美女");
 
         ViewGroup.LayoutParams params = mRecommendPage.getLayoutParams();
@@ -242,6 +243,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         ServiceLockScreen.sHaokanLockView.intoLockScreenState(true);
         mScrollView.scrollTo(0,0);
         mRecommendPage.onHide();
+        mIsRecommendPage = false;
     }
 
     //控制向上滑动的逻辑begin

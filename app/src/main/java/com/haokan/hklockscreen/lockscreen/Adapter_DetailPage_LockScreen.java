@@ -78,7 +78,6 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
         container.addView(holder.itemView);
 
         String url = imageBean.imgBigUrl;
-
         if (url.startsWith("hk_def_imgs")) { // assset中的图片
             AssetsImageLoader.loadAssetsImage(mContext, url, new AssetsImageLoader.onAssetImageLoaderListener() {
                 @Override

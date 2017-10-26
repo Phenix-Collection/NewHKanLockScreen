@@ -1,18 +1,23 @@
 package com.haokan.pubic.detailpage;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -24,6 +29,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.mycollection.CollectionBean;
+import com.haokan.hklockscreen.mycollection.ModelCollection;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
@@ -33,9 +40,11 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.BlurUtil;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
+import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -78,6 +87,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected boolean mIsCaptionShow; //当前是否正在显示图说
     protected boolean mIsAnimnating; //正在执行一些动画, 如显示隐藏图说等
     protected static final long sAinmDuration = 150; //一些动画的时长, 如显示隐藏图说等
+
+    Dialog mProgressDialog;
 
 
     public CV_DetailPageView_Base(@NonNull Context context) {
@@ -266,10 +277,21 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 onClickBack();
                 break;
             case R.id.bottom_download:
-                downloadImage(mCurrentImgBean);
+                if (Build.VERSION.SDK_INT >= 23 && mActivity != null) {
+                    //需要用权限的地方之前，检查是否有某个权限
+                    int checkCallPhonePermission = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) { //没有这个权限
+                        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 201);
+                        return;
+                    } else {
+                        downloadImage(mCurrentImgBean);
+                    }
+                } else {
+                    downloadImage(mCurrentImgBean);
+                }
                 break;
             case R.id.bottom_collect:
-                v.setSelected(!v.isSelected());
+                onClickCollect(v);
                 break;
             case R.id.setting:
                 onClickSetting();
@@ -278,7 +300,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 showShareLayout();
                 break;
             case R.id.save_img:
-//                downloadImage(mCurrentImgBean);
+                downloadImage(mCurrentImgBean);
                 hideDownloadLayout();
                 break;
             case R.id.bottomshare_layout:
@@ -293,6 +315,74 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 break;
             default:
                 break;
+        }
+    }
+
+    protected void onClickCollect(final View view) {
+        if (mCurrentImgBean == null) {
+            return;
+        }
+        boolean selected = view.isSelected();
+        if (selected) {
+            new ModelCollection().delCollection(mContext, mCurrentImgBean, new onDataResponseListener<Integer>() {
+                @Override
+                public void onStart() {
+                    showLoadingDialog();
+                }
+
+                @Override
+                public void onDataSucess(Integer integer) {
+                    dismissLoadingDialog();
+                    view.setSelected(false);
+                }
+
+                @Override
+                public void onDataEmpty() {
+                    dismissLoadingDialog();
+                }
+
+                @Override
+                public void onDataFailed(String errmsg) {
+                    dismissLoadingDialog();
+                    ToastManager.showShort(mContext, "取消收藏失败: " + errmsg);
+                }
+
+                @Override
+                public void onNetError() {
+                    dismissLoadingDialog();
+                    ToastManager.showNetErrorToast(mContext);
+                }
+            });
+        } else {
+            new ModelCollection().addCollection(mContext, mCurrentImgBean, new onDataResponseListener<CollectionBean>() {
+                @Override
+                public void onStart() {
+                    showLoadingDialog();
+                }
+
+                @Override
+                public void onDataSucess(CollectionBean collectionBean) {
+                    dismissLoadingDialog();
+                    view.setSelected(true);
+                }
+
+                @Override
+                public void onDataEmpty() {
+                    dismissLoadingDialog();
+                }
+
+                @Override
+                public void onDataFailed(String errmsg) {
+                    dismissLoadingDialog();
+                    ToastManager.showShort(mContext, "收藏失败: " + errmsg);
+                }
+
+                @Override
+                public void onNetError() {
+                    dismissLoadingDialog();
+                    ToastManager.showNetErrorToast(mContext);
+                }
+            });
         }
     }
 
@@ -568,48 +658,65 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mTvBottomCollectParent.setSelected(bean.isCollect != 0);
     }
 
-    ProgressDialog mProgressDialog;
+
     public void downloadImage(@NonNull MainImageBean bean) {
-        ModelDownLoadImage.downLoadImg(mContext, bean, new onDataResponseListener() {
+        if (mCurrentImgBean == null) {
+            return;
+        }
+        ModelDownLoadImage.downLoadImg(mContext, bean, new onDataResponseListener<File>() {
             @Override
             public void onStart() {
-                if (mActivity != null) {
-                    mProgressDialog = new ProgressDialog(mActivity);
-                    mProgressDialog.show();
-                }
+                showLoadingDialog();
             }
 
             @Override
-            public void onDataSucess(Object o) {
-                if (mProgressDialog != null) {
-                    mProgressDialog.dismiss();
-                    mProgressDialog = null;
-                }
-                ToastManager.showShort(mContext, "下载成功");
+            public void onDataSucess(File file) {
+                LogHelper.d("wangzixu", "downloadImage file = " + file.getAbsolutePath() + ", filelength = " + file.length());
+                App.sMainHanlder.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissLoadingDialog();
+                        ToastManager.showShort(mContext, "下载成功");
+                    }
+                }, 1000);
             }
 
             @Override
             public void onDataEmpty() {
+                dismissLoadingDialog();
             }
 
             @Override
             public void onDataFailed(String errmsg) {
-                if (mProgressDialog != null) {
-                    mProgressDialog.dismiss();
-                    mProgressDialog = null;
-                }
+                dismissLoadingDialog();
                 ToastManager.showShort(mContext, "下载失败 : " + errmsg);
             }
 
             @Override
             public void onNetError() {
-                if (mProgressDialog != null) {
-                    mProgressDialog.dismiss();
-                    mProgressDialog = null;
-                }
+                dismissLoadingDialog();
                 ToastManager.showNetErrorToast(mContext);
             }
         });
+    }
+
+    public void showLoadingDialog() {
+        if (mActivity != null) {
+            if (mProgressDialog == null) {
+                mProgressDialog = new Dialog(mActivity, R.style.CustomDialog);
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.setCanceledOnTouchOutside(false);
+                mProgressDialog.setContentView(R.layout.dialog_layout_loading);
+            }
+            mProgressDialog.show();
+        }
+    }
+
+    public void dismissLoadingDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
     }
 
     public void setInitIndex(int initIndex) {

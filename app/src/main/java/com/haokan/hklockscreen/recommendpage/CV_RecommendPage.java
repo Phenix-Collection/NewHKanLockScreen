@@ -151,16 +151,22 @@ public class CV_RecommendPage extends FrameLayout{
         @Override
         public void onDataEmpty() {
             LogHelper.d("wangzixu", "recompage loadData onDataEmpty");
-            dismissAllPromptLayout();
-            mAdapter.hideFooter();
-            if (mData.size() == 0) {
-                showNoContentLayout();
-            } else {
-                mAdapter.setFooterNoMore();
-            }
 
-            mIsLoading = false;
-            mHasMoreData = false;
+            //如果空, 自动取娱乐分类的
+            if (mData.size() == 0) {
+                refreshIfChangeType("娱乐");
+            } else {
+                dismissAllPromptLayout();
+                mAdapter.hideFooter();
+                if (mData.size() == 0) {
+                    showNoContentLayout();
+                } else {
+                    mAdapter.setFooterNoMore();
+                }
+
+                mIsLoading = false;
+                mHasMoreData = false;
+            }
         }
 
         @Override

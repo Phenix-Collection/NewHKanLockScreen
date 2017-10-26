@@ -3,6 +3,7 @@ package com.haokan.hklockscreen.lockscreeninitset;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -81,34 +82,52 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (isAccessibilitySettingsOn(mContext)) {
-                    sIsAutoSet = true;
+                String manufacturer = Build.MANUFACTURER;
+                if (manufacturer.equalsIgnoreCase("xiaomi")
+                        || manufacturer.equalsIgnoreCase("oppo")) {
+                    if (isAccessibilitySettingsOn(mContext)) {
+                        sIsAutoSet = true;
 
-                    mCheckTvLayout.setVisibility(GONE);
-                    mLoadingLayout.setVisibility(VISIBLE);
-                    AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
-                    animationDrawable.start();
+                        mCheckTvLayout.setVisibility(GONE);
+                        mLoadingLayout.setVisibility(VISIBLE);
+                        AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
+                        animationDrawable.start();
 
-                    mRadarView.setRadar(false);
-                    mRadarView.setVisibility(VISIBLE);
-                    mRadarView.start();
+                        mRadarView.setRadar(false);
+                        mRadarView.setVisibility(VISIBLE);
+                        mRadarView.start();
 
-                    App.sMainHanlder.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = SystemIntentUtil.getAutoStartIntent();
-                            mActivityBase.startActivityForResult(intent, 103);
-                            mActivityBase.startActivityAnim();
-                        }
-                    }, 500);
+                        App.sMainHanlder.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = SystemIntentUtil.getAutoStartIntent();
+                                mActivityBase.startActivityForResult(intent, 103);
+                                mActivityBase.startActivityAnim();
+                            }
+                        }, 500);
+                    } else {
+                        mRadarView.stop();
+                        mRadarView.setVisibility(GONE);
+                        mCheckTvLayout.setVisibility(GONE);
+
+                        mIvCryLaugh.setVisibility(VISIBLE);
+                        mIvCryLaugh.setImageResource(R.drawable.icon_lockinit_cry);
+                        mCryTvLayout.setVisibility(VISIBLE);
+                    }
                 } else {
+                    if (mManulSetLayout == null) {
+                        ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
+                        mManulSetLayout = viewStub.inflate();
+                        mTvAutoStartSet = mManulSetLayout.findViewById(R.id.autostartset);
+                        mTvManualSet = mManulSetLayout.findViewById(R.id.tvmanualset);
+                        mTvAutoStartSet.setOnClickListener(CV_LockInitSetView.this);
+                        mTvManualSet.setOnClickListener(CV_LockInitSetView.this);
+                    }
+
                     mRadarView.stop();
                     mRadarView.setVisibility(GONE);
                     mCheckTvLayout.setVisibility(GONE);
-
-                    mIvCryLaugh.setVisibility(VISIBLE);
-                    mIvCryLaugh.setImageResource(R.drawable.icon_lockinit_cry);
-                    mCryTvLayout.setVisibility(VISIBLE);
+                    mManulSetLayout.setVisibility(VISIBLE);
                 }
             }
         }, 1500);

@@ -43,6 +43,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 
     }
 
+    public int mStepDuration = 500;
     /**
      * 通过这个函数可以接收系统发送来的AccessibilityEvent，接收来的AccessibilityEvent是经过过滤的，过滤是在配置工作时设置的。
      * @param event
@@ -67,19 +68,19 @@ public class ServiceMyAccessibility extends AccessibilityService {
                             msg.what = 11;
                             msg.obj = list.get(0);
                             LogHelper.d("wangzixu", "xiaomi6 list = " + list.get(0).isScrollable());
-                            mHandler.sendMessageDelayed(msg, 400);
+                            mHandler.sendMessageDelayed(msg, mStepDuration);
                         } else {
                             CV_LockInitSetView.sAutoSuccess = false;
                             Message msg = Message.obtain();
                             msg.what = 101;
-                            mHandler.sendMessageDelayed(msg, 400);
+                            mHandler.sendMessageDelayed(msg, mStepDuration);
                         }
                     } else if ("com.miui.permcenter.autostart.AutoStartDetailManagementActivity".equals(className)) {//小米自动启动管理详情界面, 点击了条目后会跳转一个新界面, 把里面的两个条目都选中
                         CV_LockInitSetView.sIsAutoSet = false;
                         Message msg = Message.obtain();
                         msg.what = 12;
                         msg.obj = source;
-                        mHandler.sendMessageDelayed(msg, 400);
+                        mHandler.sendMessageDelayed(msg, mStepDuration);
                     } else if ("com.coloros.safecenter.startupapp.StartupAppListActivity".equals(className)) { //oppo手机的自启动界面
                         CV_LockInitSetView.sIsAutoSet = false;
                         List<AccessibilityNodeInfo> list = source.findAccessibilityNodeInfosByViewId("android:id/list");//oppo自启动界面的listview
@@ -87,12 +88,12 @@ public class ServiceMyAccessibility extends AccessibilityService {
                             Message msg = Message.obtain();
                             msg.what = 1;
                             msg.obj = list.get(0);
-                            mHandler.sendMessageDelayed(msg, 400);
+                            mHandler.sendMessageDelayed(msg, mStepDuration);
                         } else {
                             CV_LockInitSetView.sAutoSuccess = false;
                             Message msg = Message.obtain();
                             msg.what = 101;
-                            mHandler.sendMessageDelayed(msg, 400);
+                            mHandler.sendMessageDelayed(msg, mStepDuration);
                         }
                     }
                 }
@@ -161,7 +162,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 
                         Message messageBack = Message.obtain();
                         messageBack.what = 101; //后退
-                        mHandler.sendMessageDelayed(messageBack, 400);
+                        mHandler.sendMessageDelayed(messageBack, mStepDuration);
                     } else {
                         Message messageBack = Message.obtain();
                         messageBack.what = 101; //后退
@@ -173,7 +174,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 
                     Message messageBack = Message.obtain();
                     messageBack.what = 101; //后退
-                    mHandler.sendMessageDelayed(messageBack, 400);
+                    mHandler.sendMessageDelayed(messageBack, mStepDuration);
                 }
             } else {
                 CV_LockInitSetView.sAutoSuccess = false;
@@ -181,7 +182,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 
                 Message messageBack = Message.obtain();
                 messageBack.what = 101; //后退
-                mHandler.sendMessageDelayed(messageBack, 400);
+                mHandler.sendMessageDelayed(messageBack, mStepDuration);
             }
         } else {
             boolean b = source.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD); //前滚一屏幕
@@ -190,7 +191,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                 Message message = Message.obtain();
                 message.what = 1;
                 message.obj = source;
-                mHandler.sendMessageDelayed(message, 400);
+                mHandler.sendMessageDelayed(message, mStepDuration);
             } else {
                 //滚动到底了, 还没找到目标节点
                 LogHelper.d("wangzixu", "oppoauto handleMessage 1 滚动到底了, 还没找到目标节点 ");
@@ -223,10 +224,6 @@ public class ServiceMyAccessibility extends AccessibilityService {
                         message.what = 100; //点击
                         message.obj = parent;
                         mHandler.sendMessage(message);
-
-//                                    Message messageBack = Message.obtain();
-//                                    messageBack.what = 101; //后退
-//                                    mHandler.sendMessageDelayed(messageBack, 400);
                     } else {
                         CV_LockInitSetView.sAutoSuccess = true;
                         Message messageBack = Message.obtain();
@@ -239,7 +236,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 
                     Message messageBack = Message.obtain();
                     messageBack.what = 101; //后退
-                    mHandler.sendMessageDelayed(messageBack, 400);
+                    mHandler.sendMessageDelayed(messageBack, mStepDuration);
                 }
             } else {
                 CV_LockInitSetView.sAutoSuccess = false;
@@ -247,7 +244,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 
                 Message messageBack = Message.obtain();
                 messageBack.what = 101; //后退
-                mHandler.sendMessageDelayed(messageBack, 400);
+                mHandler.sendMessageDelayed(messageBack, mStepDuration);
             }
         } else {
             boolean b = source.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD); //前滚一屏幕
@@ -256,7 +253,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                 Message message = Message.obtain();
                 message.what = 11;
                 message.obj = source;
-                mHandler.sendMessageDelayed(message, 400);
+                mHandler.sendMessageDelayed(message, mStepDuration);
             } else {
                 //滚动到底了, 还没找到目标节点
                 LogHelper.d("wangzixu", "xiaomi6 handleMessage 1 滚动到底了, 还没找到目标节点 ");
@@ -289,7 +286,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
             CV_LockInitSetView.sAutoSuccess = true;
             Message messageBack = Message.obtain();
             messageBack.what = 101; //后退
-            mHandler.sendMessageDelayed(messageBack, 400);
+            mHandler.sendMessageDelayed(messageBack, mStepDuration);
 
             Message messageBack2 = Message.obtain();
             messageBack2.what = 101; //后退
@@ -300,7 +297,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 
             Message messageBack = Message.obtain();
             messageBack.what = 101; //后退
-            mHandler.sendMessageDelayed(messageBack, 400);
+            mHandler.sendMessageDelayed(messageBack, mStepDuration);
         }
     }
 
