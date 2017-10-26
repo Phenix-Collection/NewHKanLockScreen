@@ -100,9 +100,34 @@
     </RelativeLayout>
 
     <include
-        layout="@layout/layout_allprompt"
+        android:visibility="gone"
         android:layout_below="@id/divider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:id="@+id/layout_loading"
+        layout="@layout/layout_loading"/>
+
+    <include
+        android:visibility="gone"
+        android:layout_below="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_neterror"
+        layout="@layout/layout_neterror"/>
+
+    <include
+        android:visibility="gone"
+        android:layout_below="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_servererror"
+        layout="@layout/layout_servererror"/>
+
+    <include
+        android:visibility="gone"
+        android:layout_below="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_nocontent"
+        layout="@layout/layout_nocontent"/>
 </RelativeLayout>
