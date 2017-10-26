@@ -1,36 +1,52 @@
 package com.haokan.hklockscreen.mycollection;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
-import com.haokan.pubic.util.CommonUtil;
+import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.DisplayUtil;
+import com.haokan.pubic.util.ToastManager;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 public class ActivityMyCollection extends ActivityBase implements View.OnClickListener {
     private AdapterMyCollection mAdapter;
     protected Activity mActivity;
-    private TextView mEditmodeEdit;
+    private TextView mTvEdit;
     private boolean mIsEditMode = false;
 
-    private int mPageIndex = 1;
     private boolean mHasMoreData = true;
     private boolean mIsLoading = false;
+    private RecyclerView mRecyView;
+    private GridLayoutManager mManager;
+    private View mBottomDelLayout;
+    private TextView mTvAllPick;
+    private TextView mTvDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mycollection);
+        EventBus.getDefault().register(this);
+        initVies();
+        loadData();
+    }
+
+    private void initVies() {
         //错误界面相关
         View loadingLayout = this.findViewById(R.id.layout_loading);
         loadingLayout.setOnClickListener(this);
@@ -42,15 +58,17 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
         setPromptLayout(loadingLayout, netErrorView, serveErrorView, noContentView);
 
         mActivity=this;
-        mEditmodeEdit = (TextView) findViewById(R.id.edit);
-        mEditmodeEdit.setOnClickListener(this);
+        mTvEdit = (TextView) findViewById(R.id.edit);
+        mTvEdit.setOnClickListener(this);
+        mBottomDelLayout = findViewById(R.id.bottomdellayout);
+        mTvAllPick = (TextView) mBottomDelLayout.findViewById(R.id.tv_allpick);
+        mTvDelete = (TextView) mBottomDelLayout.findViewById(R.id.tv_delete);
+        mTvAllPick.setOnClickListener(this);
 
         findViewById(R.id.back).setOnClickListener(ActivityMyCollection.this);
 
-        EventBus.getDefault().register(this);
-
-        RecyclerView mRecyView = (RecyclerView) this.findViewById(R.id.recyview);
-        GridLayoutManager mManager = new GridLayoutManager(this, 3);
+        mRecyView = (RecyclerView) this.findViewById(R.id.recyview);
+        mManager = new GridLayoutManager(this, 3);
         mRecyView.setLayoutManager(mManager);
         mRecyView.setHasFixedSize(true);
         mRecyView.setItemAnimator(new DefaultItemAnimator());
@@ -64,175 +82,235 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
         });
 
         mAdapter = new AdapterMyCollection(mActivity);
-//        mRecyView.setAdapter(mAdapter);
+        mRecyView.setAdapter(mAdapter);
 
-        loadData();
-    }
-
-    public void setEditMode(boolean isEditMode) {
-        mAdapter.setState(isEditMode);
-    }
-
-    public void clearData() {
-        mAdapter.clearData();
-    }
-
-
-    @Override
-    public void onClick(View view) {
-        if (CommonUtil.isQuickClick()) {
-            return;
-        }
-        if (view.getId() == R.id.back) {
-            onBackPressed();
-        } else if (view.getId() == R.id.edit) {
-            if(!mIsEditMode) {
-                enterEditMode();
-            } else {
-                deleteAllSelectedItems();
+        mRecyView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             }
-        }
-    }
 
-    public void enterEditMode() {
-        if (!mIsEditMode) {
-            mIsEditMode = true;
-            mEditmodeEdit.setText("删除");
-            setEditMode(true);
-        }
-    }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (mHasMoreData && !mIsLoading) {
+                        boolean can = mRecyView.canScrollVertically(1);
+                        if (!can) {
+                            mAdapter.setFooterLoading();
+                            mRecyView.scrollToPosition(mManager.getItemCount() - 1);
+                            loadData();
+                        }
+                    }
+                }
+            }
+        });
 
-    public void exitEditMode() {
-        if (mIsEditMode) {
-            mIsEditMode = false;
-            mEditmodeEdit.setText("编辑");
-            setEditMode(false);
-        }
+        mAdapter.setOnSelectCountChangeListener(new AdapterMyCollection.onSelectCountChangeListener() {
+            @Override
+            public void onSelectCountChange(int currentCount) {
+                if (currentCount <= 0) {
+                    mTvDelete.setTextColor(0xff999999);
+                    mTvDelete.setOnClickListener(null);
+                } else {
+                    mTvDelete.setTextColor(0xfffc6262);
+                    mTvDelete.setOnClickListener(ActivityMyCollection.this);
+                }
+
+                if (currentCount >= mAdapter.getDataBeans().size()) {
+                    mTvAllPick.setText("反选");
+                    mTvAllPick.setSelected(true);
+                } else {
+                    mTvAllPick.setText("全选");
+                    mTvAllPick.setSelected(false);
+                }
+            }
+        });
     }
 
     @Override
-    public void onDestroy() {
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                if (mAdapter.isEditMode()) {
+                    onClick(mTvEdit);
+                } else {
+                    onBackPressed();
+                }
+                break;
+            case R.id.tv_allpick:
+                if (mTvAllPick.isSelected()) {
+                    mAdapter.allNoPick();
+                    mTvAllPick.setText("全选");
+                    mTvAllPick.setSelected(false);
+                } else {
+                    mAdapter.allPick();
+                    mTvAllPick.setText("反选");
+                    mTvAllPick.setSelected(true);
+                }
+                break;
+            case R.id.tv_delete:
+                deleteSelectedItems();
+                break;
+            case R.id.edit:
+                changeEditMode();
+                break;
+            default:
+                break;
+        }
     }
 
-    public void refreshData() {
-        mPageIndex = 1;
-        clearData();
-        loadData();
+    public void changeEditMode() {
+        if(mAdapter.isEditMode()) {
+            mAdapter.exitEditMode();
+            mTvEdit.setText("编辑");
+
+            final Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.view_bottom_out);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mBottomDelLayout.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            App.sMainHanlder.post(new Runnable() {
+                @Override
+                public void run() {
+                    mBottomDelLayout.startAnimation(animation);
+                }
+            });
+        } else {
+            if (mAdapter.getDataBeans().size() == 0) {
+                return;
+            }
+
+            mAdapter.enterEditMode();
+            mTvEdit.setText("取消");
+
+            mBottomDelLayout.setVisibility(View.VISIBLE);
+            final Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.view_bottom_in);
+            mBottomDelLayout.startAnimation(animation);
+        }
     }
 
     public void loadData() {
-//        ModelCollection.getCollections(this, 6, mPageIndex, Values.PAGE_SIZE, new onDataResponseListener<List<NewImageBean>>() {
-//        ModelCollection.getCollectionImages(this, new onDataResponseListener<List<NewImageBean>>() {
-//            @Override
-//            public void onStart() {
-//                mIsLoading = true;
-//                if (mAdapter.getDataBeans().size() == 0) {
-//                    showLoadingLayout();
-//                } else {
-//                    mAdapter.setFooterLoadMore();
-//                }
-//            }
-//
-//            @Override
-//            public void onDataSucess(List<NewImageBean> list) {
-//                mIsLoading = false;
-//                mAdapter.addDataBeans(list);
-//                mPageIndex++;
-//                dismissAllPromptLayout();
-//                mHasMoreData = false;
-//            }
-//
-//            @Override
-//            public void onDataEmpty() {
-//                mIsLoading = false;
-//                mHasMoreData = false;
-//                if (mAdapter.getDataBeans().size() == 0) {
-//                    showNoContentLayout();
-////                } else if (mView.getAllItemsData().size() >= 6) {
-////                    mView.setFooterNoMore();
-//                } else {
-////                    mView.setFooterHide();
+        new ModelCollection().getCollectionList(this, mAdapter.getDataBeans().size(), new onDataResponseListener<List<CollectionBean>>() {
+            @Override
+            public void onStart() {
+                mIsLoading = true;
+                if (mAdapter.getDataBeans().size() == 0) {
+                    showLoadingLayout();
+                }
+            }
+
+            @Override
+            public void onDataSucess(List<CollectionBean> list) {
+                mIsLoading = false;
+                mAdapter.addDataBeans(list);
+                dismissAllPromptLayout();
+                mHasMoreData = false;
+                mAdapter.hideFooter();
+            }
+
+            @Override
+            public void onDataEmpty() {
+                mIsLoading = false;
+                mHasMoreData = false;
+                if (mAdapter.getDataBeans().size() == 0) {
+                    showNoContentLayout();
+                } else {
+                    mAdapter.hideFooter();
 //                    mAdapter.setFooterNoMore();
-//                }
-//            }
-//
-//            @Override
-//            public void onDataFailed(String errmsg) {
-//                mIsLoading = false;
-//                mAdapter.hideFooter();
-//                if (mAdapter.getDataBeans().size() == 0) {
-//                    showServeErrorLayout();
-//                }
-//                showToast(errmsg);
-//            }
-//
-//            @Override
-//            public void onNetError() {
-//                mIsLoading = false;
-//                mAdapter.hideFooter();
-//                if (mAdapter.getDataBeans().size() == 0) {
-//                    showNetErrorLayout();
-//                }
-//                showToast(R.string.toast_net_error);
-//            }
-//        });
+                }
+            }
+
+            @Override
+            public void onDataFailed(String errmsg) {
+                mIsLoading = false;
+                mAdapter.hideFooter();
+                if (mAdapter.getDataBeans().size() == 0) {
+                    showServeErrorLayout();
+                }
+                ToastManager.showShort(ActivityMyCollection.this, errmsg);
+            }
+
+            @Override
+            public void onNetError() {
+                mIsLoading = false;
+                mAdapter.hideFooter();
+                if (mAdapter.getDataBeans().size() == 0) {
+                    showNetErrorLayout();
+                }
+                ToastManager.showNetErrorToast(ActivityMyCollection.this);
+            }
+        });
     }
 
-    public void deleteAllSelectedItems() {
-//        final List<NewImageBean> selectedItems = mAdapter.getSelectedItems();
-//        if (selectedItems != null && selectedItems.size() > 0) {
-//            ModelCollection.delCollectionImageBatch(this, selectedItems, new onDataResponseListener() {
-//                @Override
-//                public void onStart() {
-//                    showLoadingLayout();
-//                }
-//
-//                @Override
-//                public void onDataSucess(Object o) {
-//                    dismissAllPromptLayout();
-//                    ToastManager.showFollowToast(mActivity, R.string.delete_success);
-//
-//                    String imageIds = "";
-//                    LogHelper.d("mycollection", "deleteAllSelectedItems selectedItems size = " + selectedItems.size());
-//                    for (int i = 0; i < selectedItems.size(); i++) {
-//                        imageIds = imageIds + selectedItems.get(i).imgId + ",";
-//                    }
-//                    int i = imageIds.lastIndexOf(",");
-//                    imageIds = imageIds.substring(0, i);
-//                    Intent intent = new Intent(Values.Action.RECEIVER_LOCKSCREEN_COLLECTION_CHANGE);
-//                    intent.putExtra("image_id", imageIds.toString());
-//                    intent.putExtra("iscollect", false);
-//                    sendBroadcast(intent);
-//
-//                    mAdapter.delItems(selectedItems);
-//                    if (mAdapter.getDataBeans().size() <= 0) {
-//                        mAdapter.hideFooter();
-//                        showNoContentLayout();
-//                    }
-//                    exitEditMode();
-//                }
-//
-//                @Override
-//                public void onDataEmpty() {
-//                    dismissAllPromptLayout();
-//                }
-//
-//                @Override
-//                public void onDataFailed(String errmsg) {
-//                    showToast(errmsg);
-//                    dismissAllPromptLayout();
-//                }
-//
-//                @Override
-//                public void onNetError() {
-//                    dismissAllPromptLayout();
-//                }
-//            });
-//        } else {
-//            exitEditMode();
-//        }
+    public void deleteSelectedItems() {
+        final List<CollectionBean> selectedItems = mAdapter.getSelectedItems();
+
+
+        if (selectedItems != null && selectedItems.size() > 0) {
+            new ModelCollection().delCollections(this, selectedItems, new onDataResponseListener<Integer>() {
+                @Override
+                public void onStart() {
+                    showLoadingDialog();
+                }
+
+                @Override
+                public void onDataSucess(Integer count) {
+                    EventCollectionChange change = new EventCollectionChange();
+                    change.mIsAdd = false;
+                    change.mFrom = ActivityMyCollection.this;
+                    String ids = "";
+                    for (int i = 0; i < selectedItems.size(); i++) {
+                        ids = ids + selectedItems.get(i).imgId;
+                        if (i != selectedItems.size() - 1) {
+                            ids = ids + ",";
+                        }
+                    }
+                    change.imgIds = ids;
+                    EventBus.getDefault().post(change);
+
+
+                    mAdapter.delItems(selectedItems);
+                    if (mAdapter.getDataBeans().size() <= 0) {
+                        mAdapter.hideFooter();
+                        showNoContentLayout();
+                    }
+
+                    if (mAdapter.isEditMode()) {
+                        changeEditMode(); //退出编辑态
+                    }
+                    dismissLoadingDialog();
+                    ToastManager.showShort(mActivity, "删除成功");
+
+
+                }
+
+                @Override
+                public void onDataEmpty() {
+                    dismissLoadingDialog();
+                }
+
+                @Override
+                public void onDataFailed(String errmsg) {
+                    ToastManager.showShort(mActivity, "删除失败 : " + errmsg);
+                    dismissLoadingDialog();
+                }
+
+                @Override
+                public void onNetError() {
+                    dismissLoadingDialog();
+                }
+            });
+        }
     }
 
     @Override
@@ -241,11 +319,42 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
         closeActivityAnim();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK) {
-            refreshData();
+    @Subscribe
+    public void onEvent(EventCollectionChange event) {
+//        if (event.mIsAdd) {
+//            CollectionBean bean = event.mBean;
+//            if (mAdapter != null) {
+//                mAdapter.getDataBeans().add(0, bean);
+//                mAdapter.notifyContentItemInserted(0);
+//            }
+//        } else {
+//            String[] split = event.imgIds.split(",");
+//            List<CollectionBean> dataBeans = mAdapter.getDataBeans();
+//            ArrayList<CollectionBean> temp = new ArrayList<>();
+//            for (int i = 0; i < dataBeans.size(); i++) {
+//                CollectionBean bean = dataBeans.get(i);
+//                for (int j = 0; j < split.length; j++) {
+//                    if (bean.imgId != null && bean.imgId.equals(split[j])) {
+//                        temp.add(bean);
+//                    }
+//                }
+//            }
+//            if (temp != null && temp.size() > 0) {
+//                mAdapter.getDataBeans().remove(temp);
+//                mAdapter.notifyDataSetChanged();
+//            }
+//        }
+
+        if (this != event.mFrom) {
+            mAdapter.getDataBeans().clear();
+            mAdapter.notifyDataSetChanged();
+            loadData();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }

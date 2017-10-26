@@ -10,15 +10,31 @@
         android:layout_height="90dp"
         android:background="@drawable/bg_screen_up">
 
-        <ImageView
-            android:id="@+id/iv_setting"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="20dp"
-            android:padding="20dp"
-            android:background="@drawable/selector_touming_borderless"
-            android:scaleType="center"
-            android:src="@drawable/icon_setting_bai"
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_setting"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:padding="20dp"-->
+            <!--android:background="@drawable/selector_touming_borderless"-->
+            <!--android:scaleType="center"-->
+            <!--android:src="@drawable/icon_setting_bai"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
+
+        <TextView
+            android:id="@+id/setting"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="33dp"
+            android:background="@drawable/selector_backlockscreen_bg"
+            android:layout_marginRight="15dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:text="设置"
+            android:textColor="@color/selector_click_bai"
+            android:textSize="12sp" />
     </RelativeLayout>
 </merge>

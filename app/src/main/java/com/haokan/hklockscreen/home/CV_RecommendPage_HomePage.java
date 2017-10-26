@@ -34,13 +34,13 @@ public class CV_RecommendPage_HomePage extends CV_RecommendPage implements View.
     private void initView() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.cv_recommendpage_homepage, this, true);
 
-        view.findViewById(R.id.iv_setting).setOnClickListener(this);
+        view.findViewById(R.id.setting).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.iv_setting: //回到上面的详情页页
+            case R.id.setting:
                 Intent i = new Intent(mContext, ActivityLockSetting.class);
                 if (mActivityBase != null) {
                     mActivityBase.startActivity(i);

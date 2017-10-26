@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.mycollection.CollectionBean;
+import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
@@ -43,6 +44,9 @@ import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -77,18 +81,16 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected CV_ShareBgImageView mShareBlurBgView;
     protected ArrayList<MainImageBean> mData = new ArrayList<>();
     protected Adapter_DetailPage_Base mAdapterVpMain;
-    protected int mInitIndex; //初始在第几页
     protected int mCurrentPosition;
     protected MainImageBean mCurrentImgBean;
-    protected View mTvBottomCollectParent;
     protected View mTvBottomCollect;
     protected TextView mTvBottomCollectTitle;
-    protected View mLayoutTitleLick;
+    protected View mLayoutTitleLink;
     protected boolean mIsCaptionShow; //当前是否正在显示图说
     protected boolean mIsAnimnating; //正在执行一些动画, 如显示隐藏图说等
     protected static final long sAinmDuration = 150; //一些动画的时长, 如显示隐藏图说等
-
-    Dialog mProgressDialog;
+    protected View mBottomSettingView;
+    protected Dialog mProgressDialog;
 
 
     public CV_DetailPageView_Base(@NonNull Context context) {
@@ -109,6 +111,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
     private void init(Context context) {
+        EventBus.getDefault().register(this);
+
         mContext = context;
         LayoutInflater.from(mContext).inflate(R.layout.cv_detailpage_base, this, true);
 
@@ -127,9 +131,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 //        mTvDescSimple.setOnClickListener(this);
 //        mTvDescAll.setOnClickListener(this);
 
-        mLayoutTitleLick = mLayoutMainBottom.findViewById(R.id.layout_title);
-        mTvTitlle = (TextView) mLayoutTitleLick.findViewById(R.id.tv_title);
-        mTvLink = (TextView) mLayoutTitleLick.findViewById(R.id.tv_link);
+        mLayoutTitleLink = mLayoutMainBottom.findViewById(R.id.layout_title);
+        mTvTitlle = (TextView) mLayoutTitleLink.findViewById(R.id.tv_title);
+        mTvLink = (TextView) mLayoutTitleLink.findViewById(R.id.tv_link);
         mTvLinkBg = new GradientDrawable();
         mTvLinkBg.setCornerRadius(DisplayUtil.dip2px(mContext, 2));
         mTvLinkBg.setColor(getLinkBgColor());
@@ -138,12 +142,12 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         //底部功能按钮条, 返回, 分享...等
         mBottomBar = findViewById(R.id.bottom_bar);
         mLayoutMainBottom.findViewById(R.id.bottom_back).setOnClickListener(this);//返回
-        mLayoutMainBottom.findViewById(R.id.setting).setOnClickListener(this);//设置
+        mBottomSettingView = mLayoutMainBottom.findViewById(R.id.setting);
+        mBottomSettingView.setOnClickListener(this);//设置
 
         mTvBottomDownloadParent = mLayoutMainBottom.findViewById(R.id.bottom_download);//赞
         mTvBottomDownload = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_download_title);
         mTvBottomDownloadParent.setOnClickListener(this);
-        mTvBottomCollectParent = mLayoutMainBottom.findViewById(R.id.bottom_collect);//收藏
         mTvBottomCollect = mLayoutMainBottom.findViewById(R.id.bottom_collect);
         mTvBottomCollectTitle = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_collect_title);
         mTvBottomCollect.setOnClickListener(this);
@@ -322,8 +326,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (mCurrentImgBean == null) {
             return;
         }
-        boolean selected = view.isSelected();
-        if (selected) {
+        if (mCurrentImgBean.isCollect != 0) {
             new ModelCollection().delCollection(mContext, mCurrentImgBean, new onDataResponseListener<Integer>() {
                 @Override
                 public void onStart() {
@@ -334,6 +337,13 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 public void onDataSucess(Integer integer) {
                     dismissLoadingDialog();
                     view.setSelected(false);
+                    mCurrentImgBean.isCollect = 0;
+
+                    EventCollectionChange change = new EventCollectionChange();
+                    change.mIsAdd = false;
+                    change.mFrom = CV_DetailPageView_Base.this;
+                    change.imgIds = mCurrentImgBean.imgId;
+                    EventBus.getDefault().post(change);
                 }
 
                 @Override
@@ -364,6 +374,14 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 public void onDataSucess(CollectionBean collectionBean) {
                     dismissLoadingDialog();
                     view.setSelected(true);
+                    mCurrentImgBean.isCollect = 1;
+
+                    EventCollectionChange change = new EventCollectionChange();
+                    change.mIsAdd = true;
+                    change.mFrom = CV_DetailPageView_Base.this;
+                    change.imgIds = mCurrentImgBean.imgId;
+                    change.mBean = collectionBean;
+                    EventBus.getDefault().post(change);
                 }
 
                 @Override
@@ -432,7 +450,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
 
         mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
-        mTvTitlle.setMaxWidth(mLayoutTitleLick.getWidth() - mTvLink.getMeasuredWidth());
+        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
         mTvTitlle.setText(mCurrentImgBean.imgTitle);
 
         mTvLinkBg.setColor(getLinkBgColor());
@@ -655,7 +673,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (bean == null) {
             return;
         }
-        mTvBottomCollectParent.setSelected(bean.isCollect != 0);
+        mTvBottomCollect.setSelected(bean.isCollect != 0);
     }
 
 
@@ -719,15 +737,46 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
     }
 
-    public void setInitIndex(int initIndex) {
-        mInitIndex = initIndex;
-    }
-
     private int[] mLinkBgColors={0xccF8546B,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD,0xccBD0FE1};
     private int mLingBgColorIndex = 0;
     public int getLinkBgColor(){
         int i = mLingBgColorIndex % mLinkBgColors.length;
         mLingBgColorIndex++;
         return mLinkBgColors[i];
+    }
+
+    @Subscribe
+    public void onEvent(EventCollectionChange event) {
+        if (this != event.mFrom) {
+            if (event.mIsAdd) {
+                CollectionBean bean = event.mBean;
+                for (int i = 0; i < mData.size(); i++) {
+                    MainImageBean mainImageBean = mData.get(i);
+                    if (bean.imgId != null && bean.imgId.equals(mainImageBean.imgId)) {
+                        mainImageBean.isCollect = 1;
+                        if (mainImageBean == mCurrentImgBean) {
+                            refreshCollectNum(mCurrentImgBean);
+                        }
+                    }
+                }
+            } else {
+                String[] split = event.imgIds.split(",");
+                for (int i = 0; i < mData.size(); i++) {
+                    MainImageBean bean = mData.get(i);
+                    for (int j = 0; j < split.length; j++) {
+                        if (bean.imgId != null && bean.imgId.equals(split[j])) {
+                            bean.isCollect = 0;
+                            if (bean == mCurrentImgBean) {
+                                refreshCollectNum(mCurrentImgBean);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void onDestory() {
+        EventBus.getDefault().unregister(this);
     }
 }

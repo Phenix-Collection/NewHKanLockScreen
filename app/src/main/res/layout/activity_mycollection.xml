@@ -10,7 +10,7 @@
         android:id="@+id/actionbar"
         android:background="@color/bai"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="45dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
         <ImageButton
@@ -33,13 +33,14 @@
 
         <TextView
             android:id="@+id/edit"
+            android:background="@drawable/selector_touming_borderless"
             android:layout_alignParentEnd="true"
             android:gravity="center_vertical"
             android:paddingEnd="15dp"
             android:paddingStart="15dp"
             android:text="编辑"
             android:textSize="14sp"
-            android:textColor="#f16b6b"
+            android:textColor="#999999"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
     </RelativeLayout>
@@ -62,6 +63,41 @@
         android:scrollbars="vertical"
         android:clipToPadding="false"
         android:layout_marginRight="5dp"/>
+    
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/bottomdellayout"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bai"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/tv_allpick"
+            android:background="@drawable/selector_touming_borderless"
+            android:text="全选"
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:paddingRight="10dp"
+            android:paddingLeft="15dp"
+            android:drawablePadding="7dp"
+            android:drawableLeft="@drawable/selector_delcollect_bottom"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/selector_touming_borderless"
+            android:text="删除"
+            android:textSize="14sp"
+            android:textColor="#ff999999"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
 
     <include
         layout="@layout/layout_allprompt"

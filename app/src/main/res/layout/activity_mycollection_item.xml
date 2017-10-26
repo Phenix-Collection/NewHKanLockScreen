@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:scaleType="center"
-        android:src="@drawable/selector_collect_choice_small"
+        android:src="@drawable/selector_delcollect"
         android:layout_alignParentEnd="true"
         android:visibility="invisible"
         />

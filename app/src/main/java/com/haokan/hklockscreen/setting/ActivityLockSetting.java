@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
+import com.haokan.hklockscreen.mycollection.ActivityMyCollection;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
@@ -171,10 +172,14 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             case R.id.setting_collect:
             case R.id.setting_collect1:
                 {
-                    Intent intent = new Intent();
-                    intent.setPackage(getPackageName());
-                    intent.setAction("com.haokan.service.autoupdateimage");
-                    startService(intent);
+//                    Intent intent = new Intent();
+//                    intent.setPackage(getPackageName());
+//                    intent.setAction("com.haokan.service.autoupdateimage");
+//                    startService(intent);
+
+                    Intent intent = new Intent(this, ActivityMyCollection.class);
+                    startActivity(intent);
+                    startActivityAnim();
                 }
                 break;
             case R.id.layout_aboutus:

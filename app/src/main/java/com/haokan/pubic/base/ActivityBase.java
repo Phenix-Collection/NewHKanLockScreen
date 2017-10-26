@@ -1,5 +1,6 @@
 package com.haokan.pubic.base;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -57,6 +58,25 @@ public class ActivityBase extends AppCompatActivity {
     private View mLoadingLayout;
     private View mNoContentLayout;
     private View mServeErrorLayout;
+
+    //loading 对话框, Dialog形式的loading, 不同于loadinglayout, loadinglayout在页面底层, dialog盖在页面上层
+    private Dialog mProgressDialog;
+    public void showLoadingDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new Dialog(this, R.style.CustomDialog);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setCanceledOnTouchOutside(false);
+            mProgressDialog.setContentView(R.layout.dialog_layout_loading);
+        }
+        mProgressDialog.show();
+    }
+
+    public void dismissLoadingDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+    }
 
     /**
      * 设置四种提示框，loading，网络错误，服务器错误，无内容

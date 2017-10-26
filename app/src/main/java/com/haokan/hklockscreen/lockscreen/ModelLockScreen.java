@@ -9,9 +9,11 @@ import android.text.TextUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.reflect.TypeToken;
+import com.haokan.hklockscreen.mycollection.CollectionBean;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.cachesys.ACache;
+import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.HttpRetrofitManager;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.UrlsUtil;
@@ -23,6 +25,7 @@ import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.JsonUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.Values;
+import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -85,8 +88,6 @@ public class ModelLockScreen {
                             File file = new File(bean.localUrl);
                             if (file.exists()) {
                                 bean.myType = 1;
-                                bean.imgBigUrl = bean.localUrl;
-                                bean.imgSmallUrl = bean.localUrl;
                             }
                         }
                     }
@@ -102,6 +103,9 @@ public class ModelLockScreen {
                             }
                         }
                     }
+
+                    //处理收藏的状态
+                    processCollect(context, list);
 
                     subscriber.onNext(list);
                     subscriber.onCompleted();
@@ -133,6 +137,23 @@ public class ModelLockScreen {
                         }
                     }
                 });
+    }
+
+    private void processCollect(Context context, List<MainImageBean> list) {
+        try {
+            Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(CollectionBean.class);
+            for (int i = 0; i < list.size(); i++) {
+                MainImageBean bean = list.get(i);
+                Object o = dao.queryForId(bean.imgId);
+                if (o != null) {
+                    bean.isCollect = 1;
+                } else {
+                    bean.isCollect = 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -230,6 +251,18 @@ public class ModelLockScreen {
 
         Observable<ResponseEntity<ResponseBody_Switch>> observable = HttpRetrofitManager.getInstance().getRetrofitService().getSwitchData(UrlsUtil.getSwitchImgsUrl(), requestEntity);
         observable
+                .map(new Func1<ResponseEntity<ResponseBody_Switch>, ResponseEntity<ResponseBody_Switch>>() {
+                    @Override
+                    public ResponseEntity<ResponseBody_Switch> call(ResponseEntity<ResponseBody_Switch> responseEntity) {
+                        if (responseEntity != null && responseEntity.getHeader().resCode == 0) {
+                            ResponseBody_Switch body1 = responseEntity.getBody();
+                            if (body1.list != null && body1.list.size() > 0) {
+                                processCollect(context, body1.list);
+                            }
+                        }
+                        return responseEntity;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ResponseEntity<ResponseBody_Switch>>() {

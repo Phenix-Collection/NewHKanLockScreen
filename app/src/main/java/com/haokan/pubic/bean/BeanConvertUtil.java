@@ -25,4 +25,25 @@ public class BeanConvertUtil {
 
         return collectionBean;
     }
+
+    public static MainImageBean collectionBean2MainImageBean(CollectionBean imageBean) {
+        MainImageBean collectionBean = new MainImageBean();
+        collectionBean.imgId = imageBean.imgId;
+        collectionBean.imgSmallUrl = imageBean.imgSmallUrl;
+        collectionBean.imgBigUrl = imageBean.imgBigUrl;
+        collectionBean.imgDesc = imageBean.imgDesc;
+        collectionBean.imgTitle = imageBean.imgTitle;
+        collectionBean.linkTitle = imageBean.linkTitle;
+        collectionBean.linkUrl = imageBean.linkUrl;
+        collectionBean.typeId = imageBean.typeId;
+        collectionBean.typeName = imageBean.typeName;
+        collectionBean.shareUrl = imageBean.shareUrl;
+        collectionBean.colNum = imageBean.colNum;
+        collectionBean.commentNum = imageBean.commentNum;
+        collectionBean.cpId = imageBean.cpId;
+        collectionBean.cpName = imageBean.cpName;
+        collectionBean.isCollect = 1;
+
+        return collectionBean;
+    }
 }

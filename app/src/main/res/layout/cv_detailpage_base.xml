@@ -34,6 +34,7 @@
                 android:src="@drawable/selector_bottom_back"/>
 
             <View
+                android:id="@+id/divider1"
                 android:layout_width="1px"
                 android:layout_height="14dp"
                 android:layout_gravity="center_vertical"
@@ -67,6 +68,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/divider2"
                 android:layout_width="1px"
                 android:layout_height="14dp"
                 android:layout_gravity="center_vertical"
@@ -81,6 +83,7 @@
                 android:src="@drawable/icon_home_share"/>
 
             <View
+                android:id="@+id/divider3"
                 android:layout_width="1px"
                 android:layout_height="14dp"
                 android:layout_gravity="center_vertical"
@@ -114,6 +117,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/divider4"
                 android:layout_width="1px"
                 android:layout_height="14dp"
                 android:layout_gravity="center_vertical"

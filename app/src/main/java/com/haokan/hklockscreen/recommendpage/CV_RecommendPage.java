@@ -110,7 +110,6 @@ public class CV_RecommendPage extends FrameLayout{
                             mAdapter.setFooterLoading();
                             mRecyclerView.scrollToPosition(mManager.getItemCount() - 1);
                             loadData(false);
-                            mAdapter.setFooterLoading();
                         }
                     }
                 }

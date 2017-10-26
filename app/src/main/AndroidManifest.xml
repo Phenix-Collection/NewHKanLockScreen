@@ -69,6 +69,17 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name=".mycollection.ActivityMyCollection"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".mycollection.ActivityMyCollectionDetailPage"
+            android:theme="@style/ActivityPromptTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
 
         <activity android:name=".lockscreen.ActivityLockScreen"
                   android:launchMode="singleInstance"

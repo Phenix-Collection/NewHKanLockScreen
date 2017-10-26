@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/shape_backlockscreen_bg"
+                android:background="@drawable/selector_backlockscreen_bg"
                 android:layout_marginRight="15dp"
                 android:paddingLeft="7dp"
                 android:paddingRight="7dp"

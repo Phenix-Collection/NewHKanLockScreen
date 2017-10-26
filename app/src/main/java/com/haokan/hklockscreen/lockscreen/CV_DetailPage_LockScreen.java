@@ -64,6 +64,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     private boolean mIsFrist = true;
     private TextView mTvSwitch;
     private BroadcastReceiver mReceiver;
+    protected int mInitIndex; //初始在第几页
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
         this(context, null);
@@ -76,9 +77,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     public CV_DetailPage_LockScreen(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.cv_detailpage_lockscreen, this, false);
-        addView(view);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.cv_detailpage_lockscreen, this, true);
+//        addView(view);
         initViews(view);
+        loadData(false);
     }
 
     private void initViews(View rootView) {
@@ -214,7 +216,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 }
                 if (!HttpStatusManager.checkNetWorkConnect(mContext)) {
                     ToastManager.showNetErrorToast(mContext);
-                    mIvSwitch.clearAnimation();
+                    setIvSwitching(false);
                     return;
                 }
 
@@ -273,7 +275,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     /**
-     * 进入锁屏状态
+     * 进入锁屏状态, 是否自动滚动向下一张
      */
     public void intoLockScreenState(boolean scrollNext) {
         if (mData.size() == 0) {
@@ -648,6 +650,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     public void onDestory() {
+        super.onDestory();
         mIsDestory = true;
         if (mReceiver != null) {
             mContext.unregisterReceiver(mReceiver);
