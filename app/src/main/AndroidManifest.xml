@@ -76,7 +76,7 @@
 
         <activity
             android:name=".mycollection.ActivityMyCollectionDetailPage"
-            android:theme="@style/ActivityPromptTheme"
+            android:theme="@style/MyCollectionDetailPage"
             android:screenOrientation="portrait">
         </activity>
 

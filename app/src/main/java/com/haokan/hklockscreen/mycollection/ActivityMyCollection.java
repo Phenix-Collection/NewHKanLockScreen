@@ -131,11 +131,7 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                if (mAdapter.isEditMode()) {
-                    onClick(mTvEdit);
-                } else {
-                    onBackPressed();
-                }
+                onBackPressed();
                 break;
             case R.id.tv_allpick:
                 if (mTvAllPick.isSelected()) {
@@ -315,36 +311,16 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        closeActivityAnim();
+        if (mAdapter.isEditMode()) {
+            onClick(mTvEdit);
+        } else {
+            super.onBackPressed();
+            closeActivityAnim();
+        }
     }
 
     @Subscribe
     public void onEvent(EventCollectionChange event) {
-//        if (event.mIsAdd) {
-//            CollectionBean bean = event.mBean;
-//            if (mAdapter != null) {
-//                mAdapter.getDataBeans().add(0, bean);
-//                mAdapter.notifyContentItemInserted(0);
-//            }
-//        } else {
-//            String[] split = event.imgIds.split(",");
-//            List<CollectionBean> dataBeans = mAdapter.getDataBeans();
-//            ArrayList<CollectionBean> temp = new ArrayList<>();
-//            for (int i = 0; i < dataBeans.size(); i++) {
-//                CollectionBean bean = dataBeans.get(i);
-//                for (int j = 0; j < split.length; j++) {
-//                    if (bean.imgId != null && bean.imgId.equals(split[j])) {
-//                        temp.add(bean);
-//                    }
-//                }
-//            }
-//            if (temp != null && temp.size() > 0) {
-//                mAdapter.getDataBeans().remove(temp);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        }
-
         if (this != event.mFrom) {
             mAdapter.getDataBeans().clear();
             mAdapter.notifyDataSetChanged();

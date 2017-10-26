@@ -42,7 +42,7 @@ public class ActivityHomePage extends ActivityBase {
         Intent i = new Intent(this, ServiceLockScreen.class);
         startService(i);
 
-        checkStoragePermission();
+//        checkStoragePermission();
     }
 
     private void initView() {

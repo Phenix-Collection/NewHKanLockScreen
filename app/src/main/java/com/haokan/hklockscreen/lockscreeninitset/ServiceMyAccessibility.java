@@ -70,6 +70,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                             LogHelper.d("wangzixu", "xiaomi6 list = " + list.get(0).isScrollable());
                             mHandler.sendMessageDelayed(msg, mStepDuration);
                         } else {
+                            LogHelper.d("wangzixu", "xiaomi6 没有找到可以滚动的view");
                             CV_LockInitSetView.sAutoSuccess = false;
                             Message msg = Message.obtain();
                             msg.what = 101;
@@ -290,7 +291,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
 
             Message messageBack2 = Message.obtain();
             messageBack2.what = 101; //后退
-            mHandler.sendMessageDelayed(messageBack2, 900);
+            mHandler.sendMessageDelayed(messageBack2, mStepDuration*2);
         } else {
             LogHelper.d("wangzixu", "xiaomi6 handleMessage 12 自动启动详情页 没有找到checkbox");
             CV_LockInitSetView.sAutoSuccess = false;
