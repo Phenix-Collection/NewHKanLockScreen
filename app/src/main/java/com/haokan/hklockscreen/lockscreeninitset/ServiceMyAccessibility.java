@@ -56,46 +56,20 @@ public class ServiceMyAccessibility extends AccessibilityService {
                 int eventType = event.getEventType();
                 if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                     CharSequence className = event.getClassName();
-                    final AccessibilityNodeInfo source = getRootInActiveWindow();
-
                     if ("com.miui.permcenter.autostart.AutoStartManagementActivity".equals(className)) {//小米自动启动管理界面
-//                        List<AccessibilityNodeInfo> list = source.findAccessibilityNodeInfosByViewId("com.miui.securitycenter:id/list_view");//小米6自启动界面的listview
-                        ArrayList<AccessibilityNodeInfo> list = new ArrayList<>();
-                        findCanScrollNode(source, list);//小米6自启动界面的listview
-                        LogHelper.d("wangzixu", "xiaomi6 listSize = " + list.size());
-                        if (list != null && list.size() > 0) {
                             Message msg = Message.obtain();
-                            msg.what = 11;
-                            msg.obj = list.get(0);
-                            LogHelper.d("wangzixu", "xiaomi6 list = " + list.get(0).isScrollable());
-                            mHandler.sendMessageDelayed(msg, mStepDuration);
-                        } else {
-                            LogHelper.d("wangzixu", "xiaomi6 没有找到可以滚动的view");
-                            CV_LockInitSetView.sAutoSuccess = false;
-                            Message msg = Message.obtain();
-                            msg.what = 101;
-                            mHandler.sendMessageDelayed(msg, mStepDuration);
-                        }
+                            msg.what = 10;
+                            mHandler.sendMessageDelayed(msg, mStepDuration+100);
                     } else if ("com.miui.permcenter.autostart.AutoStartDetailManagementActivity".equals(className)) {//小米自动启动管理详情界面, 点击了条目后会跳转一个新界面, 把里面的两个条目都选中
                         CV_LockInitSetView.sIsAutoSet = false;
                         Message msg = Message.obtain();
                         msg.what = 12;
-                        msg.obj = source;
                         mHandler.sendMessageDelayed(msg, mStepDuration);
                     } else if ("com.coloros.safecenter.startupapp.StartupAppListActivity".equals(className)) { //oppo手机的自启动界面
                         CV_LockInitSetView.sIsAutoSet = false;
-                        List<AccessibilityNodeInfo> list = source.findAccessibilityNodeInfosByViewId("android:id/list");//oppo自启动界面的listview
-                        if (list != null && list.size() > 0) {
-                            Message msg = Message.obtain();
-                            msg.what = 1;
-                            msg.obj = list.get(0);
-                            mHandler.sendMessageDelayed(msg, mStepDuration);
-                        } else {
-                            CV_LockInitSetView.sAutoSuccess = false;
-                            Message msg = Message.obtain();
-                            msg.what = 101;
-                            mHandler.sendMessageDelayed(msg, mStepDuration);
-                        }
+                        Message msg = Message.obtain();
+                        msg.what = 1;
+                        mHandler.sendMessageDelayed(msg, mStepDuration+100);
                     }
                 }
             } catch (Exception e) {
@@ -124,14 +98,20 @@ public class ServiceMyAccessibility extends AccessibilityService {
                     LogHelper.d("wangzixu", "handleMessage 101 后退");
                     break;
                 }
-                case 1: //oppo R9s 设置自动开机启动
-                    autoStart_oppoR9s(msg);
+                case 1: //oppo R9s
+                    autoStart_oppoR9s_1();
+                    break;
+                case 2: //oppo R9s
+                    autoStart_oppoR9s_2(msg);
+                    break;
+                case 10:
+                    autoStart_xiaomi6_1();
                     break;
                 case 11: //小米6开机启动列表页, 找到好看锁屏并点击
-                    autoStart_xiaomi6_1(msg);
+                    autoStart_xiaomi6_2(msg);
                     break;
                 case 12://小米6开机启详情页
-                    autoStart_xiaomi6_2(msg);
+                    autoStart_xiaomi6_3(msg);
                     break;
                 default:
                     break;
@@ -139,7 +119,24 @@ public class ServiceMyAccessibility extends AccessibilityService {
         }
     };
 
-    public void autoStart_oppoR9s(Message msg) {
+    //1寻找可以滚动的view
+    public void autoStart_oppoR9s_1() {
+        final AccessibilityNodeInfo source = getRootInActiveWindow();
+        List<AccessibilityNodeInfo> list = source.findAccessibilityNodeInfosByViewId("android:id/list");//oppo自启动界面的listview
+        if (list != null && list.size() > 0) {
+            Message msg = Message.obtain();
+            msg.what = 2;
+            msg.obj = list.get(0);
+            mHandler.sendMessageDelayed(msg, 0);
+        } else {
+            CV_LockInitSetView.sAutoSuccess = false;
+            Message msg = Message.obtain();
+            msg.what = 101;
+            mHandler.sendMessageDelayed(msg, 0);
+        }
+    }
+
+    public void autoStart_oppoR9s_2(Message msg) {
         Object obj = msg.obj;
         AccessibilityNodeInfo source = (AccessibilityNodeInfo) obj;
         List<AccessibilityNodeInfo> nodes = source.findAccessibilityNodeInfosByText(getApplicationContext().getResources().getString(R.string.app_name));
@@ -190,7 +187,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
             if (b) {
                 LogHelper.d("wangzixu", "oppoauto handleMessage 1 前滚一屏幕, 再寻找");
                 Message message = Message.obtain();
-                message.what = 1;
+                message.what = 2;
                 message.obj = source;
                 mHandler.sendMessageDelayed(message, mStepDuration);
             } else {
@@ -205,9 +202,32 @@ public class ServiceMyAccessibility extends AccessibilityService {
         }
     }
 
-    private void autoStart_xiaomi6_1(Message msg) {
+    //1寻找可以滚动的view
+    private void autoStart_xiaomi6_1() {
+        final AccessibilityNodeInfo source = getRootInActiveWindow();
+        ArrayList<AccessibilityNodeInfo> list = new ArrayList<>();
+        findCanScrollNode(source, list);//小米6自启动界面的listview
+        LogHelper.d("wangzixu", "xiaomi6 listSize = " + list.size());
+        if (list != null && list.size() > 0) {
+            Message message = Message.obtain();
+            message.what = 11;
+            message.obj = list.get(0);
+            LogHelper.d("wangzixu", "xiaomi6 list = " + list.get(0).isScrollable());
+            mHandler.sendMessageDelayed(message, 0);
+        } else {
+            LogHelper.d("wangzixu", "xiaomi6 没有找到可以滚动的view");
+            CV_LockInitSetView.sAutoSuccess = false;
+            Message message = Message.obtain();
+            message.what = 101;
+            mHandler.sendMessageDelayed(message, 0);
+        }
+    }
+
+    private void autoStart_xiaomi6_2(Message msg) {
         Object obj = msg.obj;
         AccessibilityNodeInfo source = (AccessibilityNodeInfo) obj;
+
+
         List<AccessibilityNodeInfo> nodes = source.findAccessibilityNodeInfosByText(getApplicationContext().getResources().getString(R.string.app_name));
         if (nodes != null && nodes.size() > 0) {
             //找到了好看锁屏这个节点
@@ -267,9 +287,10 @@ public class ServiceMyAccessibility extends AccessibilityService {
         }
     }
 
-    private void autoStart_xiaomi6_2(Message msg) {
-        Object obj = msg.obj;
-        AccessibilityNodeInfo source = (AccessibilityNodeInfo) obj;
+    private void autoStart_xiaomi6_3(Message msg) {
+//        Object obj = msg.obj;
+//        AccessibilityNodeInfo source = (AccessibilityNodeInfo) obj;
+        final AccessibilityNodeInfo source = getRootInActiveWindow();
         List<AccessibilityNodeInfo> infos = source.findAccessibilityNodeInfosByViewId("com.miui.securitycenter:id/auto_start_sliding_button");
         if (infos != null && infos.size() > 0) {
 
