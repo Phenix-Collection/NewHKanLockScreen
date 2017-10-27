@@ -8,6 +8,8 @@ import android.os.Looper;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
 
 import java.util.Locale;
 
@@ -33,16 +35,15 @@ public class App extends Application {
         super.onCreate();
         init(this);
 
+        UMShareAPI.get(this);
         MobclickAgent.setDebugMode(false);
 
-//        UMShareAPI.get(this);
-//        com.umeng.socialize.utils.Log.LOG = false; //友盟分享的log开关
-//        //微信 appid appsecret
-//        PlatformConfig.setWeixin("wx9f0b565235da43e1", "759db4319d6c23b09c2d28b9a4fcb4ad");
-//        //新浪微博 appkey appsecret
-//        PlatformConfig.setSinaWeibo("357695541", "a4d2df94f7c5c2e48ae93659801e2249","https://api.weibo.com/oauth2/default.html");
-//        // QQ和Qzone appid appkey
-//        PlatformConfig.setQQZone("1101819412", "pvH55D7PJ3XTii7j");
+        //微信 appid appsecret
+        PlatformConfig.setWeixin("wx9d116eb352937363", "7c8e12f912049757a143ab874346bfe2");
+        //新浪微博 appkey appsecret
+        PlatformConfig.setSinaWeibo("2156364876","e3350a8d04bebf03da9e457f50682c0f","https://api.weibo.com/oauth2/default.html");
+        // QQ和Qzone appid appkey
+        PlatformConfig.setQQZone("1104604449", "DYIcUy0pqatvbvWj");
     }
 
     public static void init(final Context context) {

@@ -23,6 +23,62 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--友盟begin-->
+        <meta-data android:value="556bfc2467e58e495e003fdd" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="${CHANNEL_NAME}" android:name="UMENG_CHANNEL"/>
+
+        <!--微博begin-->
+        <activity
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:launchMode="singleTask"
+            android:name="com.sina.weibo.sdk.share.WbShareTransActivity">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!--微博end-->
+
+        <!-- *************微信分享配置 begin -->
+        <activity
+            android:name="com.haokanhaokan.lockscreen.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- *************微信分享配置 end -->
+        <!-- *************微信分享配置 end -->
+
+        <!--qq精简begn-->
+        <activity
+            android:name="com.umeng.qq.tencent.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tencent1101819412" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.umeng.qq.tencent.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+        <!--qq精简end-->
+        <!--友盟end-->
+
         <!--使glide使用okhttp来访问网络-->
         <meta-data
             android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"

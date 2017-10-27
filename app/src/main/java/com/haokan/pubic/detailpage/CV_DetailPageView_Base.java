@@ -44,6 +44,11 @@ import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -317,10 +322,117 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                     hideDownloadLayout();
                 }
                 break;
+            case R.id.share_weixin_circle:
+//                if (UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.WEIXIN)) {
+//                } else {
+//                    ToastManager.showShort(this, getString(R.string.no_install_weixin));
+//                }
+                shareTo(SHARE_MEDIA.WEIXIN_CIRCLE);
+                break;
+            case R.id.share_weixin:
+//                if (UMShareAPI.get(mContext).isInstall(this, SHARE_MEDIA.WEIXIN)) {
+//                } else {
+//                    ToastManager.showShort(this, getString(R.string.no_install_weixin));
+//                }
+                shareTo(SHARE_MEDIA.WEIXIN);
+                break;
+            case R.id.share_sina:
+                shareTo(SHARE_MEDIA.SINA);
+                break;
+            case R.id.share_qq:
+                shareTo(SHARE_MEDIA.QQ);
+//                if (UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.QQ)) {
+//                } else {
+//                    ToastManager.showShort(this, getString(R.string.no_install_qq));
+//                }
+                break;
+            case R.id.share_qqzone:
+                shareTo(SHARE_MEDIA.QZONE);
+//                if (UMShareAPI.get(this).isInstall(this, SHARE_MEDIA.QQ)) {
+//                } else {
+//                    ToastManager.showShort(this, getString(R.string.no_install_qq));
+//                }
+                break;
             default:
                 break;
         }
     }
+
+    private void shareTo(SHARE_MEDIA platfrom) {
+        if (mCurrentImgBean == null) {
+            LogHelper.d("wangzixu", "shareTo mCurrentImgBean = null");
+            return;
+        }
+
+        if (mActivity == null) {
+            LogHelper.d("wangzixu", "shareTo mActivity = null");
+            return;
+        }
+
+        if (TextUtils.isEmpty(mCurrentImgBean.shareUrl)) {
+            UMImage shareMedia = new UMImage(mContext, mCurrentImgBean.imgBigUrl);//网络图片
+            UMImage thumb =  new UMImage(mContext, mCurrentImgBean.imgSmallUrl);
+            shareMedia.setThumb(thumb);
+
+            new ShareAction(mActivity)
+                    .withMedia(shareMedia)
+                    .setCallback(mUMShareListener)
+                    .setPlatform(platfrom)
+                    .share();
+        } else {
+            UMWeb web = new UMWeb(mCurrentImgBean.shareUrl);
+            web.setTitle(mCurrentImgBean.imgTitle);//标题
+            web.setDescription(mCurrentImgBean.imgDesc);
+            web.setThumb(new UMImage(mContext, mCurrentImgBean.imgSmallUrl));  //缩略图
+
+            new ShareAction(mActivity)
+                    .setPlatform(platfrom)
+                    .withMedia(web)
+                    .setCallback(mUMShareListener)
+                    .share();
+        }
+
+    }
+
+    private UMShareListener mUMShareListener = new UMShareListener() {
+        /**
+         * @descrption 分享开始的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+        }
+
+        /**
+         * @descrption 分享成功的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            ToastManager.showShort(mContext, "已分享");
+            hideShareLayout();
+        }
+
+        /**
+         * @descrption 分享失败的回调
+         * @param platform 平台类型
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            ToastManager.showShort(mContext, "分享失败");
+            LogHelper.d("share","分享失败:"+t);
+        }
+
+        /**
+         * @descrption 分享取消的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            ToastManager.showShort(mContext, "分享取消");
+        }
+    };
 
     protected void onClickCollect(final View view) {
         if (mCurrentImgBean == null) {
