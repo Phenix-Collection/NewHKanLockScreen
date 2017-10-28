@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.haokan.hklockscreen.lockscreen.CV_DetailPage_LockScreen;
 import com.haokan.hklockscreen.lockscreen.ReceiverLockScreen;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.CommonUtil;
@@ -32,7 +33,9 @@ public class App extends Application {
 
     public static final Handler sMainHanlder = new Handler(Looper.getMainLooper());
     public static String sReview = "0"; //1表示review, 0表示没有
+
     private ReceiverLockScreen mReceiver;
+    public static CV_DetailPage_LockScreen sHaokanLockView;
 
     @Override
     public void onCreate() {
@@ -54,6 +57,7 @@ public class App extends Application {
         filter.setPriority(Integer.MAX_VALUE);
         mReceiver = new ReceiverLockScreen();
         registerReceiver(mReceiver, filter);
+        sHaokanLockView = new CV_DetailPage_LockScreen(getApplicationContext());
     }
 
     public static void init(final Context context) {

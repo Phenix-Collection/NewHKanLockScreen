@@ -113,29 +113,29 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private void initLockScreenView() {
         mLockScreenLayout = (FrameLayout) findViewById(R.id.lockscreen_content);
 
-        if (ServiceLockScreen.sHaokanLockView == null) {
-            ServiceLockScreen.sHaokanLockView = new CV_DetailPage_LockScreen(this.getApplicationContext());
-            Intent i = new Intent(this, ServiceLockScreen.class);
-            startService(i);
+        if (App.sHaokanLockView == null) {
+            App.sHaokanLockView = new CV_DetailPage_LockScreen(this.getApplicationContext());
         }
+        Intent i = new Intent(this, ServiceLockScreen.class);
+        startService(i);
 
-        ServiceLockScreen.sHaokanLockView.setActivity(this);
-        ServiceLockScreen.sHaokanLockView.setOnLockScreenStateListener(this);
-        ViewParent parent = ServiceLockScreen.sHaokanLockView.getParent();
+        App.sHaokanLockView.setActivity(this);
+        App.sHaokanLockView.setOnLockScreenStateListener(this);
+        ViewParent parent = App.sHaokanLockView.getParent();
         if (parent != null) {
-            ((ViewGroup)parent).removeView(ServiceLockScreen.sHaokanLockView);
+            ((ViewGroup)parent).removeView(App.sHaokanLockView);
         }
-        mLockScreenLayout.addView(ServiceLockScreen.sHaokanLockView);
+        mLockScreenLayout.addView(App.sHaokanLockView);
 
-        ServiceLockScreen.sHaokanLockView.intoLockScreenState(true);
+        App.sHaokanLockView.intoLockScreenState(true);
 
 
-        ViewGroup.LayoutParams params = ServiceLockScreen.sHaokanLockView.getLayoutParams();
+        ViewGroup.LayoutParams params = App.sHaokanLockView.getLayoutParams();
         if (params == null) {
             params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
         }
         params.height = mScreenH;
-        ServiceLockScreen.sHaokanLockView.setLayoutParams(params);
+        App.sHaokanLockView.setLayoutParams(params);
     }
 
     private void initRecommendPageView() {
@@ -157,7 +157,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         LogHelper.d("wangzixu", "ActivityLockScreen onNewIntent");
-        ServiceLockScreen.sHaokanLockView.intoLockScreenState(true);
+        App.sHaokanLockView.intoLockScreenState(true);
         mScrollView.scrollTo(0,0);
         mLockRecommendPage.onHide();
         mIsRecommendPage = false;
@@ -173,7 +173,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (ServiceLockScreen.sHaokanLockView.isLocked()) {
+        if (App.sHaokanLockView.isLocked()) {
             return mLockScreenLayout.dispatchTouchEvent(event);
         } else {
             int action = event.getAction();
@@ -229,7 +229,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             MobclickAgent.onEvent(this, "lockscreen_recommend"); //锁屏页进入推荐
                             MobclickAgent.onEvent(this, "recommend_show"); //推荐页show
 
-                            MainImageBean bean = ServiceLockScreen.sHaokanLockView.getCurrentImageBean();
+                            MainImageBean bean = App.sHaokanLockView.getCurrentImageBean();
                             if (bean != null) {
                                 mLockRecommendPage.refreshIfChangeType(bean.typeName);
                             }
@@ -245,7 +245,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     return true;
                 }
 
-                if (ServiceLockScreen.sHaokanLockView.isShowLongClickLayout()) {
+                if (App.sHaokanLockView.isShowLongClickLayout()) {
                     return true;
                 }
 
@@ -302,7 +302,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     public void onLockScreenStateChange(boolean isLock) {
         if (isLock) {
-            mUnLockImageView = ServiceLockScreen.sHaokanLockView.getUnLockView();
+            mUnLockImageView = App.sHaokanLockView.getUnLockView();
         } else {
             App.sMainHanlder.postDelayed(new Runnable() {
                 @Override
@@ -320,7 +320,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
 
     public void backToLockScreenPage() {
-        ServiceLockScreen.sHaokanLockView.intoLockScreenState(false);
+        App.sHaokanLockView.intoLockScreenState(false);
         backToDetailPage();
     }
 
@@ -481,12 +481,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     protected void onDestroy() {
         LogHelper.d("wangzixu", "ActivityLockScreen onDestroy");
-        if (ServiceLockScreen.sHaokanLockView != null) {
-            ServiceLockScreen.sHaokanLockView.setActivity(null);
-            ServiceLockScreen.sHaokanLockView.setOnLockScreenStateListener(null);
-            ViewParent parent = ServiceLockScreen.sHaokanLockView.getParent();
+        if (App.sHaokanLockView != null) {
+            App.sHaokanLockView.setActivity(null);
+            App.sHaokanLockView.setOnLockScreenStateListener(null);
+            ViewParent parent = App.sHaokanLockView.getParent();
             if (parent != null) {
-                ((ViewGroup)parent).removeView(ServiceLockScreen.sHaokanLockView);
+                ((ViewGroup)parent).removeView(App.sHaokanLockView);
             }
         }
         super.onDestroy();

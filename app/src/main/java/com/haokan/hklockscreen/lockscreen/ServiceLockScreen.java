@@ -14,7 +14,6 @@ import com.haokan.pubic.logsys.LogHelper;
 public class ServiceLockScreen extends Service {
     private ReceiverLockScreen mReceiver;
     private final String TAG = "ServiceLockScreen";
-    public static CV_DetailPage_LockScreen sHaokanLockView;
     public static boolean sLockEnable = false;
 
     @Override
@@ -57,19 +56,12 @@ public class ServiceLockScreen extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (sHaokanLockView == null) {
-            sHaokanLockView = new CV_DetailPage_LockScreen(getApplicationContext());
-        }
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-//        stopForeground(true);// 停止前台服务--参数：表示是否移除之前的通知
-        if (sHaokanLockView != null) {
-            sHaokanLockView.onDestory();
-        }
-        sHaokanLockView = null;
+        stopForeground(true);// 停止前台服务--参数：表示是否移除之前的通知
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
