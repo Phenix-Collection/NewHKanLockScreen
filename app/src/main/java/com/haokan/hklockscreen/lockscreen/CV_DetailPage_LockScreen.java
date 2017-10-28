@@ -33,7 +33,7 @@ import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
 import com.umeng.analytics.MobclickAgent;
@@ -114,6 +114,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 if (Intent.ACTION_TIME_TICK.equals(action)) {
                     setTime();
                 } else if ("com.haokan.receiver.autoupdateimage".equals(action)) { //自动更新了图片
+                    LogHelper.d("wangzixu", "autoupdate 收到了更新广播");
+                    LogHelper.writeLog(mContext, "autoupdate 收到了更新广播");
                     loadSwitchOfflineData(true);
                 } else if ("com.haokan.receiver.localimagechange".equals(action)) { //本地相册变化了
                     loadData(true);
@@ -391,8 +393,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     private int mSwitchDataPage = 1;
     protected void loadSwitchData() {
-        final ModelLockScreen modelLockScreen = new ModelLockScreen();
-        modelLockScreen.getSwitchData(mContext, mSwitchDataPage, new onDataResponseListener<List<MainImageBean>>() {
+        ModelLockScreen.getSwitchData(mContext, mSwitchDataPage, new onDataResponseListener<List<MainImageBean>>() {
             @Override
             public void onStart() {
                 setIvSwitching(true);
@@ -412,8 +413,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 refreshData(true);
 
                 setIvSwitching(false);
-                modelLockScreen.saveSwitchData(mContext, mSwitchImgData);
                 mSwitchDataPage++;
+//                modelLockScreen.saveSwitchData(mContext, mSwitchImgData);
             }
 
             @Override
@@ -452,22 +453,28 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             mInitIndex = mData.size() * 10;
         }
 
+        if (mIsFrist || mIsLocked) {
+            mIsFrist = false;
+            mCurrentPosition = mInitIndex%mData.size();
+            mLockPosition = mCurrentPosition;
+            mCurrentImgBean = mData.get(mCurrentPosition);
+            intoLockScreenState(false);
+        }
+
         if (mInitIndex == 0) {
             onPageSelected(0);
         } else {
             mVpMain.setCurrentItem(mInitIndex, false);
         }
 
-        if (mIsFrist) {
-            mIsFrist = false;
-            intoLockScreenState(false);
+        if (showOfflineImage) {
+            LogHelper.d("wangzixu", "autoupdate 自动更新完成");
+            LogHelper.writeLog(mContext, "autoupdate 自动更新完成");
         }
-
-        LogHelper.d("wangzixu", "autoupdate 自动更新完成");
     }
 
     public void loadSwitchOfflineData(final boolean showOfflineImage) {
-        new ModelLockScreen().getOffineSwitchData(mContext, new onDataResponseListener<List<MainImageBean>>() {
+        ModelLockScreen.getOffineSwitchData(mContext, new onDataResponseListener<List<MainImageBean>>() {
             @Override
             public void onStart() {
             }
@@ -503,7 +510,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
      * @param onlyLocalImage  是否只加载本地图片
      */
     public void loadData(final boolean onlyLocalImage) {
-        new ModelLockScreen().getLocalImg(mContext, new onDataResponseListener<List<MainImageBean>>() {
+        ModelLockScreen.getLocalImg(mContext, new onDataResponseListener<List<MainImageBean>>() {
             @Override
             public void onStart() {
 
@@ -574,6 +581,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     @Override
     public void onUnLockSuccess() {
+        LogHelper.d("wangzixu", "ActivityLockScreen onUnLockSuccess");
         if (mActivity != null) {
             mActivity.finish();
         }

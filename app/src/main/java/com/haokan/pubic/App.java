@@ -2,11 +2,14 @@ package com.haokan.pubic;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.haokan.hklockscreen.lockscreen.ReceiverLockScreen;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.CommonUtil;
-import com.haokan.pubic.util.LogHelper;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -29,6 +32,7 @@ public class App extends Application {
 
     public static final Handler sMainHanlder = new Handler(Looper.getMainLooper());
     public static String sReview = "0"; //1表示review, 0表示没有
+    private ReceiverLockScreen mReceiver;
 
     @Override
     public void onCreate() {
@@ -44,6 +48,12 @@ public class App extends Application {
         PlatformConfig.setSinaWeibo("2156364876","e3350a8d04bebf03da9e457f50682c0f","https://api.weibo.com/oauth2/default.html");
         // QQ和Qzone appid appkey
         PlatformConfig.setQQZone("1104604449", "DYIcUy0pqatvbvWj");
+
+        IntentFilter filter=new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.setPriority(Integer.MAX_VALUE);
+        mReceiver = new ReceiverLockScreen();
+        registerReceiver(mReceiver, filter);
     }
 
     public static void init(final Context context) {

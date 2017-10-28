@@ -1,7 +1,7 @@
 package com.haokan.pubic.http;
 
 
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 
 import java.util.concurrent.TimeUnit;
 

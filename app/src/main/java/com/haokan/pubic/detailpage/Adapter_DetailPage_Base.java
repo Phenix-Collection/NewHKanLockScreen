@@ -13,7 +13,7 @@ import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.util.AssetsImageLoader;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 
 import java.util.ArrayList;
 

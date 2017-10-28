@@ -36,7 +36,7 @@ public interface RetrofitHttpService {
      * 自动更新
      */
     @POST
-    Observable<ResponseEntity<ResponseBody_Update>> getUpdateData(@Url String url, @Body RequestEntity<RequestBody_Update> requestEntity);
+    Observable<ResponseBody_Update> getUpdateData(@Url String url, @Body RequestEntity<RequestBody_Update> requestEntity);
 
     /**
      * 点击换一换

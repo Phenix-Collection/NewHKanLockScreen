@@ -1,27 +1,33 @@
 ﻿[
     {
-        "imgId": "1144154",
-        "imgTitle": "布雷肯山国家公园",
-        "typeName": "娱乐",
-        "imgDesc": "位于威尔士的中部，1957年被确定为国家公园。公园的名字取自海拔最高的中部山脊布雷肯。布雷肯山地区大多是绿草如茵的高地沼泽，但偶尔会有些裸露的岩石，和北部的斯诺多尼阿亚国家公园相比，显得静谧安详，但是山顶风力强劲，景色壮丽。",
+        "imgId": "1171367",
+        "imgTitle": "这款车刷新你的认知",
+        "typeName": “汽车”,
+        "imgDesc": "这款命名位“地狱”的跑车，在外观上更显独特性。",
         "imgBigUrl": "hk_def_imgs/default1.jpg",
-        "imgSmallUrl": "hk_def_imgs/default1.jpg"
+        "imgSmallUrl": "hk_def_imgs/default1.jpg",
+        "shareUrl": "https://redirect.levect.com/10000/0/1171367",
+        "linkUrl": "https://redirect.levect.com/10000/0/1171367"
 
     },
     {
-        "imgId": "1144155",
-        "imgTitle": "布雷肯山国家公园",
-        "typeName": "娱乐",
-        "imgDesc": "位于威尔士的中部，1957年被确定为国家公园。公园的名字取自海拔最高的中部山脊布雷肯。布雷肯山地区大多是绿草如茵的高地沼泽，但偶尔会有些裸露的岩石，和北部的斯诺多尼阿亚国家公园相比，显得静谧安详，但是山顶风力强劲，景色壮丽。",
+        "imgId": "1140945",
+        "imgTitle": "躲进古堡成一统",
+        "typeName": “旅游”,
+        "imgDesc": "它们将气势恢弘的景致和浪漫优雅的细节完美结合，令人神往。",
         "imgBigUrl": "hk_def_imgs/default2.jpg",
-        "imgSmallUrl": "hk_def_imgs/default2.jpg"
+        "imgSmallUrl": "hk_def_imgs/default2.jpg",
+        "shareUrl": "https://www.autodis.cn/detail/1139630?appid=0&eid=138001&utm_source=138001&utm_medium=lockscreen&utm_campaign=20171019&utm_content=59cdf64e19d0670001b7ba56",
+        "linkUrl": "https://www.autodis.cn/detail/1139630?appid=0&eid=138001&utm_source=138001&utm_medium=lockscreen&utm_campaign=20171019&utm_content=59cdf64e19d0670001b7ba56"
     },
     {
-        "imgId": "1144156",
-        "imgTitle": "布雷肯山国家公园",
-        "typeName": "娱乐",
-        "imgDesc": "位于威尔士的中部，1957年被确定为国家公园。公园的名字取自海拔最高的中部山脊布雷肯。布雷肯山地区大多是绿草如茵的高地沼泽，但偶尔会有些裸露的岩石，和北部的斯诺多尼阿亚国家公园相比，显得静谧安详，但是山顶风力强劲，景色壮丽。",
+        "imgId": "2375236",
+        "imgTitle": "全国唯一没有树的城市！",
+        "typeName": "资讯",
+        "imgDesc": "在这里种活一棵树，能获得三等功！",
         "imgBigUrl": "hk_def_imgs/default3.jpg",
-        "imgSmallUrl": "hk_def_imgs/default3.jpg"
+        "imgSmallUrl": "hk_def_imgs/default3.jpg",
+        "shareUrl": "https://redirect.levect.com/10000/0/2375236",
+        "linkUrl": "https://redirect.levect.com/10000/0/2375236"
     }
 ]

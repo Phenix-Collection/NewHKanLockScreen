@@ -12,7 +12,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.detailpage.Adapter_DetailPage_Base;
 import com.haokan.pubic.util.AssetsImageLoader;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 
 import java.util.ArrayList;
 

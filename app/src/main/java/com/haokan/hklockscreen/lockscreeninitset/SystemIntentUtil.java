@@ -4,7 +4,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
 
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 
 /**
  * Created by wangzixu on 2017/10/11.

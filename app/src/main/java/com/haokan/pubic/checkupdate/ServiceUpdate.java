@@ -13,7 +13,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.http.HttpRetrofitManager;
 import com.haokan.pubic.util.FileUtil;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
 
@@ -79,8 +79,8 @@ public class ServiceUpdate extends Service {
                 return;
             }
 
-            String url = updateBean.getDownloadUrl();
-            String apkName = App.sPID +"_" + updateBean.getVersonCode() + ".apk";
+            String url = updateBean.getVerDownUrl();
+            String apkName = App.sPID +"_" + updateBean.getVerCode() + ".apk";
 
             final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + Values.Path.PATH_DOWNLOADAPK;
             final File dir = new File(path);

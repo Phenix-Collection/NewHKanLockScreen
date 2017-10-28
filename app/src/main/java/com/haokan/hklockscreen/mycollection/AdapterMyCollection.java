@@ -15,7 +15,7 @@ import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
 import com.haokan.pubic.util.AssetsImageLoader;
 import com.haokan.pubic.util.DisplayUtil;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 
 import java.util.ArrayList;
 import java.util.List;

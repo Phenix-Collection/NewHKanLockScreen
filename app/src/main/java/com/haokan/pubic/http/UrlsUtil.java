@@ -22,9 +22,9 @@ public class UrlsUtil {
 
     //******接口系统1 begin, http://srapi.levect.com/api/app/xxxx****
     //升级用的借口
-    public String getUpdateUrl() {
-        return "http://srapi.levect.com/api/app/configure";
-    }
+//    public String getUpdateUrl() {
+//        return "http://srapi.levect.com/api/app/configure";
+//    }
     //******接口系统1 end, http://srapi.levect.com/api/app/xxxx****
 
 
@@ -51,6 +51,15 @@ public class UrlsUtil {
      */
     public static String getRecommendUrl() {
         return "http://api-m-gray.levect.com/app/list/img";
+    }
+
+
+    /**
+     * //升级用的借口
+     */
+    public static String getUpdateUrl() {
+        return "http://api-m-gray.levect.com/app/config/config";
+//        return "http://172.18.0.114:3009/app/config/config";
     }
 
     /**

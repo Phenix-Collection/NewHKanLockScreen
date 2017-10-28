@@ -14,7 +14,7 @@ import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.Values;
 
 import java.util.List;
@@ -31,10 +31,12 @@ public class ServiceAutoUpdateImage extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogHelper.d("wangzixu", "autoupdate AlarmOfflineService onStartCommand");
+
         //用户是否打开了自动更新开关
         boolean auto = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, true);
         if (!auto) {
+            LogHelper.d("wangzixu", "autoupdate onStartCommand auto = false");
+            LogHelper.writeLog(this, "autoupdate onStartCommand auto = false");
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
@@ -42,18 +44,22 @@ public class ServiceAutoUpdateImage extends Service {
         //用户是否有sd卡权限
         int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
-            LogHelper.w("wangzixu", "autoupdate 没有存储权限");
+            LogHelper.w("wangzixu", "autoupdate onStartCommand 没有存储权限");
+            LogHelper.writeLog(this, "autoupdate onStartCommand 没有存储权限");
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
 
         boolean wifi = HttpStatusManager.isWifi(this);
         if (!wifi) {
-            LogHelper.w("wangzixu", "autoupdate noWifi");
+            LogHelper.w("wangzixu", "autoupdate onStartCommand noWifi");
+            LogHelper.writeLog(this, "autoupdate onStartCommand noWifi");
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
 
+        LogHelper.d("wangzixu", "autoupdate onStartCommand");
+        LogHelper.writeLog(this, "autoupdate onStartCommand");
         autoUpdateData();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -64,8 +70,7 @@ public class ServiceAutoUpdateImage extends Service {
         if (mIsSwitching) {
             return;
         }
-        final ModelLockScreen modelLockScreen = new ModelLockScreen();
-        modelLockScreen.getAutoUpdateData(this, new onDataResponseListener<List<MainImageBean>>() {
+        ModelLockScreen.getAutoUpdateData(this, new onDataResponseListener<List<MainImageBean>>() {
             @Override
             public void onStart() {
                 mIsSwitching = true;
@@ -74,7 +79,8 @@ public class ServiceAutoUpdateImage extends Service {
             @Override
             public void onDataSucess(List<MainImageBean> mainImageBeen) {
                 mIsSwitching = false;
-                LogHelper.d("wangzixu", "autoupdate onDataSucess");
+                LogHelper.d("wangzixu", "autoupdate autoUpdateData onDataSucess");
+                LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData onDataSucess");
                 Intent intent = new Intent("com.haokan.receiver.autoupdateimage");
                 sendBroadcast(intent);
                 App.sMainHanlder.post(new Runnable() {
@@ -88,7 +94,8 @@ public class ServiceAutoUpdateImage extends Service {
             @Override
             public void onDataEmpty() {
                 mIsSwitching = false;
-                LogHelper.d("wangzixu", "autoupdate onDataEmpty");
+                LogHelper.d("wangzixu", "autoupdate autoUpdateData onDataEmpty");
+                LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData onDataEmpty");
                 App.sMainHanlder.post(new Runnable() {
                     @Override
                     public void run() {
@@ -100,7 +107,8 @@ public class ServiceAutoUpdateImage extends Service {
             @Override
             public void onDataFailed(String errmsg) {
                 mIsSwitching = false;
-                LogHelper.d("wangzixu", "autoupdate errmsg = " + errmsg);
+                LogHelper.d("wangzixu", "autoupdate autoUpdateData errmsg = " + errmsg);
+                LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData errmsg = " + errmsg);
                 App.sMainHanlder.post(new Runnable() {
                     @Override
                     public void run() {
@@ -112,7 +120,8 @@ public class ServiceAutoUpdateImage extends Service {
             @Override
             public void onNetError() {
                 mIsSwitching = false;
-                LogHelper.d("wangzixu", "autoupdate onNetError");
+                LogHelper.d("wangzixu", "autoupdate autoUpdateData onNetError");
+                LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData onNetError");
                 App.sMainHanlder.post(new Runnable() {
                     @Override
                     public void run() {

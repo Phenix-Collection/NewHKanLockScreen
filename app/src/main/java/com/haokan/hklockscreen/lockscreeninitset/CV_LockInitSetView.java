@@ -20,7 +20,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.umeng.analytics.MobclickAgent;
 

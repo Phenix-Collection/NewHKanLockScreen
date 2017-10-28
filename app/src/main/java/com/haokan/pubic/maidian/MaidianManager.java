@@ -2,7 +2,7 @@ package com.haokan.pubic.maidian;
 
 import android.text.TextUtils;
 import com.haokan.pubic.http.HttpRetrofitManager;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;

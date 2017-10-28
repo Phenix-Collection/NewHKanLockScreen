@@ -6,7 +6,7 @@ import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.j256.ormlite.dao.Dao;
 
 import java.util.List;

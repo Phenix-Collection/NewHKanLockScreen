@@ -30,7 +30,7 @@ import android.widget.TextView;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.util.CommonUtil;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 

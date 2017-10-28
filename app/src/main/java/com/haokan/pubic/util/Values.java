@@ -11,8 +11,9 @@ public class Values {
     public static class Path{
         public static final String PATH_BASE = "/Levect/" + PACKAGE_NAME + "/";
 
-        public static final String PATH_DOWNLOADAPK = PATH_BASE;
+        public static final String PATH_DOWNLOADAPK = PATH_BASE + "update";
         public static final String PATH_DOWNLOAD_PIC = PATH_BASE + "HkImages/";
+        public static final String PATH_LOG = PATH_BASE + "Log/";
     }
 
     public static class AcacheKey {

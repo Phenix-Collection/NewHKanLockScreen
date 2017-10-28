@@ -13,7 +13,7 @@ import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.AssetsImageLoader;
 import com.haokan.pubic.util.FileUtil;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.Values;
 import java.io.File;
 import rx.Observable;

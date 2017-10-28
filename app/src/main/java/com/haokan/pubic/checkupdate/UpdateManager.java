@@ -18,7 +18,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 
 import java.io.File;
@@ -43,7 +43,7 @@ public class UpdateManager {
 
             @Override
             public void onDataSucess(BeanUpdate updateBean) {
-                int ver_code = updateBean.getVersonCode();
+                int ver_code = updateBean.getVerCode();
                 int localVersionCode = App.APP_VERSION_CODE;
                 LogHelper.d("wangzixu", "checkUpdata onDataSucess localVersionCode= " + localVersionCode + ", remotecode = " + ver_code);
                 if (ver_code > localVersionCode) {
@@ -81,7 +81,7 @@ public class UpdateManager {
         }
         View cv = LayoutInflater.from(context).inflate(R.layout.dialog_layout_update, null);
         TextView desc = (TextView) cv.findViewById(R.id.tv_desc);
-        desc.setText(updateResponseBean.getAppDesc());
+        desc.setText(updateResponseBean.getVerDesc());
         final AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle("新版更新")
                 .setView(cv)

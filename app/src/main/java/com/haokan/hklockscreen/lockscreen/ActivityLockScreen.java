@@ -34,7 +34,7 @@ import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.util.DisplayUtil;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.umeng.analytics.MobclickAgent;
 
@@ -115,6 +115,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
         if (ServiceLockScreen.sHaokanLockView == null) {
             ServiceLockScreen.sHaokanLockView = new CV_DetailPage_LockScreen(this.getApplicationContext());
+            Intent i = new Intent(this, ServiceLockScreen.class);
+            startService(i);
         }
 
         ServiceLockScreen.sHaokanLockView.setActivity(this);
@@ -373,19 +375,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     public void onBackPressed() {
     }
 
-    @Override
-    protected void onDestroy() {
-        if (ServiceLockScreen.sHaokanLockView != null) {
-            ServiceLockScreen.sHaokanLockView.setActivity(null);
-            ServiceLockScreen.sHaokanLockView.setOnLockScreenStateListener(null);
-            ViewParent parent = ServiceLockScreen.sHaokanLockView.getParent();
-            if (parent != null) {
-                ((ViewGroup)parent).removeView(ServiceLockScreen.sHaokanLockView);
-            }
-        }
-        super.onDestroy();
-    }
-
     //权限相关begin*****
     /**
      * 检查权限
@@ -487,5 +476,19 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     public void onSystemUiVisibilityChange(int visibility) {
         hideNavigation();
+    }
+
+    @Override
+    protected void onDestroy() {
+        LogHelper.d("wangzixu", "ActivityLockScreen onDestroy");
+        if (ServiceLockScreen.sHaokanLockView != null) {
+            ServiceLockScreen.sHaokanLockView.setActivity(null);
+            ServiceLockScreen.sHaokanLockView.setOnLockScreenStateListener(null);
+            ViewParent parent = ServiceLockScreen.sHaokanLockView.getParent();
+            if (parent != null) {
+                ((ViewGroup)parent).removeView(ServiceLockScreen.sHaokanLockView);
+            }
+        }
+        super.onDestroy();
     }
 }

@@ -24,6 +24,7 @@ import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
 
 /**
@@ -112,6 +113,10 @@ public class CV_UnLockImageView extends AppCompatImageView {
     private boolean mCanUnLock = true; //是否可以解锁的开关
 
     public void setCanUnLock(boolean canUnLock) {
+        if (canUnLock && !mCanUnLock) {
+            LogHelper.d("wangzixu", "unlockview setCanUnLock mDownY = " + mDownY);
+            mDownY = mMinY = 0;
+        }
         mCanUnLock = canUnLock;
     }
 
@@ -173,17 +178,17 @@ public class CV_UnLockImageView extends AppCompatImageView {
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
         int action = event.getAction();
-        int y = (int) event.getRawY();
+        int y = (int) event.getY();
         if (y < mMinY) {
             mMinY = y;
         }
 
-//        LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION = " + y);
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 isTouch = false;
                 mMinY = mDownY = y;
                 mStartLongClick = true;
+                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_DOWN = " + y);
 
                 if (!mCanUnLock) {
                     postDelayed(mLongClickRunnable, 800);
@@ -200,6 +205,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
+                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_MOVE = " + y);
                 if (mCanUnLock) {
                     int deltaY = mDownY - y;
                     if (deltaY > 15 || isTouch) {
@@ -221,6 +227,9 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
+                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_UP = " + y
+                        + ", mMinY = " + mMinY + ", mDownY = "
+                        + mDownY + ", mCanUnLock = " + mCanUnLock + ", mTopRect.bottom = " + mTopRect.bottom);
                 if (mCanUnLock) {
                     if (mDownY - y > mLockDelta
                             && y - mMinY < mLockDelta) {

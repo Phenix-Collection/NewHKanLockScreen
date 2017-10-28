@@ -7,27 +7,41 @@ import android.os.Parcelable;
  * Created by wangzixu on 2017/7/18.
  */
 public class BeanUpdate implements Parcelable {
-    private int versonCode;
-    private String versonName;
-    private String downloadUrl;
-    private String appDesc;
+    private int verCode;
+    private String verName;
+    private String verDownUrl;
+    private String verDesc;
 
-    public BeanUpdate() {
+    public int getVerCode() {
+        return verCode;
     }
 
-    protected BeanUpdate(Parcel in) {
-        versonCode = in.readInt();
-        versonName = in.readString();
-        downloadUrl = in.readString();
-        appDesc = in.readString();
+    public void setVerCode(int verCode) {
+        this.verCode = verCode;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(versonCode);
-        dest.writeString(versonName);
-        dest.writeString(downloadUrl);
-        dest.writeString(appDesc);
+    public String getVerName() {
+        return verName;
+    }
+
+    public void setVerName(String verName) {
+        this.verName = verName;
+    }
+
+    public String getVerDownUrl() {
+        return verDownUrl;
+    }
+
+    public void setVerDownUrl(String verDownUrl) {
+        this.verDownUrl = verDownUrl;
+    }
+
+    public String getVerDesc() {
+        return verDesc;
+    }
+
+    public void setVerDesc(String verDesc) {
+        this.verDesc = verDesc;
     }
 
     @Override
@@ -35,10 +49,28 @@ public class BeanUpdate implements Parcelable {
         return 0;
     }
 
-    public static final Creator<BeanUpdate> CREATOR = new Creator<BeanUpdate>() {
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.verCode);
+        dest.writeString(this.verName);
+        dest.writeString(this.verDownUrl);
+        dest.writeString(this.verDesc);
+    }
+
+    public BeanUpdate() {
+    }
+
+    protected BeanUpdate(Parcel in) {
+        this.verCode = in.readInt();
+        this.verName = in.readString();
+        this.verDownUrl = in.readString();
+        this.verDesc = in.readString();
+    }
+
+    public static final Parcelable.Creator<BeanUpdate> CREATOR = new Parcelable.Creator<BeanUpdate>() {
         @Override
-        public BeanUpdate createFromParcel(Parcel in) {
-            return new BeanUpdate(in);
+        public BeanUpdate createFromParcel(Parcel source) {
+            return new BeanUpdate(source);
         }
 
         @Override
@@ -46,36 +78,4 @@ public class BeanUpdate implements Parcelable {
             return new BeanUpdate[size];
         }
     };
-
-    public int getVersonCode() {
-        return versonCode;
-    }
-
-    public void setVersonCode(int versonCode) {
-        this.versonCode = versonCode;
-    }
-
-    public String getVersonName() {
-        return versonName;
-    }
-
-    public void setVersonName(String versonName) {
-        this.versonName = versonName;
-    }
-
-    public String getDownloadUrl() {
-        return downloadUrl;
-    }
-
-    public void setDownloadUrl(String downloadUrl) {
-        this.downloadUrl = downloadUrl;
-    }
-
-    public String getAppDesc() {
-        return appDesc;
-    }
-
-    public void setAppDesc(String appDesc) {
-        this.appDesc = appDesc;
-    }
 }

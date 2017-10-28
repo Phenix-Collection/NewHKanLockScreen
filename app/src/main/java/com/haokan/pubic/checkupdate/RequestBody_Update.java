@@ -5,6 +5,5 @@ package com.haokan.pubic.checkupdate;
  * 获取频道/类型列表的请求体
  */
 public class RequestBody_Update {
-    public String appId;
-    public String pid;
+    public String companyId;
 }

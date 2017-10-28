@@ -23,7 +23,7 @@ import com.haokan.pubic.http.request.RequestHeader;
 import com.haokan.pubic.http.response.ResponseEntity;
 import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.JsonUtil;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.Values;
 import com.j256.ormlite.dao.Dao;
 
@@ -43,7 +43,7 @@ import rx.schedulers.Schedulers;
  * Created by wangzixu on 2017/10/16.
  */
 public class ModelLockScreen {
-    public File getOfflineDir(Context context) {
+    public static File getOfflineDir(Context context) {
         File filesDir = context.getFilesDir();
         File dir = new File(filesDir, "offline/");
         if (!dir.exists()) {
@@ -52,7 +52,7 @@ public class ModelLockScreen {
         return dir;
     }
 
-    public File getLocalImageDir(Context context) {
+    public static File getLocalImageDir(Context context) {
         File filesDir = context.getFilesDir();
         File dir = new File(filesDir, "localimage/");
         if (!dir.exists()) {
@@ -61,7 +61,7 @@ public class ModelLockScreen {
         return dir;
     }
 
-    public void getOffineSwitchData(final Context context, final onDataResponseListener<List<MainImageBean>> listener) {
+    public static void getOffineSwitchData(final Context context, final onDataResponseListener<List<MainImageBean>> listener) {
         if (listener == null) {
             return;
         }
@@ -139,7 +139,7 @@ public class ModelLockScreen {
                 });
     }
 
-    private void processCollect(Context context, List<MainImageBean> list) {
+    private static void processCollect(Context context, List<MainImageBean> list) {
         try {
             Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(CollectionBean.class);
             for (int i = 0; i < list.size(); i++) {
@@ -159,7 +159,7 @@ public class ModelLockScreen {
     /**
      * 获取本地相册的图片
      */
-    public void getLocalImg(final Context context, @NonNull final onDataResponseListener<List<MainImageBean>> listener) {
+    public static void getLocalImg(final Context context, @NonNull final onDataResponseListener<List<MainImageBean>> listener) {
         if (listener == null) {
             return;
         }
@@ -227,7 +227,7 @@ public class ModelLockScreen {
     }
 
 
-    public void getSwitchData(final Context context, final int page, final onDataResponseListener<List<MainImageBean>> listener) {
+    public static void getSwitchData(final Context context, final int page, final onDataResponseListener<List<MainImageBean>> listener) {
         if (listener == null || context == null) {
             return;
         }
@@ -258,6 +258,7 @@ public class ModelLockScreen {
                             ResponseBody_Switch body1 = responseEntity.getBody();
                             if (body1.list != null && body1.list.size() > 0) {
                                 processCollect(context, body1.list);
+                                saveSwitchDataSync(context, body1.list);
                             }
                         }
                         return responseEntity;
@@ -297,49 +298,99 @@ public class ModelLockScreen {
                 });
     }
 
-    public void saveSwitchData(final Context context, final ArrayList<MainImageBean> list) {
-        Observable.create(new Observable.OnSubscribe<ArrayList<MainImageBean>>() {
-            @Override
-            public void call(Subscriber<? super ArrayList<MainImageBean>> subscriber) {
-                try {
-                    saveSwitchDataSync(context, list);
-                    subscriber.onNext(list);
-                    subscriber.onCompleted();
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                    return;
-                }
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ArrayList<MainImageBean>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+//    public static void saveSwitchData(final Context context, final ArrayList<MainImageBean> list) {
+//        Observable.create(new Observable.OnSubscribe<ArrayList<MainImageBean>>() {
+//            @Override
+//            public void call(Subscriber<? super ArrayList<MainImageBean>> subscriber) {
+//                try {
+//                    saveSwitchDataSync(context, list);
+//                    subscriber.onNext(list);
+//                    subscriber.onCompleted();
+//                } catch (Exception e) {
+//                    subscriber.onError(e);
+//                    return;
+//                }
+//            }
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<ArrayList<MainImageBean>>() {
+//                    @Override
+//                    public void onCompleted() {
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable throwable) {
+//                        throwable.printStackTrace();
+//                        LogHelper.d("wangzixu", "saveSwitchData onError");
+//                    }
+//
+//                    @Override
+//                    public void onNext(ArrayList<MainImageBean> list) {
+//                        LogHelper.d("wangzixu", "saveSwitchData success");
+//                    }
+//                });
+//    }
+//
+//    public static void deleteOldData(final Context context, final ArrayList<MainImageBean> list) {
+//        Observable.create(new Observable.OnSubscribe<ArrayList<MainImageBean>>() {
+//            @Override
+//            public void call(Subscriber<? super ArrayList<MainImageBean>> subscriber) {
+//                try {
+//
+//                    File offlineDir = getOfflineDir(context);
+//                    File[] files = offlineDir.listFiles();
+//                    for (int i = 0; i < files.length; i++) {
+//                        File file = files[i];
+//                        boolean delete = true;
+//
+//                        for (int j = 0; j < list.size(); j++) {
+//                            MainImageBean imageBean = list.get(j);
+//                            if (file.getAbsolutePath().equals(imageBean.localUrl)) {
+//                                delete = false;
+//                                break;
+//                            }
+//                        }
+//
+//                        if (delete) {
+//                            FileUtil.deleteFile(file);
+//                        }
+//                    }
+//
+//                    subscriber.onNext(list);
+//                    subscriber.onCompleted();
+//                } catch (Exception e) {
+//                    subscriber.onError(e);
+//                    return;
+//                }
+//            }
+//        })
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<ArrayList<MainImageBean>>() {
+//                    @Override
+//                    public void onCompleted() {
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable throwable) {
+//                        throwable.printStackTrace();
+//                        LogHelper.d("wangzixu", "saveSwitchData onError");
+//                    }
+//
+//                    @Override
+//                    public void onNext(ArrayList<MainImageBean> list) {
+//                        LogHelper.d("wangzixu", "saveSwitchData success");
+//                    }
+//                });
+//    }
 
-                    @Override
-                    public void onError(Throwable throwable) {
-                        throwable.printStackTrace();
-                        LogHelper.d("wangzixu", "saveSwitchData onError");
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<MainImageBean> list) {
-                        LogHelper.d("wangzixu", "saveSwitchData success");
-                    }
-                });
-    }
-
-    private void saveSwitchDataSync(Context context, ArrayList<MainImageBean> list) {
+    private static synchronized void saveSwitchDataSync(Context context, ArrayList<MainImageBean> list) {
         if (list != null && list.size() > 0) {
-            //存储数据json
-            ACache aCache = ACache.get(context);
-            aCache.put(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME, list);
+            ArrayList<MainImageBean> failList = new ArrayList<>();
 
             //存储图片文件
             File offlineDir = getOfflineDir(context);
-            FileUtil.deleteContents(offlineDir, false);
             for (int i = 0; i < list.size(); i++) {
                 MainImageBean imageBean = list.get(i);
                 String url = imageBean.imgBigUrl;
@@ -351,22 +402,58 @@ public class ModelLockScreen {
                 }
 
                 File file = new File(offlineDir, name);
-                if (!file.exists()) { //图片文件不存在, 就下载
+
+                if (!file.exists() || file.length() == 0) { //图片文件不存在, 就下载
                     try {
                         Bitmap bitmap = Glide.with(context).load(url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
                         FileUtil.saveBitmapToFile(context, bitmap, file, false);
+
+                        imageBean.localUrl = file.getAbsolutePath();
+                        imageBean.imgBigUrl = imageBean.localUrl;
+                        imageBean.imgSmallUrl = imageBean.imgBigUrl;
                     } catch (Exception e) {
                         if (LogHelper.DEBUG) {
                             LogHelper.e("wangzixu", "saveSwitchData ----下载失败了一张 Glide load i = " + i + " , url = " + url);
                         }
+                        failList.add(imageBean);
                         e.printStackTrace();
                     }
+                } else {
+                    imageBean.localUrl = file.getAbsolutePath();
+                    imageBean.imgBigUrl = imageBean.localUrl;
+                    imageBean.imgSmallUrl = imageBean.imgBigUrl;
+                }
+            }
+
+            list.removeAll(failList);
+
+            //存储数据json
+            ACache aCache = ACache.get(context);
+            aCache.put(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME, list);
+
+            File[] files = offlineDir.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File file = files[i];
+                boolean delete = true;
+
+                for (int j = 0; j < list.size(); j++) {
+                    MainImageBean imageBean = list.get(j);
+                    if (file.getAbsolutePath().equals(imageBean.localUrl)) {
+                        delete = false;
+                        break;
+                    }
+                }
+
+                if (delete) {
+                    FileUtil.deleteFile(file);
                 }
             }
         }
     }
 
-    public void getAutoUpdateData(final Context context, final onDataResponseListener<List<MainImageBean>> listener) {
+
+
+    public static void getAutoUpdateData(final Context context, final onDataResponseListener<List<MainImageBean>> listener) {
         if (listener == null || context == null) {
             return;
         }

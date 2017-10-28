@@ -13,7 +13,7 @@ import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.onDataResponseListener;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 
 import java.lang.reflect.Field;

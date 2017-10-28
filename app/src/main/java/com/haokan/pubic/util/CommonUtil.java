@@ -17,6 +17,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.haokan.pubic.logsys.LogHelper;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;

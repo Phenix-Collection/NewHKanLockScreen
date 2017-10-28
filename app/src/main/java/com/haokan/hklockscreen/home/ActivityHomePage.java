@@ -20,6 +20,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
+import com.haokan.pubic.checkupdate.UpdateManager;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 
@@ -42,7 +43,7 @@ public class ActivityHomePage extends ActivityBase {
         Intent i = new Intent(this, ServiceLockScreen.class);
         startService(i);
 
-//        checkStoragePermission();
+        UpdateManager.checkUpdate(this, true);
     }
 
     private void initView() {

@@ -19,7 +19,7 @@ import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.DisplayUtil;
-import com.haokan.pubic.util.LogHelper;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.umeng.analytics.MobclickAgent;
