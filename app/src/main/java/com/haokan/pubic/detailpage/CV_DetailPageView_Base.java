@@ -38,6 +38,7 @@ import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.customview.ViewPagerTransformer;
 import com.haokan.pubic.http.onDataResponseListener;
+import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.BlurUtil;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
@@ -227,8 +228,16 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
     };
 
+    protected long mPreImageShowTime;
     @Override
     public void onPageSelected(int position) {
+        long currentTimeMillis = System.currentTimeMillis();
+        if (mCurrentImgBean != null) {
+            //好看埋点
+            MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 9, String.valueOf(currentTimeMillis-mPreImageShowTime), currentTimeMillis);
+        }
+        mPreImageShowTime = currentTimeMillis;
+
         App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
         mCurrentPosition = position%mData.size();
         mCurrentImgBean = mData.get(mCurrentPosition);
@@ -259,20 +268,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 break;
             case R.id.tv_link:
             case R.id.layout_caption:
-                {
-                    if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-                        return;
-                    }
-                    Intent intent = new Intent(mContext, ActivityWebview.class);
-                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
-                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
-                    if (mActivity != null) {
-                        mActivity.startActivity(intent);
-                        mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
-                    } else {
-                        mContext.startActivity(intent);
-                    }
-                }
+                onClickLink();
                 break;
             case R.id.tv_desc_all:
                 mTvDescSimple.setVisibility(VISIBLE);
@@ -358,7 +354,22 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
     }
 
-    private void shareTo(SHARE_MEDIA platfrom) {
+    protected void onClickLink(){
+        if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+            return;
+        }
+        Intent intent = new Intent(mContext, ActivityWebview.class);
+        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
+        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
+        if (mActivity != null) {
+            mActivity.startActivity(intent);
+            mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+        } else {
+            mContext.startActivity(intent);
+        }
+    }
+
+    protected void shareTo(SHARE_MEDIA platfrom) {
         if (mCurrentImgBean == null) {
             LogHelper.d("wangzixu", "shareTo mCurrentImgBean = null");
             return;
@@ -368,6 +379,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             LogHelper.d("wangzixu", "shareTo mActivity = null");
             return;
         }
+
+        //好看埋点
+        MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 4, "", System.currentTimeMillis());
 
         if (TextUtils.isEmpty(mCurrentImgBean.shareUrl)) {
             UMImage shareMedia = new UMImage(mContext, mCurrentImgBean.imgBigUrl);//网络图片
@@ -438,6 +452,10 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (mCurrentImgBean == null) {
             return;
         }
+
+        //好看埋点
+        MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 3, mCurrentImgBean.isCollect != 0 ? "0" : "1", System.currentTimeMillis());
+
         if (mCurrentImgBean.isCollect != 0) {
             new ModelCollection().delCollection(mContext, mCurrentImgBean, new onDataResponseListener<Integer>() {
                 @Override
@@ -531,7 +549,12 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
     protected void onClickBigImage() {
+        if (mCurrentImgBean != null) {
+            MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 7, mIsCaptionShow ? "0" : "1", System.currentTimeMillis());
+        }
+
         if (mIsCaptionShow) {
+            //好看埋点
             hideCaption();
         } else {
             showCaption();
@@ -793,6 +816,10 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (mCurrentImgBean == null) {
             return;
         }
+
+        //好看埋点
+        MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 6, "", System.currentTimeMillis());
+
         ModelDownLoadImage.downLoadImg(mContext, bean, new onDataResponseListener<File>() {
             @Override
             public void onStart() {

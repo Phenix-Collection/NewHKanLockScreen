@@ -15,12 +15,14 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -278,6 +280,10 @@ public class CV_RecommendPage extends FrameLayout{
             mActivityBase.startActivityAnim();
         } else {
             mContext.startActivity(intent);
+        }
+
+        if (mActivityBase instanceof ActivityLockScreen) {
+            MobclickAgent.onEvent(mContext, "recommend_godetail");
         }
     }
 }

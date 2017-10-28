@@ -10,6 +10,8 @@ import com.haokan.pubic.checkupdate.RequestBody_Update;
 import com.haokan.pubic.checkupdate.ResponseBody_Update;
 import com.haokan.pubic.http.request.RequestEntity;
 import com.haokan.pubic.http.response.ResponseEntity;
+import com.haokan.pubic.maidian.MaidianResponse;
+import com.haokan.pubic.maidian.MaidianUpBean;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -60,4 +62,9 @@ public interface RetrofitHttpService {
     @Streaming
     @GET
     Call<ResponseBody> downloadBigFile(@Url String fileUrl);
+
+    //埋点相关begin
+    @POST
+    Observable<MaidianResponse> maidianUpload(@Url String url, @Body MaidianUpBean requestEntity);
+    //埋点相关end
 }

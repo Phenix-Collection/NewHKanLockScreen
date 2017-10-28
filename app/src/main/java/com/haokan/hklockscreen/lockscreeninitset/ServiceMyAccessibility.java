@@ -59,7 +59,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                     if ("com.miui.permcenter.autostart.AutoStartManagementActivity".equals(className)) {//小米自动启动管理界面
                             Message msg = Message.obtain();
                             msg.what = 10;
-                            mHandler.sendMessageDelayed(msg, mStepDuration+100);
+                            mHandler.sendMessageDelayed(msg, mStepDuration+200);
                     } else if ("com.miui.permcenter.autostart.AutoStartDetailManagementActivity".equals(className)) {//小米自动启动管理详情界面, 点击了条目后会跳转一个新界面, 把里面的两个条目都选中
                         CV_LockInitSetView.sIsAutoSet = false;
                         Message msg = Message.obtain();
@@ -69,7 +69,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                         CV_LockInitSetView.sIsAutoSet = false;
                         Message msg = Message.obtain();
                         msg.what = 1;
-                        mHandler.sendMessageDelayed(msg, mStepDuration+100);
+                        mHandler.sendMessageDelayed(msg, mStepDuration+200);
                     }
                 }
             } catch (Exception e) {

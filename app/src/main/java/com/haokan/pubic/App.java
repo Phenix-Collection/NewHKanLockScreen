@@ -36,7 +36,7 @@ public class App extends Application {
         init(this);
 
         UMShareAPI.get(this);
-        MobclickAgent.setDebugMode(false);
+        MobclickAgent.setDebugMode(true);
 
         //微信 appid appsecret
         PlatformConfig.setWeixin("wx9d116eb352937363", "7c8e12f912049757a143ab874346bfe2");

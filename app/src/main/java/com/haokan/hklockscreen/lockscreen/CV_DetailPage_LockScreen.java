@@ -36,7 +36,8 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
-import com.haokan.pubic.webview.ActivityWebview;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -101,18 +102,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         mTvLockLink.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-                    return;
-                }
-                Intent intent = new Intent(mContext, ActivityWebview.class);
-                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
-                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
-                if (mActivity != null) {
-                    mActivity.startActivity(intent);
-                    mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
-                } else {
-                    mContext.startActivity(intent);
-                }
+                onClickLink();
             }
         });
 
@@ -204,6 +194,12 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 mVpMain.setCurrentItem(mInitIndex, false);
             }
         }
+    }
+
+    @Override
+    protected void onClickLink() {
+        MobclickAgent.onEvent(mContext, "lockscreen_godetail"); //锁屏页进入详情
+        super.onClickLink();
     }
 
     @Override
@@ -559,6 +555,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     @Override
     protected void onClickSetting() {
         super.onClickSetting();
+        MobclickAgent.onEvent(mContext, "lockscreen_set"); //锁屏页进入设置
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -570,10 +567,17 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     @Override
+    protected void shareTo(SHARE_MEDIA platfrom) {
+        super.shareTo(platfrom);
+        MobclickAgent.onEvent(mContext, "lockscreen_share"); //锁屏页进入分享
+    }
+
+    @Override
     public void onUnLockSuccess() {
         if (mActivity != null) {
             mActivity.finish();
         }
+        MobclickAgent.onEvent(mContext, "lockscreen_unlock"); //锁屏页解锁
         CV_DetailPage_LockScreen.this.setVisibility(INVISIBLE);
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override

@@ -22,6 +22,7 @@ import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.ToastManager;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by wangzixu on 2017/10/23.
@@ -103,6 +104,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                                 Intent intent = SystemIntentUtil.getAutoStartIntent();
                                 mActivityBase.startActivityForResult(intent, 103);
                                 mActivityBase.startActivityAnim();
+                                MobclickAgent.onEvent(mContext, "initset_setting");
                             }
                         }, 500);
                     } else {
@@ -113,13 +115,15 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                         mIvCryLaugh.setVisibility(VISIBLE);
                         mIvCryLaugh.setImageResource(R.drawable.icon_lockinit_cry);
                         mCryTvLayout.setVisibility(VISIBLE);
+
+                        MobclickAgent.onEvent(mContext, "initset_checkfailed");
                     }
                 } else {
                     if (mManulSetLayout == null) {
                         ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
                         mManulSetLayout = viewStub.inflate();
-                        mTvAutoStartSet = mManulSetLayout.findViewById(R.id.autostartset);
-                        mTvManualSet = mManulSetLayout.findViewById(R.id.tvmanualset);
+                        mTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset);
+                        mTvManualSet = mManulSetLayout.findViewById(R.id.tv_golockmanual);
                         mTvAutoStartSet.setOnClickListener(CV_LockInitSetView.this);
                         mTvManualSet.setOnClickListener(CV_LockInitSetView.this);
                     }
@@ -131,6 +135,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 }
             }
         }, 1500);
+
+        MobclickAgent.onEvent(mContext, "initset_check");
     }
 
     private void startScanAnim() {
@@ -183,11 +189,13 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             case R.id.tvaccessset: //打开辅助功能按钮
                 goAccessablityActivity();
                 break;
-            case R.id.autostartset:
+            case R.id.tv_manualset:
                 goAutoSetActivity();
                 break;
-            case R.id.tvmanualset:
+            case R.id.tv_golockmanual:
                 if (mHasSetAutoStart) {
+                    MobclickAgent.onEvent(mContext, "initset_failmanugolock");
+
                     Intent i = new Intent(mContext, ActivityLockScreen.class);
                     mActivityBase.startActivity(i);
                     mActivityBase.finish();
@@ -196,6 +204,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 break;
             case R.id.startlock:
                 if (mHasSetAutoStart) {
+                    MobclickAgent.onEvent(mContext, "initset_successgolock");
+
                     Intent i = new Intent(mContext, ActivityLockScreen.class);
                     mActivityBase.startActivity(i);
                     mActivityBase.finish();
@@ -268,14 +278,18 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                         Intent intent = SystemIntentUtil.getAutoStartIntent();
                         mActivityBase.startActivityForResult(intent, 103);
                         mActivityBase.startActivityAnim();
+
+                        MobclickAgent.onEvent(mContext, "initset_setting");
                     }
                 }, 500);
             } else {
+                MobclickAgent.onEvent(mContext, "initset_checkfailed");
+
                 if (mManulSetLayout == null) {
                     ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
                     mManulSetLayout = viewStub.inflate();
-                    mTvAutoStartSet = mManulSetLayout.findViewById(R.id.autostartset);
-                    mTvManualSet = mManulSetLayout.findViewById(R.id.tvmanualset);
+                    mTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset);
+                    mTvManualSet = mManulSetLayout.findViewById(R.id.tv_golockmanual);
                     mTvAutoStartSet.setOnClickListener(this);
                     mTvManualSet.setOnClickListener(this);
                 }
@@ -291,6 +305,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             sIsAutoSet = false;
 
             if (sAutoSuccess) { //自动设置成功回来
+                MobclickAgent.onEvent(mContext, "initset_success");
+
                 mHasSetAutoStart = true;
                 mTvPercent.setText("100%");
                 mRadarView.stop();
@@ -298,15 +314,18 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 mLoadingLayout.setVisibility(GONE);
                 AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
                 animationDrawable.stop();
+
                 mIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
                 mIvCryLaugh.setVisibility(VISIBLE);
                 mAutoCompleteLayout.setVisibility(VISIBLE);
             } else { //自动设置失败回来
+                MobclickAgent.onEvent(mContext, "initset_failmanual");
+
                 if (mManulSetLayout == null) {
                     ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
                     mManulSetLayout = viewStub.inflate();
-                    mTvAutoStartSet = mManulSetLayout.findViewById(R.id.autostartset);
-                    mTvManualSet = mManulSetLayout.findViewById(R.id.tvmanualset);
+                    mTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset);
+                    mTvManualSet = mManulSetLayout.findViewById(R.id.tv_golockmanual);
                     mTvAutoStartSet.setOnClickListener(this);
                     mTvManualSet.setOnClickListener(this);
                 }

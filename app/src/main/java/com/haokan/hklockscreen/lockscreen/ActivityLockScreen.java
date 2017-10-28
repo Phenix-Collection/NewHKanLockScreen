@@ -36,6 +36,7 @@ import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.LogHelper;
 import com.haokan.pubic.util.StatusBarUtil;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by wangzixu on 2017/3/2.
@@ -61,7 +62,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         disableKeyGuard();
         StatusBarUtil.setStatusBarTransparnet(this);
         setContentView(R.layout.activity_lock);
-        hideNavigation();
+
         disableKeyGuard();
 //        mScreenH = getResources().getDisplayMetrics().heightPixels;
 
@@ -74,6 +75,28 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         initRecommendPageView();
 
         checkStoragePermission();
+
+        //为了处理一个bug --- 锁屏view不触发layout, 第一帧不绘制
+        App.sMainHanlder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mScrollView.scrollTo(1, 1);
+                mScrollView.scrollTo(0, 0);
+            }
+        }, 250);
+
+        hideNavigation();
+        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mIsRecommendPage) {
+            MobclickAgent.onEvent(this, "recommend_show"); //推荐页show
+        } else {
+            MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
+        }
     }
 
     private void initView() {
@@ -126,15 +149,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         }
         params.height = mScreenH;
         mLockRecommendPage.setLayoutParams(params);
-
-        //为了处理一个bug --- 锁屏view不触发layout, 第一帧不绘制
-        App.sMainHanlder.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mScrollView.scrollTo(0, 1);
-                mScrollView.scrollTo(0, 0);
-            }
-        }, 150);
     }
 
     @Override
@@ -145,6 +159,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mScrollView.scrollTo(0,0);
         mLockRecommendPage.onHide();
         mIsRecommendPage = false;
+
+        hideNavigation();
     }
 
     //控制向上滑动的逻辑begin
@@ -171,7 +187,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                 if (mVelocityTracker != null) {
                     mVelocityTracker.addMovement(event);
                 }
-//                return true;
             } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
                 if (mIsAnimingPrompt) {
                     return true;
@@ -195,6 +210,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             mScrollView.smoothScrollTo(0, 0);
                             mIsRecommendPage = false;
                             mLockRecommendPage.onHide();
+
+                            MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
                         } else {
                             mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
@@ -206,6 +223,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
                             mLockRecommendPage.onShow();
+
+                            MobclickAgent.onEvent(this, "lockscreen_recommend"); //锁屏页进入推荐
+                            MobclickAgent.onEvent(this, "recommend_show"); //推荐页show
 
                             MainImageBean bean = ServiceLockScreen.sHaokanLockView.getCurrentImageBean();
                             if (bean != null) {
@@ -333,36 +353,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         });
     }
 
-
-    /**
-     * 设置状态栏和导航栏
-     * <p>
-     * 参考Android ApiDemos中的View - System UI Visibility - System UI Modes
-     * 源码地址：https://github.com/android/platform_development/tree/master/samples/ApiDemos 具体类：SystemUIModes
-     * 源码项目运营不了，我是用的模拟器自带的API Demos，对照着源码处理写的
-     */
-    private void hideNavigation() {
-        super.onResume();
-        int visibility = 0;
-//        int visibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-//        visibility |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-        visibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;//隐藏导航栏
-        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;//view获取焦点后导航栏别显示
-        visibility |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;//view全屏
-        getWindow().getDecorView().setSystemUiVisibility(visibility);
-
-        //设置状态栏透明
-//        Window win = getWindow();
-//        WindowManager.LayoutParams winParams = win.getAttributes();
-//        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-//        if (true) {
-//            winParams.flags |= bits;
-//        } else {
-//            winParams.flags &= ~bits;
-//        }
-//        win.setAttributes(winParams);
-    }
-
     private void  disableKeyGuard(){
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
@@ -395,12 +385,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         }
         super.onDestroy();
     }
-
-    @Override
-    public void onSystemUiVisibilityChange(int visibility) {
-        hideNavigation();
-    }
-
 
     //权限相关begin*****
     /**
@@ -480,4 +464,28 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
     //权限相关end*****
 
+
+    //隐藏导航栏相关
+    /**
+     * 设置状态栏和导航栏
+     * <p>
+     * 参考Android ApiDemos中的View - System UI Visibility - System UI Modes
+     * 源码地址：https://github.com/android/platform_development/tree/master/samples/ApiDemos 具体类：SystemUIModes
+     * 源码项目运营不了，我是用的模拟器自带的API Demos，对照着源码处理写的
+     */
+    private void hideNavigation() {
+        super.onResume();
+        View decorView = getWindow().getDecorView();
+        int visibility = decorView.getSystemUiVisibility();
+        visibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;//隐藏导航栏
+//        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;//view获取焦点后导航栏不显示. 边缘向内化导航栏一直显示, 出发listenrer
+        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;//view获取焦点后导航栏不显示. 边缘向内化导航栏暂时显示, 不触发listener
+        visibility |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;//view全屏
+        decorView.setSystemUiVisibility(visibility);
+    }
+
+    @Override
+    public void onSystemUiVisibilityChange(int visibility) {
+        hideNavigation();
+    }
 }

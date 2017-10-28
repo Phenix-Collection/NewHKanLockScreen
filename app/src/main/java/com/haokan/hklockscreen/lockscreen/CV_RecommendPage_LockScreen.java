@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.recommendpage.CV_RecommendPage;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by wangzixu on 2017/10/20.
@@ -85,11 +86,13 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
             case R.id.back: //回到上面的详情页页
                 if (mActivityBase != null && mActivityBase instanceof ActivityLockScreen) {
                     ((ActivityLockScreen)mActivityBase).backToDetailPage();
+                    MobclickAgent.onEvent(mContext, "recommend_back");
                 }
                 break;
             case R.id.backlockscreen: //回到上面的详情页页, 并进入锁屏状态
                 if (mActivityBase != null && mActivityBase instanceof ActivityLockScreen) {
                     ((ActivityLockScreen)mActivityBase).backToLockScreenPage();
+                    MobclickAgent.onEvent(mContext, "recommend_backlock");
                 }
                 break;
             default:

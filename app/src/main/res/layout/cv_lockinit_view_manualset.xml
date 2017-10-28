@@ -69,7 +69,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/autostartset"
+            android:id="@+id/tv_manualset"
             android:layout_gravity="center_vertical"
             android:background="@drawable/selector_lockinit_btnbg2"
             android:gravity="center"
@@ -89,7 +89,7 @@
 
     <TextView
         android:layout_marginTop="100dp"
-        android:id="@+id/tvmanualset"
+        android:id="@+id/tv_golockmanual"
         android:background="@drawable/selector_lockinit_btnbg3"
         android:gravity="center"
         android:textSize="14sp"
