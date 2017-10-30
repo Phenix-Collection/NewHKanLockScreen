@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
@@ -114,6 +115,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mLayoutAutoUpdateImage.setOnClickListener(this);
         mLayoutInitset.setOnClickListener(this);
         mTvLocalImageEdit.setOnClickListener(this);
+        mLayoutFadeback.setOnClickListener(this);
 
         //顶部banner高-mHeader1高
         mHeaderChangeHeigh = DisplayUtil.dip2px(this, 220-65);
@@ -172,16 +174,20 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             case R.id.setting_collect:
             case R.id.setting_collect1:
                 {
-//                    Intent intent = new Intent();
-//                    intent.setPackage(getPackageName());
-//                    intent.setAction("com.haokan.service.autoupdateimage");
-//                    startService(intent);
-
                     Intent intent = new Intent(this, ActivityMyCollection.class);
                     startActivity(intent);
                     startActivityAnim();
                 }
                 break;
+            case R.id.layout_fadeback:
+            {
+//                Intent intent = new Intent(this, ActivityMyCollection.class);
+//                startActivity(intent);
+//                startActivityAnim();
+
+                FeedbackAPI.openFeedbackActivity();
+            }
+            break;
             case R.id.layout_aboutus:
                 {
                     Intent intent = new Intent(this, ActivityAboutUs.class);

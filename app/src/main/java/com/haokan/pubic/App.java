@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
+import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.CV_DetailPage_LockScreen;
 import com.haokan.hklockscreen.lockscreen.ReceiverLockScreen;
 import com.haokan.pubic.logsys.LogHelper;
@@ -42,15 +44,22 @@ public class App extends Application {
         super.onCreate();
         init(this);
 
+        //友盟分享初始化begin
         UMShareAPI.get(this);
-        MobclickAgent.setDebugMode(true);
-
+        MobclickAgent.setDebugMode(false);
         //微信 appid appsecret
         PlatformConfig.setWeixin("wx9d116eb352937363", "7c8e12f912049757a143ab874346bfe2");
         //新浪微博 appkey appsecret
         PlatformConfig.setSinaWeibo("2156364876","e3350a8d04bebf03da9e457f50682c0f","https://api.weibo.com/oauth2/default.html");
         // QQ和Qzone appid appkey
         PlatformConfig.setQQZone("1104604449", "DYIcUy0pqatvbvWj");
+        //友盟分享初始化end
+
+        //阿里云反馈begin
+        FeedbackAPI.init(this, "24649885", "5761371ea5beb9c2d15ea43c1b453c32");
+        FeedbackAPI.setTranslucent(false);
+        FeedbackAPI.setBackIcon(R.drawable.icon_back_hei);
+        //阿里云反馈end
 
         IntentFilter filter=new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
