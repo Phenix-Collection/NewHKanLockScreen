@@ -22,11 +22,10 @@ public class ReceiverLockScreen extends BroadcastReceiver {
         LogHelper.d("wangzixu", "ServiceLockScreen action----" + action);
         switch (action) {
             case Intent.ACTION_SCREEN_OFF:
-
-
                 Intent intent1 = new Intent(context, ActivityLockScreen.class);
                 intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent1);
+                context.getApplicationContext().startActivity(intent1);
+                LogHelper.d("wangzixu", "ServiceLockScreen startActivity");
                 break;
             case Intent.ACTION_SCREEN_ON: {
                 break;

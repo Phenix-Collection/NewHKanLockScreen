@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -33,8 +34,8 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.MainImageBean;
-import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.umeng.analytics.MobclickAgent;
 
@@ -49,7 +50,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private int mScreenH;
     private int mScreenW;
     private boolean mIsRecommendPage;
-
     private int mTouchSlop;
     private int mMinimumVelocity;
     private int mMaximumVelocity;
@@ -62,6 +62,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         disableKeyGuard();
         StatusBarUtil.setStatusBarTransparnet(this);
         setContentView(R.layout.activity_lock);
+        LogHelper.d("wangzixu", "ActivityLockScreen onCreate");
 
         disableKeyGuard();
 //        mScreenH = getResources().getDisplayMetrics().heightPixels;
@@ -76,15 +77,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
         checkStoragePermission();
 
-        //为了处理一个bug --- 锁屏view不触发layout, 第一帧不绘制
-        App.sMainHanlder.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mScrollView.scrollTo(1, 1);
-                mScrollView.scrollTo(0, 0);
-            }
-        }, 250);
-
         hideNavigation();
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(this);
     }
@@ -97,10 +89,18 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         } else {
             MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
         }
+
+        //为了处理一个bug --- 锁屏view不触发layout, 第一帧不绘制
+        App.sMainHanlder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mScrollView.scrollTo(1, 1);
+                mScrollView.scrollTo(0, 0);
+            }
+        }, 200);
     }
 
     private void initView() {
-        LogHelper.d("wangzixu", "ActivityLockScreen onCreate");
         mScrollView = (ScrollView) findViewById(R.id.scrollview);
         mRootView = findViewById(R.id.rootview);
 
@@ -370,9 +370,16 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     public void onClick(View v) {
     }
 
-
+    /**
+     * 屏蔽掉返回键
+     */
     @Override
-    public void onBackPressed() {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KeyEvent.KEYCODE_BACK || keyCode==KeyEvent.KEYCODE_HOME){
+            return true;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 
     //权限相关begin*****

@@ -205,7 +205,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_MOVE = " + y);
+//                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_MOVE = " + y);
                 if (mCanUnLock) {
                     int deltaY = mDownY - y;
                     if (deltaY > 15 || isTouch) {

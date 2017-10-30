@@ -1,8 +1,8 @@
 package com.haokan.pubic.base;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
@@ -12,7 +12,7 @@ import com.umeng.analytics.MobclickAgent;
 /**
  * Created by wangzixu on 2016/11/24.
  */
-public class ActivityBase extends AppCompatActivity {
+public class ActivityBase extends Activity {
     protected volatile boolean mIsDestory;
     protected boolean mHasFragment = false;
 
@@ -31,8 +31,8 @@ public class ActivityBase extends AppCompatActivity {
     }
 
     protected void onPause() {
-        super.onPause();
         MobclickAgent.onPause(this);
+        super.onPause();
     }
 
     @Override

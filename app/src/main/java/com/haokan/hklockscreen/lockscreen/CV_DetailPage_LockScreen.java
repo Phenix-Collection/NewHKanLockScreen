@@ -583,7 +583,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     public void onUnLockSuccess() {
         LogHelper.d("wangzixu", "ActivityLockScreen onUnLockSuccess");
         if (mActivity != null) {
-            mActivity.finish();
+            mActivity.onBackPressed();
         }
         MobclickAgent.onEvent(mContext, "lockscreen_unlock"); //锁屏页解锁
         CV_DetailPage_LockScreen.this.setVisibility(INVISIBLE);
