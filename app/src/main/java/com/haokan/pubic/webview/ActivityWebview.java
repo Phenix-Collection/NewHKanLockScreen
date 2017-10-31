@@ -1,7 +1,10 @@
 package com.haokan.pubic.webview;
 
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -27,10 +30,11 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.base.ActivityBase;
-import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 
@@ -49,6 +53,7 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
     private Handler mHandler = new Handler();
     private View mTvClose;
     private ViewGroup mBigViedioParent;
+    private BroadcastReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,23 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
 
         assignViews();
         loadData();
+
+        IntentFilter filter=new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+                overridePendingTransition(0,0);
+            }
+        };
+        registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        loadData();
     }
 
     private void assignViews() {
@@ -66,18 +88,6 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
 
         mTvClose = findViewById(R.id.close);
         mTvClose.setOnClickListener(this);
-
-//        mBottomShare = findViewById(R.id.bottom_share);
-//        mShareContent = mBottomShare.findViewById(R.id.content);
-//        mShareContent.findViewById(R.id.share_weixin).setOnClickListener(this);
-//        mShareContent.findViewById(R.id.share_weixin_circle).setOnClickListener(this);
-//        mShareContent.findViewById(R.id.share_qq).setOnClickListener(this);
-//        mShareContent.findViewById(R.id.share_qqzone).setOnClickListener(this);
-//        mShareContent.findViewById(R.id.share_sina).setOnClickListener(this);
-//        mShareContent.findViewById(R.id.cancel).setOnClickListener(this);
-//        mShareBg = mBottomShare.findViewById(R.id.bg);
-//        mShareBg.setOnClickListener(this);
-
 
         mTvTitle = (TextView) findViewById(R.id.title);
         String title = getIntent().getStringExtra(KEY_INTENT_WEB_TITLE);
@@ -139,7 +149,7 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
                 public void run() {
                     mWebView.loadUrl(mWeb_Url);
                 }
-            }, 300);
+            }, 200);
         } else {
             loadLocalApp();
         }
@@ -341,13 +351,15 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
 
     @Override
     protected void onDestroy() {
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
         if(mWebView!=null){
             mWebView.destroy();
             mWebView.removeAllViews();
             mWebView = null;
         }
         super.onDestroy();
-//        System.exit(0);
     }
 
     @Override

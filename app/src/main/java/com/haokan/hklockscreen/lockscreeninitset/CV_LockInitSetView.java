@@ -41,8 +41,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     private View mAutoCompleteLayout;
     private boolean mHasSetAutoStart;
     private TextView mTvSkip;
-    public static boolean sIsAutoSet = false; //是否正在用辅助功能自动设置
-    public static boolean sAutoSuccess = false; //是否自动设置成功了
+    public static boolean sIsAutoSetting = false; //是否正在用辅助功能自动设置
+    public static boolean sAutoSetSuccess = false; //是否自动设置成功了
     private ImageView mIvGear;
     private TextView mTvPercent;
     private ImageView mIVManulSet;
@@ -89,7 +89,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 if (manufacturer.equalsIgnoreCase("xiaomi")
                         || manufacturer.equalsIgnoreCase("oppo")) {
                     if (isAccessibilitySettingsOn(mContext)) {
-                        sIsAutoSet = true;
+                        sIsAutoSetting = true;
 
                         mCheckTvLayout.setVisibility(GONE);
                         mLoadingLayout.setVisibility(VISIBLE);
@@ -121,14 +121,16 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                         MobclickAgent.onEvent(mContext, "initset_checkfailed");
                     }
                 } else {
-                    if (mManulSetLayout == null) {
-                        initManualSetLayout();
-                    }
+//                    if (mManulSetLayout == null) {
+//                        initManualSetLayout();
+//                    }
+//                    mManulSetLayout.setVisibility(VISIBLE);
 
                     mRadarView.stop();
                     mRadarView.setVisibility(GONE);
                     mCheckTvLayout.setVisibility(GONE);
-                    mManulSetLayout.setVisibility(VISIBLE);
+
+                    autoSetSuccessLayout();
                 }
             }
         }, 1500);
@@ -179,7 +181,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        if (sIsAutoSet) {
+        if (sIsAutoSetting) {
             return;
         }
         switch (v.getId()) {
@@ -196,7 +198,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     Intent i = new Intent(mContext, ActivityLockScreen.class);
                     mActivityBase.startActivity(i);
                     mActivityBase.finish();
-                    mActivityBase.startActivityAnim();
+//                    mActivityBase.startActivityAnim();
+                    mActivityBase.overridePendingTransition(0,0);
                 }
                 break;
             case R.id.startlock:
@@ -206,7 +209,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     Intent i = new Intent(mContext, ActivityLockScreen.class);
                     mActivityBase.startActivity(i);
                     mActivityBase.finish();
-                    mActivityBase.startActivityAnim();
+//                    mActivityBase.startActivityAnim();
+                    mActivityBase.overridePendingTransition(0,0);
                 }
                 break;
             case R.id.tv_skip:
@@ -257,7 +261,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 101) { //辅助功能界面回来
             if (isAccessibilitySettingsOn(mContext)) {
-                sIsAutoSet = true;
+                sIsAutoSetting = true;
 
                 mLoadingLayout.setVisibility(VISIBLE);
                 AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
@@ -290,43 +294,54 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 mCryTvLayout.setVisibility(GONE);
             }
         } else if (requestCode == 102) { //手动开机启动
-            sIsAutoSet = false;
+            sIsAutoSetting = false;
             mHasSetAutoStart = true;
             mTvManualSet.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
             mIVManulSet.setImageResource(R.drawable.icon_lockinit_laugh);
             mTvTitleManulSet.setText("锁屏设置已完成");
         } else if (requestCode == 103) { //自动设置自启动回来
-            sIsAutoSet = false;
+            sIsAutoSetting = false;
 
-            if (sAutoSuccess) { //自动设置成功回来
-                MobclickAgent.onEvent(mContext, "initset_success");
-
-                mHasSetAutoStart = true;
-                mTvPercent.setText("100%");
-                mRadarView.stop();
-                mRadarView.setVisibility(GONE);
-                mLoadingLayout.setVisibility(GONE);
-                AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
-                animationDrawable.stop();
-
-                mIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
-                mIvCryLaugh.setVisibility(VISIBLE);
-                mAutoCompleteLayout.setVisibility(VISIBLE);
+            if (sAutoSetSuccess) { //自动设置成功回来
+                autoSetSuccessLayout();
             } else { //自动设置失败回来
-                MobclickAgent.onEvent(mContext, "initset_failmanual");
-
-                if (mManulSetLayout == null) {
-                    initManualSetLayout();
-                }
-                mHasSetAutoStart = false;
-                mManulSetLayout.setVisibility(VISIBLE);
-                mRadarView.stop();
-                mRadarView.setVisibility(GONE);
-                mLoadingLayout.setVisibility(GONE);
-                AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
-                animationDrawable.stop();
+                autoSetFailLayout();
             }
         }
+    }
+
+    //自动设置成功回来
+    public void autoSetSuccessLayout() {
+        MobclickAgent.onEvent(mContext, "initset_success");
+
+        mHasSetAutoStart = true;
+
+        mRadarView.stop();
+        mRadarView.setVisibility(GONE);
+        mLoadingLayout.setVisibility(GONE);
+        AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
+        animationDrawable.stop();
+
+        mIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
+        mIvCryLaugh.setVisibility(VISIBLE);
+        mAutoCompleteLayout.setVisibility(VISIBLE);
+    }
+
+    //自动设置失败回来
+    public void autoSetFailLayout() {
+        MobclickAgent.onEvent(mContext, "initset_failmanual");
+
+        if (mManulSetLayout == null) {
+            initManualSetLayout();
+        }
+        mHasSetAutoStart = false;
+        mManulSetLayout.setVisibility(VISIBLE);
+
+        mRadarView.stop();
+        mRadarView.setVisibility(GONE);
+        mLoadingLayout.setVisibility(GONE);
+        AnimationDrawable animationDrawable = (AnimationDrawable) mIvGear.getDrawable();
+        animationDrawable.stop();
     }
 
     public void initManualSetLayout() {
