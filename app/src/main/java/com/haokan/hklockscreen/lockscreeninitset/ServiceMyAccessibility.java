@@ -49,8 +49,8 @@ public class ServiceMyAccessibility extends AccessibilityService {
      */
     @Override
     public void onAccessibilityEvent(final AccessibilityEvent event) {
-        LogHelper.d("wangzixu", "onAccessibilityEvent getEventType = " + event + ", CV_LockInitSetView.sIsAutoSet = " + CV_LockInitSetView.sIsAutoSet);
-        if (CV_LockInitSetView.sIsAutoSet) {
+        LogHelper.d("wangzixu", "onAccessibilityEvent getEventType = " + event + ", CV_LockInitSetView.sIsAutoSetting = " + CV_LockInitSetView.sIsAutoSetting);
+        if (CV_LockInitSetView.sIsAutoSetting) {
             try {
                 int eventType = event.getEventType();
                 if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
@@ -61,12 +61,12 @@ public class ServiceMyAccessibility extends AccessibilityService {
                         msg.arg1 = 0;
                         mHandler.sendMessageDelayed(msg, mStepDuration);
                     } else if ("com.miui.permcenter.autostart.AutoStartDetailManagementActivity".equals(className)) {//小米自动启动管理详情界面, 点击了条目后会跳转一个新界面, 把里面的两个条目都选中
-                        CV_LockInitSetView.sIsAutoSet = false;
+                        CV_LockInitSetView.sIsAutoSetting = false;
                         Message msg = Message.obtain();
                         msg.what = 12;
                         mHandler.sendMessageDelayed(msg, mStepDuration);
                     } else if ("com.coloros.safecenter.startupapp.StartupAppListActivity".equals(className)) { //oppo手机的自启动界面
-                        CV_LockInitSetView.sIsAutoSet = false;
+                        CV_LockInitSetView.sIsAutoSetting = false;
                         Message msg = Message.obtain();
                         msg.what = 1;
                         msg.arg1 = 0;
@@ -74,7 +74,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                     }
                 }
             } catch (Exception e) {
-                CV_LockInitSetView.sIsAutoSet = false;
+                CV_LockInitSetView.sIsAutoSetting = false;
                 LogHelper.d("wangzixu", "onAccessibilityEvent error e = " + e.getMessage());
                 e.printStackTrace();
             }
@@ -134,7 +134,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
             mHandler.sendMessageDelayed(msg, 0);
         } else {
             if (count > 1) {
-                CV_LockInitSetView.sAutoSuccess = false;
+                CV_LockInitSetView.sAutoSetSuccess = false;
                 Message msg = Message.obtain();
                 msg.what = 101;
                 mHandler.sendMessageDelayed(msg, 0);
@@ -162,7 +162,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                 if (list != null && list.size() > 0) {
                     LogHelper.d("wangzixu", "oppoauto handleMessage 1 找到了 hkNode的条目 的开关");
                     AccessibilityNodeInfo info = list.get(0);
-                    CV_LockInitSetView.sAutoSuccess = true;
+                    CV_LockInitSetView.sAutoSetSuccess = true;
                     if (!info.isChecked()) {
                         Message message = Message.obtain();
                         message.what = 100; //点击
@@ -178,7 +178,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                         mHandler.sendMessage(messageBack);
                     }
                 } else {
-                    CV_LockInitSetView.sAutoSuccess = false;
+                    CV_LockInitSetView.sAutoSetSuccess = false;
                     LogHelper.d("wangzixu", "oppoauto handleMessage 1 没找到条目中的开关");
 
                     Message messageBack = Message.obtain();
@@ -186,7 +186,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                     mHandler.sendMessageDelayed(messageBack, mStepDuration);
                 }
             } else {
-                CV_LockInitSetView.sAutoSuccess = false;
+                CV_LockInitSetView.sAutoSetSuccess = false;
                 LogHelper.d("wangzixu", "oppoauto handleMessage 1 没找到可以点击的条目");
 
                 Message messageBack = Message.obtain();
@@ -204,7 +204,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
             } else {
                 //滚动到底了, 还没找到目标节点
                 LogHelper.d("wangzixu", "oppoauto handleMessage 1 滚动到底了, 还没找到目标节点 ");
-                CV_LockInitSetView.sAutoSuccess = false;
+                CV_LockInitSetView.sAutoSetSuccess = false;
 
                 Message messageBack = Message.obtain();
                 messageBack.what = 101; //后退
@@ -231,7 +231,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
         } else {
             if (count > 1) {
                 LogHelper.d("wangzixu", "xiaomi6 没有找到可以滚动的view");
-                CV_LockInitSetView.sAutoSuccess = false;
+                CV_LockInitSetView.sAutoSetSuccess = false;
                 Message message = Message.obtain();
                 message.what = 101;
                 mHandler.sendMessageDelayed(message, 0);
@@ -267,13 +267,13 @@ public class ServiceMyAccessibility extends AccessibilityService {
                         message.obj = parent;
                         mHandler.sendMessage(message);
                     } else {
-                        CV_LockInitSetView.sAutoSuccess = true;
+                        CV_LockInitSetView.sAutoSetSuccess = true;
                         Message messageBack = Message.obtain();
                         messageBack.what = 101; //后退
                         mHandler.sendMessage(messageBack);
                     }
                 } else {
-                    CV_LockInitSetView.sAutoSuccess = false;
+                    CV_LockInitSetView.sAutoSetSuccess = false;
                     LogHelper.d("wangzixu", "xiaomi6 handleMessage 1 没找到条目中的开关");
 
                     Message messageBack = Message.obtain();
@@ -281,7 +281,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                     mHandler.sendMessageDelayed(messageBack, mStepDuration);
                 }
             } else {
-                CV_LockInitSetView.sAutoSuccess = false;
+                CV_LockInitSetView.sAutoSetSuccess = false;
                 LogHelper.d("wangzixu", "xiaomi6 handleMessage 1 没找到可以点击的条目");
 
                 Message messageBack = Message.obtain();
@@ -299,7 +299,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
             } else {
                 //滚动到底了, 还没找到目标节点
                 LogHelper.d("wangzixu", "xiaomi6 handleMessage 1 滚动到底了, 还没找到目标节点 ");
-                CV_LockInitSetView.sAutoSuccess = false;
+                CV_LockInitSetView.sAutoSetSuccess = false;
 
                 Message messageBack = Message.obtain();
                 messageBack.what = 101; //后退
@@ -326,7 +326,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
                 }
             }
 
-            CV_LockInitSetView.sAutoSuccess = true;
+            CV_LockInitSetView.sAutoSetSuccess = true;
             Message messageBack = Message.obtain();
             messageBack.what = 101; //后退
             mHandler.sendMessageDelayed(messageBack, mStepDuration);
@@ -336,7 +336,7 @@ public class ServiceMyAccessibility extends AccessibilityService {
             mHandler.sendMessageDelayed(messageBack2, mStepDuration*2);
         } else {
             LogHelper.d("wangzixu", "xiaomi6 handleMessage 12 自动启动详情页 没有找到checkbox");
-            CV_LockInitSetView.sAutoSuccess = false;
+            CV_LockInitSetView.sAutoSetSuccess = false;
 
             Message messageBack = Message.obtain();
             messageBack.what = 101; //后退

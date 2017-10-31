@@ -69,5 +69,9 @@ public class ActivityMyCollectionDetailPage extends ActivityBase {
         if (mCvDetailPageMyCollection != null) {
             mCvDetailPageMyCollection.onDestory();
         }
+
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
     }
 }

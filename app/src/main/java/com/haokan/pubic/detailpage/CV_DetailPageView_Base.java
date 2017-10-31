@@ -584,8 +584,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             mTvDescAll.setText(desc);
         }
 
-        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
-        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
+//        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
+        mTvLink.setText("查看更多");
+//        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
         mTvTitlle.setText(mCurrentImgBean.imgTitle);
 
         mTvLinkBg.setColor(getLinkBgColor());
