@@ -46,11 +46,12 @@ public class UrlsUtil {
 
 
     //******接口系统3 begin, http://api-m-gray.levect.com/xxxx****
+    //api-m.levect.com
     /**
      * 换一换的地址
      */
     public static String getRecommendUrl() {
-        return "http://api-m-gray.levect.com/app/list/img";
+        return "http://api-m.levect.com/app/list/img";
     }
 
 
@@ -58,7 +59,7 @@ public class UrlsUtil {
      * //升级用的借口
      */
     public static String getUpdateUrl() {
-        return "http://api-m-gray.levect.com/app/config/config";
+        return "http://api-m.levect.com/app/config/config";
 //        return "http://172.18.0.114:3009/app/config/config";
     }
 
@@ -66,7 +67,7 @@ public class UrlsUtil {
      * Timelines的网络地址
      */
     public static String getTimelineUrl() {
-        return "http://api-m-gray.levect.com/app/list";
+        return "http://api-m.levect.com/app/list";
     }
     //******接口系统3 end, http://api-m-gray.levect.com/xxxx****
 }

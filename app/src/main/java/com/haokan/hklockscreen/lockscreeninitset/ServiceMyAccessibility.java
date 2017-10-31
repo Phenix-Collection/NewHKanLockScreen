@@ -10,7 +10,6 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.logsys.LogHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,9 +56,10 @@ public class ServiceMyAccessibility extends AccessibilityService {
                 if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                     CharSequence className = event.getClassName();
                     if ("com.miui.permcenter.autostart.AutoStartManagementActivity".equals(className)) {//小米自动启动管理界面
-                            Message msg = Message.obtain();
-                            msg.what = 10;
-                            mHandler.sendMessageDelayed(msg, mStepDuration+200);
+                        Message msg = Message.obtain();
+                        msg.what = 10;
+                        msg.arg1 = 0;
+                        mHandler.sendMessageDelayed(msg, mStepDuration);
                     } else if ("com.miui.permcenter.autostart.AutoStartDetailManagementActivity".equals(className)) {//小米自动启动管理详情界面, 点击了条目后会跳转一个新界面, 把里面的两个条目都选中
                         CV_LockInitSetView.sIsAutoSet = false;
                         Message msg = Message.obtain();
@@ -69,7 +69,8 @@ public class ServiceMyAccessibility extends AccessibilityService {
                         CV_LockInitSetView.sIsAutoSet = false;
                         Message msg = Message.obtain();
                         msg.what = 1;
-                        mHandler.sendMessageDelayed(msg, mStepDuration+200);
+                        msg.arg1 = 0;
+                        mHandler.sendMessageDelayed(msg, mStepDuration);
                     }
                 }
             } catch (Exception e) {
@@ -84,6 +85,21 @@ public class ServiceMyAccessibility extends AccessibilityService {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
+                case 1: //oppo R9s
+                    autoStart_oppoR9s_1(msg.arg1);
+                    break;
+                case 2: //oppo R9s
+                    autoStart_oppoR9s_2(msg);
+                    break;
+                case 10:
+                    autoStart_xiaomi6_1(msg.arg1);
+                    break;
+                case 11: //小米6开机启动列表页, 找到好看锁屏并点击
+                    autoStart_xiaomi6_2(msg);
+                    break;
+                case 12://小米6开机启详情页
+                    autoStart_xiaomi6_3(msg);
+                    break;
                 case 100: //node点击事件
                 {
                     Object obj = msg.obj;
@@ -98,29 +114,17 @@ public class ServiceMyAccessibility extends AccessibilityService {
                     LogHelper.d("wangzixu", "handleMessage 101 后退");
                     break;
                 }
-                case 1: //oppo R9s
-                    autoStart_oppoR9s_1();
-                    break;
-                case 2: //oppo R9s
-                    autoStart_oppoR9s_2(msg);
-                    break;
-                case 10:
-                    autoStart_xiaomi6_1();
-                    break;
-                case 11: //小米6开机启动列表页, 找到好看锁屏并点击
-                    autoStart_xiaomi6_2(msg);
-                    break;
-                case 12://小米6开机启详情页
-                    autoStart_xiaomi6_3(msg);
-                    break;
                 default:
                     break;
             }
         }
     };
 
-    //1寻找可以滚动的view
-    public void autoStart_oppoR9s_1() {
+    /**
+     * 1寻找可以滚动的view
+     * @param count 如果之前没有打开过自启动列表页, 第一次打开会很慢, 很容易找不到组件, 循环调用此方法, 这是调用的次数
+     */
+    public void autoStart_oppoR9s_1(int count) {
         final AccessibilityNodeInfo source = getRootInActiveWindow();
         List<AccessibilityNodeInfo> list = source.findAccessibilityNodeInfosByViewId("android:id/list");//oppo自启动界面的listview
         if (list != null && list.size() > 0) {
@@ -129,10 +133,17 @@ public class ServiceMyAccessibility extends AccessibilityService {
             msg.obj = list.get(0);
             mHandler.sendMessageDelayed(msg, 0);
         } else {
-            CV_LockInitSetView.sAutoSuccess = false;
-            Message msg = Message.obtain();
-            msg.what = 101;
-            mHandler.sendMessageDelayed(msg, 0);
+            if (count > 1) {
+                CV_LockInitSetView.sAutoSuccess = false;
+                Message msg = Message.obtain();
+                msg.what = 101;
+                mHandler.sendMessageDelayed(msg, 0);
+            } else {
+                Message msg = Message.obtain();
+                msg.what = 1;
+                msg.arg1 = count+1;
+                mHandler.sendMessageDelayed(msg, mStepDuration);
+            }
         }
     }
 
@@ -202,24 +213,34 @@ public class ServiceMyAccessibility extends AccessibilityService {
         }
     }
 
-    //1寻找可以滚动的view
-    private void autoStart_xiaomi6_1() {
+    /**
+     * 1寻找可以滚动的view
+     * @param count 如果之前没有打开过自启动列表页, 第一次打开会很慢, 很容易找不到组件, 循环调用此方法, 这是调用的次数
+     */
+    private void autoStart_xiaomi6_1(int count) {
         final AccessibilityNodeInfo source = getRootInActiveWindow();
-        ArrayList<AccessibilityNodeInfo> list = new ArrayList<>();
-        findCanScrollNode(source, list);//小米6自启动界面的listview
-        LogHelper.d("wangzixu", "xiaomi6 listSize = " + list.size());
-        if (list != null && list.size() > 0) {
+
+        AccessibilityNodeInfo scrollNode = findCanScrollNode(source);//小米6自启动界面的listview
+
+        LogHelper.d("wangzixu", "xiaomi6 autoStart_xiaomi6_1 scrollNode = " + scrollNode);
+        if (scrollNode != null) {
             Message message = Message.obtain();
             message.what = 11;
-            message.obj = list.get(0);
-            LogHelper.d("wangzixu", "xiaomi6 list = " + list.get(0).isScrollable());
+            message.obj = scrollNode;
             mHandler.sendMessageDelayed(message, 0);
         } else {
-            LogHelper.d("wangzixu", "xiaomi6 没有找到可以滚动的view");
-            CV_LockInitSetView.sAutoSuccess = false;
-            Message message = Message.obtain();
-            message.what = 101;
-            mHandler.sendMessageDelayed(message, 0);
+            if (count > 1) {
+                LogHelper.d("wangzixu", "xiaomi6 没有找到可以滚动的view");
+                CV_LockInitSetView.sAutoSuccess = false;
+                Message message = Message.obtain();
+                message.what = 101;
+                mHandler.sendMessageDelayed(message, 0);
+            } else {
+                Message msg = Message.obtain();
+                msg.what = 10;
+                msg.arg1 = count+1;
+                mHandler.sendMessageDelayed(msg, mStepDuration);
+            }
         }
     }
 
@@ -327,27 +348,45 @@ public class ServiceMyAccessibility extends AccessibilityService {
      * 寻找可以滚动的节点
      * @return
      */
-    private void findCanScrollNode(AccessibilityNodeInfo source, ArrayList<AccessibilityNodeInfo> list) {
+    private AccessibilityNodeInfo findCanScrollNode(AccessibilityNodeInfo source) {
         //miui对应的listview: com.miui.securitycenter:id/list_view
         if (source == null) {
-            return;
+            return null;
         }
-        int childCount = source.getChildCount();
-        LogHelper.d("wangzixu", "onAccessibilityEvent findCanScrollNode childCount = " + childCount + ", source = " + source.getClassName());
-        if (childCount <= 0) {
-            return;
-        }
-        for (int i = 0; i < childCount; i++) {
-            AccessibilityNodeInfo child = source.getChild(i);
-            if (child != null) { //有时候寻找的child会是null
-                if (child.isScrollable()) {
-                    list.add(child);
-                } else {
-                    findCanScrollNode(child, list);
+        List<AccessibilityNodeInfo> list = source.findAccessibilityNodeInfosByViewId("com.miui.securitycenter:id/list_view");
+        LogHelper.d("wangzixu", "onAccessibilityEvent findCanScrollNode list = " + list.size());
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                AccessibilityNodeInfo nodeInfo = list.get(i);
+                if (nodeInfo.isScrollable()) {
+                    return nodeInfo;
                 }
             }
         }
+        return null;
     }
+
+//    private void findCanScrollNode(AccessibilityNodeInfo source, ArrayList<AccessibilityNodeInfo> list) {
+//        //miui对应的listview: com.miui.securitycenter:id/list_view
+//        if (source == null) {
+//            return;
+//        }
+//        int childCount = source.getChildCount();
+//        LogHelper.d("wangzixu", "onAccessibilityEvent findCanScrollNode childCount = " + childCount + ", source = " + source.getClassName());
+//        if (childCount <= 0) {
+//            return;
+//        }
+//        for (int i = 0; i < childCount; i++) {
+//            AccessibilityNodeInfo child = source.getChild(i);
+//            if (child != null) { //有时候寻找的child会是null
+//                if (child.isScrollable()) {
+//                    list.add(child);
+//                } else {
+//                    findCanScrollNode(child, list);
+//                }
+//            }
+//        }
+//    }
 
     /**
      * 由当前节点向上查找, 寻找能点击的父节点

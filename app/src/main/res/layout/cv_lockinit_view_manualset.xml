@@ -21,6 +21,7 @@
             android:layout_height="80dp"/>
 
         <TextView
+            android:id="@+id/tv_title"
             android:text="还差一点, 开启下列选项, 保证锁屏稳定运行"
             android:textColor="@color/bai_90"
             android:textSize="14sp"

@@ -45,6 +45,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     public static boolean sAutoSuccess = false; //是否自动设置成功了
     private ImageView mIvGear;
     private TextView mTvPercent;
+    private ImageView mManulSetIV;
+    private TextView mManulSetTitle;
 
     public CV_LockInitSetView(@NonNull Context context) {
         this(context, null);
@@ -288,6 +290,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 if (mManulSetLayout == null) {
                     ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
                     mManulSetLayout = viewStub.inflate();
+                    mManulSetIV = (ImageView) mManulSetLayout.findViewById(R.id.iv_cry_laugh);
+                    mManulSetTitle = (TextView) mManulSetLayout.findViewById(R.id.tv_title);
                     mTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset);
                     mTvManualSet = mManulSetLayout.findViewById(R.id.tv_golockmanual);
                     mTvAutoStartSet.setOnClickListener(this);
@@ -301,6 +305,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             sIsAutoSet = false;
             mHasSetAutoStart = true;
             mTvManualSet.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
+            mManulSetIV.setImageResource(R.drawable.icon_lockinit_laugh);
+            mManulSetTitle.setText("锁屏设置已完成");
         } else if (requestCode == 103) { //自动设置自启动回来
             sIsAutoSet = false;
 
