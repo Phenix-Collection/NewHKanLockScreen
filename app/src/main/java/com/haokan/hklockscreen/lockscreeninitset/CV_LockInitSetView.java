@@ -122,12 +122,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     }
                 } else {
                     if (mManulSetLayout == null) {
-                        ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
-                        mManulSetLayout = viewStub.inflate();
-                        mTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset);
-                        mTvManualSet = mManulSetLayout.findViewById(R.id.tv_golockmanual);
-                        mTvAutoStartSet.setOnClickListener(CV_LockInitSetView.this);
-                        mTvManualSet.setOnClickListener(CV_LockInitSetView.this);
+                        initManualSetLayout();
                     }
 
                     mRadarView.stop();
@@ -288,14 +283,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 MobclickAgent.onEvent(mContext, "initset_checkfailed");
 
                 if (mManulSetLayout == null) {
-                    ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
-                    mManulSetLayout = viewStub.inflate();
-                    mIVManulSet = (ImageView) mManulSetLayout.findViewById(R.id.iv_cry_laugh);
-                    mTvTitleManulSet = (TextView) mManulSetLayout.findViewById(R.id.tv_title);
-                    mTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset);
-                    mTvManualSet = mManulSetLayout.findViewById(R.id.tv_golockmanual);
-                    mTvAutoStartSet.setOnClickListener(this);
-                    mTvManualSet.setOnClickListener(this);
+                    initManualSetLayout();
                 }
                 mManulSetLayout.setVisibility(VISIBLE);
                 mIvCryLaugh.setVisibility(GONE);
@@ -328,12 +316,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 MobclickAgent.onEvent(mContext, "initset_failmanual");
 
                 if (mManulSetLayout == null) {
-                    ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
-                    mManulSetLayout = viewStub.inflate();
-                    mTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset);
-                    mTvManualSet = mManulSetLayout.findViewById(R.id.tv_golockmanual);
-                    mTvAutoStartSet.setOnClickListener(this);
-                    mTvManualSet.setOnClickListener(this);
+                    initManualSetLayout();
                 }
                 mHasSetAutoStart = false;
                 mManulSetLayout.setVisibility(VISIBLE);
@@ -344,5 +327,16 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 animationDrawable.stop();
             }
         }
+    }
+
+    public void initManualSetLayout() {
+        ViewStub viewStub = (ViewStub) findViewById(R.id.manualsetlayout);
+        mManulSetLayout = viewStub.inflate();
+        mIVManulSet = (ImageView) mManulSetLayout.findViewById(R.id.iv_cry_laugh);
+        mTvTitleManulSet = (TextView) mManulSetLayout.findViewById(R.id.tv_title);
+        mTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset);
+        mTvManualSet = mManulSetLayout.findViewById(R.id.tv_golockmanual);
+        mTvAutoStartSet.setOnClickListener(this);
+        mTvManualSet.setOnClickListener(this);
     }
 }
