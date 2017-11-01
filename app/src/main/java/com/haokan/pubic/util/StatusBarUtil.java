@@ -60,6 +60,16 @@ public class StatusBarUtil {
         }
     }
 
+    public static void hideNavigation(Activity activity) {
+        View decorView =activity.getWindow().getDecorView();
+        int visibility = decorView.getSystemUiVisibility();
+        visibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;//隐藏导航栏
+//        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;//view获取焦点后导航栏不显示. 边缘向内化导航栏一直显示, 出发listenrer
+        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;//view获取焦点后导航栏不显示. 边缘向内化导航栏暂时显示, 不触发listener
+        visibility |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;//view全屏
+        decorView.setSystemUiVisibility(visibility);
+    }
+
     /**
      * 设置状态栏，白底黑字
      * @param activity

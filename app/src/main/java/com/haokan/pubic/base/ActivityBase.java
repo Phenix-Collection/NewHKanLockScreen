@@ -89,17 +89,15 @@ public class ActivityBase extends Activity {
 
         if (this instanceof View.OnClickListener) {
             View.OnClickListener listener = (View.OnClickListener) this;
-            mLoadingLayout.setOnClickListener(listener);
-            mNetErrorLayout.setOnClickListener(listener);
-            mServeErrorLayout.setOnClickListener(listener);
-            mNoContentLayout.setOnClickListener(listener);
+            if (mLoadingLayout != null) mLoadingLayout.setOnClickListener(listener);
+            if (mNetErrorLayout != null) mNetErrorLayout.setOnClickListener(listener);
+            if (mNoContentLayout != null) mServeErrorLayout.setOnClickListener(listener);
+            if (mServeErrorLayout != null) mNoContentLayout.setOnClickListener(listener);
         }
     }
 
     public void showLoadingLayout() {
-        if (mLoadingLayout != null){
-            mLoadingLayout.setVisibility(View.VISIBLE);
-        }
+        if (mLoadingLayout != null) mLoadingLayout.setVisibility(View.VISIBLE);
         if (mNetErrorLayout != null) mNetErrorLayout.setVisibility(View.GONE);
         if (mNoContentLayout != null) mNoContentLayout.setVisibility(View.GONE);
         if (mServeErrorLayout != null) mServeErrorLayout.setVisibility(View.GONE);

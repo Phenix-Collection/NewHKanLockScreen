@@ -196,7 +196,7 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
     }
 
     public void loadData() {
-        new ModelCollection().getCollectionList(this, mAdapter.getDataBeans().size(), new onDataResponseListener<List<CollectionBean>>() {
+        new ModelCollection().getCollectionList(this, mAdapter.getDataBeans().size(), new onDataResponseListener<List<BeanCollection>>() {
             @Override
             public void onStart() {
                 mIsLoading = true;
@@ -206,7 +206,7 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
             }
 
             @Override
-            public void onDataSucess(List<CollectionBean> list) {
+            public void onDataSucess(List<BeanCollection> list) {
                 mIsLoading = false;
                 mAdapter.addDataBeans(list);
                 dismissAllPromptLayout();
@@ -249,7 +249,7 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
     }
 
     public void deleteSelectedItems() {
-        final List<CollectionBean> selectedItems = mAdapter.getSelectedItems();
+        final List<BeanCollection> selectedItems = mAdapter.getSelectedItems();
 
 
         if (selectedItems != null && selectedItems.size() > 0) {

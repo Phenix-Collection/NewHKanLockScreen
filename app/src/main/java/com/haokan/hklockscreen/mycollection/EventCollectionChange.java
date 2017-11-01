@@ -11,7 +11,7 @@ public class EventCollectionChange {
 
     public boolean mIsAdd;
 
-    public CollectionBean mBean;
+    public BeanCollection mBean;
 
     public Object mFrom;
 }

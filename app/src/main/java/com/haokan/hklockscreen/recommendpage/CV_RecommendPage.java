@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -204,8 +205,8 @@ public class CV_RecommendPage extends FrameLayout{
     }
 
     public void refreshIfChangeType(String typeName) {
-        if (typeName == null) {
-            typeName = "";
+        if (TextUtils.isEmpty(typeName)) {
+            typeName = "娱乐";
         }
         if (mTypeName.equals(typeName)) {
             return;

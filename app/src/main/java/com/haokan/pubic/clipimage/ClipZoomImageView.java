@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.localDICM;
+package com.haokan.pubic.clipimage;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,8 +18,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
+
 import com.haokan.pubic.logsys.LogHelper;
 
 
@@ -55,14 +57,12 @@ public class ClipZoomImageView extends AppCompatImageView {
 	private float mRedundantXSpace, mRedundantYSpace;
 	private int mMode;
 	private boolean mAlreadyLoadBigBmp = false;
-	private boolean mIsOnLeftSide, mIsOnRightSide, mIsOnTopSide, mIsOnBottomSide;
 	private int mPointCount;
 	private Bitmap mBitmap = null;
 	private RectF mClipRect; //剪裁框, 也是图片最小框, 图片边缘不能进入这个框内
 	private RectF mEdgeRect; //图片边缘框
 	private int mFirstFillMode = 0; //初始时, 图片显示填充的模式 0:以剪裁框centercrop的模式, 1:以边缘框centercrop的模式, 2以边缘框fitcenter的模式
 	private boolean mSizeChanged = false;
-	private boolean mCanZoom = true;
 
     /**
      * 判断用户是否开始滑动的，手指防抖裕量
@@ -107,6 +107,7 @@ public class ClipZoomImageView extends AppCompatImageView {
 			return;
 		}
 
+
         //模拟系统的形式来处理图片，参考系统源码，imageview中的configureBounds()方法
 		if (mFirstFillMode == 0) { //以剪裁框centercrop的模式
 			if (mClipRect == null) {
@@ -118,18 +119,18 @@ public class ClipZoomImageView extends AppCompatImageView {
 			float scaleY = mClipRect.height() / mOriBmpHeight;
 
 			mCurrentScale = mZoomMinScale = Math.max(scaleX, scaleY);
-			mZommMaxScale = 5.0f;
+			mZommMaxScale = mCurrentScale*4.0f;
 
 			calcRedundantSpace();
 
-			mBitmapLeft = -mRedundantXSpace/2;
-			mBitmapTop = -mRedundantYSpace/2;
+			mBitmapLeft = mClipRect.left-mRedundantXSpace*0.5f;
+			mBitmapTop = mClipRect.top-mRedundantYSpace*0.5f;
+//			LogHelper.d("wangzixu", "clipimg calcBitmapWH called mClipRect = " + mClipRect.toString());
+//			LogHelper.d("wangzixu", "clipimg calcBitmapWH called mBitmapLeft = " + mBitmapLeft + ", mBitmapTop = " + mBitmapTop);
 
 			mMatrix.setScale(mCurrentScale, mCurrentScale, 0.5f, 0.5f);
 			mMatrix.postTranslate(Math.round(mBitmapLeft), Math.round(mBitmapTop));
 			setImageMatrix(mMatrix);
-
-			checkIsOnSide();
 		} else if (mFirstFillMode == 1) { //1:以边缘框centercrop的模式
 			mEdgeRect = new RectF(0, 0 , mWidth, mHeight);
 
@@ -137,15 +138,15 @@ public class ClipZoomImageView extends AppCompatImageView {
 			float scaleY = mEdgeRect.height() / mOriBmpHeight;
 
 			mCurrentScale = mZoomMinScale = Math.max(scaleX, scaleY);
-			mZommMaxScale = 5.0f;
+			mZommMaxScale = mCurrentScale*4.0f;
 
 			mCurrentBmpWidth = mCurrentScale * mOriBmpWidth;
 			mCurrentBmpHeight = mCurrentScale * mOriBmpHeight;
 			mRedundantXSpace =  mCurrentBmpWidth - mEdgeRect.width();
 			mRedundantYSpace = mCurrentBmpHeight - mEdgeRect.height();
 
-			mBitmapLeft = -mRedundantXSpace/2;
-			mBitmapTop = -mRedundantYSpace/2;
+			mBitmapLeft = mEdgeRect.left-mRedundantXSpace*0.5f;
+			mBitmapTop = mEdgeRect.left-mRedundantYSpace*0.5f;
 
 			if (mClipRect == null) {
 				mClipRect = new RectF(0, 0 , mWidth, mHeight);
@@ -156,8 +157,6 @@ public class ClipZoomImageView extends AppCompatImageView {
 			mMatrix.setScale(mCurrentScale, mCurrentScale, 0.5f, 0.5f);
 			mMatrix.postTranslate(Math.round(mBitmapLeft), Math.round(mBitmapTop));
 			setImageMatrix(mMatrix);
-
-			checkIsOnSide();
 		} else if (mFirstFillMode == 2) {//2以边缘框fitcenter的模式
 			//留白的填充方式, 图片要在这个方框内显示, 初始显示成留白的方式, 也是最小的缩放系数, 再小要返回,
 			//最大可以显示成窄边充满的方式, 也是最大的缩放系数, 再大也要返回, 有时候还要双击切换着两种显示形态
@@ -167,15 +166,15 @@ public class ClipZoomImageView extends AppCompatImageView {
 			float scaleY = mEdgeRect.height() / mOriBmpHeight;
 
 			mCurrentScale = mZoomMinScale = Math.min(scaleX, scaleY);
-			mZommMaxScale = 5.0f;
+			mZommMaxScale = mCurrentScale*4.0f;
 
 			mCurrentBmpWidth = mCurrentScale * mOriBmpWidth;
 			mCurrentBmpHeight = mCurrentScale * mOriBmpHeight;
 			mRedundantXSpace =  mCurrentBmpWidth - mEdgeRect.width();
 			mRedundantYSpace = mCurrentBmpHeight - mEdgeRect.height();
 
-			mBitmapLeft = -mRedundantXSpace/2;
-			mBitmapTop = -mRedundantYSpace/2;
+			mBitmapLeft = mEdgeRect.left-mRedundantXSpace*0.5f;
+			mBitmapTop = mEdgeRect.left-mRedundantYSpace*0.5f;
 
 			if (mClipRect == null) {
 				mClipRect = new RectF(mBitmapLeft, mBitmapTop , mCurrentBmpWidth, mCurrentBmpHeight);
@@ -192,8 +191,6 @@ public class ClipZoomImageView extends AppCompatImageView {
 			mMatrix.postScale(mCurrentScale, mCurrentScale, 0.5f, 0.5f);
 			mMatrix.postTranslate(mBitmapLeft, mBitmapTop);
 			setImageMatrix(mMatrix);
-
-			checkIsOnSide();
 		}
 	}
 
@@ -277,18 +274,15 @@ public class ClipZoomImageView extends AppCompatImageView {
 	@Override
 	public boolean onTouchEvent(@NonNull MotionEvent event) {
 		if (true) { //如果父控件是不可滑动的，那么手势自己处理//如果是可以滑动的，手势是由父控件的手势中直接调用
-			handleTouchEvent(event, true);
+			handleTouchEvent(event);
 			return true;
 		} else {
 			return super.onTouchEvent(event);
 		}
 	}
 
-	private void checkIntoDrag(boolean parentIsOnEdge) {
-		if (parentIsOnEdge
-				&& ((mRedundantXSpace > 0)
-				|| (mRedundantYSpace > 0))
-				) {
+	private void checkIntoDrag() {
+		if (mRedundantXSpace > 0 || mRedundantYSpace > 0) {
 			mMode = DRAG;
 			mIsFirstMove = true;
 		}
@@ -296,18 +290,28 @@ public class ClipZoomImageView extends AppCompatImageView {
 
     private boolean mIsFirstMove; //有静到拖动
     private boolean mIsFirstScale; //由静止到开始双指缩放
-	public int handleTouchEvent(MotionEvent event, boolean parentIsOnEdge) {
+	private VelocityTracker mVelocityTracker;
+	public int handleTouchEvent(MotionEvent event) {
+		if (mVelocityTracker == null) {
+			mVelocityTracker = VelocityTracker.obtain();
+		}
+
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
-				mMode = NONE;
-				mPointCount = 1;
-				checkIntoDrag(parentIsOnEdge);
 				mLastX = event.getX(0);
 				mLastY = event.getY(0);
+				mMode = NONE;
+				mPointCount = 1;
+
+				checkIntoDrag();
+
+				mVelocityTracker.clear();
+				mVelocityTracker.addMovement(event);
+				stopFling();
 				break;
 			case MotionEvent.ACTION_POINTER_DOWN:
 				mPointCount++;
-				if (!mCanZoom || mPointCount > 2 || mMode == ZOOM_ANIM) {
+				if (mPointCount > 2 || mMode == ZOOM_ANIM) {
 					break;
 				}
 				mOldDistant = getDistance(event);
@@ -323,14 +327,12 @@ public class ClipZoomImageView extends AppCompatImageView {
 				}
                 mMode = NONE;
                 if (mCurrentScale < mZoomMinScale) {
-                    if (parentIsOnEdge) {
-					    mMode = ZOOM_ANIM;
-                    }
+					mMode = ZOOM_ANIM;
 					startScaleAnim(mCurrentScale, mZoomMinScale);
 				} else if (mCurrentScale > mZommMaxScale) {
 					startScaleAnim(mCurrentScale, mZommMaxScale);
 				} else {
-					checkIntoDrag(parentIsOnEdge);
+					checkIntoDrag();
 					if (mMode == DRAG) {
 						int pointerIndex = event.getActionIndex();
 						mLastX = event.getX(1 - pointerIndex);
@@ -339,6 +341,7 @@ public class ClipZoomImageView extends AppCompatImageView {
 				}
 				break;
 			case MotionEvent.ACTION_MOVE:
+				mVelocityTracker.addMovement(event);
 				if (mMode == DRAG) {
 					float currentX = event.getX(0);
 					float currentY = event.getY(0);
@@ -356,29 +359,8 @@ public class ClipZoomImageView extends AppCompatImageView {
 					}
 					mLastX = currentX;
 					mLastY = currentY;
-					//由拖动图片转向viewpager滑动的过程
-					if (mParentCanScroll) {
-						//在viewpager中，父容器可以滑动，所以要时刻判断图片是否拖动到了边框
-//                        LogHelper.d("zoomview", "mRedundantXSpace mIsOnRightSide deltaX = " + mRedundantXSpace + ", " + mIsOnRightSide + ", " + deltaX);
-						if (mRedundantXSpace <= 0) { // 说明x方向图片和最小框已经重合了，不能响应图片左右拖动，只能响应上下拖动
-							if (Math.abs(deltaX) > Math.abs(deltaY)
-//									&& Math.abs(deltaX) > mTouchSlop
-                                    ) { //说明当前用户想要左右拖动，应该使父容易滚动
-								event.setAction(MotionEvent.ACTION_DOWN);
-								mMode = NONE; //返回none，父viewpager就会自己处理事件
-								break;
-							}
-						} else if ((Math.abs(deltaX) > Math.abs(deltaY))
-//                                && Math.abs(deltaX) > mTouchSlop //首先判断是在左右滑动手势中
-								&& ((mIsOnLeftSide && deltaX > 0) //如果滑到了左边缘，并且继续向右滑动，
-								|| (mIsOnRightSide && deltaX < 0))) { // 如果滑到了右边缘，并且继续向左滑动 应该让父容器接受事件
-							event.setAction(MotionEvent.ACTION_DOWN);
-							mMode = NONE; //返回none，父viewpager就会自己处理事件
-                            LogHelper.d("zoomview", "mRedundantXSpace mIsOnLeftSide mIsOnRightSide deltaX = " + mRedundantXSpace + ", " + mIsOnLeftSide +", " + mIsOnRightSide + ", " + deltaX);
-							break;
-						}
-					}
 					checkAndSetTranslate(deltaX, deltaY);
+
 				} else if (mMode == ZOOM) {
 					mCurrentDistant = getDistance(event);
 					float scaleFactor = mCurrentDistant / mOldDistant;
@@ -404,11 +386,21 @@ public class ClipZoomImageView extends AppCompatImageView {
 				}
 				break;
 			case MotionEvent.ACTION_UP:
+			case MotionEvent.ACTION_CANCEL:
+				if (mMode == DRAG) {
+					mVelocityTracker.addMovement(event);
+					mVelocityTracker.computeCurrentVelocity(2000);
+					final float vX = mVelocityTracker.getXVelocity();
+					final float vY = mVelocityTracker.getYVelocity();
+
+
+
+					float dx = vX/10;
+					float dy = vY/10;
+					flingDistence((int) dx, (int) dy);
+				}
 				mMode = NONE;
 				mPointCount = 0;
-				if (mCurrentScale > mZoomMinScale && !mIsOnLeftSide && !mIsOnRightSide) {
-					mMode = DRAG;
-				}
 				break;
 		}
 		return mMode;
@@ -456,36 +448,36 @@ public class ClipZoomImageView extends AppCompatImageView {
 		mCurrentScale *= scaleFactor;
 
 		float px, py; //缩放的中心点，如果图片宽小于边框宽了，中点就是边框的中心，否则就是双指的中心
-		px = mRedundantXSpace <= 0 ? mRect.centerX() : mCenter.x;
-		py = mRedundantYSpace <= 0 ? mRect.centerY() : mCenter.y;
+		px = mRedundantXSpace <= 0 ? mClipRect.centerX() : mCenter.x;
+		py = mRedundantYSpace <= 0 ? mClipRect.centerY() : mCenter.y;
 		mMatrix.postScale(scaleFactor, scaleFactor, px, py);
 
 		calcRedundantSpace();
+
 		mMatrix.getValues(mTmpArray);
 		mBitmapLeft = mTmpArray[Matrix.MTRANS_X];
 		mBitmapTop = mTmpArray[Matrix.MTRANS_Y];
 
 		//X方向有裕量的情况下，图片边缘不能进入最小框
 		if (mRedundantXSpace >= 0) {
-			if (mBitmapLeft > mRect.left) {
-				mMatrix.postTranslate(mRect.left - mBitmapLeft, 0);
-			} else if (mBitmapLeft + mCurrentBmpWidth < mRect.right) {
-				mMatrix.postTranslate(mRect.right - mCurrentBmpWidth - mBitmapLeft, 0);
+			if (mBitmapLeft > mClipRect.left) {
+				mMatrix.postTranslate(mClipRect.left - mBitmapLeft, 0);
+			} else if (mBitmapLeft + mCurrentBmpWidth < mClipRect.right) {
+				mMatrix.postTranslate(mClipRect.right - mCurrentBmpWidth - mBitmapLeft, 0);
 			}
 		}
 
 		if (mRedundantYSpace >= 0) {
-			if (mBitmapTop > mRect.top) {
-				mMatrix.postTranslate(0, mRect.top - mBitmapTop);
-			} else if (mBitmapTop + mCurrentBmpHeight < mRect.bottom) {
-				mMatrix.postTranslate(0, mRect.bottom - mCurrentBmpHeight - mBitmapTop);
+			if (mBitmapTop > mClipRect.top) {
+				mMatrix.postTranslate(0, mClipRect.top - mBitmapTop);
+			} else if (mBitmapTop + mCurrentBmpHeight < mClipRect.bottom) {
+				mMatrix.postTranslate(0, mClipRect.bottom - mCurrentBmpHeight - mBitmapTop);
 			}
 		}
 		setImageMatrix(mMatrix);
 		mMatrix.getValues(mTmpArray);
 		mBitmapLeft = mTmpArray[Matrix.MTRANS_X];
 		mBitmapTop = mTmpArray[Matrix.MTRANS_Y];
-        checkIsOnSide();
 	}
 
 	private float getDistance(MotionEvent event) {
@@ -516,38 +508,38 @@ public class ClipZoomImageView extends AppCompatImageView {
 	private void calcRedundantSpace() {
 		mCurrentBmpWidth = mCurrentScale * mOriBmpWidth;
 		mCurrentBmpHeight = mCurrentScale * mOriBmpHeight;
-        mRedundantXSpace =  mCurrentBmpWidth - mClipRect.width();
-        mRedundantYSpace = mCurrentBmpHeight - mClipRect.height();
+		mRedundantXSpace =  mCurrentBmpWidth - mClipRect.width();
+		mRedundantYSpace = mCurrentBmpHeight - mClipRect.height();
     }
 
 	private void checkAndSetTranslate(float deltaX, float deltaY) {
 		if (mRedundantXSpace <= 0) {
-			float offset = mRedundantXSpace/2;
-			if (mBitmapLeft != mRect.left - offset) {
-				deltaX = mRect.left - offset - mBitmapLeft;
+			float offset = mRedundantXSpace*0.5f;
+			if (mBitmapLeft != mClipRect.left - offset) {
+				deltaX = mClipRect.left - offset - mBitmapLeft;
 			} else {
 				deltaX = 0;
 			}
 		} else {
-			if (mBitmapLeft + deltaX > mRect.left) { //移动完后图片就进入最小框左边缘了，需要处理
-				deltaX = mRect.left - mBitmapLeft;
-			} else if (mBitmapLeft + deltaX + mCurrentBmpWidth < mRect.right) {
-				deltaX = mRect.right - mCurrentBmpWidth - mBitmapLeft;
+			if (mBitmapLeft + deltaX > mClipRect.left) { //移动完后图片就进入最小框左边缘了，需要处理
+				deltaX = mClipRect.left - mBitmapLeft;
+			} else if (mBitmapLeft + deltaX + mCurrentBmpWidth < mClipRect.right) {
+				deltaX = mClipRect.right - mCurrentBmpWidth - mBitmapLeft;
 			}
 		}
 
 		if (mRedundantYSpace <= 0) {
-			float offset = mRedundantYSpace/2;
-			if (mBitmapTop != mRect.top - offset) {
-				deltaY = mRect.top - offset - mBitmapTop;
+			float offset = mRedundantYSpace*0.5f;
+			if (mBitmapTop != mClipRect.top - offset) {
+				deltaY = mClipRect.top - offset - mBitmapTop;
 			} else {
 				deltaY = 0;
 			}
 		} else {
-			if (mBitmapTop + deltaY > mRect.top) {
-				deltaY = mRect.top - mBitmapTop;
-			} else if (mBitmapTop + deltaY + mCurrentBmpHeight < mRect.bottom) {
-				deltaY = mRect.bottom - mCurrentBmpHeight - mBitmapTop;
+			if (mBitmapTop + deltaY > mClipRect.top) {
+				deltaY = mClipRect.top - mBitmapTop;
+			} else if (mBitmapTop + deltaY + mCurrentBmpHeight < mClipRect.bottom) {
+				deltaY = mClipRect.bottom - mCurrentBmpHeight - mBitmapTop;
 			}
 		}
 		if (deltaX != 0 || deltaY != 0) {
@@ -555,44 +547,7 @@ public class ClipZoomImageView extends AppCompatImageView {
 			setImageMatrix(mMatrix);
 			mBitmapLeft = mBitmapLeft + deltaX;
 			mBitmapTop = mBitmapTop + deltaY;
-            checkIsOnSide();
 		}
-	}
-
-    private void checkIsOnSide() {
-        mIsOnLeftSide = false;
-        mIsOnRightSide = false;
-        mIsOnTopSide = false;
-        mIsOnBottomSide = false;
-
-		if (mBitmapLeft >= mClipRect.left) {
-			mIsOnLeftSide = true;
-		}
-		if (mBitmapLeft + mCurrentBmpWidth <= mClipRect.right) {
-			mIsOnRightSide = true;
-		}
-		if (mBitmapTop >= mClipRect.top) {
-			mIsOnTopSide = true;
-		}
-		if (mBitmapTop + mCurrentBmpHeight <= mClipRect.bottom) {
-			mIsOnBottomSide = true;
-		}
-    }
-
-	private void getMatrixXY(Matrix m) {
-		m.getValues(mTmpArray);
-		mBitmapLeft = mTmpArray[Matrix.MTRANS_X];
-		mBitmapTop = mTmpArray[Matrix.MTRANS_Y];
-//		mMatrixX = mTmpArray[Matrix.MTRANS_X];
-//		mMatrixY = mTmpArray[Matrix.MTRANS_Y];
-	}
-
-	public float getReDundantXSpace() {
-		return mRedundantXSpace;
-	}
-
-	public void setCanZoom(boolean canZoom) {
-		mCanZoom = canZoom;
 	}
 
 	public int getTouchMode() {
@@ -613,38 +568,13 @@ public class ClipZoomImageView extends AppCompatImageView {
         return false;
     }
 
-	public float getCurrentScale() {
-		return mCurrentScale;
-	}
-
-    public boolean isOnTopSide() {
-        return mIsOnTopSide;
-    }
-
-    public boolean isOnBottomSide() {
-        return mIsOnBottomSide;
-    }
-
-    public boolean isOnLeftSide() {
-		return mIsOnLeftSide;
-	}
-
-	public boolean isOnRightSide() {
-		return mIsOnRightSide;
-	}
-
-	public void setMaxMinScale(float max, float min) {
-		mZommMaxScale = max;
-		mZoomMinScale = min;
-	}
-
 	@Override
 	public Matrix getMatrix() {
 		return mMatrix;
 	}
 
-	public RectF getRect() {
-		return mRect;
+	public RectF getClipRect() {
+		return mClipRect;
 	}
 
 	public Bitmap getOriginalBmp() {
@@ -660,6 +590,7 @@ public class ClipZoomImageView extends AppCompatImageView {
 //		mScroller.setDuration(Math.abs(dx) * 3);
 		mScroller.startScroll(0, 0, dx, dy);
 		mLastX = 0;
+		mLastY = 0;
 		invalidate();
 	}
 
@@ -684,12 +615,7 @@ public class ClipZoomImageView extends AppCompatImageView {
 
 			LogHelper.d("zoomview", "currentX, deltaX = " + currentX + ", " +deltaX);
 			checkAndSetTranslate(deltaX, deltaY);
-			if ((mIsOnLeftSide && deltaX > 0)
-					|| (mIsOnRightSide && deltaX < 0)) {
-				mScroller.forceFinished(true);
-			}
 		}
 	}
 	//***为了模拟ios的抬手后自动滚动一段距离而实现end
-
 }

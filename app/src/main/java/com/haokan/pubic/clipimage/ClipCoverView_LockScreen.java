@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.localDICM;
+package com.haokan.pubic.clipimage;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -15,7 +15,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.util.DisplayUtil;
 
 
-public class ClipConveredView extends View {
+public class ClipCoverView_LockScreen extends View {
 	private int mLeftGap, mTopGap, mRightGap, mBottomGap;
 	private int mWidgetOnePaddingLeft, mWidgetOnePaddingTop,
 			mWidgetSecondPaddingRight, mWidgetSecondPaddingTop;
@@ -39,11 +39,11 @@ public class ClipConveredView extends View {
         return mScreenHeight;
     }
 
-    public ClipConveredView(Context context) {
+    public ClipCoverView_LockScreen(Context context) {
 		super(context);
 	}
 
-	public ClipConveredView(Context context, AttributeSet attrs) {
+	public ClipCoverView_LockScreen(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		TypedArray a = context.obtainStyledAttributes(attrs,
 				R.styleable.ClipCoveredViewStyle);

@@ -43,11 +43,11 @@ public class ActivityMyCollectionDetailPage extends ActivityBase {
         mCvDetailPageMyCollection = (CV_DetailPage_MyCollection) findViewById(R.id.cv_detailpage_mycollection);
         mCvDetailPageMyCollection.setActivity(this);
 
-        ArrayList<CollectionBean> list = getIntent().getParcelableArrayListExtra("initdata");
+        ArrayList<BeanCollection> list = getIntent().getParcelableArrayListExtra("initdata");
         if (list == null) {
             return;
         }
-        ArrayList<MainImageBean> mainList = new ArrayList<MainImageBean>();
+        ArrayList<MainImageBean> mainList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             MainImageBean mainImageBean = BeanConvertUtil.collectionBean2MainImageBean(list.get(i));
             mainList.add(mainImageBean);

@@ -24,7 +24,7 @@ import java.util.List;
  * Created by Maoyujiao on 2017/3/12.
  */
 public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<AdapterMyCollection.ViewHolder> {
-    private ArrayList<CollectionBean> mData = new ArrayList<>();
+    private ArrayList<BeanCollection> mData = new ArrayList<>();
     private Context mContext;
     private int mItemH;
 
@@ -35,7 +35,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
         mItemH = (int) ((float) iw * 16 / 9);
     }
 
-    public void addDataBeans(List<CollectionBean> dataList) {
+    public void addDataBeans(List<BeanCollection> dataList) {
         if (null != dataList && !dataList.isEmpty()) {
             int start = mData.size();
             int len = dataList.size();
@@ -44,7 +44,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
         }
     }
 
-    public void addDataBeans(int index, List<CollectionBean> dataList) {
+    public void addDataBeans(int index, List<BeanCollection> dataList) {
         if (null != dataList && !dataList.isEmpty()) {
             if (index < 0 || index > mData.size()) {
                 index = mData.size();
@@ -54,7 +54,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
         }
     }
 
-    public void addDataBeansAndClear(List<CollectionBean> dataList) {
+    public void addDataBeansAndClear(List<BeanCollection> dataList) {
         if (null != dataList && !dataList.isEmpty()) {
             mData.clear();
             mData.addAll(dataList);
@@ -62,7 +62,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
         }
     }
 
-    public List<CollectionBean> getDataBeans() {
+    public List<BeanCollection> getDataBeans() {
         return mData;
     }
 
@@ -118,7 +118,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
     class Item0ViewHolder extends ViewHolder implements View.OnClickListener {
         public ImageView mImg;
         public ImageView mImgChoiceMark;
-        public CollectionBean mImageBean;
+        public BeanCollection mImageBean;
         public int pos;
 
         public Item0ViewHolder(View itemView) {
@@ -203,7 +203,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
 
     //***********关于编辑的逻辑 begin***************
     private List<Item0ViewHolder> mAllHolders = new ArrayList<>();
-    private List<CollectionBean> mSelectedBeans = new ArrayList<>();
+    private List<BeanCollection> mSelectedBeans = new ArrayList<>();
     private boolean mEditMode;
 
     public void enterEditMode() {
@@ -263,7 +263,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
         return mEditMode;
     }
 
-    public List<CollectionBean> getSelectedItems() {
+    public List<BeanCollection> getSelectedItems() {
         return mSelectedBeans;
     }
 
@@ -278,7 +278,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
         notifyDataSetChanged();
     }
 
-    public void delItems(List<CollectionBean> list) {
+    public void delItems(List<BeanCollection> list) {
         if (list != null && list.size() > 0) {
             mData.removeAll(list);
             if (mEditMode) {

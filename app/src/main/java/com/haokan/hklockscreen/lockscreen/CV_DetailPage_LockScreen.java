@@ -66,6 +66,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     private TextView mTvSwitch;
     private BroadcastReceiver mReceiver;
     protected int mInitIndex; //初始在第几页
+    private View mTimeTitleLayout;
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
         this(context, null);
@@ -97,6 +98,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         mLayoutTime = rootView.findViewById(R.id.layout_time); //底部时间区域
         mTvLockTime = (TextView) mLayoutTime.findViewById(R.id.tv_time);
         mTvLockData = (TextView) mLayoutTime.findViewById(R.id.tv_data);
+        mTimeTitleLayout = mLayoutTime.findViewById(R.id.time_title_layout);
         mTvLockTitle = (TextView) mLayoutTime.findViewById(R.id.tv_title);
         mTvLockLink = (TextView) mLayoutTime.findViewById(R.id.tv_link);
         mTvLockLink.setOnClickListener(new OnClickListener() {
@@ -310,12 +312,11 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         //自动换下一张的逻辑
         if (scrollNext) {
             if (mLocalImgData.size() > 0) {
-                mInitIndex = mData.size()*10 + mLocalLockIndex;
+                mInitIndex = mData.size()*10+mLocalLockIndex;
+                mCurrentPosition = mLocalLockIndex;
                 mLocalLockIndex = (mLocalLockIndex+1)%mLocalImgData.size();
-                mCurrentPosition = mInitIndex;
             } else {
-                int indexOf = mData.indexOf(mCurrentImgBean);
-                indexOf = indexOf + 1;
+                int indexOf = mCurrentPosition + 1;
                 if (indexOf >= mData.size()) {
                     indexOf = 0;
                 }
@@ -332,24 +333,20 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
         //处理时间界面上的一些标题等信息
         if (mCurrentImgBean != null) {
-            String linkTitle = mCurrentImgBean.linkTitle;
-            if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-                linkTitle = "";
+            if (TextUtils.isEmpty(mCurrentImgBean.imgTitle)) {
+                mTimeTitleLayout.setVisibility(GONE);
             } else {
-                if (TextUtils.isEmpty(linkTitle)) {
-                    linkTitle = "查看更多";
+                mTimeTitleLayout.setVisibility(VISIBLE);
+                mTvLockTitle.setText(mCurrentImgBean.imgTitle);
+
+                if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+                    mTvLockLink.setVisibility(GONE);
+                } else {
+                    mTvLockLink.setBackground(mTvLinkBg);
+                    mTvLockLink.setVisibility(VISIBLE);
+                    mTvLockLink.setText("查看更多");
                 }
             }
-
-
-            if (TextUtils.isEmpty(linkTitle)) {
-                mTvLockLink.setVisibility(GONE);
-            } else {
-                mTvLockLink.setBackground(mTvLinkBg);
-                mTvLockLink.setVisibility(VISIBLE);
-                mTvLockLink.setText(linkTitle);
-            }
-            mTvLockTitle.setText(mCurrentImgBean.imgTitle);
         }
 
         mIsLocked = true;
@@ -513,7 +510,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         ModelLockScreen.getLocalImg(mContext, new onDataResponseListener<List<MainImageBean>>() {
             @Override
             public void onStart() {
-
             }
 
             @Override

@@ -3,7 +3,8 @@ package com.haokan.pubic.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.haokan.hklockscreen.mycollection.CollectionBean;
+import com.haokan.hklockscreen.localDICM.BeanLocalImage;
+import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.logsys.LogHelper;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -23,7 +24,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
     /**
      * 数据库版本
      */
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
 
     /**
      * DAO对象的缓存
@@ -81,7 +82,8 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         LogHelper.d("wangzixu", "database onCreate is called");
         try {
-            TableUtils.createTable(connectionSource, CollectionBean.class);
+            TableUtils.createTable(connectionSource, BeanCollection.class);
+            TableUtils.createTable(connectionSource, BeanLocalImage.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,22 +94,22 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
                           int newVersion) {
         LogHelper.d("wangzixu", "database onUpgrade is called, oldV, newV = " + oldVersion + ", " + newVersion);
         int version = oldVersion;
-        if (version < 1) { //版本1时只加了CollectionBean表
+        if (version < 1) { //BeanCollection
             try {
-                TableUtils.createTable(connectionSource, CollectionBean.class);
+                TableUtils.createTable(connectionSource, BeanCollection.class);
                 version = 1;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-//        if (version < 2) { //版本2时加了HistoryRecordBean表
-//            try {
-//                TableUtils.createTable(connectionSource, HistoryRecordBean.class);
-//                version = 2;
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        if (version < 2) { //版本2时加了BeanLocalImage表
+            try {
+                TableUtils.createTable(connectionSource, BeanLocalImage.class);
+                version = 2;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

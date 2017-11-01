@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:clipcoveredview="http://schemas.android.com/apk/res-auto">
+    <com.haokan.pubic.clipimage.ClipZoomImageView
+        android:id="@+id/clipimg_src_image"
+        android:scaleType="matrix"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.haokan.pubic.clipimage.ClipCoverView_LockScreen
+        android:id="@+id/clipimg_conver_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        clipcoveredview:out_fill_color="#9c0d131f"
+        clipcoveredview:top_gap="58dp"
+        clipcoveredview:bottom_gap="58dp"
+        clipcoveredview:frame_line_width="2dp"
+        clipcoveredview:inner_line_width="1dp"
+        clipcoveredview:inner_line_color="#77FFFFFF"
+        clipcoveredview:inner_line_horizontal_count="2"
+        clipcoveredview:inner_line_vertical_count="2"
+        />
+
+    <include
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_loading"
+        layout="@layout/layout_loading"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="58dp">
+        <TextView
+            android:textSize="14sp"
+            android:text="拖动或者缩放图片到合适位置\n剪裁锁屏区域"
+            android:textColor="@color/bai_50"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_botombar"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="58dp">
+
+        <View
+            android:id="@+id/divider1"
+            android:background="@color/bai_50"
+            android:layout_centerInParent="true"
+            android:layout_width="1px"
+            android:layout_height="15dp"/>
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_toLeftOf="@id/divider1"
+            android:textSize="14sp"
+            android:text="取消"
+            android:textColor="@color/selector_click_bai"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tv_confirm"
+            android:layout_toRightOf="@id/divider1"
+            android:textSize="14sp"
+            android:text="确定"
+            android:textColor="@color/selector_click_bai"
+            android:includeFontPadding="false"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+</RelativeLayout>

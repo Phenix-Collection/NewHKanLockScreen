@@ -10,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * Created by wangzixu on 2017/10/26.
  */
 @DatabaseTable(tableName = "table_collect")
-public class CollectionBean implements Parcelable {
+public class BeanCollection implements Parcelable {
     @DatabaseField(id = true)
     public String imgId; //id
 
@@ -56,7 +56,7 @@ public class CollectionBean implements Parcelable {
     @DatabaseField
     public String cpName; //cpName
 
-    @DatabaseField()
+    @DatabaseField
     public long create_time;
 
     public boolean isSelected;
@@ -86,10 +86,10 @@ public class CollectionBean implements Parcelable {
         dest.writeByte(this.isSelected ? (byte) 1 : (byte) 0);
     }
 
-    public CollectionBean() {
+    public BeanCollection() {
     }
 
-    protected CollectionBean(Parcel in) {
+    protected BeanCollection(Parcel in) {
         this.imgId = in.readString();
         this.imgSmallUrl = in.readString();
         this.imgBigUrl = in.readString();
@@ -108,15 +108,15 @@ public class CollectionBean implements Parcelable {
         this.isSelected = in.readByte() != 0;
     }
 
-    public static final Parcelable.Creator<CollectionBean> CREATOR = new Parcelable.Creator<CollectionBean>() {
+    public static final Parcelable.Creator<BeanCollection> CREATOR = new Parcelable.Creator<BeanCollection>() {
         @Override
-        public CollectionBean createFromParcel(Parcel source) {
-            return new CollectionBean(source);
+        public BeanCollection createFromParcel(Parcel source) {
+            return new BeanCollection(source);
         }
 
         @Override
-        public CollectionBean[] newArray(int size) {
-            return new CollectionBean[size];
+        public BeanCollection[] newArray(int size) {
+            return new BeanCollection[size];
         }
     };
 }

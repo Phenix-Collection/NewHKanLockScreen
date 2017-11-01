@@ -9,7 +9,8 @@ import android.text.TextUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.reflect.TypeToken;
-import com.haokan.hklockscreen.mycollection.CollectionBean;
+import com.haokan.hklockscreen.localDICM.BeanLocalImage;
+import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.cachesys.ACache;
@@ -21,14 +22,13 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.http.request.RequestEntity;
 import com.haokan.pubic.http.request.RequestHeader;
 import com.haokan.pubic.http.response.ResponseEntity;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.JsonUtil;
-import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.Values;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -140,8 +140,11 @@ public class ModelLockScreen {
     }
 
     private static void processCollect(Context context, List<MainImageBean> list) {
+        if (list == null) {
+            return;
+        }
         try {
-            Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(CollectionBean.class);
+            Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanCollection.class);
             for (int i = 0; i < list.size(); i++) {
                 MainImageBean bean = list.get(i);
                 Object o = dao.queryForId(bean.imgId);
@@ -171,33 +174,27 @@ public class ModelLockScreen {
                     return;
                 }
 
-                File dir = getLocalImageDir(context);
                 ArrayList<MainImageBean> list = new ArrayList<>();
-                if (dir.exists()) {
-                    try {
-                        File[] files=dir.listFiles(new FilenameFilter() {
-                            @Override
-                            public boolean accept(File dir, String name) {
-                                if (name.startsWith("img")) { //存本地图片时一定要以img开头命名
-                                    return true;
-                                }
-                                return false;
-                            }
-                        });
+                try {
+                    Dao daoLocalImg = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanLocalImage.class);
+                    List<BeanLocalImage> list1 = daoLocalImg.queryForAll();
+                    if (list1 != null && list1.size() > 0) {
+                        for (int i = 0; i < list1.size(); i++) {
+                            BeanLocalImage beanLocalImage = list1.get(i);
 
-                        if (files != null) {
-                            for (int i = 0; i < files.length; i++) {
-                                MainImageBean imageBean = new MainImageBean();
-                                imageBean.myType = 3;
-                                imageBean.imgBigUrl = imageBean.imgSmallUrl = imageBean.localUrl = files[i].getAbsolutePath();
-                                list.add(imageBean);
-                            }
+                            MainImageBean imageBean = new MainImageBean();
+                            imageBean.myType = 3;
+                            imageBean.imgBigUrl = imageBean.imgSmallUrl = imageBean.localUrl = beanLocalImage.imgUrl;
+                            imageBean.imgId = beanLocalImage.imgId;
+                            imageBean.imgTitle = beanLocalImage.imgTitle;
+                            imageBean.imgDesc = beanLocalImage.imgDesc;
+                            list.add(imageBean);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        list = null;
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                processCollect(context, list);
                 subscriber.onNext(list);
                 subscriber.onCompleted();
             }

@@ -1,14 +1,20 @@
 package com.haokan.pubic.bean;
 
-import com.haokan.hklockscreen.mycollection.CollectionBean;
+import android.text.TextUtils;
+
+import com.haokan.hklockscreen.localDICM.ModelLocalImage;
+import com.haokan.hklockscreen.mycollection.BeanCollection;
 
 /**
  * Created by wangzixu on 2017/10/26.
  */
 public class BeanConvertUtil {
-    public static CollectionBean mainImageBean2CollectionBean(MainImageBean imageBean) {
-        CollectionBean collectionBean = new CollectionBean();
+    public static BeanCollection mainImageBean2CollectionBean(MainImageBean imageBean) {
+        BeanCollection collectionBean = new BeanCollection();
         collectionBean.imgId = imageBean.imgId;
+        if (TextUtils.isEmpty(collectionBean.imgId)) {
+            collectionBean.imgId = ModelLocalImage.sLocalImgIdPreffix + System.currentTimeMillis();
+        }
         collectionBean.imgSmallUrl = imageBean.imgSmallUrl;
         collectionBean.imgBigUrl = imageBean.imgBigUrl;
         collectionBean.imgDesc = imageBean.imgDesc;
@@ -26,24 +32,27 @@ public class BeanConvertUtil {
         return collectionBean;
     }
 
-    public static MainImageBean collectionBean2MainImageBean(CollectionBean imageBean) {
-        MainImageBean collectionBean = new MainImageBean();
-        collectionBean.imgId = imageBean.imgId;
-        collectionBean.imgSmallUrl = imageBean.imgSmallUrl;
-        collectionBean.imgBigUrl = imageBean.imgBigUrl;
-        collectionBean.imgDesc = imageBean.imgDesc;
-        collectionBean.imgTitle = imageBean.imgTitle;
-        collectionBean.linkTitle = imageBean.linkTitle;
-        collectionBean.linkUrl = imageBean.linkUrl;
-        collectionBean.typeId = imageBean.typeId;
-        collectionBean.typeName = imageBean.typeName;
-        collectionBean.shareUrl = imageBean.shareUrl;
-        collectionBean.colNum = imageBean.colNum;
-        collectionBean.commentNum = imageBean.commentNum;
-        collectionBean.cpId = imageBean.cpId;
-        collectionBean.cpName = imageBean.cpName;
-        collectionBean.isCollect = 1;
+    public static MainImageBean collectionBean2MainImageBean(BeanCollection collectionBean) {
+        MainImageBean imgBean = new MainImageBean();
+        imgBean.imgId = collectionBean.imgId;
+        imgBean.imgSmallUrl = collectionBean.imgSmallUrl;
+        imgBean.imgBigUrl = collectionBean.imgBigUrl;
+        imgBean.imgDesc = collectionBean.imgDesc;
+        imgBean.imgTitle = collectionBean.imgTitle;
+        imgBean.linkTitle = collectionBean.linkTitle;
+        imgBean.linkUrl = collectionBean.linkUrl;
+        imgBean.typeId = collectionBean.typeId;
+        imgBean.typeName = collectionBean.typeName;
+        imgBean.shareUrl = collectionBean.shareUrl;
+        imgBean.colNum = collectionBean.colNum;
+        imgBean.commentNum = collectionBean.commentNum;
+        imgBean.cpId = collectionBean.cpId;
+        imgBean.cpName = collectionBean.cpName;
+        imgBean.isCollect = 1;
+        if (TextUtils.isEmpty(collectionBean.imgId) || collectionBean.imgId.startsWith(ModelLocalImage.sLocalImgIdPreffix)) {
+            imgBean.myType = 3;
+        }
 
-        return collectionBean;
+        return imgBean;
     }
 }

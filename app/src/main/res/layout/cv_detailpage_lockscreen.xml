@@ -80,6 +80,7 @@
             android:background="@color/bai_50" />
 
         <LinearLayout
+            android:id="@+id/time_title_layout"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="15dp"
             android:layout_width="wrap_content"

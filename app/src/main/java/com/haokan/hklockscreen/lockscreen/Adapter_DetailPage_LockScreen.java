@@ -5,14 +5,15 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.detailpage.Adapter_DetailPage_Base;
-import com.haokan.pubic.util.AssetsImageLoader;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.AssetsImageLoader;
 
 import java.util.ArrayList;
 
@@ -105,7 +106,9 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
                 }
             });
         } else {
-            Glide.with(mContext).load(url).asBitmap().dontAnimate().listener(new RequestListener<String, Bitmap>() {
+            BitmapRequestBuilder<String, Bitmap> builder = Glide.with(mContext).load(url).asBitmap().dontAnimate();
+
+            builder.listener(new RequestListener<String, Bitmap>() {
                 @Override
                 public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
                     holder.errorView.setVisibility(View.VISIBLE);

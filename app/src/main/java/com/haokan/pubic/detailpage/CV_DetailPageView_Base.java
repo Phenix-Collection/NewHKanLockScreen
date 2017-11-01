@@ -4,7 +4,6 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,8 +27,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.mycollection.CollectionBean;
+import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
@@ -38,11 +40,11 @@ import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.customview.ViewPagerTransformer;
 import com.haokan.pubic.http.onDataResponseListener;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.BlurUtil;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
-import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.umeng.socialize.ShareAction;
@@ -96,8 +98,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected boolean mIsAnimnating; //正在执行一些动画, 如显示隐藏图说等
     protected static final long sAinmDuration = 150; //一些动画的时长, 如显示隐藏图说等
     protected View mBottomSettingView;
-    protected Dialog mProgressDialog;
-
 
     public CV_DetailPageView_Base(@NonNull Context context) {
         this(context, null);
@@ -369,7 +369,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
     }
 
-    protected void shareTo(SHARE_MEDIA platfrom) {
+    protected void shareTo(final SHARE_MEDIA platfrom) {
         if (mCurrentImgBean == null) {
             LogHelper.d("wangzixu", "shareTo mCurrentImgBean = null");
             return;
@@ -384,15 +384,22 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 4, "", System.currentTimeMillis());
 
         if (TextUtils.isEmpty(mCurrentImgBean.shareUrl)) {
-            UMImage shareMedia = new UMImage(mContext, mCurrentImgBean.imgBigUrl);//网络图片
-            UMImage thumb =  new UMImage(mContext, mCurrentImgBean.imgSmallUrl);
-            shareMedia.setThumb(thumb);
+//            LogHelper.d("wangzixu", "shareTo mActivity  mCurrentImgBean.imgBigUrl = " + mCurrentImgBean.imgBigUrl);
+            Glide.with(mContext).load(mCurrentImgBean.imgBigUrl)
+                    .asBitmap()
+                    .dontAnimate()
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
 
-            new ShareAction(mActivity)
-                    .withMedia(shareMedia)
-                    .setCallback(mUMShareListener)
-                    .setPlatform(platfrom)
-                    .share();
+                            UMImage shareMedia = new UMImage(mContext, resource);//
+                            new ShareAction(mActivity)
+                                    .withMedia(shareMedia)
+                                    .setCallback(mUMShareListener)
+                                    .setPlatform(platfrom)
+                                    .share();
+                        }
+                    });
         } else {
             UMWeb web = new UMWeb(mCurrentImgBean.shareUrl);
             web.setTitle(mCurrentImgBean.imgTitle);//标题
@@ -436,6 +443,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         public void onError(SHARE_MEDIA platform, Throwable t) {
             ToastManager.showShort(mContext, "分享失败");
             LogHelper.d("share","分享失败:"+t);
+            t.printStackTrace();
         }
 
         /**
@@ -460,12 +468,16 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             new ModelCollection().delCollection(mContext, mCurrentImgBean, new onDataResponseListener<Integer>() {
                 @Override
                 public void onStart() {
-                    showLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.showLoadingDialog();
+                    }
                 }
 
                 @Override
                 public void onDataSucess(Integer integer) {
-                    dismissLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.dismissLoadingDialog();
+                    }
                     view.setSelected(false);
                     mCurrentImgBean.isCollect = 0;
 
@@ -478,31 +490,41 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
                 @Override
                 public void onDataEmpty() {
-                    dismissLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.dismissLoadingDialog();
+                    }
                 }
 
                 @Override
                 public void onDataFailed(String errmsg) {
-                    dismissLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.dismissLoadingDialog();
+                    }
                     ToastManager.showShort(mContext, "取消收藏失败: " + errmsg);
                 }
 
                 @Override
                 public void onNetError() {
-                    dismissLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.dismissLoadingDialog();
+                    }
                     ToastManager.showNetErrorToast(mContext);
                 }
             });
         } else {
-            new ModelCollection().addCollection(mContext, mCurrentImgBean, new onDataResponseListener<CollectionBean>() {
+            new ModelCollection().addCollection(mContext, mCurrentImgBean, new onDataResponseListener<BeanCollection>() {
                 @Override
                 public void onStart() {
-                    showLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.showLoadingDialog();
+                    }
                 }
 
                 @Override
-                public void onDataSucess(CollectionBean collectionBean) {
-                    dismissLoadingDialog();
+                public void onDataSucess(BeanCollection collectionBean) {
+                    if (mActivity != null) {
+                        mActivity.dismissLoadingDialog();
+                    }
                     view.setSelected(true);
                     mCurrentImgBean.isCollect = 1;
 
@@ -516,18 +538,24 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
                 @Override
                 public void onDataEmpty() {
-                    dismissLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.dismissLoadingDialog();
+                    }
                 }
 
                 @Override
                 public void onDataFailed(String errmsg) {
-                    dismissLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.dismissLoadingDialog();
+                    }
                     ToastManager.showShort(mContext, "收藏失败: " + errmsg);
                 }
 
                 @Override
                 public void onNetError() {
-                    dismissLoadingDialog();
+                    if (mActivity != null) {
+                        mActivity.dismissLoadingDialog();
+                    }
                     ToastManager.showNetErrorToast(mContext);
                 }
             });
@@ -585,9 +613,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
 
 //        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
-        mTvLink.setText("查看更多");
 //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
         mTvTitlle.setText(mCurrentImgBean.imgTitle);
+        mTvLink.setText("查看更多");
 
         mTvLinkBg.setColor(getLinkBgColor());
         mTvLink.setBackground(mTvLinkBg);
@@ -824,7 +852,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         ModelDownLoadImage.downLoadImg(mContext, bean, new onDataResponseListener<File>() {
             @Override
             public void onStart() {
-                showLoadingDialog();
+                if (mActivity != null) {
+                    mActivity.showLoadingDialog();
+                }
             }
 
             @Override
@@ -833,7 +863,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 App.sMainHanlder.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        dismissLoadingDialog();
+                        if (mActivity != null) {
+                            mActivity.dismissLoadingDialog();
+                        }
                         ToastManager.showShort(mContext, "下载成功");
                     }
                 }, 1000);
@@ -841,40 +873,27 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
             @Override
             public void onDataEmpty() {
-                dismissLoadingDialog();
+                if (mActivity != null) {
+                    mActivity.dismissLoadingDialog();
+                }
             }
 
             @Override
             public void onDataFailed(String errmsg) {
-                dismissLoadingDialog();
+                if (mActivity != null) {
+                    mActivity.dismissLoadingDialog();
+                }
                 ToastManager.showShort(mContext, "下载失败 : " + errmsg);
             }
 
             @Override
             public void onNetError() {
-                dismissLoadingDialog();
+                if (mActivity != null) {
+                    mActivity.dismissLoadingDialog();
+                }
                 ToastManager.showNetErrorToast(mContext);
             }
         });
-    }
-
-    public void showLoadingDialog() {
-        if (mActivity != null) {
-            if (mProgressDialog == null) {
-                mProgressDialog = new Dialog(mActivity, R.style.CustomDialog);
-                mProgressDialog.setCancelable(false);
-                mProgressDialog.setCanceledOnTouchOutside(false);
-                mProgressDialog.setContentView(R.layout.dialog_layout_loading);
-            }
-            mProgressDialog.show();
-        }
-    }
-
-    public void dismissLoadingDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
-        }
     }
 
     private int[] mLinkBgColors={0xccF8546B,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD,0xccBD0FE1};
@@ -889,7 +908,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     public void onEvent(EventCollectionChange event) {
         if (this != event.mFrom) {
             if (event.mIsAdd) {
-                CollectionBean bean = event.mBean;
+                BeanCollection bean = event.mBean;
                 for (int i = 0; i < mData.size(); i++) {
                     MainImageBean mainImageBean = mData.get(i);
                     if (bean.imgId != null && bean.imgId.equals(mainImageBean.imgId)) {

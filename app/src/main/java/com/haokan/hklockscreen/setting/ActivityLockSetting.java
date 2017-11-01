@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -21,16 +22,34 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
+import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.localDICM.BeanLocalImage;
+import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
 import com.haokan.hklockscreen.mycollection.ActivityMyCollection;
+import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
+import com.haokan.pubic.clipimage.ActivityClipImage;
+import com.haokan.pubic.clipimage.ClipImgManager;
+import com.haokan.pubic.database.MyDatabaseHelper;
+import com.haokan.pubic.http.onDataResponseListener;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
+import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.Values;
+import com.j256.ormlite.dao.Dao;
+
+import java.io.File;
+import java.util.List;
+
+import rx.Scheduler;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by wangzixu on 2017/10/20.
@@ -57,6 +76,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private int mHeaderChangeHeigh;
     private TextView mSettingCollect1;
     private TextView mTvLocalImageEdit;
+    private ImageView mCurrentImage;
+    private ClipImgManager mClipImgManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +85,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         setContentView(R.layout.activity_locksetting);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
+        loadLocalImages();
     }
 
     private void initView() {
@@ -116,6 +138,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mLayoutInitset.setOnClickListener(this);
         mTvLocalImageEdit.setOnClickListener(this);
         mLayoutFadeback.setOnClickListener(this);
+        mIvImage1.setOnClickListener(this);
+        mIvImage2.setOnClickListener(this);
+        mIvImage3.setOnClickListener(this);
 
         //顶部banner高-mHeader1高
         mHeaderChangeHeigh = DisplayUtil.dip2px(this, 220-65);
@@ -180,14 +205,10 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
                 break;
             case R.id.layout_fadeback:
-            {
-//                Intent intent = new Intent(this, ActivityMyCollection.class);
-//                startActivity(intent);
-//                startActivityAnim();
-
-                FeedbackAPI.openFeedbackActivity();
-            }
-            break;
+                {
+                    FeedbackAPI.openFeedbackActivity();
+                }
+                break;
             case R.id.layout_aboutus:
                 {
                     Intent intent = new Intent(this, ActivityAboutUs.class);
@@ -199,14 +220,151 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 checkStoragePermission();
                 break;
             case R.id.layout_initset:
-            {
-                Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
-                startActivity(intent);
-                startActivityAnim();
-            }
+                {
+                    Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
+                    startActivity(intent);
+                    startActivityAnim();
+                }
+                break;
+            case R.id.iv_image1:
+                {
+                    mCurrentImage = mIvImage1;
+                    if (mClipImgManager == null) {
+                        mClipImgManager = new ClipImgManager();
+                    }
+                    mClipImgManager.startChose(this, 101);
+                }
+                break;
+            case R.id.iv_image2:
+                {
+                    mCurrentImage = mIvImage2;
+                    if (mClipImgManager == null) {
+                        mClipImgManager = new ClipImgManager();
+                    }
+                    mClipImgManager.startChose(this, 101);
+                }
+                break;
+            case R.id.iv_image3:
+                {
+                    mCurrentImage = mIvImage3;
+                    if (mClipImgManager == null) {
+                        mClipImgManager = new ClipImgManager();
+                    }
+                    mClipImgManager.startChose(this, 101);
+                }
                 break;
             default:
                 break;
+        }
+    }
+
+    private void loadLocalImages() {
+        ModelLocalImage.getLocalImgList(this, new onDataResponseListener<List<BeanLocalImage>>() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onDataSucess(List<BeanLocalImage> list) {
+                for (int i = 0; i < list.size(); i++) {
+                    BeanLocalImage imageBean = list.get(i);
+                    if (imageBean.index == 1) {
+                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage1);
+                    }
+                    if (imageBean.index == 2) {
+                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage2);
+                    }
+                    if (imageBean.index == 3) {
+                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage3);
+                    }
+                }
+            }
+
+            @Override
+            public void onDataEmpty() {
+
+            }
+
+            @Override
+            public void onDataFailed(String errmsg) {
+
+            }
+
+            @Override
+            public void onNetError() {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 101) {
+                final String path = mClipImgManager.onResult(this, data);
+                if (!TextUtils.isEmpty(path)) {
+                    Intent intent = new Intent(this, ActivityClipImage.class);
+                    intent.putExtra(ActivityClipImage.KEY_INTENT_CLIPIMG_SRC_PATH, path);
+                    startActivityForResult(intent, 102);
+                    startActivityAnim();
+                }
+            } else if (requestCode == 102) {
+                final String path = data.getStringExtra(ActivityClipImage.KEY_INTENT_CLIPIMG_DOWN_PATH);
+                LogHelper.d("wangzixu", "clipimg onActivityResult 102 path = " + path);
+                if (!TextUtils.isEmpty(path)) {
+                    Glide.with(this).load(path).dontAnimate().into(mCurrentImage);
+
+                    final Scheduler.Worker worker = Schedulers.io().createWorker();
+                    worker.schedule(new Action0() {
+                        @Override
+                        public void call() {
+                            try {
+                                int index = 1;
+                                if (mCurrentImage == mIvImage2) {
+                                    index = 2;
+                                } else if (mCurrentImage == mIvImage3) {
+                                    index = 3;
+                                }
+
+                                Dao daoLocalImg = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanLocalImage.class);
+                                List<BeanLocalImage> list = daoLocalImg.queryForEq("index", index);
+                                BeanLocalImage beanOld = null;
+                                if (list != null && list.size() > 0) {
+                                    beanOld = list.get(0);
+                                    daoLocalImg.delete(beanOld);
+                                }
+
+                                BeanLocalImage beanNew = new BeanLocalImage();
+                                beanNew.imgId = ModelLocalImage.sLocalImgIdPreffix + System.currentTimeMillis();
+                                beanNew.imgUrl = path;
+                                beanNew.index = index;
+                                beanNew.create_time = System.currentTimeMillis();
+                                daoLocalImg.create(beanNew);
+
+                                //通知锁屏更新图片
+                                Intent intent = new Intent("com.haokan.receiver.localimagechange");
+                                sendBroadcast(intent);
+
+                                if (beanOld != null) {
+                                    //替换了之前的本地图, 如果这个图片没有被收藏, 则应该删除, 如果被收藏了, 就不能删除
+                                    Dao daoCollection = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanCollection.class);
+                                    Object forId = daoCollection.queryForId(beanOld.imgId);
+                                    if (forId == null) {
+                                        File imgFile = new File(beanOld.imgUrl);
+                                        FileUtil.deleteFile(imgFile);
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            worker.unsubscribe();
+                        }
+                    });
+                }
+            }
         }
     }
 

@@ -77,14 +77,14 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
     }
 
     public void loadData() {
-        new ModelCollection().getCollectionList(mContext, mData.size(), new onDataResponseListener<List<CollectionBean>>() {
+        new ModelCollection().getCollectionList(mContext, mData.size(), new onDataResponseListener<List<BeanCollection>>() {
             @Override
             public void onStart() {
                 mIsLoading = true;
             }
 
             @Override
-            public void onDataSucess(List<CollectionBean> list) {
+            public void onDataSucess(List<BeanCollection> list) {
                 mIsLoading = false;
                 mHasMoreData = false;
 

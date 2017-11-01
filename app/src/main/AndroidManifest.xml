@@ -158,6 +158,11 @@
                   android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name="com.haokan.pubic.clipimage.ActivityClipImage"
+                  android:theme="@style/ClipImageActivityTheme"
+                  android:screenOrientation="portrait">
+        </activity>
+
         <service
             android:name=".lockscreen.ServiceLockScreen"
             android:enabled="true"
