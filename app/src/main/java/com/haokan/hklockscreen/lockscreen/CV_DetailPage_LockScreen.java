@@ -588,6 +588,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             public void run() {
                 CV_DetailPage_LockScreen.this.setVisibility(VISIBLE);
                 mLayoutTime.setAlpha(1.0f);
+                mLayoutMainBottom.setAlpha(1.0f);
             }
         }, 500);
     }
@@ -595,12 +596,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     @Override
     public void onUnLockFailed() {
         mLayoutTime.setAlpha(1.0f);
+        mLayoutMainBottom.setAlpha(1.0f);
     }
 
     @Override
     public void onUnLocking(float f) {
         float ff = 3.3f * f - 2.3f;
         mLayoutTime.setAlpha(ff);
+        mLayoutMainBottom.setAlpha(ff);
     }
 
     /**

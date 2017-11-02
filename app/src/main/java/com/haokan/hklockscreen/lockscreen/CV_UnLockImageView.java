@@ -107,18 +107,9 @@ public class CV_UnLockImageView extends AppCompatImageView {
     private static Bitmap sBlurBitmap;
 
     /**
-     * 是否在触摸屏幕
+     * 是否在解锁中
      */
-    boolean isTouch = false;
-    private boolean mCanUnLock = true; //是否可以解锁的开关
-
-    public void setCanUnLock(boolean canUnLock) {
-        if (canUnLock && !mCanUnLock) {
-            LogHelper.d("wangzixu", "unlockview setCanUnLock mDownY = " + mDownY);
-            mDownY = mMinY = 0;
-        }
-        mCanUnLock = canUnLock;
-    }
+    boolean mIsUnLonking = false;
 
     public CV_UnLockImageView(Context context) {
         this(context, null);
@@ -161,15 +152,14 @@ public class CV_UnLockImageView extends AppCompatImageView {
     }
 
 
-    private boolean mStartLongClick;
-    private boolean mHasLongClicked;
-    public void setStartLongClick(boolean startLongClick) {
-        mStartLongClick = startLongClick;
-    }
+    private boolean mCancelLongClick;
+    private boolean mHasLongClicked; //记录是否相应了长按, 如果相应了长按, 就不能相应其他事件
+
     private Runnable mLongClickRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mStartLongClick && mOnLongClickListener != null) {
+            if (!mCancelLongClick && mOnLongClickListener != null) {
+                mCancelLongClick = true;
                 mHasLongClicked = mOnLongClickListener.onLongClick(CV_UnLockImageView.this);
             }
         }
@@ -185,14 +175,14 @@ public class CV_UnLockImageView extends AppCompatImageView {
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                isTouch = false;
-                mMinY = mDownY = y;
-                mStartLongClick = true;
+                mIsUnLonking = false;
+                mMinY  = y;
+                mDownY = y;
                 LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_DOWN = " + y);
 
-                if (!mCanUnLock) {
-                    postDelayed(mLongClickRunnable, 800);
-                }
+                mCancelLongClick = false;
+                mHasLongClicked = false;
+                postDelayed(mLongClickRunnable, 800);
 
                 if (mImageBitmap == null) {
                     buildDrawingCache();
@@ -206,31 +196,31 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 break;
             case MotionEvent.ACTION_MOVE:
 //                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_MOVE = " + y);
-                if (mCanUnLock) {
-                    int deltaY = mDownY - y;
-                    if (deltaY > 15 || isTouch) {
-                        isTouch = true;
-                        deltaY = deltaY - 15;
-    //                    int foreGroundbottom = mHeight - mRadius / 2 - deltaY;
-                        int foreGroundbottom = (int) Math.min(mHeight, mHeight - UNLOCK_RADIO * deltaY);
-                        calcDisplayRect(foreGroundbottom);
-                    } else {
-                        isTouch = false;
-                    }
+                if (!mCancelLongClick && Math.abs(mDownY - y) >= 15) {
+                    mCancelLongClick = true;
+                    removeCallbacks(mLongClickRunnable);
+                }
+
+                if (mHasLongClicked) { //记录是否相应了长按, 如果相应了长按, 就不能相应其他事件
+                    return true;
+                }
+
+                int deltaY = mDownY - y;
+                if (deltaY > 15 || mIsUnLonking) {
+                    mIsUnLonking = true;
+                    deltaY = deltaY - 15;
+                    int foreGroundbottom = (int) Math.min(mHeight, mHeight - UNLOCK_RADIO * deltaY);
+                    calcDisplayRect(foreGroundbottom);
+                    invalidate();
                 } else {
-                    if (mStartLongClick) {
-                        if (Math.abs(mDownY - y) >= 20) {
-                            mStartLongClick = false;
-                        }
-                    }
+                    mIsUnLonking = false;
                 }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_UP = " + y
-                        + ", mMinY = " + mMinY + ", mDownY = "
-                        + mDownY + ", mCanUnLock = " + mCanUnLock + ", mTopRect.bottom = " + mTopRect.bottom);
-                if (mCanUnLock) {
+//                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_UP = " + y
+//                        + ", mMinY = " + mMinY);
+                if (mIsUnLonking) {
                     if (mDownY - y > mLockDelta
                             && y - mMinY < mLockDelta) {
                         // unLock anim
@@ -240,9 +230,9 @@ public class CV_UnLockImageView extends AppCompatImageView {
                         startAnim(mTopRect.bottom, mHeight);
                     }
                 }
-                mStartLongClick = false;
+                mCancelLongClick = true;
                 removeCallbacks(mLongClickRunnable);
-                if (mHasLongClicked) {
+                if (mHasLongClicked) { //记录是否相应了长按, 如果相应了长按, 就不能相应其他事件
                     mHasLongClicked = false;
                     return true;
                 }
@@ -250,8 +240,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
             default:
                 break;
         }
-        invalidate();
-        return isTouch || super.dispatchTouchEvent(event);
+        return mIsUnLonking || super.dispatchTouchEvent(event);
         //return true;
     }
 
@@ -326,7 +315,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                isTouch = false;
+                mIsUnLonking = false;
                 if (mOnUnLockListener != null) {
                     if (end == 0) {
                         mOnUnLockListener.onUnLockSuccess();
@@ -341,7 +330,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
 
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
-        if (isTouch && mCanUnLock) {
+        if (mIsUnLonking) {
             drawForeGround(canvas);
         } else {
             super.onDraw(canvas);
