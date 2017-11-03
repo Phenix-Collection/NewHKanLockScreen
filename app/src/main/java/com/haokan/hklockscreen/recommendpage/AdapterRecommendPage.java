@@ -37,9 +37,20 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     }
 
     @Override
+    protected int getContentItemViewType(int position) {
+        return 0;
+    }
+
+    @Override
     protected ViewHolder onCreateContentItemViewHolder(ViewGroup parent, int contentViewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.cv_recommendpage_item, parent, false);
-        Item0ViewHolder holder = new Item0ViewHolder(view);
+        ViewHolder holder;
+        if (contentViewType == 0) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.cv_recommendpage_item, parent, false);
+            holder = new Item0ViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.cv_recommendpage_item_ad, parent, false);
+            holder = new Item1ViewHolder(view);
+        }
         return holder;
     }
 
@@ -146,6 +157,19 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
         @Override
         public void onClick(View v) {
             mRecommendPage.startWebview(mBean.urlClick, mBean.imgTitle);
+        }
+    }
+
+    class Item1ViewHolder extends ViewHolder{
+        private BeanRecommendItem mBean;
+
+        public Item1ViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void renderView(final int position) {
+            mBean = mData.get(position);
         }
     }
 }

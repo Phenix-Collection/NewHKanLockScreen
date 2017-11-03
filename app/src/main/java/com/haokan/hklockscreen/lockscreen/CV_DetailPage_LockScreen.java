@@ -61,12 +61,20 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     public static boolean sIsSwitching = false; //是否在换一换
     protected ArrayList<MainImageBean> mLocalImgData = new ArrayList<>(); //锁屏的数据分成两部分, 一部分是本地添加的照片, 一部分是网络更新的数据
     protected ArrayList<MainImageBean> mSwitchImgData = new ArrayList<>();
-    private int mLocalLockIndex = 0;
+    protected ArrayList<MainImageBean> mTempData = new ArrayList<>();
+    private int mLocalLockIndex = 0; //本地图片循环时用的
+    private int mNoLocalLockIndex = 0; //没有本地图片循环时用的
     private boolean mIsFrist = true;
     private TextView mTvSwitch;
     private BroadcastReceiver mReceiver;
     protected int mInitIndex; //初始在第几页
     private View mTimeTitleLayout;
+
+    private MainImageBean mAdData5; //第5个位置和第11个位置的广告
+    private MainImageBean mAdData11;
+    //为动态插入第5帧广告而用的集合, 始终保持有5条数据, 广告数据向后接续
+    //需要把date分成2份, [lockindex, lockindex+5]和[lockindex+6~~因为要往11位置~~lockindex]
+    private ArrayList<MainImageBean> mImgDataForAd5 = new ArrayList<>();
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
         this(context, null);
@@ -312,22 +320,33 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         //自动换下一张的逻辑
         if (scrollNext) {
             if (mLocalImgData.size() > 0) {
-                mInitIndex = mData.size()*10+mLocalLockIndex;
-                mCurrentPosition = mLocalLockIndex;
+                mInitIndex = mTempData.size()*9+mLocalLockIndex;
+                mCurrentPosition = mInitIndex;
                 mLocalLockIndex = (mLocalLockIndex+1)%mLocalImgData.size();
             } else {
-                int indexOf = mCurrentPosition + 1;
-                if (indexOf >= mData.size()) {
-                    indexOf = 0;
-                }
-                mInitIndex = mData.size()*10 + indexOf;
-                mCurrentPosition = indexOf;
+                mInitIndex = mTempData.size()*9+mNoLocalLockIndex;
+                mCurrentPosition = mInitIndex;
+                mNoLocalLockIndex = (mNoLocalLockIndex+1)%mTempData.size();
+
+//                int indexOf = mCurrentPosition + 1;
+//                if (indexOf >= mData.size()) {
+//                    indexOf = 0;
+//                }
+//                mInitIndex = mData.size()*10 + indexOf;
+//                mCurrentPosition = indexOf;
             }
 
             mLockPosition = mCurrentPosition;
             mCurrentImgBean = mData.get(mCurrentPosition);
 
             App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
+            if (mAdData5 != null) {
+                mData.remove(mAdData5);
+            }
+            if (mAdData11 != null) {
+                mData.remove(mAdData11);
+            }
+            mAdapterVpMain.notifyDataSetChanged();
             mVpMain.setCurrentItem(mInitIndex, false);
         }
 
@@ -355,11 +374,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         if (mOnLockScreenStateChangeListener != null) {
             mOnLockScreenStateChangeListener.onLockScreenStateChange(mIsLocked);
         }
+
+        mHasLoadAd5 = false;
+        mHasLoadAd11 = false;
     }
 
     @Override
     public void onPageSelected(int position) {
-        mCurrentPosition = position%mData.size();
+        mCurrentPosition = position;
 
         if (mIsLocked && mLockPosition != mCurrentPosition) {
             App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
@@ -372,6 +394,60 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         } else {
             super.onPageSelected(position);
         }
+
+        if (!mHasLoadAd5 && position == mLockPosition + 1) {
+            loadHaoKanAdDate5(position);
+        }
+
+        if (!mHasLoadAd11 && position == mLockPosition + 5) {
+            loadHaoKanAdDate11(position);
+        }
+    }
+
+    private boolean mHasLoadAd5;
+    private boolean mHasLoadAd11;
+    protected void loadHaoKanAdDate5(final int position) {
+        //第5个位置的广告
+        mHasLoadAd5 = true;
+//        HaokanADManager.getInstance().loadAdData(mContext, AdTypeCommonUtil.REQUEST_INSERT_TYPE, "28-53-206", 1080, 1920, new HaokanADInterface() {
+////        HaokanADManager.getInstance().loadAdData(mContext, AdTypeCommonUtil.REQUEST_SPLASH_TYPE, "28-53-209", 1080, 1560, new HaokanADInterface() {
+//            @Override
+//            public void onADSuccess(AdData adData) {
+//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-206 onADSuccess");
+//                MainImageBean imageBean = new MainImageBean();
+//                imageBean.mAdData = adData;
+//                mAdData5 = imageBean;
+//                mData.add(position+4, imageBean);
+//                mAdapterVpMain.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onADError(String s) {
+//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-206 onADError s = " + s);
+//            }
+//        });
+    }
+
+    protected void loadHaoKanAdDate11(final int position) {
+        //第11个位置的广告
+        mHasLoadAd11 = true;
+//        HaokanADManager.getInstance().loadAdData(mContext, AdTypeCommonUtil.REQUEST_INSERT_TYPE, "28-53-207", 1080, 1920, new HaokanADInterface() {
+//        HaokanADManager.getInstance().loadAdData(mContext, AdTypeCommonUtil.REQUEST_SPLASH_TYPE, "28-53-209", 1080, 1560, new HaokanADInterface() {
+//            @Override
+//            public void onADSuccess(AdData adData) {
+//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-207 onADSuccess");
+//                MainImageBean imageBean = new MainImageBean();
+//                imageBean.mAdData = adData;
+//                mAdData11 = imageBean;
+//                mData.add(position+5, imageBean);
+//                mAdapterVpMain.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onADError(String s) {
+//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-207 onADError s = " + s);
+//            }
+//        });
     }
 
     public void setIvSwitching(boolean isUpdating) {
@@ -440,19 +516,23 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
      */
     public void refreshData(boolean showOfflineImage) {
         mData.clear();
-        mData.addAll(mLocalImgData);
-        mData.addAll(mSwitchImgData);
+        mTempData.clear();
+        mTempData.addAll(mLocalImgData);
+        mTempData.addAll(mSwitchImgData);
+        for (int i = 0; i < 30; i++) { //为了实现伪无限循环
+            mData.addAll(mTempData);
+        }
         setVpAdapter();
 
         if (showOfflineImage) {
-            mInitIndex = mData.size() * 10 + mLocalImgData.size();
+            mInitIndex = mTempData.size() * 10 + mLocalImgData.size();
         } else {
-            mInitIndex = mData.size() * 10;
+            mInitIndex = mTempData.size() * 10;
         }
 
         if (mIsFrist || mIsLocked) {
             mIsFrist = false;
-            mCurrentPosition = mInitIndex%mData.size();
+            mCurrentPosition = mInitIndex;
             mLockPosition = mCurrentPosition;
             mCurrentImgBean = mData.get(mCurrentPosition);
             intoLockScreenState(false);

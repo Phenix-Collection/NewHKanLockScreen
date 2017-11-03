@@ -19,8 +19,8 @@ import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
-import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.umeng.analytics.MobclickAgent;
@@ -139,15 +139,11 @@ public class CV_RecommendPage extends FrameLayout{
         public void onDataSucess(List<BeanRecommendItem> beanRecommendItems) {
             LogHelper.d("wangzixu", "recompage loadData onDataSucess size = " + beanRecommendItems.size());
 
-            int start = mData.size();
-            mData.addAll(beanRecommendItems);
-            mAdapter.notifyContentItemRangeInserted(start, beanRecommendItems.size());
-            mAdapter.hideFooter();
-            dismissAllPromptLayout();
-
-            mPage++;
-            mIsLoading = false;
-            mHasMoreData = true;
+            if (mData.size() == 0) { //从头开始加载, 需请求广告
+                loadHaoKanAdData5(beanRecommendItems);
+            } else {
+                onDataSucess(beanRecommendItems);
+            }
         }
 
         @Override
@@ -200,6 +196,18 @@ public class CV_RecommendPage extends FrameLayout{
         }
     };
 
+    public void onDataSuccess(List<BeanRecommendItem> beanRecommendItems) {
+        int start = mData.size();
+        mData.addAll(beanRecommendItems);
+        mAdapter.notifyContentItemRangeInserted(start, beanRecommendItems.size());
+        mAdapter.hideFooter();
+        dismissAllPromptLayout();
+
+        mPage++;
+        mIsLoading = false;
+        mHasMoreData = true;
+    }
+
     public void setTypeName(String typeName) {
         mTypeName = typeName;
     }
@@ -224,6 +232,27 @@ public class CV_RecommendPage extends FrameLayout{
         new ModelRecommendPage().getRecommendData(mContext, mTypeName, mPage, mOnDataResponseListener);
     }
 
+    //请求第五个位置的广告数据
+    public void loadHaoKanAdData5(final List<BeanRecommendItem> beanRecommendItems) {
+        //第5信息流
+//        if (beanRecommendItems.size() > 4) {
+        if (false) {
+
+        } else {
+            onDataSuccess(beanRecommendItems);
+        }
+    }
+
+    //请求第11个位置的广告数据
+    public void loadHaoKanAdData11(final List<BeanRecommendItem> beanRecommendItems) {
+        //第11信息流
+//        if (beanRecommendItems.size() > 10) {
+        if (false) {
+
+        } else {
+            onDataSuccess(beanRecommendItems);
+        }
+    }
     //*******************4种提示框相关的布局 begin*************************
     protected View mNetErrorLayout;
     protected View mLoadingLayout;

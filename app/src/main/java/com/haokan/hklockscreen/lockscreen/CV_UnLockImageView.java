@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
@@ -110,6 +111,9 @@ public class CV_UnLockImageView extends AppCompatImageView {
      * 是否在解锁中
      */
     boolean mIsUnLonking = false;
+    private int mTouchSlop;
+
+    private boolean mCanUnLock = true;
 
     public CV_UnLockImageView(Context context) {
         this(context, null);
@@ -134,6 +138,10 @@ public class CV_UnLockImageView extends AppCompatImageView {
         mRadius = DisplayUtil.dip2px(mContext, 30);
         mLockDelta = DisplayUtil.dip2px(mContext, 80);
 
+        final ViewConfiguration configuration = ViewConfiguration.get(mContext);
+//        mTouchSlop = configuration.getScaledTouchSlop();
+        mTouchSlop = configuration.getScaledPagingTouchSlop();
+
         mBlurRect.set(0, 0, mWidth, mRadius);
 
         if (sBlurPaint == null) {
@@ -154,7 +162,6 @@ public class CV_UnLockImageView extends AppCompatImageView {
 
     private boolean mCancelLongClick;
     private boolean mHasLongClicked; //记录是否相应了长按, 如果相应了长按, 就不能相应其他事件
-
     private Runnable mLongClickRunnable = new Runnable() {
         @Override
         public void run() {
@@ -164,6 +171,10 @@ public class CV_UnLockImageView extends AppCompatImageView {
             }
         }
     };
+
+    public void setCanUnLock(boolean canUnLock) {
+        mCanUnLock = canUnLock;
+    }
 
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
@@ -206,9 +217,9 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 }
 
                 int deltaY = mDownY - y;
-                if (deltaY > 15 || mIsUnLonking) {
+                if (mCanUnLock && (deltaY > mTouchSlop || mIsUnLonking)) {
                     mIsUnLonking = true;
-                    deltaY = deltaY - 15;
+                    deltaY = deltaY - mTouchSlop;
                     int foreGroundbottom = (int) Math.min(mHeight, mHeight - UNLOCK_RADIO * deltaY);
                     calcDisplayRect(foreGroundbottom);
                     invalidate();
@@ -241,7 +252,6 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 break;
         }
         return mIsUnLonking || super.dispatchTouchEvent(event);
-        //return true;
     }
 
     OnLongClickListener mOnLongClickListener;
@@ -249,11 +259,6 @@ public class CV_UnLockImageView extends AppCompatImageView {
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
         mOnLongClickListener = l;
     }
-//    OnClickListener mOnClickListener;
-//    @Override
-//    public void setOnClickListener(OnClickListener onClickListener) {
-//        mOnClickListener = onClickListener;
-//    }
 
     /**
      * 此效果分两部分，上面是原图清晰的部分，下面是带遮罩效果的由不透明到全透明的过渡区域，foreGroundbottom

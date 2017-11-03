@@ -30,15 +30,15 @@ public class MyScroller {
 	
 	private long mStartTime;
 	private long mDuration = 1200l;
-	private boolean mIsfinish;
+	private boolean mIsfinish = true;
 
 	public void setDuration(long duration) {
 		mDuration = duration;
 	}
 
-	public void startScroll(int scrollX, int scrollY, int distanceX, int distanceY) {
-		mStartX = scrollX;
-		mStartY = scrollY;
+	public void startScroll(int startX, int startY, int distanceX, int distanceY) {
+		mStartX = startX;
+		mStartY = startY;
 		this.mDistanceX = distanceX;
 		this.mDistanceY = distanceY;
 		mIsfinish = false;
@@ -84,6 +84,10 @@ public class MyScroller {
 
 	public final void forceFinished(boolean finished) {
 		mIsfinish = finished;
+	}
+
+	public boolean isFinish() {
+		return mIsfinish;
 	}
 
 	static class ViscousFluidInterpolator implements Interpolator {

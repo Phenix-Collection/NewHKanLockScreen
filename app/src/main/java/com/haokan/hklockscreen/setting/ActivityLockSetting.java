@@ -78,6 +78,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private TextView mTvLocalImageEdit;
     private ImageView mCurrentImage;
     private ClipImgManager mClipImgManager;
+    private ImageView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +86,14 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         setContentView(R.layout.activity_locksetting);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
+        loadHaoKanAd();
         loadLocalImages();
     }
 
     private void initView() {
         mScrollview = (CV_ScrollView) findViewById(R.id.scrollview);
         mBannerlayout = (FrameLayout) findViewById(R.id.bannerlayout);
+        mAdView = (ImageView) findViewById(R.id.adview);
         mLayoutlockscreen = (RelativeLayout) findViewById(R.id.layoutlockscreen);
         mIvLockscreen = (ImageView) findViewById(R.id.iv_lockscreen);
         mLayoutAutoUpdateImage = (RelativeLayout) findViewById(R.id.layoutautoupdateimg);
@@ -152,13 +155,11 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     if (mHeader1.getVisibility() != View.VISIBLE) {
                         mHeader1.setVisibility(View.VISIBLE);
                         mHeader.setVisibility(View.INVISIBLE);
-//                        StatusBarUtil.setStatusBarTextColor(ActivityLockSetting.this, true);
                     }
                 } else {
                     if (mHeader.getVisibility() != View.VISIBLE) {
                         mHeader1.setVisibility(View.INVISIBLE);
                         mHeader.setVisibility(View.VISIBLE);
-//                        StatusBarUtil.setStatusBarTextColor(ActivityLockSetting.this, false);
                     }
                 }
             }
@@ -256,6 +257,36 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             default:
                 break;
         }
+    }
+
+    private void loadHaoKanAd() {
+//        mAdMediaView.setAdJumpWebview(true);
+//        HaokanADManager.getInstance().loadAdData(getApplication(), AdTypeCommonUtil.REQUEST_BANNER_TYPE, "28-53-208", 1080, 630, new HaokanADInterface() {
+//            @Override
+//            public void onADSuccess(AdData adData) {
+//                mAdMediaView.setNativeAd(adData, new EffectiveAdListener() {
+//                    @Override
+//                    public void onAdInvalid() {
+//                        LogHelper.d("wangzixu", "HaokanADManager  28-53-208 setNativeAd onAdInvalid");
+//                    }
+//
+//                    @Override
+//                    public void onLoadSuccess() {
+//                        LogHelper.d("wangzixu", "HaokanADManager 28-53-208 setNativeAd onLoadSuccess");
+//                    }
+//
+//                    @Override
+//                    public void onLoadFailure() {
+//                        LogHelper.d("wangzixu", "HaokanADManager 28-53-208 setNativeAd onLoadFailure");
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onADError(String s) {
+//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-208 onADError s = " + s);
+//            }
+//        });
     }
 
     private void loadLocalImages() {

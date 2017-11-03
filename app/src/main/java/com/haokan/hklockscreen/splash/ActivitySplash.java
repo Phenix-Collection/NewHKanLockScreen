@@ -1,16 +1,14 @@
 package com.haokan.hklockscreen.splash;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.home.ActivityHomePage;
 import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
-import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.HttpStatusManager;
@@ -18,7 +16,6 @@ import com.haokan.pubic.http.UrlsUtil;
 import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.StatusBarUtil;
-import com.haokan.pubic.util.Values;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +24,9 @@ import rx.schedulers.Schedulers;
 
 
 public class ActivitySplash extends ActivityBase implements View.OnClickListener {
-    private long mStayTime = 1000; //倒计时
+    private long mStayTime = 2000; //倒计时
+    private ImageView mAdView;
+    private TextView mTvJumpAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +34,11 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
         setContentView(R.layout.activity_splash);
         StatusBarUtil.setStatusBarTransparnet(this);
 
+        App.sMainHanlder.postDelayed(mLaunchHomeRunnable, mStayTime);
         initView();
 
         Intent i = new Intent(ActivitySplash.this, ServiceLockScreen.class);
         startService(i);
-        App.sMainHanlder.postDelayed(mLaunchHomeRunnable, mStayTime);
 
         StringBuilder builder = new StringBuilder();
         builder.append(App.sDID).append(",")
@@ -62,7 +61,63 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
     }
 
     private void initView() {
+        mTvJumpAd = (TextView) findViewById(R.id.jumpad);
+        mTvJumpAd.setOnClickListener(this);
 
+        mAdView = (ImageView) findViewById(R.id.adview);
+
+//        mAdMediaView.setAdJumpWebview(true);
+//        mAdMediaView.setAdClickListener(new AdClickListener() {
+//            @Override
+//            public void onAdClick() {
+//                App.sMainHanlder.removeCallbacks(mLaunchHomeRunnable);
+//            }
+//        });
+//        Intent i = new Intent(ActivitySplash.this, ActivityHomePage.class);
+//        mAdMediaView.setAdJumpWebViewCloseIntent(i.toUri(0));
+//
+//        HaokanADManager.getInstance().loadAdData(getApplication(), AdTypeCommonUtil.REQUEST_SPLASH_TYPE, "28-53-209", 1080, 1560, new HaokanADInterface() {
+//            @Override
+//            public void onADSuccess(AdData adData) {
+//                mAdMediaView.setNativeAd(adData, new EffectiveAdListener() {
+//                    @Override
+//                    public void onAdInvalid() {
+//                        LogHelper.d("wangzixu", "HaokanADManager  28-53-209 setNativeAd onAdInvalid");
+//                    }
+//
+//                    @Override
+//                    public void onLoadSuccess() {
+//                        LogHelper.d("wangzixu", "HaokanADManager 28-53-209 setNativeAd onLoadSuccess");
+//                        App.sMainHanlder.removeCallbacks(mLaunchHomeRunnable);
+//                        App.sMainHanlder.postDelayed(mLaunchHomeRunnable, 3000);
+//                        mTvJumpAd.setVisibility(View.VISIBLE);
+//                        mTvJumpAd.setText("3");
+//                        App.sMainHanlder.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mTvJumpAd.setText("2");
+//                            }
+//                        }, 1000);
+//                        App.sMainHanlder.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mTvJumpAd.setText("1");
+//                            }
+//                        }, 2000);
+//                    }
+//
+//                    @Override
+//                    public void onLoadFailure() {
+//                        LogHelper.d("wangzixu", "HaokanADManager 28-53-209 setNativeAd onLoadFailure");
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onADError(String s) {
+//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-209 onADError s = " + s);
+//            }
+//        });
     }
 
     @Override
@@ -85,25 +140,10 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
         }
         mIsDestory = true;
 
-//        Intent i = new Intent(ActivitySplash.this, ActivityLockScreen.class);
-//        Intent i = new Intent(ActivitySplash.this, ActivityAutoSetLockScreen.class);
         Intent i = new Intent(ActivitySplash.this, ActivityHomePage.class);
         startActivity(i);
 
-        //是否是第一次安装
-        String manufacturer = Build.MANUFACTURER;
-        if (manufacturer.equalsIgnoreCase("xiaomi")
-                || manufacturer.equalsIgnoreCase("oppo")) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            boolean first = preferences.getBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, true);
-            if (first) {
-                preferences.edit().putBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, false).apply();
-                Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
-                startActivity(intent);
-            }
-        }
-
         finish();
-        overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+        startActivityAnim();
     }
 }

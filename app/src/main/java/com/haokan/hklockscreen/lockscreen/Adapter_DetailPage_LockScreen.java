@@ -29,7 +29,7 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
 
     @Override
     public int getCount() {
-        return 30 * super.getCount();
+        return mData.size();
     }
 
     public void setCanUnLock(boolean canUnLock) {
@@ -37,7 +37,7 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
         for (int i = 0; i < mHolders.size(); i++) {
             ViewHolder holder = mHolders.get(i);
             CV_UnLockImageView unLockImageView = (CV_UnLockImageView) holder.image;
-//            unLockImageView.setCanUnLock(canUnLock);
+            unLockImageView.setCanUnLock(canUnLock);
         }
     }
 
@@ -58,77 +58,83 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        position = position%mData.size();
         final MainImageBean imageBean = mData.get(position);
+        if (false) { //是广告
+            LogHelper.d("wangzixu", "HaokanADManager  detailpage AD position = " + position);
+            View view = View.inflate(mContext, R.layout.cv_detailpage_lockscreen_item_ad, null);
 
-        View view = View.inflate(mContext, R.layout.cv_detailpage_lockscreen_item, null);
-        final ViewHolder holder = new ViewHolder(view);
-        CV_UnLockImageView unLockImageView = (CV_UnLockImageView) holder.image;
-//        unLockImageView.setCanUnLock(mCanUnLock);
-        unLockImageView.setOnLongClickListener(null);//暂时不响应长按, 所以设置为null
-        if (mOnLongClickListener != null && mOnLongClickListener instanceof CV_UnLockImageView.onUnLockListener) {
-            unLockImageView.setOnUnLockListener((CV_UnLockImageView.onUnLockListener) mOnLongClickListener);
-        }
-        view.setTag(holder);
-        mHolders.add(holder);
+            container.addView(view);
+            return view;
+        } else {
 
-        holder.loadingView.setVisibility(View.VISIBLE);
-        holder.position = position;
-        holder.imgState = 0;
+            View view = View.inflate(mContext, R.layout.cv_detailpage_lockscreen_item, null);
+            final ViewHolder holder = new ViewHolder(view);
+            CV_UnLockImageView unLockImageView = (CV_UnLockImageView) holder.image;
+            unLockImageView.setCanUnLock(mCanUnLock);
+            unLockImageView.setOnLongClickListener(null);//暂时不响应长按, 所以设置为null
+            if (mOnLongClickListener != null && mOnLongClickListener instanceof CV_UnLockImageView.onUnLockListener) {
+                unLockImageView.setOnUnLockListener((CV_UnLockImageView.onUnLockListener) mOnLongClickListener);
+            }
+            view.setTag(holder);
+            mHolders.add(holder);
 
-        container.addView(holder.itemView);
+            holder.loadingView.setVisibility(View.VISIBLE);
+            holder.position = position;
+            holder.imgState = 0;
 
-        String url = imageBean.imgBigUrl;
-        if (imageBean.myType == 1) {
-            url = imageBean.localUrl;
-        }
-        if (url.startsWith("hk_def_imgs")) { // assset中的图片
-            AssetsImageLoader.loadAssetsImage(mContext, url, new AssetsImageLoader.onAssetImageLoaderListener() {
-                @Override
-                public void onSuccess(Bitmap bitmap) {
-                    if (holder.position != -1) {
+            container.addView(holder.itemView);
+
+            String url = imageBean.imgBigUrl;
+            if (imageBean.myType == 1) {
+                url = imageBean.localUrl;
+            }
+            if (url.startsWith("hk_def_imgs")) { // assset中的图片
+                AssetsImageLoader.loadAssetsImage(mContext, url, new AssetsImageLoader.onAssetImageLoaderListener() {
+                    @Override
+                    public void onSuccess(Bitmap bitmap) {
+                        if (holder.position != -1) {
+                            holder.errorView.setVisibility(View.GONE);
+                            holder.loadingView.setVisibility(View.GONE);
+                            holder.image.setVisibility(View.VISIBLE);
+                            holder.mBitmap = bitmap;
+                            holder.image.setImageBitmap(bitmap);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+                        LogHelper.d("wangzixu", "lockadapter instantiateItem AssetsImageLoader  获取不到");
+                        e.printStackTrace();
+                        holder.errorView.setVisibility(View.VISIBLE);
+                        holder.loadingView.setVisibility(View.GONE);
+                        holder.image.setVisibility(View.GONE);
+                        holder.mBitmap = null;
+                    }
+                });
+            } else {
+                BitmapRequestBuilder<String, Bitmap> builder = Glide.with(mContext).load(url).asBitmap().dontAnimate();
+
+                builder.listener(new RequestListener<String, Bitmap>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                        holder.errorView.setVisibility(View.VISIBLE);
+                        holder.loadingView.setVisibility(View.GONE);
+                        holder.image.setVisibility(View.GONE);
+                        holder.mBitmap = null;
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
                         holder.errorView.setVisibility(View.GONE);
                         holder.loadingView.setVisibility(View.GONE);
                         holder.image.setVisibility(View.VISIBLE);
-                        holder.mBitmap = bitmap;
-                        holder.image.setImageBitmap(bitmap);
+                        holder.mBitmap = resource;
+                        return false;
                     }
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-                    LogHelper.d("wangzixu", "lockadapter instantiateItem AssetsImageLoader  获取不到");
-                    e.printStackTrace();
-                    holder.errorView.setVisibility(View.VISIBLE);
-                    holder.loadingView.setVisibility(View.GONE);
-                    holder.image.setVisibility(View.GONE);
-                    holder.mBitmap = null;
-                }
-            });
-        } else {
-            BitmapRequestBuilder<String, Bitmap> builder = Glide.with(mContext).load(url).asBitmap().dontAnimate();
-
-            builder.listener(new RequestListener<String, Bitmap>() {
-                @Override
-                public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                    holder.errorView.setVisibility(View.VISIBLE);
-                    holder.loadingView.setVisibility(View.GONE);
-                    holder.image.setVisibility(View.GONE);
-                    holder.mBitmap = null;
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                    holder.errorView.setVisibility(View.GONE);
-                    holder.loadingView.setVisibility(View.GONE);
-                    holder.image.setVisibility(View.VISIBLE);
-                    holder.mBitmap = resource;
-                    return false;
-                }
-            }).into(holder.image);
+                }).into(holder.image);
+            }
+            return holder.itemView;
         }
-
-        return holder.itemView;
     }
 }

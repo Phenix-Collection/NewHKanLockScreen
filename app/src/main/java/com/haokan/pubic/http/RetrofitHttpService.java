@@ -1,5 +1,7 @@
 package com.haokan.pubic.http;
 
+import com.haokan.hklockscreen.haokanAd.request.BidRequest;
+import com.haokan.hklockscreen.haokanAd.response.BidResponse;
 import com.haokan.hklockscreen.lockscreen.RequestBody_Switch;
 import com.haokan.hklockscreen.lockscreen.ResponseBody_Switch;
 import com.haokan.hklockscreen.recommendpage.RequestBody_Recommend;
@@ -67,4 +69,12 @@ public interface RetrofitHttpService {
     @POST
     Observable<MaidianResponse> maidianUpload(@Url String url, @Body MaidianUpBean requestEntity);
     //埋点相关end
+
+    //---好看广告begin
+    @POST
+    Call<BidResponse> getHaoKanAd(@Url String url, @Body BidRequest adrequest);
+
+    @GET
+    Call<Object> reportHaoKanAd(@Url String url);
+    //---好看广告end
 }

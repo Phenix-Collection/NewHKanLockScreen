@@ -163,6 +163,11 @@
                   android:screenOrientation="portrait">
         </activity>
 
+        <activity
+            android:name="com.haokan.ad.Activity.WebViewActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
         <service
             android:name=".lockscreen.ServiceLockScreen"
             android:enabled="true"

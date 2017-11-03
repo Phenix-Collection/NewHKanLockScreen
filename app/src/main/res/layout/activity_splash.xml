@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="0dp"
-        android:layout_height="0dp">
-    </WebView>
-
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
@@ -54,24 +48,24 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/adwrapper"
+    <ImageView
+        android:id="@+id/adview"
         android:layout_above="@id/rl_bottom"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </RelativeLayout>
+    </ImageView>
 
     <TextView
         android:visibility="gone"
         android:id="@+id/jumpad"
-        android:layout_width="63dp"
-        android:layout_height="27dp"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="36dp"
         android:background="@drawable/selector_splash_jumpbtn"
         android:gravity="center"
-        android:text="跳过"
+        android:text="3"
         android:textColor="@color/bai"
         android:textSize="13sp" />
 </RelativeLayout>

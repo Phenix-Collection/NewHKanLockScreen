@@ -199,7 +199,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
         //viewpager区域
         mVpMain = (ViewPager) findViewById(R.id.vp_main);
-        mVpMain.setOffscreenPageLimit(2);
+        mVpMain.setOffscreenPageLimit(1);
         mVpMain.setPageTransformer(true, new ViewPagerTransformer.ParallaxTransformer(R.id.iv_image));
         mVpMain.addOnPageChangeListener(this);
 
@@ -239,7 +239,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mPreImageShowTime = currentTimeMillis;
 
         App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
-        mCurrentPosition = position%mData.size();
+        mCurrentPosition = position;
         mCurrentImgBean = mData.get(mCurrentPosition);
         if (mCurrentImgBean == null) {
             return;

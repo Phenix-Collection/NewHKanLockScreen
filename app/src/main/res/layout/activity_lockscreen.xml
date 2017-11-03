@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<com.haokan.hklockscreen.lockscreen.CV_ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scrollview"
     android:overScrollMode="never"
@@ -25,4 +25,4 @@
             android:layout_height="match_parent">
         </com.haokan.hklockscreen.lockscreen.CV_RecommendPage_LockScreen>
     </RelativeLayout>
-</ScrollView>
+</com.haokan.hklockscreen.lockscreen.CV_ScrollView>

@@ -4,20 +4,25 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ScrollView;
 
+import com.haokan.pubic.clipimage.MyScroller;
+
 /**
  * Created by wangzixu on 2017/10/18.
  */
 public class CV_ScrollView extends ScrollView {
+    private Context mContext;
     public CV_ScrollView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public CV_ScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public CV_ScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
+        init();
     }
 
     @Override
@@ -37,4 +42,38 @@ public class CV_ScrollView extends ScrollView {
     public void setMyOnScrollChangeListener(MyOnScrollChangeListener myOnScrollChangeListener) {
         mMyOnScrollChangeListener = myOnScrollChangeListener;
     }
+
+    //系统的smollscroll滚动太快了, 需要自定义实现begin----
+    MyScroller mMyScroller;
+
+    private void init() {
+        mMyScroller = new MyScroller(mContext);
+    }
+
+    public void myScrollTo(int x, int y, long duration) {
+        mMyScroller.setDuration(duration);
+
+        int curX = getScrollX();
+        int curY = getScrollY();
+        int deltaX = x - curX;
+        int deltaY = y - curY;
+        mMyScroller.startScroll(curX, curY, deltaX, deltaY);
+    }
+
+    @Override
+    public void computeScroll() {
+        if (mMyScroller.computeScrollOffset()) {
+            int currentX = mMyScroller.getCurrentX();
+            int currentY = mMyScroller.getCurrentY();
+            scrollTo(currentX, currentY);
+        } else {
+            super.computeScroll();
+        }
+    }
+
+    public boolean isScrolling() {
+        return !mMyScroller.isFinish();
+    }
+
+    //系统的smollscroll滚动太快了, 需要自定义实现end-----
 }

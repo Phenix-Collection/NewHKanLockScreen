@@ -63,6 +63,7 @@ public class App extends Application {
 
         IntentFilter filter=new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.setPriority(Integer.MAX_VALUE);
         mReceiver = new ReceiverLockScreen();
         registerReceiver(mReceiver, filter);

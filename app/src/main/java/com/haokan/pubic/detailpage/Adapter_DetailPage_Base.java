@@ -55,7 +55,7 @@ public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClic
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
         Object tag = ((View) object).getTag();
-        if (tag instanceof ViewHolder) {
+        if (tag != null && tag instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) tag;
             mHolders.remove(holder);
             holder.mBitmap = null;

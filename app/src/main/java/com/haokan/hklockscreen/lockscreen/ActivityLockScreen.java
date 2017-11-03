@@ -27,7 +27,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
@@ -44,7 +43,7 @@ import com.umeng.analytics.MobclickAgent;
  */
 public class ActivityLockScreen extends ActivityBase implements View.OnClickListener, View.OnSystemUiVisibilityChangeListener, CV_DetailPage_LockScreen.OnLockScreenStateChangeListener {
     private CV_RecommendPage_LockScreen mLockRecommendPage;
-    private ScrollView mScrollView;
+    private CV_ScrollView mScrollView;
     private View mRootView;
     private FrameLayout mLockScreenLayout;
     private int mScreenH;
@@ -56,9 +55,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private VelocityTracker mVelocityTracker;
     private float mLastX;
     private float mLastY;
-    private boolean mScrollLockScreenLayout;
-    private int mUnLockThreshold;//解锁阈值, 手指落点小于这个值解锁, 大于这个值, 上划
-    private boolean mHasScrollViewMoved; //是够控制scrollview移动过了, 如果移动过了, up事件应该直接返回, 否则会相应点击事件(解决bug:上划显示推荐页后, 再下滑到底, 相应点击事件)
+    private boolean mScrollViewMove; //是够控制scrollview移动过了, 如果移动过了, up事件应该直接返回, 否则会相应点击事件(解决bug:上划显示推荐页后, 再下滑到底, 相应点击事件)
 
 
     @Override
@@ -66,7 +63,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         super.onCreate(savedInstanceState);
         disableKeyGuard();
         StatusBarUtil.setStatusBarTransparnet(this);
-        setContentView(R.layout.activity_lock);
+        setContentView(R.layout.activity_lockscreen);
         LogHelper.d("wangzixu", "ActivityLockScreen onCreate");
 
         disableKeyGuard();
@@ -75,7 +72,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         Point point = DisplayUtil.getRealScreenPoint(this);
         mScreenW = point.x;
         mScreenH = point.y;
-        mUnLockThreshold = mScreenH - DisplayUtil.dip2px(this, 110);
 
         initView();
         initLockScreenView();
@@ -85,6 +81,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
         hideNavigation();
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(this);
+
+
+    }
+
+    public void showGestureGudie() {
+
     }
 
     @Override
@@ -107,11 +109,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
 
     private void initView() {
-        mScrollView = (ScrollView) findViewById(R.id.scrollview);
+        mScrollView = (CV_ScrollView) findViewById(R.id.scrollview);
         mRootView = findViewById(R.id.rootview);
 
         final ViewConfiguration configuration = ViewConfiguration.get(this);
-        mTouchSlop = configuration.getScaledTouchSlop();
+//        mTouchSlop = configuration.getScaledTouchSlop();
+        mTouchSlop = configuration.getScaledPagingTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
         mMaximumVelocity = configuration.getScaledMaximumFlingVelocity();
     }
@@ -134,7 +137,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mLockScreenLayout.addView(App.sHaokanLockView);
 
         App.sHaokanLockView.intoLockScreenState(true);
-
 
         ViewGroup.LayoutParams params = App.sHaokanLockView.getLayoutParams();
         if (params == null) {
@@ -171,30 +173,25 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         hideNavigation();
     }
 
-    private boolean mBeginUnLock;
-    //控制向上滑动的逻辑begin
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-//        if (App.sHaokanLockView.isLocked()) {
         if (mIsAnimingPrompt) {
             return true;
         }
 
-        if (false) {
+        if (App.sHaokanLockView.isLocked()) { //锁屏界面, 直接解锁
             return mLockScreenLayout.dispatchTouchEvent(event);
-        } else {
-            int action = event.getAction();
+        }
 
-            if (action == MotionEvent.ACTION_DOWN) {
+        int action = event.getActionMasked();
+        int scrollY = mScrollView.getScrollY();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
                 mLastX = event.getX();
                 mLastY = event.getY();
-                if (!mIsRecommendPage && mLastY < mUnLockThreshold) {
-                    mBeginUnLock = true;
-                    return mLockScreenLayout.dispatchTouchEvent(event);
-                }
 
-                mBeginUnLock = false;
-                mScrollLockScreenLayout = false;
+                mScrollViewMove = false;
+
                 if (mVelocityTracker == null) {
                     mVelocityTracker = VelocityTracker.obtain();
                 }
@@ -202,22 +199,52 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                 if (mVelocityTracker != null) {
                     mVelocityTracker.addMovement(event);
                 }
-            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                if (mBeginUnLock) {
-                    mBeginUnLock = false;
-                    if (!mIsRecommendPage) {
-                        return mLockScreenLayout.dispatchTouchEvent(event);
-                    }
+                break;
+            case MotionEvent.ACTION_MOVE:
+
+                if (App.sHaokanLockView.isShowLongClickLayout()) { //如果当前显示出了长按的对话框, 不响应事件
+                    return true;
                 }
 
-                int scrollY = mScrollView.getScrollY();
+                float x = event.getX();
+                float y = event.getY();
+                if (mVelocityTracker != null) {
+                    mVelocityTracker.addMovement(event);
+                }
+
+                if (scrollY < mScreenH) {
+                    if (scrollY > 0 || mScrollViewMove) { //2在推荐和锁屏页之间, 拦截掉事件, 自己处理
+                        mScrollViewMove = true;
+                        mScrollView.scrollBy(0, (int) (mLastY - y));
+                        if (mScrollView.getScrollY() < 0) {
+                            mScrollView.scrollTo(0,0);
+                        } else if (mScrollView.getScrollY() > mScreenH) {
+                            mScrollView.scrollTo(0, mScreenH);
+                        }
+                        mLastY = y;
+                        return true;
+                    }
+
+                    //此时在锁屏界面, 且不知道用户意图
+                    float absX = Math.abs(mLastX - x);
+    //                    float absY = Math.abs(mLastY - y);
+                    float absY = mLastY - y; //只有向上划, 才相应滑动scrollview的事件, 其他的事件都交由viewpager去处理
+                    if (absY > mTouchSlop && absY > absX) {
+                        mScrollView.scrollBy(0, 1);
+                        mScrollViewMove = true;
+                        mLastY = y;
+                        return true;
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
                 if (mVelocityTracker != null) {
                     mVelocityTracker.addMovement(event);
                 }
 
                 //如果当前在推荐和锁屏页中间, 拦截掉事件, 自己处理. 其他情况都交由系统处理
                 if (scrollY > 0 && scrollY < mScreenH) {
-                    mHasScrollViewMoved = false;
                     mVelocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
                     int initialVelocity = (int) mVelocityTracker.getYVelocity(); //计算抬手时速度, 向上滑小于0, 向下滑大于0
                     LogHelper.d("wangzixu", "ActivityLockScreen recyclerView initialVelocity = " + initialVelocity);
@@ -226,12 +253,14 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                         if (initialVelocity > 1000
 //                                || scrollY < mScreenH*3/4
                                 ) { //下滑fling, 或者下滑过1/4
+//                            mScrollView.myScrollTo(0, 0, 350);
                             mScrollView.smoothScrollTo(0, 0);
                             mIsRecommendPage = false;
                             mLockRecommendPage.onHide();
 
                             MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
                         } else {
+//                            mScrollView.myScrollTo(0, mScreenH, 350);
                             mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
                         }
@@ -239,6 +268,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                         if (initialVelocity < -1000
 //                                || scrollY > mScreenH / 4
                                 ) {//上滑fling, 或者上滑过1/4
+//                            mScrollView.myScrollTo(0, mScreenH, 350);
                             mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
                             mLockRecommendPage.onShow();
@@ -251,70 +281,25 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                                 mLockRecommendPage.refreshIfChangeType(bean.typeName);
                             }
                         } else {
+//                            mScrollView.myScrollTo(0, 0, 350);
                             mScrollView.smoothScrollTo(0, 0);
                             mIsRecommendPage = false;
                         }
                     }
+                }
+
+                if (mScrollViewMove) {
+                    mScrollViewMove = false;
                     event.setAction(MotionEvent.ACTION_CANCEL);
-                } else if (mHasScrollViewMoved) {
-                    mHasScrollViewMoved = false;
-                    event.setAction(MotionEvent.ACTION_CANCEL);
                 }
-            } else {
-                if (!mIsRecommendPage && mBeginUnLock) {
-                    return mLockScreenLayout.dispatchTouchEvent(event);
-                }
-
-                if (App.sHaokanLockView.isShowLongClickLayout()) {
-                    return true;
-                }
-
-                float x = event.getX();
-                float y = event.getY();
-                if (mVelocityTracker != null) {
-                    mVelocityTracker.addMovement(event);
-                }
-                int scrollY = mScrollView.getScrollY();
-//                LogHelper.d("wangzixu", "ActivityLockScreen recyclerView scrollY = " + scrollY);
-                if ((scrollY > 0 && scrollY < mScreenH)) { //如果当前在推荐和锁屏页中间, 拦截掉事件, 自己处理. 其他情况都交系统处理
-                    mHasScrollViewMoved = true;
-                    mScrollView.scrollBy(0, (int) (mLastY - y));
-                    if (mScrollView.getScrollY() < 0) {
-                        mScrollView.scrollTo(0,0);
-                    } else if (mScrollView.getScrollY() > mScreenH) {
-                        mScrollView.scrollTo(0, mScreenH);
-                    }
-                    mLastY = y;
-                    return true;
-                }
-                //--begin---
-                //本来scrollY在0或者mScreenH时, 是交由mScrollView处理, 让其内部来实现是开始相应scrollview竖滑还是viewpager横滑
-                //这里拦截掉在scrollY == 0时, 不交给scrollview, 自己处理是开始竖滑还是横滑, 因为只有上划时才需要相应竖滑
-                else if (scrollY == 0 && !mScrollLockScreenLayout) {
-                    float absX = Math.abs(mLastX - x);
-//                    float absY = Math.abs(mLastY - y);
-                    float absY = mLastY - y; //只有向上划, 才相应滑动scrollview的事件, 其他的事件都交由viewpager去处理
-                    if (absY > mTouchSlop && absY > absX) {
-                        //开始向上滑动
-                        mScrollView.scrollBy(0, 1);
-                        mLastY = y;
-                        return true;
-                    } else if (absX > mTouchSlop) {
-                        mScrollLockScreenLayout = true;
-                        mLastY = y;
-                    }
-                } else {
-                    mLastY = y;
-                }
-                //--end
-//                mLastY = y;
-            }
-
-            if (!mIsRecommendPage) {
-                return mLockScreenLayout.dispatchTouchEvent(event);
-            } else {
-                return mScrollView.dispatchTouchEvent(event);
-            }
+                break;
+            default:
+                break;
+        }
+        if (scrollY < mScreenH) {
+            return mLockScreenLayout.dispatchTouchEvent(event);
+        } else {
+            return mScrollView.dispatchTouchEvent(event);
         }
     }
     //控制向上滑动的逻辑end

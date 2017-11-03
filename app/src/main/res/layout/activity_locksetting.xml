@@ -15,13 +15,22 @@
             android:layout_height="match_parent">
             <FrameLayout
                 android:id="@+id/bannerlayout"
+                android:background="@drawable/icon_locksettingbg"
                 android:layout_width="match_parent"
                 android:layout_height="210dp">
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_ban"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:src="@drawable/icon_locksettingbg"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"/>-->
+
+                    <!--android:visibility="gone"-->
                 <ImageView
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/icon_locksettingbg"
+                    android:id="@+id/adview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="210dp">
+                </ImageView>
             </FrameLayout>
 
             <View

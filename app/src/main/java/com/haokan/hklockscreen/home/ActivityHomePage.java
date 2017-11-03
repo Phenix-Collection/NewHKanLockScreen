@@ -4,11 +4,13 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,11 +20,13 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
+import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
+import com.haokan.pubic.util.Values;
 
 /**
  * Created by wangzixu on 2017/10/20.
@@ -43,7 +47,17 @@ public class ActivityHomePage extends ActivityBase {
         Intent i = new Intent(this, ServiceLockScreen.class);
         startService(i);
 
-        UpdateManager.checkUpdate(this, true);
+        //是否是第一次安装
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean first = preferences.getBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, true);
+        if (first) {
+            preferences.edit().putBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, false).apply();
+            Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
+            startActivity(intent);
+        } else {
+            UpdateManager.checkUpdate(this, true);
+        }
+
     }
 
     private void initView() {
