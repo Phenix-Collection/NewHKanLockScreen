@@ -58,6 +58,7 @@ public class CV_ScrollView extends ScrollView {
         int deltaX = x - curX;
         int deltaY = y - curY;
         mMyScroller.startScroll(curX, curY, deltaX, deltaY);
+        invalidate();
     }
 
     @Override
@@ -66,6 +67,7 @@ public class CV_ScrollView extends ScrollView {
             int currentX = mMyScroller.getCurrentX();
             int currentY = mMyScroller.getCurrentY();
             scrollTo(currentX, currentY);
+            invalidate();
         } else {
             super.computeScroll();
         }

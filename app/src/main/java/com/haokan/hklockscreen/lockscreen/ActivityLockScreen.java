@@ -235,6 +235,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                         mLastY = y;
                         return true;
                     }
+                } else {
+                    mLastY = y;
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -253,23 +255,23 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                         if (initialVelocity > 1000
 //                                || scrollY < mScreenH*3/4
                                 ) { //下滑fling, 或者下滑过1/4
-//                            mScrollView.myScrollTo(0, 0, 350);
-                            mScrollView.smoothScrollTo(0, 0);
+                            mScrollView.myScrollTo(0, 0, 400);
+//                            mScrollView.smoothScrollTo(0, 0);
                             mIsRecommendPage = false;
                             mLockRecommendPage.onHide();
 
                             MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
                         } else {
-//                            mScrollView.myScrollTo(0, mScreenH, 350);
-                            mScrollView.smoothScrollTo(0, mScreenH);
+                            mScrollView.myScrollTo(0, mScreenH, 400);
+//                            mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
                         }
                     } else {
                         if (initialVelocity < -1000
 //                                || scrollY > mScreenH / 4
                                 ) {//上滑fling, 或者上滑过1/4
-//                            mScrollView.myScrollTo(0, mScreenH, 350);
-                            mScrollView.smoothScrollTo(0, mScreenH);
+                            mScrollView.myScrollTo(0, mScreenH, 400);
+//                            mScrollView.smoothScrollTo(0, mScreenH);
                             mIsRecommendPage = true;
                             mLockRecommendPage.onShow();
 
@@ -281,8 +283,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                                 mLockRecommendPage.refreshIfChangeType(bean.typeName);
                             }
                         } else {
-//                            mScrollView.myScrollTo(0, 0, 350);
-                            mScrollView.smoothScrollTo(0, 0);
+                            mScrollView.myScrollTo(0, 0, 400);
+//                            mScrollView.smoothScrollTo(0, 0);
                             mIsRecommendPage = false;
                         }
                     }

@@ -5,16 +5,32 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/layout_switch"
+        android:id="@+id/lockscreen_layouttop"
         android:background="@drawable/bg_screen_up"
         android:layout_width="match_parent"
         android:layout_height="74dp">
+
+        <TextView
+            android:id="@+id/backlockscreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/selector_backlockscreen_bg"
+            android:layout_marginRight="15dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="返回锁屏"
+            android:textColor="@color/selector_click_bai"
+            android:textSize="12sp" />
 
         <LinearLayout
             android:id="@+id/ll_switch"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_alignParentRight="true"
+            android:layout_marginLeft="15dp"
             android:paddingRight="5dp"
             android:layout_marginTop="34dp"
             android:layout_width="wrap_content"

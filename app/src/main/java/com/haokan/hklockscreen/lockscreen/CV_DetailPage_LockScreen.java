@@ -94,14 +94,17 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     private void initViews(View rootView) {
-        View layoutSwitch = rootView.findViewById(R.id.layout_switch); //换一换
+        View layoutTop = rootView.findViewById(R.id.lockscreen_layouttop); //换一换
         mLayoutMainTop.setVisibility(GONE);
-        mLayoutMainTop = layoutSwitch;//把base中的顶部view替换掉, 切面编程思想, 这样利用baseview中关于顶部view的
+        mLayoutMainTop = layoutTop;//把base中的顶部view替换掉, 切面编程思想, 这样利用baseview中关于顶部view的
 
-        layoutSwitch.findViewById(R.id.ll_switch).setOnClickListener(this);
+        layoutTop.findViewById(R.id.backlockscreen).setOnClickListener(mLockClickListener);
+
+        View layoutSwitch = layoutTop.findViewById(R.id.ll_switch);
         mIvSwitch = (ImageView) layoutSwitch.findViewById(R.id.iv_switch);
         mTvSwitch = (TextView) layoutSwitch.findViewById(R.id.tv_switch);
         layoutSwitch.setOnClickListener(this);
+
 
         mLayoutTime = rootView.findViewById(R.id.layout_time); //底部时间区域
         mTvLockTime = (TextView) mLayoutTime.findViewById(R.id.tv_time);
@@ -109,12 +112,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         mTimeTitleLayout = mLayoutTime.findViewById(R.id.time_title_layout);
         mTvLockTitle = (TextView) mLayoutTime.findViewById(R.id.tv_title);
         mTvLockLink = (TextView) mLayoutTime.findViewById(R.id.tv_link);
-        mTvLockLink.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickLink();
-            }
-        });
+        mTvLockLink.setOnClickListener(mLockClickListener);
 
         setTime();
         mReceiver = new BroadcastReceiver() {
@@ -140,6 +138,68 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
         AlarmUtil.setOfflineAlarm(mContext);
     }
+
+    private OnClickListener mLockClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.tv_link:
+                    onClickLink();
+                    break;
+                case R.id.backlockscreen:
+                    onClickBack();
+                    break;
+                case R.id.ll_switch:
+                    if (sIsSwitching) {
+                        return;
+                    }
+                    if (!HttpStatusManager.checkNetWorkConnect(mContext)) {
+                        ToastManager.showNetErrorToast(mContext);
+                        setIvSwitching(false);
+                        return;
+                    }
+
+                    boolean wifi = HttpStatusManager.isWifi(mContext);
+                    //如果是wifi, 或者允许在非wifi下换一换
+                    if (wifi || PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, false)) {
+                        loadSwitchData();
+                    } else {
+                        if (mActivity == null) {
+                            ToastManager.showCenter(mContext, "未设置Activity, 无法弹窗");
+                            return;
+                        }
+                        View cv = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_nowifi_switch, null);
+                        final CheckBox checkBox = (CheckBox) cv.findViewById(R.id.checkbox);
+                        checkBox.setChecked(true);
+
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
+                                .setTitle("提示")
+                                .setView(cv)
+                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if (checkBox.isChecked()) {//勾选存储
+                                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                                            SharedPreferences.Editor edit = preferences.edit();
+                                            edit.putBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, true).apply();
+                                        }
+                                        loadSwitchData();
+                                    }
+                                });
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.setCancelable(false);
+                        alertDialog.show();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     public boolean isLocked() {
         return mIsLocked;
@@ -212,61 +272,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     protected void onClickLink() {
         MobclickAgent.onEvent(mContext, "lockscreen_godetail"); //锁屏页进入详情
         super.onClickLink();
-    }
-
-    @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        switch (v.getId()) {
-            case R.id.ll_switch:
-                if (sIsSwitching) {
-                    return;
-                }
-                if (!HttpStatusManager.checkNetWorkConnect(mContext)) {
-                    ToastManager.showNetErrorToast(mContext);
-                    setIvSwitching(false);
-                    return;
-                }
-
-                boolean wifi = HttpStatusManager.isWifi(mContext);
-                //如果是wifi, 或者允许在非wifi下换一换
-                if (wifi || PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, false)) {
-                    loadSwitchData();
-                } else {
-                    if (mActivity == null) {
-                        ToastManager.showCenter(mContext, "未设置Activity, 无法弹窗");
-                        return;
-                    }
-                    View cv = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_nowifi_switch, null);
-                    final CheckBox checkBox = (CheckBox) cv.findViewById(R.id.checkbox);
-                    checkBox.setChecked(true);
-
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                            .setTitle("提示")
-                            .setView(cv)
-                            .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    if (checkBox.isChecked()) {//勾选存储
-                                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-                                        SharedPreferences.Editor edit = preferences.edit();
-                                        edit.putBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, true).apply();
-                                    }
-                                    loadSwitchData();
-                                }
-                            });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.setCancelable(false);
-                    alertDialog.show();
-                }
-                break;
-            default:
-                break;
-        }
     }
 
     /**

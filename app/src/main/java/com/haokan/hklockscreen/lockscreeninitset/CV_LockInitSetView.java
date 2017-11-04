@@ -130,6 +130,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     mRadarView.setVisibility(GONE);
                     mCheckTvLayout.setVisibility(GONE);
 
+                    MobclickAgent.onEvent(mContext, "initset_checkfailed");
                     autoSetSuccessLayout();
                 }
             }
@@ -254,7 +255,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             });
         }catch (Exception e){//抛出异常就直接打开设置页面
             e.printStackTrace();
-            ToastManager.showShort(mActivityBase, "没有找到自启动界面");
+            ToastManager.showShort(mActivityBase, "");
         }
     }
 

@@ -72,9 +72,9 @@ public interface RetrofitHttpService {
 
     //---好看广告begin
     @POST
-    Call<BidResponse> getHaoKanAd(@Url String url, @Body BidRequest adrequest);
+    Observable<BidResponse> getHaoKanAd(@Url String url, @Body BidRequest adrequest);
 
     @GET
-    Call<Object> reportHaoKanAd(@Url String url);
+    Observable<Object> reportHaoKanAd(@Url String url);
     //---好看广告end
 }

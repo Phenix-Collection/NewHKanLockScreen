@@ -142,7 +142,7 @@ public class CV_RecommendPage extends FrameLayout{
             if (mData.size() == 0) { //从头开始加载, 需请求广告
                 loadHaoKanAdData5(beanRecommendItems);
             } else {
-                onDataSucess(beanRecommendItems);
+                setDataSuccess(beanRecommendItems);
             }
         }
 
@@ -196,7 +196,7 @@ public class CV_RecommendPage extends FrameLayout{
         }
     };
 
-    public void onDataSuccess(List<BeanRecommendItem> beanRecommendItems) {
+    public void setDataSuccess(List<BeanRecommendItem> beanRecommendItems) {
         int start = mData.size();
         mData.addAll(beanRecommendItems);
         mAdapter.notifyContentItemRangeInserted(start, beanRecommendItems.size());
@@ -239,7 +239,7 @@ public class CV_RecommendPage extends FrameLayout{
         if (false) {
 
         } else {
-            onDataSuccess(beanRecommendItems);
+            setDataSuccess(beanRecommendItems);
         }
     }
 
@@ -250,7 +250,7 @@ public class CV_RecommendPage extends FrameLayout{
         if (false) {
 
         } else {
-            onDataSuccess(beanRecommendItems);
+            setDataSuccess(beanRecommendItems);
         }
     }
     //*******************4种提示框相关的布局 begin*************************
