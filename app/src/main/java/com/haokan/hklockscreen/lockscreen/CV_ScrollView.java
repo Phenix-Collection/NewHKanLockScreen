@@ -50,8 +50,10 @@ public class CV_ScrollView extends ScrollView {
         mMyScroller = new MyScroller(mContext);
     }
 
+    public int mAnimState; //1代表scroll, 2代表tranlate
     public void myScrollTo(int x, int y, long duration) {
         mMyScroller.setDuration(duration);
+        mAnimState = 1;
 
         int curX = getScrollX();
         int curY = getScrollY();
@@ -61,14 +63,31 @@ public class CV_ScrollView extends ScrollView {
         invalidate();
     }
 
+    public void mySetTranslateY(float y, long duration) {
+        mMyScroller.setDuration(duration);
+        mAnimState = 2;
+
+        float curY = getTranslationY();
+        float deltaY = y - curY;
+        mMyScroller.startScroll(0, (int)curY, 0, (int)deltaY);
+        invalidate();
+    }
+
     @Override
     public void computeScroll() {
         if (mMyScroller.computeScrollOffset()) {
-            int currentX = mMyScroller.getCurrentX();
-            int currentY = mMyScroller.getCurrentY();
-            scrollTo(currentX, currentY);
-            invalidate();
+            if (mAnimState == 1) {
+                int currentX = mMyScroller.getCurrentX();
+                int currentY = mMyScroller.getCurrentY();
+                scrollTo(currentX, currentY);
+                invalidate();
+            } else if (mAnimState == 2) {
+                int currentY = mMyScroller.getCurrentY();
+                setTranslationY(currentY);
+                invalidate();
+            }
         } else {
+            mAnimState = 0;
             super.computeScroll();
         }
     }

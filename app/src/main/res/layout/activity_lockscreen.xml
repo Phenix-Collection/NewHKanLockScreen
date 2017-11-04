@@ -1,28 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.haokan.hklockscreen.lockscreen.CV_ScrollView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollview"
-    android:overScrollMode="never"
-    android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <RelativeLayout
-        android:id="@+id/rootview"
-        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/pullrefreshlayout"
+        android:background="#13354d"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/lockscreen_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </FrameLayout>
-
-        <com.haokan.hklockscreen.lockscreen.CV_RecommendPage_LockScreen
-            android:id="@+id/cv_recommendpage"
-            android:layout_below="@id/lockscreen_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </com.haokan.hklockscreen.lockscreen.CV_RecommendPage_LockScreen>
+        <TextView
+            android:id="@+id/tv_switch"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="34dp"
+            android:textColor="@color/bai"
+            android:textSize="13sp"
+            android:text="下拉换一换"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_marginTop="35dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/tv_switch"
+            android:src="@drawable/ic_pull_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
-</com.haokan.hklockscreen.lockscreen.CV_ScrollView>
+
+    <com.haokan.hklockscreen.lockscreen.CV_ScrollView
+        android:id="@+id/scrollview"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/rootview"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/lockscreen_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </FrameLayout>
+
+            <com.haokan.hklockscreen.lockscreen.CV_RecommendPage_LockScreen
+                android:id="@+id/cv_recommendpage"
+                android:layout_below="@id/lockscreen_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </com.haokan.hklockscreen.lockscreen.CV_RecommendPage_LockScreen>
+        </RelativeLayout>
+    </com.haokan.hklockscreen.lockscreen.CV_ScrollView>
+</FrameLayout>

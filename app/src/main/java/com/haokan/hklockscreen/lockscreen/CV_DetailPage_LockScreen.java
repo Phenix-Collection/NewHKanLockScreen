@@ -150,56 +150,60 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     onClickBack();
                     break;
                 case R.id.ll_switch:
-                    if (sIsSwitching) {
-                        return;
-                    }
-                    if (!HttpStatusManager.checkNetWorkConnect(mContext)) {
-                        ToastManager.showNetErrorToast(mContext);
-                        setIvSwitching(false);
-                        return;
-                    }
-
-                    boolean wifi = HttpStatusManager.isWifi(mContext);
-                    //如果是wifi, 或者允许在非wifi下换一换
-                    if (wifi || PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, false)) {
-                        loadSwitchData();
-                    } else {
-                        if (mActivity == null) {
-                            ToastManager.showCenter(mContext, "未设置Activity, 无法弹窗");
-                            return;
-                        }
-                        View cv = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_nowifi_switch, null);
-                        final CheckBox checkBox = (CheckBox) cv.findViewById(R.id.checkbox);
-                        checkBox.setChecked(true);
-
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                                .setTitle("提示")
-                                .setView(cv)
-                                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if (checkBox.isChecked()) {//勾选存储
-                                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-                                            SharedPreferences.Editor edit = preferences.edit();
-                                            edit.putBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, true).apply();
-                                        }
-                                        loadSwitchData();
-                                    }
-                                });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.setCancelable(false);
-                        alertDialog.show();
-                    }
+                    pullToSwitch();
                     break;
                 default:
                     break;
             }
         }
     };
+
+    public void pullToSwitch() {
+        if (sIsSwitching) {
+            return;
+        }
+        if (!HttpStatusManager.checkNetWorkConnect(mContext)) {
+            ToastManager.showNetErrorToast(mContext);
+            setIvSwitching(false);
+            return;
+        }
+
+        boolean wifi = HttpStatusManager.isWifi(mContext);
+        //如果是wifi, 或者允许在非wifi下换一换
+        if (wifi || PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, false)) {
+            loadSwitchData();
+        } else {
+            if (mActivity == null) {
+                ToastManager.showCenter(mContext, "未设置Activity, 无法弹窗");
+                return;
+            }
+            View cv = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_nowifi_switch, null);
+            final CheckBox checkBox = (CheckBox) cv.findViewById(R.id.checkbox);
+            checkBox.setChecked(true);
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
+                    .setTitle("提示")
+                    .setView(cv)
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (checkBox.isChecked()) {//勾选存储
+                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                                SharedPreferences.Editor edit = preferences.edit();
+                                edit.putBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, true).apply();
+                            }
+                            loadSwitchData();
+                        }
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+        }
+    }
 
     public boolean isLocked() {
         return mIsLocked;
