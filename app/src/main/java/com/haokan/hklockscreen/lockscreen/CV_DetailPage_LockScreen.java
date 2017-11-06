@@ -75,6 +75,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     //为动态插入第5帧广告而用的集合, 始终保持有5条数据, 广告数据向后接续
     //需要把date分成2份, [lockindex, lockindex+5]和[lockindex+6~~因为要往11位置~~lockindex]
     private ArrayList<MainImageBean> mImgDataForAd5 = new ArrayList<>();
+    private View mLayoutSwitch;
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
         this(context, null);
@@ -100,10 +101,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
         layoutTop.findViewById(R.id.backlockscreen).setOnClickListener(mLockClickListener);
 
-        View layoutSwitch = layoutTop.findViewById(R.id.ll_switch);
-        mIvSwitch = (ImageView) layoutSwitch.findViewById(R.id.iv_switch);
-        mTvSwitch = (TextView) layoutSwitch.findViewById(R.id.tv_switch);
-        layoutSwitch.setOnClickListener(this);
+        mLayoutSwitch = layoutTop.findViewById(R.id.ll_switch);
+        mIvSwitch = (ImageView) mLayoutSwitch.findViewById(R.id.iv_switch);
+        mTvSwitch = (TextView) mLayoutSwitch.findViewById(R.id.tv_switch);
+        mLayoutSwitch.setOnClickListener(this);
 
 
         mLayoutTime = rootView.findViewById(R.id.layout_time); //底部时间区域
@@ -462,12 +463,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     public void setIvSwitching(boolean isUpdating) {
         if (isUpdating) {
             sIsSwitching = true;
+            mLayoutSwitch.setVisibility(VISIBLE);
             mTvSwitch.setText("更新中...");
             Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.switch_updating_anim);
             animation.setInterpolator(new LinearInterpolator());
             mIvSwitch.startAnimation(animation);
         } else {
             sIsSwitching = false;
+            mLayoutSwitch.setVisibility(GONE);
             mTvSwitch.setText("换一换");
             mIvSwitch.clearAnimation();
         }

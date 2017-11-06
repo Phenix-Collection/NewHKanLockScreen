@@ -438,6 +438,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
 
     public void backToDetailPage() {
+        LogHelper.d("wangzixu", "backToDetailPage call");
         mScrollView.smoothScrollTo(0, 0);
         mIsRecommendPage = false;
         mLockRecommendPage.onHide();

@@ -37,4 +37,6 @@ public class Device {
      */
     public int devicetype;
 
+    public String os;
+
 }

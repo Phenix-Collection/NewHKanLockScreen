@@ -11,7 +11,7 @@ package com.haokan.hklockscreen.haokanAd.request;
  */
 public class AdApp {
     public int id;
-    public int bundle;
-    public int name;
+    public String bundle;
+    public String name;
     public int cat;
 }
