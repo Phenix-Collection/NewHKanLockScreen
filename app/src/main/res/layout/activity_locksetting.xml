@@ -289,36 +289,75 @@
                 android:padding="15dp"
                 android:layout_height="207dp">
 
-                <ImageView
-                    android:id="@+id/iv_image1"
-                    android:scaleType="centerInside"
+                <RelativeLayout
                     android:layout_marginRight="5dp"
-                    android:background="@drawable/shape_setting_addbg"
-                    android:src="@drawable/icon_addto"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/iv_image1"
+                        android:scaleType="centerInside"
+                        android:background="@drawable/shape_setting_addbg"
+                        android:src="@drawable/icon_addto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
 
-                <ImageView
-                    android:id="@+id/iv_image2"
-                    android:scaleType="centerInside"
-                    android:layout_marginLeft="15dp"
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/iv_close1"
+                        android:src="@drawable/selector_setting_delete"
+                        android:layout_alignParentRight="true"
+                        android:padding="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:layout_marginRight="5dp"
-                    android:background="@drawable/shape_setting_addbg"
-                    android:src="@drawable/icon_addto"
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"/>
-
-                <ImageView
-                    android:id="@+id/iv_image3"
-                    android:scaleType="centerInside"
                     android:layout_marginLeft="5dp"
-                    android:background="@drawable/shape_setting_addbg"
-                    android:src="@drawable/icon_addto"
                     android:layout_weight="1"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/iv_image2"
+                        android:scaleType="centerInside"
+                        android:background="@drawable/shape_setting_addbg"
+                        android:src="@drawable/icon_addto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/iv_close2"
+                        android:src="@drawable/selector_setting_delete"
+                        android:layout_alignParentRight="true"
+                        android:padding="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/iv_image3"
+                        android:scaleType="centerInside"
+                        android:background="@drawable/shape_setting_addbg"
+                        android:src="@drawable/icon_addto"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/iv_close3"
+                        android:src="@drawable/selector_setting_delete"
+                        android:layout_alignParentRight="true"
+                        android:padding="6dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </com.haokan.hklockscreen.lockscreen.CV_ScrollView>

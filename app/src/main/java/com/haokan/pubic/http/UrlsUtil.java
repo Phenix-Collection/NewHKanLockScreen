@@ -4,6 +4,7 @@ package com.haokan.pubic.http;
  * 用于生成访问网络的url地址的工具类
  */
 public class UrlsUtil {
+    //请求接口用的id
     public static String COMPANYID = "10000";
     public static String SECRET_KEY = "GVed-Y~of0pLBjlDzN66V5Q)iipr!x5@";
 

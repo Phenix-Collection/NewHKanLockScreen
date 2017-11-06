@@ -16,6 +16,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -79,6 +81,13 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private ImageView mCurrentImage;
     private ClipImgManager mClipImgManager;
     private ImageView mAdView;
+    private View mIvDelte1;
+    private View mIvDelte2;
+    private View mIvDelte3;
+    private BeanLocalImage mLocalImage1;
+    private BeanLocalImage mLocalImage2;
+    private BeanLocalImage mLocalImage3;
+    private ImageView mIvBigImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +114,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mIvImage1 = (ImageView) findViewById(R.id.iv_image1);
         mIvImage2 = (ImageView) findViewById(R.id.iv_image2);
         mIvImage3 = (ImageView) findViewById(R.id.iv_image3);
+        mIvDelte1 = findViewById(R.id.iv_close1);
+        mIvDelte2 = findViewById(R.id.iv_close2);
+        mIvDelte3 = findViewById(R.id.iv_close3);
         mHeader = (FrameLayout) findViewById(R.id.header);
         mBack = (ImageView) findViewById(R.id.back);
         mSettingCollect = (TextView) findViewById(R.id.setting_collect);
@@ -144,6 +156,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mIvImage1.setOnClickListener(this);
         mIvImage2.setOnClickListener(this);
         mIvImage3.setOnClickListener(this);
+        mIvDelte1.setOnClickListener(this);
+        mIvDelte2.setOnClickListener(this);
+        mIvDelte3.setOnClickListener(this);
 
         //顶部banner高-mHeader1高
         mHeaderChangeHeigh = DisplayUtil.dip2px(this, 220-65);
@@ -164,6 +179,21 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
             }
         });
+
+        mIvBigImage = new ImageView(this);
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mIvBigImage.setLayoutParams(lp);
+        mIvBigImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewParent parent = mIvBigImage.getParent();
+                if (parent != null) {
+                    ((ViewGroup)parent).removeView(mIvBigImage);
+                    mIvBigImage.setImageBitmap(null);
+                    mIvBigImage.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
@@ -172,6 +202,54 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             case R.id.back:
             case R.id.back1:
                 onBackPressed();
+                break;
+            case R.id.iv_close1:
+                if (mLocalImage1 != null) {
+                    deleteLocalImage(mLocalImage1);
+                    notifyLocalImageChange();
+                    mIvImage1.setImageResource(R.drawable.icon_seting_add);
+                    mLocalImage1 = null;
+                    v.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.iv_close2:
+                if (mLocalImage2 != null) {
+                    deleteLocalImage(mLocalImage2);
+                    notifyLocalImageChange();
+                    mIvImage2.setImageResource(R.drawable.icon_seting_add);
+                    mLocalImage2 = null;
+                    v.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.iv_close3:
+                if (mLocalImage3 != null) {
+                    deleteLocalImage(mLocalImage3);
+                    notifyLocalImageChange();
+                    mIvImage3.setImageResource(R.drawable.icon_seting_add);
+                    mLocalImage3 = null;
+                    v.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.edit:
+                if (v.isSelected()) {
+                    mTvLocalImageEdit.setText("编辑");
+                    mTvLocalImageEdit.setSelected(false);
+                    mIvDelte1.setVisibility(View.GONE);
+                    mIvDelte2.setVisibility(View.GONE);
+                    mIvDelte3.setVisibility(View.GONE);
+                } else {
+                    mTvLocalImageEdit.setText("取消");
+                    mTvLocalImageEdit.setSelected(true);
+                    if (mLocalImage1 != null) {
+                        mIvDelte1.setVisibility(View.VISIBLE);
+                    }
+                    if (mLocalImage2 != null) {
+                        mIvDelte2.setVisibility(View.VISIBLE);
+                    }
+                    if (mLocalImage3 != null) {
+                        mIvDelte3.setVisibility(View.VISIBLE);
+                    }
+                }
                 break;
             case R.id.layoutlockscreen:
                 {
@@ -228,30 +306,63 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
                 break;
             case R.id.iv_image1:
-                {
+                if (mTvLocalImageEdit.isSelected() || mLocalImage1 == null) {
                     mCurrentImage = mIvImage1;
                     if (mClipImgManager == null) {
                         mClipImgManager = new ClipImgManager();
                     }
                     mClipImgManager.startChose(this, 101);
+                } else {
+                    ViewParent parent = mIvBigImage.getParent();
+                    if (parent != null) {
+                        ((ViewGroup)parent).removeView(mIvBigImage);
+                        mIvBigImage.setImageBitmap(null);
+                    }
+
+                    mIvBigImage.setVisibility(View.VISIBLE);
+                    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+                    decorView.addView(mIvBigImage);
+                    Glide.with(this).load(mLocalImage1.imgUrl).into(mIvBigImage);
                 }
                 break;
             case R.id.iv_image2:
-                {
+                if (mTvLocalImageEdit.isSelected()|| mLocalImage2 == null){
                     mCurrentImage = mIvImage2;
                     if (mClipImgManager == null) {
                         mClipImgManager = new ClipImgManager();
                     }
                     mClipImgManager.startChose(this, 101);
+                } else {
+                    ViewParent parent = mIvBigImage.getParent();
+                    if (parent != null) {
+                        ((ViewGroup)parent).removeView(mIvBigImage);
+                        mIvBigImage.setImageBitmap(null);
+                    }
+
+                    mIvBigImage.setVisibility(View.VISIBLE);
+                    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+                    decorView.addView(mIvBigImage);
+                    Glide.with(this).load(mLocalImage2.imgUrl).into(mIvBigImage);
                 }
                 break;
             case R.id.iv_image3:
-                {
+                if (mTvLocalImageEdit.isSelected()|| mLocalImage3 == null) {
                     mCurrentImage = mIvImage3;
                     if (mClipImgManager == null) {
                         mClipImgManager = new ClipImgManager();
                     }
                     mClipImgManager.startChose(this, 101);
+                } else {
+                    ViewParent parent = mIvBigImage.getParent();
+                    if (parent != null) {
+                        ((ViewGroup)parent).removeView(mIvBigImage);
+                        mIvBigImage.setImageBitmap(null);
+                    }
+
+                    mIvBigImage.setVisibility(View.VISIBLE);
+                    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+                    decorView.addView(mIvBigImage);
+                    Glide.with(this).load(mLocalImage3.imgUrl).into(mIvBigImage);
                 }
                 break;
             default:
@@ -302,12 +413,15 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     BeanLocalImage imageBean = list.get(i);
                     if (imageBean.index == 1) {
                         Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage1);
-                    }
+                        mLocalImage1 = imageBean;
+                    } else
                     if (imageBean.index == 2) {
                         Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage2);
-                    }
+                        mLocalImage2 = imageBean;
+                    } else
                     if (imageBean.index == 3) {
                         Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage3);
+                        mLocalImage3 = imageBean;
                     }
                 }
             }
@@ -352,21 +466,20 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                         @Override
                         public void call() {
                             try {
+                                BeanLocalImage beanOld = null;
                                 int index = 1;
-                                if (mCurrentImage == mIvImage2) {
+                                if (mCurrentImage == mIvImage1) {
+                                    beanOld = mLocalImage1;
+                                    index = 1;
+                                } else if (mCurrentImage == mIvImage2) {
+                                    beanOld = mLocalImage2;
                                     index = 2;
                                 } else if (mCurrentImage == mIvImage3) {
+                                    beanOld = mLocalImage3;
                                     index = 3;
                                 }
 
                                 Dao daoLocalImg = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanLocalImage.class);
-                                List<BeanLocalImage> list = daoLocalImg.queryForEq("index", index);
-                                BeanLocalImage beanOld = null;
-                                if (list != null && list.size() > 0) {
-                                    beanOld = list.get(0);
-                                    daoLocalImg.delete(beanOld);
-                                }
-
                                 BeanLocalImage beanNew = new BeanLocalImage();
                                 beanNew.imgId = ModelLocalImage.sLocalImgIdPreffix + System.currentTimeMillis();
                                 beanNew.imgUrl = path;
@@ -374,19 +487,26 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                                 beanNew.create_time = System.currentTimeMillis();
                                 daoLocalImg.create(beanNew);
 
-                                //通知锁屏更新图片
-                                Intent intent = new Intent("com.haokan.receiver.localimagechange");
-                                sendBroadcast(intent);
+                                if (index == 1) {
+                                    mLocalImage1 = beanNew;
+                                } else if (index == 2) {
+                                    mLocalImage2 = beanNew;
+                                } else if (index == 3) {
+                                    mLocalImage3 = beanNew;
+                                }
 
-                                if (beanOld != null) {
-                                    //替换了之前的本地图, 如果这个图片没有被收藏, 则应该删除, 如果被收藏了, 就不能删除
-                                    Dao daoCollection = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanCollection.class);
-                                    Object forId = daoCollection.queryForId(beanOld.imgId);
-                                    if (forId == null) {
-                                        File imgFile = new File(beanOld.imgUrl);
-                                        FileUtil.deleteFile(imgFile);
+                                if (beanOld == null && mTvLocalImageEdit.isSelected()) {
+                                    if (index == 1) {
+                                        mIvDelte1.setVisibility(View.VISIBLE);
+                                    } else if (index == 2) {
+                                        mIvDelte2.setVisibility(View.VISIBLE);
+                                    } else if (index == 3) {
+                                        mIvDelte3.setVisibility(View.VISIBLE);
                                     }
                                 }
+
+                                deleteLocalImage(beanOld);
+                                notifyLocalImageChange();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -397,6 +517,31 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
             }
         }
+    }
+
+    protected void deleteLocalImage(BeanLocalImage beanOld) {
+        if (beanOld != null) {
+            Dao daoLocalImg = null;
+            try {
+                daoLocalImg = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanLocalImage.class);
+                daoLocalImg.delete(beanOld);
+                //之前的本地图, 如果这个图片没有被收藏, 则应该删除, 如果被收藏了, 就不能删除
+                Dao daoCollection = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanCollection.class);
+                Object forId = daoCollection.queryForId(beanOld.imgId);
+                if (forId == null) {
+                    File imgFile = new File(beanOld.imgUrl);
+                    FileUtil.deleteFile(imgFile);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    protected void notifyLocalImageChange() {
+        //通知锁屏更新图片
+        Intent intent = new Intent("com.haokan.receiver.localimagechange");
+        sendBroadcast(intent);
     }
 
     //权限相关begin*****
@@ -479,7 +624,16 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        closeActivityAnim();
+        if (mIvBigImage != null && mIvBigImage.getVisibility() == View.VISIBLE) {
+            ViewParent parent = mIvBigImage.getParent();
+            if (parent != null) {
+                ((ViewGroup)parent).removeView(mIvBigImage);
+                mIvBigImage.setImageBitmap(null);
+                mIvBigImage.setVisibility(View.GONE);
+            }
+        } else {
+            super.onBackPressed();
+            closeActivityAnim();
+        }
     }
 }

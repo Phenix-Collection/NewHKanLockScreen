@@ -22,9 +22,12 @@ import java.util.Locale;
 public class App extends Application {
     public static String APP_VERSION_NAME = "";
     public static int APP_VERSION_CODE;
+    public static final int  sAPPid = 10017;
+    public static String sH5_EID = "138005"; //默认值 ,H5产品分给我们的值, Exit
+
     public static String sDID = "default"; //默认值
-    public static String sPID = "138003"; //默认值
-    public static String sEID = "0"; //默认值
+    public static String sPID = "206"; //默认值
+    public static String sEID = "138005"; //默认值
     public static String sPhoneModel = "defaultPhone";
     public static String sImgSize_Big = "1080x1920";
 //    public static String sImgSize_Small = "360x640";
