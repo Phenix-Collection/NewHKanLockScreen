@@ -3,5 +3,47 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/iv_image"
+        android:scaleType="centerCrop"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"/>
+
+
+    <RelativeLayout
+        android:background="@drawable/bg_screen_b"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+        <TextView
+            android:id="@+id/adsgin"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="11dp"
+            android:textSize="11sp"
+            android:text="广告"
+            android:textColor="@color/bai"
+            android:background="@drawable/selector_splash_jumpbtn"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingBottom="1dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_above="@id/adsgin"
+            android:layout_marginBottom="6dp"
+            android:lineSpacingExtra="2dp"
+            android:textSize="13sp"
+            android:text=""
+            android:textColor="@color/bai"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
 </FrameLayout>

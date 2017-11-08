@@ -133,7 +133,12 @@
         </activity>
 
         <activity
-            android:name=".mycollection.ActivityMyCollectionDetailPage"
+            android:name=".recommendpagedetail.ActivityDetailPageRecommend"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".mycollection.ActivityDetailPageMyCollection"
             android:theme="@style/MyCollectionDetailPage"
             android:screenOrientation="portrait">
         </activity>
@@ -145,13 +150,20 @@
                   android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name="com.haokan.pubic.webview.ActivityWebview"
+        <activity android:name="com.haokan.pubic.webview.ActivityWebviewLockScreen"
                   android:launchMode="singleInstance"
                   android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name="com.haokan.pubic.webview.ActivityWebview"
+                  android:screenOrientation="portrait">
+        </activity>
+
         <activity android:name=".timeline.ActivityTimelines"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".recommendpageland.ActivityRecommendPageLand"
+                  android:screenOrientation="portrait">
         </activity>
 
         <activity android:name=".setting.ActivityAboutUs"
@@ -161,11 +173,6 @@
         <activity android:name="com.haokan.pubic.clipimage.ActivityClipImage"
                   android:theme="@style/ClipImageActivityTheme"
                   android:screenOrientation="portrait">
-        </activity>
-
-        <activity
-            android:name="com.haokan.ad.Activity.WebViewActivity"
-            android:screenOrientation="portrait">
         </activity>
 
         <service

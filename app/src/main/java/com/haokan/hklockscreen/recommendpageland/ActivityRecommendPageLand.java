@@ -1,0 +1,382 @@
+package com.haokan.hklockscreen.recommendpageland;
+
+import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
+
+import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.haokanAd.BeanAdRes;
+import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
+import com.haokan.hklockscreen.haokanAd.onAdResListener;
+import com.haokan.hklockscreen.haokanAd.request.BannerReq;
+import com.haokan.hklockscreen.haokanAd.request.BidRequest;
+import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
+import com.haokan.pubic.base.ActivityBase;
+import com.haokan.pubic.http.onDataResponseListener;
+import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.ToastManager;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
+
+import java.util.ArrayList;
+
+/**
+ * Created by wangzixu on 2017/11/7.
+ */
+public class ActivityRecommendPageLand extends ActivityBase implements View.OnClickListener {
+    private TextView mTvTitle;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mManager;
+    private boolean mHasMoreData;
+    private boolean mIsLoading;
+    private int mCommentPage;
+    private BeanRecommendItem mRecommendItemBean;
+    public static final String KEY_INTENT_RECOMMENDBEAN = "recommenbean";
+    private AdapterRecommendPageLand mAdapter;
+    private ArrayList<BeanRecommendPageLand> mData = new ArrayList<>();
+    private int mTitleBottomH;
+    private AdapterRecommendPageLand.Item1ViewHolder mHeaderItem;
+    private View mShareLayout;
+    private View mShareLayoutContent;
+    private View mShareLayoutBg;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_recommendpageland);
+        initView();
+
+        mRecommendItemBean = getIntent().getParcelableExtra(KEY_INTENT_RECOMMENDBEAN);
+
+        if (mRecommendItemBean == null) {
+            ToastManager.showShort(this, "推荐bean不能为空");
+            finish();
+            return;
+        }
+        loadHaoKanAd();
+    }
+
+    private void initView() {
+        //错误界面相关
+        View loadingLayout = findViewById(R.id.layout_loading);
+        View netErrorView = findViewById(R.id.layout_neterror);
+        View serveErrorView = findViewById(R.id.layout_servererror);
+        View nocontentView = findViewById(R.id.layout_nocontent);
+        setPromptLayout(loadingLayout, netErrorView, serveErrorView, nocontentView);
+
+        mTvTitle = (TextView) findViewById(R.id.tv_title);
+
+        //*****底部分享区域begin*********
+        mShareLayout = findViewById(R.id.bottom_share);
+        mShareLayoutContent = mShareLayout.findViewById(R.id.content);
+        mShareLayoutBg = mShareLayout.findViewById(R.id.bg);
+        mShareLayoutBg.setOnClickListener(this);
+
+        mShareLayoutContent.findViewById(R.id.share_weixin).setOnClickListener(this);
+        mShareLayoutContent.findViewById(R.id.share_weixin_circle).setOnClickListener(this);
+        mShareLayoutContent.findViewById(R.id.share_qq).setOnClickListener(this);
+        mShareLayoutContent.findViewById(R.id.share_qqzone).setOnClickListener(this);
+        mShareLayoutContent.findViewById(R.id.share_sina).setOnClickListener(this);
+        mShareLayoutContent.findViewById(R.id.cancel).setOnClickListener(this);
+        //*****底部分享区域end*********
+
+        //RecyView相关
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyview);
+        mManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mManager);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mAdapter = new AdapterRecommendPageLand(this, mData);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (mHeaderItem != null) {
+                    int top = mHeaderItem.itemView.getTop();
+                    LogHelper.d("wangzixu", "onScrolled top = " + top + ", mTitleBottomH = " + mTitleBottomH);
+                    if (top <= -mTitleBottomH && mTvTitle.getVisibility() != View.VISIBLE) {
+                        mTvTitle.setVisibility(View.VISIBLE);
+                    } else if (top >= -30 && mTvTitle.getVisibility() == View.VISIBLE) {
+                        mTvTitle.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (mHasMoreData && !mIsLoading) {
+                        boolean can = mRecyclerView.canScrollVertically(1);
+                        if (!can) {
+//                            mAdapter.setFooterLoading();
+                            mRecyclerView.scrollToPosition(mManager.getItemCount() - 1);
+                            loadComment();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void setHeaderItem(AdapterRecommendPageLand.Item1ViewHolder headerItem) {
+        mHeaderItem = headerItem;
+        mHeaderItem.mTvTitle.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                mTitleBottomH = bottom-top;
+            }
+        });
+        mTvTitle.setText(mData.get(0).imgTitle);
+    }
+
+    public void loadData() {
+        new ModelRecommendPageLand().getImgListByGroupId(this, mRecommendItemBean.GroupId, new onDataResponseListener<ResponseBody_ImgGroupList>() {
+            @Override
+            public void onStart() {
+                showLoadingLayout();
+            }
+
+            @Override
+            public void onDataSucess(ResponseBody_ImgGroupList res) {
+                if (mIsDestory) {
+                    return;
+                }
+                ArrayList<BeanRecommendPageLand> list = res.list;
+
+                //头部标题
+                BeanRecommendPageLand headerBean = new BeanRecommendPageLand();
+                headerBean.imgTitle = mRecommendItemBean.imgTitle;
+                headerBean.myType = 1;
+
+                mData.clear();
+                mData.add(headerBean);
+                mData.addAll(list);
+
+                //分享按钮
+                BeanRecommendPageLand shareItem = new BeanRecommendPageLand();
+                shareItem.myType = 2;
+                mData.add(shareItem);
+
+                if (mAdItem != null) {
+                    mData.add(mAdItem);
+                }
+
+                mAdapter.notifyDataSetChanged();
+
+                dismissAllPromptLayout();
+            }
+
+            @Override
+            public void onDataEmpty() {
+                if (mIsDestory) {
+                    return;
+                }
+                dismissAllPromptLayout();
+            }
+
+            @Override
+            public void onDataFailed(String errmsg) {
+                if (mIsDestory) {
+                    return;
+                }
+                dismissAllPromptLayout();
+            }
+
+            @Override
+            public void onNetError() {
+                if (mIsDestory) {
+                    return;
+                }
+                dismissAllPromptLayout();
+            }
+        });
+    }
+
+    BeanRecommendPageLand mAdItem;
+    public void loadHaoKanAd() {
+        showLoadingLayout();
+
+        BannerReq bannerReq = new BannerReq();
+        bannerReq.w = 1080;
+        bannerReq.h = 586;
+        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-205", 5, null, bannerReq);
+
+        ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
+            @Override
+            public void onAdResSuccess(final BeanAdRes adRes) {
+                LogHelper.d("wangzixu", "ModelHaoKanAd landpage onAdResSuccess");
+                //广告
+                mAdItem = new BeanRecommendPageLand();
+                mAdItem.myType = 3;
+                mAdItem.mBeanAdRes = adRes;
+
+                loadData();
+            }
+
+            @Override
+            public void onAdResFail(String errmsg) {
+                LogHelper.d("wangzixu", "ModelHaoKanAd landpage onAdResFail errmsg = " + errmsg);
+                loadData();
+            }
+        });
+    }
+
+    //加载评论
+    public void loadComment() {
+
+    }
+
+    public void shareTo() {
+        showShareLayout();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                onBackPressed();
+                break;
+            case R.id.cancel:
+            case R.id.bg:
+                hideShareLayout();
+                break;
+            case R.id.share_weixin:
+                shareTo(SHARE_MEDIA.WEIXIN);
+                hideShareLayout();
+                break;
+            case R.id.share_weixin_circle:
+                shareTo(SHARE_MEDIA.WEIXIN_CIRCLE);
+                hideShareLayout();
+                break;
+            case R.id.share_sina:
+                shareTo(SHARE_MEDIA.SINA);
+                hideShareLayout();
+                break;
+            case R.id.share_qq:
+                shareTo(SHARE_MEDIA.QQ);
+                hideShareLayout();
+                break;
+            case R.id.share_qqzone:
+                shareTo(SHARE_MEDIA.QZONE);
+                hideShareLayout();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void shareTo(SHARE_MEDIA media) {
+        if (mRecommendItemBean == null) {
+            return;
+        }
+
+        UMWeb web = new UMWeb(mRecommendItemBean.cover);
+        web.setTitle(mRecommendItemBean.imgTitle);//标题
+        web.setDescription(mRecommendItemBean.imgDesc);
+        web.setThumb(new UMImage(this, mRecommendItemBean.cover));  //缩略图
+
+        new ShareAction(this)
+                .setPlatform(media)
+                .withMedia(web)
+                .setCallback(mUMShareListener)
+                .share();
+    }
+
+    private UMShareListener mUMShareListener = new UMShareListener() {
+        /**
+         * @descrption 分享开始的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+        }
+
+        /**
+         * @descrption 分享成功的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            ToastManager.showShort(ActivityRecommendPageLand.this, "已分享");
+            hideShareLayout();
+        }
+
+        /**
+         * @descrption 分享失败的回调
+         * @param platform 平台类型
+         * @param t 错误原因
+         */
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            ToastManager.showShort(ActivityRecommendPageLand.this, "分享失败");
+            LogHelper.d("share","分享失败:"+t);
+        }
+
+        /**
+         * @descrption 分享取消的回调
+         * @param platform 平台类型
+         */
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            ToastManager.showShort(ActivityRecommendPageLand.this, "分享取消");
+        }
+    };
+
+    @Override
+    public void onBackPressed() {
+        if (mShareLayout.getVisibility() == View.VISIBLE) {
+            hideShareLayout();
+        } else {
+            super.onBackPressed();
+            closeActivityAnim();
+        }
+    }
+
+    private void showShareLayout() {
+        if (mShareLayout.getVisibility() != View.VISIBLE) {
+            mShareLayout.setVisibility(View.VISIBLE);
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.activity_fade_in);
+            mShareLayoutBg.startAnimation(animation);
+
+            Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.view_bottom_in);
+            mShareLayoutContent.startAnimation(animation1);
+        }
+    }
+
+    private void hideShareLayout() {
+        if (mShareLayout.getVisibility() == View.VISIBLE) {
+            Animation animation = AnimationUtils.loadAnimation(this, R.anim.activity_fade_out);
+            animation.setFillAfter(true);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mShareLayout.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            mShareLayoutBg.startAnimation(animation);
+
+            Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.view_bottom_out);
+            animation1.setFillAfter(true);
+            mShareLayoutContent.startAnimation(animation1);
+        }
+    }
+}

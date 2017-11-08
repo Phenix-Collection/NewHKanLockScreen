@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.recommendpage;
+package com.haokan.hklockscreen.recommendpagelist;
 
 /**
  * Created by wangzixu on 2017/10/17.

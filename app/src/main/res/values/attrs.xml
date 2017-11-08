@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="ZoomViewPager">
+        <attr name="zoomable" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="ClipCoverView">
         <attr name="ccv_radius" format="dimension" />
         <attr name="ccv_bg_color" format="color" />

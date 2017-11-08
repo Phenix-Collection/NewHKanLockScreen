@@ -69,9 +69,7 @@ public class RequestHeader<RequestBody> {
         String bodyStr = stringer.toString();
 //        LogHelper.e("times","before---bodyStr="+bodyStr);
         StringBuilder sb = new StringBuilder();
-//        String sign_temp = sb.append(messageID).append(timeStamp).append(transactionType).append(UrlsUtil_Java.SECRET_KEY).append(bodyStr).toString();
         String sign_temp = sb.append(messageID).append(timeStamp).append(UrlsUtil.SECRET_KEY).append(bodyStr).toString();
-//        LogHelper.e("times","before---sign_temp="+sign_temp);
         sign = SecurityUtil.md5(sign_temp);
 //        LogHelper.e("times","afeter---sign="+sign);
         terminal = "5";

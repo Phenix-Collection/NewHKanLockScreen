@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.recommendpage;
+package com.haokan.hklockscreen.recommendpagelist;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,14 +16,18 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
+import com.haokan.hklockscreen.haokanAd.BeanAdRes;
+import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
+import com.haokan.hklockscreen.haokanAd.onAdResListener;
+import com.haokan.hklockscreen.haokanAd.request.BidRequest;
+import com.haokan.hklockscreen.haokanAd.request.NativeReq;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -235,9 +239,31 @@ public class CV_RecommendPage extends FrameLayout{
     //请求第五个位置的广告数据
     public void loadHaoKanAdData5(final List<BeanRecommendItem> beanRecommendItems) {
         //第5信息流
-//        if (beanRecommendItems.size() > 4) {
-        if (false) {
+        if (beanRecommendItems.size() > 4) {
+//        if (false) {
 
+            NativeReq nativeReq = new NativeReq();
+            nativeReq.w = 540;
+            nativeReq.h = 960;
+            nativeReq.style = 2;
+            BidRequest request = ModelHaoKanAd.getBidRequest("28-53-202", 10, nativeReq, null);
+
+            ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
+                @Override
+                public void onAdResSuccess(final BeanAdRes adRes) {
+                    LogHelper.d("wangzixu", "ModelHaoKanAd loadHaoKanAdData 5 onAdResSuccess");
+                    BeanRecommendItem adBean = new BeanRecommendItem();
+                    adBean.mBeanAdRes = adRes;
+                    beanRecommendItems.add(4, adBean);
+                    loadHaoKanAdData11(beanRecommendItems);
+                }
+
+                @Override
+                public void onAdResFail(String errmsg) {
+                    LogHelper.d("wangzixu", "ModelHaoKanAd loadHaoKanAdData 5 onAdResFail errmsg = " + errmsg);
+                    loadHaoKanAdData11(beanRecommendItems);
+                }
+            });
         } else {
             setDataSuccess(beanRecommendItems);
         }
@@ -246,9 +272,31 @@ public class CV_RecommendPage extends FrameLayout{
     //请求第11个位置的广告数据
     public void loadHaoKanAdData11(final List<BeanRecommendItem> beanRecommendItems) {
         //第11信息流
-//        if (beanRecommendItems.size() > 10) {
-        if (false) {
+        if (beanRecommendItems.size() > 10) {
+//        if (false) {
+            NativeReq nativeReq = new NativeReq();
+            nativeReq.w = 540;
+            nativeReq.h = 960;
+            nativeReq.style = 2;
+            BidRequest request = ModelHaoKanAd.getBidRequest("28-53-203", 10, nativeReq, null);
 
+            ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
+                @Override
+                public void onAdResSuccess(final BeanAdRes adRes) {
+                    LogHelper.d("wangzixu", "ModelHaoKanAd loadHaoKanAdData 10 onAdResSuccess");
+                    BeanRecommendItem adBean = new BeanRecommendItem();
+                    adBean.mBeanAdRes = adRes;
+                    beanRecommendItems.add(10, adBean);
+
+                    setDataSuccess(beanRecommendItems);
+                }
+
+                @Override
+                public void onAdResFail(String errmsg) {
+                    LogHelper.d("wangzixu", "ModelHaoKanAd loadHaoKanAdData 10 onAdResFail errmsg = " + errmsg);
+                    setDataSuccess(beanRecommendItems);
+                }
+            });
         } else {
             setDataSuccess(beanRecommendItems);
         }
@@ -301,19 +349,30 @@ public class CV_RecommendPage extends FrameLayout{
         mActivityBase = activityBase;
     }
 
-    public void startWebview(String url, String imgTitle) {
-        Intent intent = new Intent(mContext, ActivityWebview.class);
-        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, url);
-        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, imgTitle);
-        if (mActivityBase != null) {
-            mActivityBase.startActivity(intent);
-            mActivityBase.startActivityAnim();
-        } else {
-            mContext.startActivity(intent);
+    public void startDetailPage(BeanRecommendItem beanRecommendItem) {
+        if (beanRecommendItem == null) {
+            return;
         }
 
-        if (mActivityBase instanceof ActivityLockScreen) {
-            MobclickAgent.onEvent(mContext, "recommend_godetail");
+        if (beanRecommendItem.mBeanAdRes == null) {
+            Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
+            intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            if (mActivityBase != null) {
+                mActivityBase.startActivity(intent);
+                mActivityBase.startActivityAnim();
+            } else {
+                mContext.startActivity(intent);
+            }
+        } else {
+            //跳转webview
+            Intent intent = new Intent(mContext, ActivityWebview.class);
+            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
+            if (mActivityBase != null) {
+                mActivityBase.startActivity(intent);
+                mActivityBase.startActivityAnim();
+            } else {
+                mContext.startActivity(intent);
+            }
         }
     }
 }

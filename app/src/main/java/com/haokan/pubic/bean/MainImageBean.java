@@ -1,5 +1,7 @@
 package com.haokan.pubic.bean;
 
+import com.haokan.hklockscreen.haokanAd.BeanAdRes;
+
 import java.io.Serializable;
 
 /**
@@ -27,4 +29,6 @@ public class MainImageBean implements Serializable{
      */
     public int myType;
     public String localUrl;//当图片类型为1时, 为存储的离线图片, 用此地址
+
+    public BeanAdRes mBeanAdRes;
  }

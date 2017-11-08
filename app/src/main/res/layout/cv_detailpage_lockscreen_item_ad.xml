@@ -3,4 +3,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <com.haokan.hklockscreen.lockscreen.CV_UnLockImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:id="@+id/adsgin"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="50dp"
+        android:textSize="11sp"
+        android:text="广告"
+        android:textColor="@color/bai"
+        android:background="@drawable/selector_splash_jumpbtn"
+        android:paddingLeft="3dp"
+        android:paddingRight="3dp"
+        android:paddingBottom="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <include
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_loading"
+        layout="@layout/layout_loading_heibg"/>
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/layout_fail"
+        android:background="@color/detailpagebgcolor"
+        android:src="@drawable/icon_loadimgfail"
+        android:scaleType="centerInside"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

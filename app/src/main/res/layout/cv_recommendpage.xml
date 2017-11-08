@@ -13,7 +13,6 @@
 
     <include
         android:visibility="gone"
-        android:layout_below="@id/divider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/layout_loading"
@@ -21,7 +20,6 @@
 
     <include
         android:visibility="gone"
-        android:layout_below="@id/divider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/layout_neterror"
@@ -29,7 +27,6 @@
 
     <include
         android:visibility="gone"
-        android:layout_below="@id/divider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/layout_servererror"
@@ -37,7 +34,6 @@
 
     <include
         android:visibility="gone"
-        android:layout_below="@id/divider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/layout_nocontent"

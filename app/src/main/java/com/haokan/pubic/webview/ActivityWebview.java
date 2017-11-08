@@ -35,7 +35,6 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.CommonUtil;
-import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 
 
@@ -59,8 +58,7 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
-        StatusBarUtil.setStatusBarWhiteBg_BlackText(this);
-
+//        StatusBarUtil.setStatusBarWhiteBg_BlackText(this);
         assignViews();
         loadData();
 

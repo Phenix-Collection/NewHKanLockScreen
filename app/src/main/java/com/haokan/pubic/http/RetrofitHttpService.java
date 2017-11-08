@@ -4,8 +4,10 @@ import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.haokanAd.response.BidResponse;
 import com.haokan.hklockscreen.lockscreen.RequestBody_Switch;
 import com.haokan.hklockscreen.lockscreen.ResponseBody_Switch;
-import com.haokan.hklockscreen.recommendpage.RequestBody_Recommend;
-import com.haokan.hklockscreen.recommendpage.ResponseBody_Recommend;
+import com.haokan.hklockscreen.recommendpagelist.RequestBody_Recommend;
+import com.haokan.hklockscreen.recommendpagelist.ResponseBody_Recommend;
+import com.haokan.hklockscreen.recommendpageland.RequestBody_ImgGroupList;
+import com.haokan.hklockscreen.recommendpageland.ResponseBody_ImgGroupList;
 import com.haokan.hklockscreen.timeline.RequestBody_Timelines;
 import com.haokan.hklockscreen.timeline.ResponseBody_Timelines;
 import com.haokan.pubic.checkupdate.RequestBody_Update;
@@ -77,4 +79,7 @@ public interface RetrofitHttpService {
     @GET
     Observable<Object> reportHaoKanAd(@Url String url);
     //---好看广告end
+
+    @POST
+    Observable<ResponseEntity<ResponseBody_ImgGroupList>> getImageListByGroupId(@Url String url, @Body RequestEntity<RequestBody_ImgGroupList> requestEntity);
 }

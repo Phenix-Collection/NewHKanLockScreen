@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
-import com.haokan.hklockscreen.recommendpage.CV_RecommendPage;
+import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
 
 /**
  * Created by wangzixu on 2017/10/20.

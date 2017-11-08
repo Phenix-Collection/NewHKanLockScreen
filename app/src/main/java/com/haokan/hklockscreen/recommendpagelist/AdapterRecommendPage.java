@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.recommendpage;
+package com.haokan.hklockscreen.recommendpagelist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
 
     @Override
     protected int getContentItemViewType(int position) {
+        if (mData.get(position).mBeanAdRes != null) {
+            return 1;
+        }
         return 0;
     }
 
@@ -138,6 +142,7 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
             mTvShareNum.setText(mBean.shareNum+"");
 
             String imgUrl = mBean.cover;
+            mImageView.setImageBitmap(null);
             Glide.with(mContext).load(imgUrl)
 //                    .listener(new RequestListener<String, GlideDrawable>() {
 //                        @Override
@@ -156,20 +161,41 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
 
         @Override
         public void onClick(View v) {
-            mRecommendPage.startWebview(mBean.urlClick, mBean.imgTitle);
+            mRecommendPage.startDetailPage(mBean);
         }
     }
 
-    class Item1ViewHolder extends ViewHolder{
+    class Item1ViewHolder extends ViewHolder implements View.OnClickListener {
         private BeanRecommendItem mBean;
+        ImageView imageView;
+        TextView tvTitle;
 
         public Item1ViewHolder(View itemView) {
             super(itemView);
+            imageView = (ImageView) itemView.findViewById(R.id.iv_image);
+
+            tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
         }
 
         @Override
         public void renderView(final int position) {
             mBean = mData.get(position);
+            imageView.setImageBitmap(null);
+            tvTitle.setText("");
+            if (mBean.mBeanAdRes != null) {
+                Glide.with(mContext).load(mBean.mBeanAdRes.imgUrl).into(imageView);
+                tvTitle.setText(mBean.mBeanAdRes.adTitle);
+                imageView.setOnClickListener(this);
+                //上报广告展示
+                ModelHaoKanAd.adShowUpLoad(mBean.mBeanAdRes.showUpUrl);
+            } else {
+                imageView.setOnClickListener(null);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            mRecommendPage.startDetailPage(mBean);
         }
     }
 }

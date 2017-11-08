@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.haokanhaokan.lockscreen"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 400
         versionName "4.0.0"

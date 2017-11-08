@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.recommendpage;
+package com.haokan.hklockscreen.recommendpagelist;
 
 import java.util.List;
 

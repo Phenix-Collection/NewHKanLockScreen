@@ -31,13 +31,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="210dp">
                 </ImageView>
+
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/adsgin"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:textSize="11sp"
+                    android:text="广告"
+                    android:textColor="@color/bai"
+                    android:background="@drawable/selector_splash_jumpbtn"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="1dp"
+                    android:paddingBottom="1dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </FrameLayout>
 
             <View
-                android:layout_marginTop="9dp"
-                android:background="#d8d8d8"
+                android:background="#f4f4f4"
                 android:layout_width="match_parent"
-                android:layout_height="1px"/>
+                android:layout_height="5dp"/>
 
             <TextView
                 android:text="锁屏设置"
@@ -50,7 +66,7 @@
                 android:layout_height="56dp"/>
 
             <View
-                android:background="#d8d8d8"
+                android:background="#f4f4f4"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"/>
 
@@ -143,15 +159,9 @@
             </RelativeLayout>
 
             <View
-                android:background="#d8d8d8"
+                android:background="#f4f4f4"
                 android:layout_width="match_parent"
-                android:layout_height="1px"/>
-
-            <View
-                android:layout_marginTop="9dp"
-                android:background="#d8d8d8"
-                android:layout_width="match_parent"
-                android:layout_height="1px"/>
+                android:layout_height="5dp"/>
 
             <TextView
                 android:text="系统设置"
@@ -164,7 +174,7 @@
                 android:layout_height="56dp"/>
 
             <View
-                android:background="#d8d8d8"
+                android:background="#f4f4f4"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"/>
 
@@ -241,15 +251,9 @@
             </RelativeLayout>
 
             <View
-                android:background="#d8d8d8"
+                android:background="#f4f4f4"
                 android:layout_width="match_parent"
-                android:layout_height="1px"/>
-
-            <View
-                android:layout_marginTop="9dp"
-                android:background="#d8d8d8"
-                android:layout_width="match_parent"
-                android:layout_height="1px"/>
+                android:layout_height="5dp"/>
 
             <RelativeLayout
                 android:background="@color/bai"
@@ -279,7 +283,7 @@
             </RelativeLayout>
 
             <View
-                android:background="#d8d8d8"
+                android:background="#f4f4f4"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"/>
             
@@ -457,7 +461,7 @@
 
             <View
                 android:layout_alignParentBottom="true"
-                android:background="#d8d8d8"
+                android:background="#f4f4f4"
                 android:layout_width="match_parent"
                 android:layout_height="1px"/>
         </RelativeLayout>

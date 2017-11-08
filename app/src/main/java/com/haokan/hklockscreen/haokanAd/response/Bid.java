@@ -1,7 +1,6 @@
 package com.haokan.hklockscreen.haokanAd.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.haokan.hklockscreen.haokanAd.request.PictureReq;
 
 import java.util.List;
 
@@ -36,6 +35,9 @@ public class Bid {
     public String impid;
     public int price;
     public String adm;
+    /**
+     * 1.banner;2.video;3.native;
+     */
     public int type;
     public String category;
     public int w;
@@ -48,6 +50,7 @@ public class Bid {
     public List<String> trackurls;
     @SerializedName("native")
     public NativeRes nativeX;
+    public VideoRes video;
 
     public static class BannerRes {
         public List<String> curl;
@@ -57,6 +60,15 @@ public class Bid {
         public List<AssetRes> assets;
     }
 
+    public static class VideoRes {
+        /*
+        curl required string 创意地址
+        duration optional int 视频播放时长,单位秒
+         */
+        public String curl;
+        public int duration;
+    }
+
     /**
      id optional int 元素在原生创意中的编号,和 request 中所传编号对 应
      text optional object 文字对象
@@ -64,8 +76,8 @@ public class Bid {
      */
     public static class AssetRes {
         public int id;
-        public TextRes type;
-        public PictureReq pic;
+        public TextRes text;
+        public PictureRes pic;
     }
 
     public static class TextRes {
@@ -80,6 +92,6 @@ public class Bid {
         public int w;
         public int h;
         public int type;
-        public String url;
+        public List<String> url;
     }
 }

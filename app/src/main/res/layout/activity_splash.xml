@@ -58,14 +58,14 @@
     <TextView
         android:visibility="gone"
         android:id="@+id/jumpad"
-        android:layout_width="50dp"
-        android:layout_height="30dp"
+        android:layout_width="48dp"
+        android:layout_height="26dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="36dp"
         android:background="@drawable/selector_splash_jumpbtn"
         android:gravity="center"
-        android:text="3"
+        android:text="广告3"
         android:textColor="@color/bai"
         android:textSize="13sp" />
 </RelativeLayout>

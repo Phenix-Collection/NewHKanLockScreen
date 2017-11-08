@@ -13,7 +13,7 @@
         />
 
     <RelativeLayout
-        android:id="@+id/rl_content"
+        android:id="@+id/content"
         android:background="@color/hei_30"
         android:layout_width="match_parent"
         android:layout_height="190dp"
@@ -60,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/bg_share_friends_click"
+                android:drawableTop="@drawable/selector_share_penyouquan"
                 android:drawablePadding="10dp"
                 android:text="@string/share_circle"
                 android:paddingTop="25dp"
@@ -75,7 +75,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/bg_share_weixin_click"
+                android:drawableTop="@drawable/selector_share_weixin"
                 android:drawablePadding="10dp"
                 android:text="@string/share_weixin"
                 android:paddingTop="25dp"
@@ -90,7 +90,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/bg_share_qq_click"
+                android:drawableTop="@drawable/selector_share_qq"
                 android:drawablePadding="10dp"
                 android:text="@string/share_qq"
                 android:paddingTop="25dp"
@@ -106,7 +106,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/bg_share_sina_click"
+                android:drawableTop="@drawable/selector_share_sina"
                 android:drawablePadding="10dp"
                 android:text="@string/share_sina"
                 android:paddingTop="25dp"
@@ -142,13 +142,4 @@
             android:layout_height="wrap_content"
             />
     </RelativeLayout>
-
-    <!---->
-    <!--<ViewStub-->
-        <!--android:id="@+id/content_en"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="178dp"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout="@layout/lock_layout_bottom_share_content_en"-->
-        <!--/>-->
 </RelativeLayout>

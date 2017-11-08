@@ -41,7 +41,8 @@ public class ActivityHomePage extends ActivityBase {
         setContentView(R.layout.activity_homepage);
 
         initView();
-        mCvHomePage.setTypeName("娱乐");
+//        mCvHomePage.setTypeName("娱乐");
+        mCvHomePage.setTypeName("旅游");
         mCvHomePage.loadData(true);
 
         Intent i = new Intent(this, ServiceLockScreen.class);

@@ -37,6 +37,7 @@ import com.haokan.hklockscreen.mycollection.ModelCollection;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
+import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.customview.ViewPagerTransformer;
 import com.haokan.pubic.http.onDataResponseListener;
@@ -70,7 +71,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected View mLayoutCaption;
     protected TextView mTvDescSimple;
     protected View mLayoutMainBottom;
-    protected TextView mTvDescAll;
     protected TextView mTvTitlle;
     protected TextView mTvLink;
     //外链需要随机的背景色, 所以new个背景, 随机设置颜色
@@ -98,6 +98,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected boolean mIsAnimnating; //正在执行一些动画, 如显示隐藏图说等
     protected static final long sAinmDuration = 150; //一些动画的时长, 如显示隐藏图说等
     protected View mBottomSettingView;
+    protected TextView mTvCount;
 
     public CV_DetailPageView_Base(@NonNull Context context) {
         this(context, null);
@@ -129,13 +130,12 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mLayoutMainBottom = findViewById(R.id.layout_bottom);
         mIsCaptionShow = true;
 
+        mTvCount = (TextView) findViewById(R.id.tv_count);
+
         //单图区域
         mLayoutCaption = mLayoutMainBottom.findViewById(R.id.layout_caption);
         mLayoutCaption.setOnClickListener(this);
         mTvDescSimple = (TextView) mLayoutMainBottom.findViewById(R.id.tv_desc_simple);
-        mTvDescAll = (TextView) mLayoutMainBottom.findViewById(R.id.tv_desc_all);
-//        mTvDescSimple.setOnClickListener(this);
-//        mTvDescAll.setOnClickListener(this);
 
         mLayoutTitleLink = mLayoutMainBottom.findViewById(R.id.layout_title);
         mTvTitlle = (TextView) mLayoutTitleLink.findViewById(R.id.tv_title);
@@ -161,7 +161,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
         //************底部下载layout相关 begin *****************
         mDownloadLayout = findViewById(R.id.download_img_layout);
-        mDownloadLayoutContent = mDownloadLayout.findViewById(R.id.rl_content);
+        mDownloadLayoutContent = mDownloadLayout.findViewById(R.id.content);
         mDownloadLayoutBgView = mDownloadLayout.findViewById(R.id.bgview);
         mDownloadLayoutBgView.setOnClickListener(this);
         mDownloadLayoutContent.findViewById(R.id.cancel).setOnClickListener(this);
@@ -176,7 +176,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         //*****底部分享区域begin*********
         mShareLayout = findViewById(R.id.bottomshare_layout);
         mShareLayout.setOnClickListener(this);
-        mShareLayoutContent =  mShareLayout.findViewById(R.id.rl_content);
+        mShareLayoutContent =  mShareLayout.findViewById(R.id.content);
         mShareLayoutContent.findViewById(R.id.share_weixin_circle).setOnClickListener(this);
         mShareLayoutContent.findViewById(R.id.share_weixin).setOnClickListener(this);
         mShareLayoutContent.findViewById(R.id.share_qq).setOnClickListener(this);
@@ -269,14 +269,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             case R.id.tv_link:
             case R.id.layout_caption:
                 onClickLink();
-                break;
-            case R.id.tv_desc_all:
-                mTvDescSimple.setVisibility(VISIBLE);
-                mTvDescAll.setVisibility(GONE);
-                break;
-            case R.id.tv_desc_simple:
-                mTvDescAll.setVisibility(VISIBLE);
-                mTvDescSimple.setVisibility(GONE);
                 break;
             case R.id.bottom_back:
                 onClickBack();
@@ -512,7 +504,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 }
             });
         } else {
-            new ModelCollection().addCollection(mContext, mCurrentImgBean, new onDataResponseListener<BeanCollection>() {
+            BeanCollection bean = BeanConvertUtil.mainImageBean2CollectionBean(mCurrentImgBean);
+            new ModelCollection().addCollection(mContext, bean, new onDataResponseListener<BeanCollection>() {
                 @Override
                 public void onStart() {
                     if (mActivity != null) {
@@ -563,7 +556,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
     protected void onClickBack() {
-
+        if (mActivity != null) {
+            mActivity.onBackPressed();
+        }
     }
 
     protected void onClickSetting() {
@@ -582,7 +577,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
 
         if (mIsCaptionShow) {
-            //好看埋点
             hideCaption();
         } else {
             showCaption();
@@ -605,32 +599,36 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (!TextUtils.isEmpty(cp_name) && !TextUtils.isEmpty(desc)) {
             String aa = new StringBuilder(desc).append(" @").append(cp_name).toString();
             mTvDescSimple.setText(aa);
-            mTvDescAll.setText(aa);
 
         } else {
             mTvDescSimple.setText(desc);
-            mTvDescAll.setText(desc);
         }
 
-//        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
-//        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
         mTvTitlle.setText(mCurrentImgBean.imgTitle);
-        mTvLink.setText("查看更多");
 
-        mTvLinkBg.setColor(getLinkBgColor());
-        mTvLink.setBackground(mTvLinkBg);
+        if (mTvCount.getVisibility() == VISIBLE) {
+            mTvCount.setText(mCurrentPosition + "/" + (mData.size()));
+        }
 
         if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-//            mTvLink.setOnClickListener(null);
+            mLayoutCaption.setOnClickListener(null);
             mTvLink.setVisibility(View.GONE);
         } else {
-//            mTvLink.setOnClickListener(this);
+    //        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
+    //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
+            mLayoutCaption.setOnClickListener(this);
+            mTvLinkBg.setColor(getLinkBgColor());
+            mTvLink.setBackground(mTvLinkBg);
+            mTvLink.setText("查看更多");
             mTvLink.setVisibility(View.VISIBLE);
         }
 
 
         // 设置标题、图说
-        if (mIsCaptionShow && mLayoutMainBottom.getVisibility() != VISIBLE) {
+        if (mIsCaptionShow
+                && mLayoutMainBottom.getVisibility() != VISIBLE
+//                && mCurrentImgBean.mBeanAdRes == null
+                ) {
             showCaption();
         }
     }
@@ -892,6 +890,53 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                     mActivity.dismissLoadingDialog();
                 }
                 ToastManager.showNetErrorToast(mContext);
+            }
+        });
+    }
+
+    //******设置为桌面 begin *******
+    public void setWallPaper(@NonNull final MainImageBean bean) {
+        if (bean == null) {
+            return;
+        }
+        new ModelSetWallpaper().setWallPaper(mContext, bean.imgBigUrl, new onDataResponseListener() {
+            @Override
+            public void onStart() {
+                if (mActivity != null) {
+                    mActivity.showLoadingDialog();
+                }
+            }
+
+            @Override
+            public void onDataSucess(Object o) {
+                if (mActivity != null) {
+                    mActivity.dismissLoadingDialog();
+                }
+                ToastManager.showShort(mContext, "设置成功");
+            }
+
+            @Override
+            public void onDataEmpty() {
+                if (mActivity != null) {
+                    mActivity.dismissLoadingDialog();
+                }
+                ToastManager.showShort(mContext, "设置失败");
+            }
+
+            @Override
+            public void onDataFailed(String errmsg) {
+                if (mActivity != null) {
+                    mActivity.dismissLoadingDialog();
+                }
+                ToastManager.showShort(mContext, "设置失败");
+            }
+
+            @Override
+            public void onNetError() {
+                if (mActivity != null) {
+                    mActivity.dismissLoadingDialog();
+                }
+                ToastManager.showShort(mContext, "设置失败");
             }
         });
     }

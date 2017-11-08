@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.haokan.hklockscreen.recommendpagedetail.CV_DetailPage_Recommend
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cv_detailpage_recommend"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
+</com.haokan.hklockscreen.recommendpagedetail.CV_DetailPage_Recommend>

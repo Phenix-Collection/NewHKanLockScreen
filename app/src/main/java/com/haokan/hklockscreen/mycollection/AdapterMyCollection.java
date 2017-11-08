@@ -125,7 +125,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
             super(itemView);
             mImg = (ImageView) itemView.findViewById(R.id.iv_image);
             mImgChoiceMark = (ImageView) itemView.findViewById(R.id.choice_mark);
-            View view = itemView.findViewById(R.id.rl_content);
+            View view = itemView.findViewById(R.id.content);
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             if (layoutParams == null) {
                 layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mItemH);
@@ -178,7 +178,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
             if (!mEditMode) { //正常态，跳转到大图页
                 if (mContext instanceof ActivityBase) {
                     ActivityBase activity = (ActivityBase) mContext;
-                    Intent intent = new Intent(mContext, ActivityMyCollectionDetailPage.class);
+                    Intent intent = new Intent(mContext, ActivityDetailPageMyCollection.class);
                     intent.putParcelableArrayListExtra("initdata", mData);
                     intent.putExtra("initpos", pos);
                     activity.startActivity(intent);

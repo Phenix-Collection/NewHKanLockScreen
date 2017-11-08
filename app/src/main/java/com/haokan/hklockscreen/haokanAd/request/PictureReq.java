@@ -10,4 +10,5 @@ public class PictureReq {
     public int type;
     public int w;
     public int h;
+
 }

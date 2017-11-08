@@ -27,6 +27,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.haokanAd.BeanAdRes;
+import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
+import com.haokan.hklockscreen.haokanAd.onAdResListener;
+import com.haokan.hklockscreen.haokanAd.request.BannerReq;
+import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
@@ -36,6 +41,7 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
+import com.haokan.pubic.webview.ActivityWebviewLockScreen;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -211,8 +217,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     public CV_UnLockImageView getUnLockView() {
-        if (mAdapterVpMain instanceof Adapter_DetailPage_LockScreen) {
-            return ((Adapter_DetailPage_LockScreen)mAdapterVpMain).getCurrentImageView(mCurrentPosition);
+        ImageView imageView = mAdapterVpMain.getCurrentImageView(mCurrentPosition);
+        if (imageView != null && imageView instanceof CV_UnLockImageView) {
+            return (CV_UnLockImageView) imageView;
         }
         return null;
     }
@@ -250,7 +257,18 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         if (mIsLocked) {//点击解锁
             intoDetialPageState();
         } else {
-            super.onClickBigImage();
+            if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) {
+                Intent intent = new Intent(mContext, ActivityWebviewLockScreen.class);
+                intent.putExtra(ActivityWebviewLockScreen.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
+                if (mActivity != null) {
+                    mActivity.startActivity(intent);
+                    mActivity.startActivityAnim();
+                } else {
+                    mContext.startActivity(intent);
+                }
+            } else {
+                super.onClickBigImage();
+            }
         }
     }
 
@@ -322,11 +340,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 //        mLayoutMainBottom.setVisibility(GONE);
 //        mIsCaptionShow = false;
 
-
-        //图说恢复高度
-        mTvDescSimple.setVisibility(View.VISIBLE);
-        mTvDescAll.setVisibility(View.GONE);
-
         //自动换下一张的逻辑
         if (scrollNext) {
             if (mLocalImgData.size() > 0) {
@@ -358,6 +371,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             }
             mAdapterVpMain.notifyDataSetChanged();
             mVpMain.setCurrentItem(mInitIndex, false);
+            mHasLoadAd5 = false;
+            mHasLoadAd11 = false;
         }
 
         //处理时间界面上的一些标题等信息
@@ -384,9 +399,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         if (mOnLockScreenStateChangeListener != null) {
             mOnLockScreenStateChangeListener.onLockScreenStateChange(mIsLocked);
         }
-
-        mHasLoadAd5 = false;
-        mHasLoadAd11 = false;
     }
 
     @Override
@@ -405,6 +417,12 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             super.onPageSelected(position);
         }
 
+//        if (mCurrentImgBean.mBeanAdRes != null) {
+//            if (mLayoutMainBottom.getVisibility() == VISIBLE) {
+//                mLayoutMainBottom.setVisibility(INVISIBLE);
+//            }
+//        }
+
         if (!mHasLoadAd5 && position == mLockPosition + 1) {
             loadHaoKanAdDate5(position);
         }
@@ -419,45 +437,60 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     protected void loadHaoKanAdDate5(final int position) {
         //第5个位置的广告
         mHasLoadAd5 = true;
-//        HaokanADManager.getInstance().loadAdData(mContext, AdTypeCommonUtil.REQUEST_INSERT_TYPE, "28-53-206", 1080, 1920, new HaokanADInterface() {
-////        HaokanADManager.getInstance().loadAdData(mContext, AdTypeCommonUtil.REQUEST_SPLASH_TYPE, "28-53-209", 1080, 1560, new HaokanADInterface() {
-//            @Override
-//            public void onADSuccess(AdData adData) {
-//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-206 onADSuccess");
-//                MainImageBean imageBean = new MainImageBean();
-//                imageBean.mAdData = adData;
-//                mAdData5 = imageBean;
-//                mData.add(position+4, imageBean);
-//                mAdapterVpMain.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onADError(String s) {
-//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-206 onADError s = " + s);
-//            }
-//        });
+
+        BannerReq bannerReq = new BannerReq();
+        bannerReq.w = 1080;
+        bannerReq.h = 1920;
+        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 5, null, bannerReq);
+
+        ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
+            @Override
+            public void onAdResSuccess(BeanAdRes adRes) {
+                LogHelper.d("wangzixu", "ModelHaoKanAd loadAdData 28-53-206 onADSuccess");
+                MainImageBean imageBean = new MainImageBean();
+                imageBean.mBeanAdRes = adRes;
+                imageBean.imgBigUrl = adRes.imgUrl;
+                imageBean.imgSmallUrl = adRes.imgUrl;
+                imageBean.shareUrl = adRes.landPageUrl;
+                mAdData5 = imageBean;
+                mData.add(position+4, imageBean);
+                mAdapterVpMain.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onAdResFail(String errmsg) {
+                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-206 onADError errmsg = " + errmsg);
+            }
+        });
     }
 
     protected void loadHaoKanAdDate11(final int position) {
         //第11个位置的广告
         mHasLoadAd11 = true;
-//        HaokanADManager.getInstance().loadAdData(mContext, AdTypeCommonUtil.REQUEST_INSERT_TYPE, "28-53-207", 1080, 1920, new HaokanADInterface() {
-//        HaokanADManager.getInstance().loadAdData(mContext, AdTypeCommonUtil.REQUEST_SPLASH_TYPE, "28-53-209", 1080, 1560, new HaokanADInterface() {
-//            @Override
-//            public void onADSuccess(AdData adData) {
-//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-207 onADSuccess");
-//                MainImageBean imageBean = new MainImageBean();
-//                imageBean.mAdData = adData;
-//                mAdData11 = imageBean;
-//                mData.add(position+5, imageBean);
-//                mAdapterVpMain.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onADError(String s) {
-//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-207 onADError s = " + s);
-//            }
-//        });
+        BannerReq bannerReq = new BannerReq();
+        bannerReq.w = 1080;
+        bannerReq.h = 1920;
+        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-207", 5, null, bannerReq);
+
+        ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
+            @Override
+            public void onAdResSuccess(BeanAdRes adRes) {
+                LogHelper.d("wangzixu", "ModelHaoKanAd loadAdData 28-53-206 onADSuccess");
+                MainImageBean imageBean = new MainImageBean();
+                imageBean.mBeanAdRes = adRes;
+                imageBean.imgBigUrl = adRes.imgUrl;
+                imageBean.imgSmallUrl = adRes.imgUrl;
+                imageBean.shareUrl = adRes.landPageUrl;
+                mAdData11 = imageBean;
+                mData.add(position+5, imageBean);
+                mAdapterVpMain.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onAdResFail(String errmsg) {
+                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-206 onADError errmsg = " + errmsg);
+            }
+        });
     }
 
     public void setIvSwitching(boolean isUpdating) {

@@ -26,6 +26,11 @@ import android.widget.TextView;
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.haokanAd.BeanAdRes;
+import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
+import com.haokan.hklockscreen.haokanAd.onAdResListener;
+import com.haokan.hklockscreen.haokanAd.request.BannerReq;
+import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
@@ -44,6 +49,7 @@ import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.Values;
+import com.haokan.pubic.webview.ActivityWebview;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
@@ -80,7 +86,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private TextView mTvLocalImageEdit;
     private ImageView mCurrentImage;
     private ClipImgManager mClipImgManager;
-    private ImageView mAdView;
+    private ImageView mIvAdView;
     private View mIvDelte1;
     private View mIvDelte2;
     private View mIvDelte3;
@@ -88,6 +94,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private BeanLocalImage mLocalImage2;
     private BeanLocalImage mLocalImage3;
     private ImageView mIvBigImage;
+    private View mAdSignView;
+    private String mAdLandPageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +110,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private void initView() {
         mScrollview = (CV_ScrollView) findViewById(R.id.scrollview);
         mBannerlayout = (FrameLayout) findViewById(R.id.bannerlayout);
-        mAdView = (ImageView) findViewById(R.id.adview);
+        mIvAdView = (ImageView) findViewById(R.id.adview);
+        mAdSignView = findViewById(R.id.adsgin);
         mLayoutlockscreen = (RelativeLayout) findViewById(R.id.layoutlockscreen);
         mIvLockscreen = (ImageView) findViewById(R.id.iv_lockscreen);
         mLayoutAutoUpdateImage = (RelativeLayout) findViewById(R.id.layoutautoupdateimg);
@@ -159,6 +168,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mIvDelte1.setOnClickListener(this);
         mIvDelte2.setOnClickListener(this);
         mIvDelte3.setOnClickListener(this);
+        mIvAdView.setOnClickListener(this);
 
         //顶部banner高-mHeader1高
         mHeaderChangeHeigh = DisplayUtil.dip2px(this, 220-65);
@@ -199,6 +209,14 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.adview:
+                if (!TextUtils.isEmpty(mAdLandPageUrl)) {
+                    Intent intent = new Intent(ActivityLockSetting.this, ActivityWebview.class);
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mAdLandPageUrl);
+                    startActivity(intent);
+                    startActivityAnim();
+                }
+                break;
             case R.id.back:
             case R.id.back1:
                 onBackPressed();
@@ -371,33 +389,30 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     }
 
     private void loadHaoKanAd() {
-//        mAdMediaView.setAdJumpWebview(true);
-//        HaokanADManager.getInstance().loadAdData(getApplication(), AdTypeCommonUtil.REQUEST_BANNER_TYPE, "28-53-208", 1080, 630, new HaokanADInterface() {
-//            @Override
-//            public void onADSuccess(AdData adData) {
-//                mAdMediaView.setNativeAd(adData, new EffectiveAdListener() {
-//                    @Override
-//                    public void onAdInvalid() {
-//                        LogHelper.d("wangzixu", "HaokanADManager  28-53-208 setNativeAd onAdInvalid");
-//                    }
-//
-//                    @Override
-//                    public void onLoadSuccess() {
-//                        LogHelper.d("wangzixu", "HaokanADManager 28-53-208 setNativeAd onLoadSuccess");
-//                    }
-//
-//                    @Override
-//                    public void onLoadFailure() {
-//                        LogHelper.d("wangzixu", "HaokanADManager 28-53-208 setNativeAd onLoadFailure");
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onADError(String s) {
-//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-208 onADError s = " + s);
-//            }
-//        });
+        BannerReq bannerReq = new BannerReq();
+        bannerReq.w = 1080;
+        bannerReq.h = 630;
+        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-208", 5, null, bannerReq);
+
+        ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
+            @Override
+            public void onAdResSuccess(final BeanAdRes adRes) {
+                LogHelper.d("wangzixu", "ModelHaoKanAd onAdResSuccess adRes = " + adRes.landPageUrl);
+                Glide.with(ActivityLockSetting.this).load(adRes.imgUrl).into(mIvAdView);
+                mAdSignView.setVisibility(View.VISIBLE);
+
+                mAdLandPageUrl = adRes.landPageUrl;
+                mIvAdView.setOnClickListener(ActivityLockSetting.this);
+
+                //广告展示上报
+                ModelHaoKanAd.adShowUpLoad(adRes.showUpUrl);
+            }
+
+            @Override
+            public void onAdResFail(String errmsg) {
+                LogHelper.d("wangzixu", "ModelHaoKanAd onAdResFail errmsg = " + errmsg);
+            }
+        });
     }
 
     private void loadLocalImages() {
@@ -624,13 +639,11 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        if (mIvBigImage != null && mIvBigImage.getVisibility() == View.VISIBLE) {
+        if (mIvBigImage != null && mIvBigImage.getParent() != null) {
             ViewParent parent = mIvBigImage.getParent();
-            if (parent != null) {
-                ((ViewGroup)parent).removeView(mIvBigImage);
-                mIvBigImage.setImageBitmap(null);
-                mIvBigImage.setVisibility(View.GONE);
-            }
+            ((ViewGroup)parent).removeView(mIvBigImage);
+            mIvBigImage.setImageBitmap(null);
+            mIvBigImage.setVisibility(View.GONE);
         } else {
             super.onBackPressed();
             closeActivityAnim();

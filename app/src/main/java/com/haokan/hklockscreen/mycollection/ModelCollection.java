@@ -8,7 +8,6 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
-import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
@@ -29,7 +28,7 @@ import rx.schedulers.Schedulers;
  * 所有收藏相关的接口
  */
 public class ModelCollection {
-    public void addCollection(final Context context, final MainImageBean imageBean, final onDataResponseListener<BeanCollection> listener) {
+    public void addCollection(final Context context, final BeanCollection imageBean, final onDataResponseListener<BeanCollection> listener) {
         if (listener == null || context == null) {
             return;
         }
@@ -39,13 +38,11 @@ public class ModelCollection {
             @Override
             public void call(Subscriber<? super BeanCollection> subscriber) {
                 try {
-                    BeanCollection bean = BeanConvertUtil.mainImageBean2CollectionBean(imageBean);
-                    bean.create_time = System.currentTimeMillis();
                     Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanCollection.class);
-                    dao.createOrUpdate(bean);
+                    dao.createOrUpdate(imageBean);
 
                     //如果是本地图片, 需要看是否有没有这个文件
-                    if (imageBean.myType == 3) {
+                    if (!imageBean.imgBigUrl.startsWith("http")) {
                         final File file = new File(imageBean.imgBigUrl);
                         if (!file.exists() || file.length() == 0) {
                             Glide.with(context).load(imageBean.imgBigUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
@@ -57,7 +54,7 @@ public class ModelCollection {
                         }
                     }
 
-                    subscriber.onNext(bean);
+                    subscriber.onNext(imageBean);
                     subscriber.onCompleted();
                 } catch (Exception e) {
                     subscriber.onError(e);

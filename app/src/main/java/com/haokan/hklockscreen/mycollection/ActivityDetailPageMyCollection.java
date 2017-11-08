@@ -17,7 +17,7 @@ import java.util.ArrayList;
 /**
  * Created by wangzixu on 2017/10/26.
  */
-public class ActivityMyCollectionDetailPage extends ActivityBase {
+public class ActivityDetailPageMyCollection extends ActivityBase {
     private CV_DetailPage_MyCollection mCvDetailPageMyCollection;
     private BroadcastReceiver mReceiver;
 

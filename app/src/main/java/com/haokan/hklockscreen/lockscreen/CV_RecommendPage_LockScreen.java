@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.recommendpage.CV_RecommendPage;
+import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -99,4 +99,21 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
                 break;
         }
     }
+
+//    @Override
+//    public void startDetailPage(String url, String imgTitle) {
+//        Intent intent = new Intent(mContext, ActivityWebviewLockScreen.class);
+//        intent.putExtra(ActivityWebviewLockScreen.KEY_INTENT_WEB_URL, url);
+//        intent.putExtra(ActivityWebviewLockScreen.KEY_INTENT_WEB_TITLE, imgTitle);
+//        if (mActivityBase != null) {
+//            mActivityBase.startActivity(intent);
+//            mActivityBase.startActivityAnim();
+//        } else {
+//            mContext.startActivity(intent);
+//        }
+//
+//        if (mActivityBase instanceof ActivityLockScreen) {
+//            MobclickAgent.onEvent(mContext, "recommend_godetail");
+//        }
+//    }
 }

@@ -69,13 +69,6 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
         }
     }
 
-
-    protected void onClickBack() {
-        if (mActivity != null) {
-            mActivity.onBackPressed();
-        }
-    }
-
     public void loadData() {
         new ModelCollection().getCollectionList(mContext, mData.size(), new onDataResponseListener<List<BeanCollection>>() {
             @Override

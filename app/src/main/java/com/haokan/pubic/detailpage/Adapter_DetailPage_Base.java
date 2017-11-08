@@ -12,14 +12,14 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.MainImageBean;
-import com.haokan.pubic.util.AssetsImageLoader;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.AssetsImageLoader;
 
 import java.util.ArrayList;
 
 public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClickListener {
     protected final Context mContext; //用activity，利用glide的生命周期控制系统
-    protected ArrayList<MainImageBean> mData;
+    protected ArrayList<MainImageBean> mData = new ArrayList<>();
     protected ArrayList<ViewHolder> mHolders = new ArrayList<>();
     protected View.OnClickListener mOnClickListener;
     protected View.OnLongClickListener mOnLongClickListener;
@@ -138,6 +138,21 @@ public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClic
         }
         if (holder != null) {
             return holder.mBitmap;
+        }
+        return null;
+    }
+
+    public ImageView getCurrentImageView(int position) {
+        ViewHolder holder = null;
+        for (int i = 0; i < mHolders.size(); i++) {
+            ViewHolder temp = mHolders.get(i);
+            if (temp.position == position) {
+                holder = temp;
+                break;
+            }
+        }
+        if (holder != null) {
+            return holder.image;
         }
         return null;
     }
