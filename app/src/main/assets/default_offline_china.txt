@@ -5,7 +5,7 @@
         "typeName": “汽车”,
         "imgDesc": "这款命名位“地狱”的跑车，在外观上更显独特性。",
         "imgBigUrl": "file:///android_asset/hk_def_imgs/default1.jpg",
-        "imgSmallUrl": "hk_def_imgs/default1.jpg",
+        "imgSmallUrl": "file:///android_asset/hk_def_imgs/default1.jpg",
         "shareUrl": "https://redirect.levect.com/10000/0/1171367",
         "linkUrl": "https://redirect.levect.com/10000/0/1171367"
     },
@@ -15,7 +15,7 @@
         "typeName": “旅游”,
         "imgDesc": "它们将气势恢弘的景致和浪漫优雅的细节完美结合，令人神往。",
         "imgBigUrl": "file:///android_asset/hk_def_imgs/default2.jpg",
-        "imgSmallUrl": "hk_def_imgs/default2.jpg",
+        "imgSmallUrl": "file:///android_asset/hk_def_imgs/default2.jpg",
         "shareUrl": "https://www.autodis.cn/detail/1139630?appid=0&eid=138001&utm_source=138001&utm_medium=lockscreen&utm_campaign=20171019&utm_content=59cdf64e19d0670001b7ba56",
         "linkUrl": "https://www.autodis.cn/detail/1139630?appid=0&eid=138001&utm_source=138001&utm_medium=lockscreen&utm_campaign=20171019&utm_content=59cdf64e19d0670001b7ba56"
     },
@@ -24,7 +24,7 @@
         "imgTitle": "全国唯一没有树的城市！",
         "typeName": "资讯",
         "imgDesc": "在这里种活一棵树，能获得三等功！",
-        "imgBigUrl": "hk_def_imgs/default3.jpg",
+        "imgBigUrl": "file:///android_asset/hk_def_imgs/default3.jpg",
         "imgSmallUrl": "file:///android_asset/hk_def_imgs/default3.jpg",
         "shareUrl": "https://redirect.levect.com/10000/0/2375236",
         "linkUrl": "https://redirect.levect.com/10000/0/2375236"

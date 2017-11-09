@@ -2,7 +2,6 @@ package com.haokan.hklockscreen.mycollection;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +12,8 @@ import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
-import com.haokan.pubic.util.AssetsImageLoader;
-import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.DisplayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,26 +141,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
             mImageBean = mData.get(position);
             final String url = mImageBean.imgSmallUrl;
 
-            if (url.startsWith("hk_def_imgs")) { // assset中的图片
-                AssetsImageLoader.loadAssetsImage(mContext, url, new AssetsImageLoader.onAssetImageLoaderListener() {
-                    @Override
-                    public void onSuccess(Bitmap bitmap) {
-                        if (url.equals(mImageBean.imgSmallUrl)) {
-                            mImg.setImageBitmap(bitmap);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(Exception e) {
-                        LogHelper.d("wangzixu", "lockadapter instantiateItem AssetsImageLoader  获取不到");
-                        if (url.equals(mImageBean.imgSmallUrl)) {
-                            mImg.setImageBitmap(null);
-                        }
-                    }
-                });
-            } else {
-                Glide.with(mContext).load(url).dontAnimate().into(mImg);
-            }
+            Glide.with(mContext).load(url).dontAnimate().into(mImg);
 
             if (mEditMode) {
                 mImgChoiceMark.setVisibility(View.VISIBLE);

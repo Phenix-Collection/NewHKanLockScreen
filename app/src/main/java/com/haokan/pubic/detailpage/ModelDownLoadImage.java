@@ -11,11 +11,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.http.onDataResponseListener;
-import com.haokan.pubic.util.AssetsImageLoader;
-import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.Values;
+
 import java.io.File;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -58,12 +59,7 @@ public class ModelDownLoadImage {
 
                     String imgUrl = imageBean.imgBigUrl;
                     try {
-                        Bitmap bitmap;
-                        if (imgUrl.startsWith("hk_def_imgs")) {
-                            bitmap = AssetsImageLoader.loadAssetsImageBitmap(context, imgUrl);
-                        } else {
-                            bitmap = Glide.with(context).load(imgUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                        }
+                        Bitmap bitmap = Glide.with(context).load(imgUrl).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
                         if (bitmap != null) {
                             FileUtil.saveBitmapToFile(context, bitmap, file, true);
                             subscriber.onNext(file);

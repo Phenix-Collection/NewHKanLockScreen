@@ -12,8 +12,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.MainImageBean;
-import com.haokan.pubic.logsys.LogHelper;
-import com.haokan.pubic.util.AssetsImageLoader;
 
 import java.util.ArrayList;
 
@@ -79,51 +77,25 @@ public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClic
         container.addView(holder.itemView);
 
         String url = imageBean.imgBigUrl;
+        Glide.with(mContext).load(url).asBitmap().dontAnimate().listener(new RequestListener<String, Bitmap>() {
+            @Override
+            public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+                holder.errorView.setVisibility(View.VISIBLE);
+                holder.loadingView.setVisibility(View.GONE);
+                holder.image.setVisibility(View.GONE);
+                holder.mBitmap = null;
+                return false;
+            }
 
-        if (url.startsWith("hk_def_imgs")) { // assset中的图片
-            AssetsImageLoader.loadAssetsImage(mContext, url, new AssetsImageLoader.onAssetImageLoaderListener() {
-                @Override
-                public void onSuccess(Bitmap bitmap) {
-                    if (holder.position != -1) {
-                        holder.errorView.setVisibility(View.GONE);
-                        holder.loadingView.setVisibility(View.GONE);
-                        holder.image.setVisibility(View.VISIBLE);
-                        holder.mBitmap = bitmap;
-                        holder.image.setImageBitmap(bitmap);
-                    }
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-                    LogHelper.d("wangzixu", "lockadapter instantiateItem AssetsImageLoader  获取不到");
-                    e.printStackTrace();
-                    holder.errorView.setVisibility(View.VISIBLE);
-                    holder.loadingView.setVisibility(View.GONE);
-                    holder.image.setVisibility(View.GONE);
-                    holder.mBitmap = null;
-                }
-            });
-        } else {
-            Glide.with(mContext).load(url).asBitmap().dontAnimate().listener(new RequestListener<String, Bitmap>() {
-                @Override
-                public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-                    holder.errorView.setVisibility(View.VISIBLE);
-                    holder.loadingView.setVisibility(View.GONE);
-                    holder.image.setVisibility(View.GONE);
-                    holder.mBitmap = null;
-                    return false;
-                }
-
-                @Override
-                public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                    holder.errorView.setVisibility(View.GONE);
-                    holder.loadingView.setVisibility(View.GONE);
-                    holder.image.setVisibility(View.VISIBLE);
-                    holder.mBitmap = resource;
-                    return false;
-                }
-            }).into(holder.image);
-        }
+            @Override
+            public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                holder.errorView.setVisibility(View.GONE);
+                holder.loadingView.setVisibility(View.GONE);
+                holder.image.setVisibility(View.VISIBLE);
+                holder.mBitmap = resource;
+                return false;
+            }
+        }).into(holder.image);
         return holder.itemView;
     }
 
