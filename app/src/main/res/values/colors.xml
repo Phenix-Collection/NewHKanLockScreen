@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="detailpagebgcolor">#113e69</color>
+    <!--<color name="detailpagebgcolor">#808080</color>-->
 
     <color name="default_bg_color">#ffffffff</color>
     <color name="default_color_clicked">#c1c1c1</color>

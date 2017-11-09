@@ -114,7 +114,7 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
     protected EdgeEffectCompat mLeftEdge;
     protected void initViewPagerRightEdge() {
         try {
-            Field rightEdgeField = mVpMain.getClass().getDeclaredField("mRightEdge");
+            Field rightEdgeField = mVpMain.getClass().getSuperclass().getDeclaredField("mRightEdge");
             if (rightEdgeField != null) {
                 rightEdgeField.setAccessible(true);
                 mRightEdge = (EdgeEffectCompat) rightEdgeField.get(mVpMain);

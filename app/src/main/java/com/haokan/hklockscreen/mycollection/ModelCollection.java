@@ -1,11 +1,10 @@
 package com.haokan.hklockscreen.mycollection;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.pubic.bean.MainImageBean;
@@ -45,12 +44,15 @@ public class ModelCollection {
                     if (!imageBean.imgBigUrl.startsWith("http")) {
                         final File file = new File(imageBean.imgBigUrl);
                         if (!file.exists() || file.length() == 0) {
-                            Glide.with(context).load(imageBean.imgBigUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                    FileUtil.saveBitmapToFile(context, resource, file, false);
-                                }
-                            });
+                            FutureTarget<File> target = Glide.with(context).load(imageBean.imgBigUrl).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+                            File bitmapFile = target.get();
+                            FileUtil.moveFile(bitmapFile, file);
+//                            Glide.with(context).load(imageBean.imgBigUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+//                                @Override
+//                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                                    FileUtil.saveBitmapToFile(context, resource, file, false);
+//                                }
+//                            });
                         }
                     }
 

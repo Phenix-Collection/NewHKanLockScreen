@@ -26,10 +26,9 @@ public class BeanRecommendPageLand implements Parcelable {
     /**
      *自己规定的type, 因为这个详情页有很多类型, 需要区分开
      * 0大图条目,
-     * 1头部,
-     * 2分享按钮,
-     * 3广告,
-     * 4评论
+     * 1分享按钮,
+     * 2广告,
+     * 3评论,
      */
     public int myType;
 

@@ -33,15 +33,19 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         final MainImageBean imageBean = mData.get(position);
-        View view = View.inflate(mContext, R.layout.activity_recommendpagedetail_item, null);
+        View view = View.inflate(mContext, R.layout.cv_detailpage_recommend_item, null);
         final RecommendPageDetailViewHolder holder = new RecommendPageDetailViewHolder(view);
         holder.position = position;
         view.setTag(holder);
         mHolders.add(holder);
 
         container.addView(holder.itemView);
-        final String imgUrl = imageBean.imgBigUrl;
+        loadBigBitmap(imageBean, holder);
+        return holder.itemView;
+    }
 
+    public void loadBigBitmap(MainImageBean imageBean, final RecommendPageDetailViewHolder holder) {
+        final String imgUrl = imageBean.imgBigUrl;
         Observable.create(new Observable.OnSubscribe<Bitmap>() {
             @Override
             public void call(Subscriber<? super Bitmap> subscriber) {
@@ -70,34 +74,77 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
                 }
             }
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new Subscriber<Bitmap>() {
-            @Override
-            public void onCompleted() {
-            }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Bitmap>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                e.printStackTrace();
-                holder.errorView.setVisibility(View.VISIBLE);
-                holder.loadingView.setVisibility(View.GONE);
-                holder.image.setVisibility(View.GONE);
-                holder.mBitmap = null;
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        holder.errorView.setVisibility(View.VISIBLE);
+                        holder.loadingView.setVisibility(View.GONE);
+                        holder.image.setVisibility(View.GONE);
+                        holder.mBitmap = null;
+                    }
 
+                    @Override
+                    public void onNext(Bitmap bitmap) {
+                        if (holder.position != -1) {
+                            holder.errorView.setVisibility(View.GONE);
+                            holder.loadingView.setVisibility(View.GONE);
+                            holder.image.setVisibility(View.VISIBLE);
+                            holder.mBitmap = bitmap;
+                            holder.image.setImageBitmap(bitmap);
+                        }
+                    }
+                });
+    }
+
+    public void loadBlurBitmap(MainImageBean imageBean, final RecommendPageDetailViewHolder holder) {
+        final String imgUrl = imageBean.imgSmallUrl;
+        Observable.create(new Observable.OnSubscribe<BitmapDrawable>() {
             @Override
-            public void onNext(Bitmap bitmap) {
-                if (holder.position != -1) {
-                    holder.errorView.setVisibility(View.GONE);
-                    holder.loadingView.setVisibility(View.GONE);
-                    holder.image.setVisibility(View.VISIBLE);
-                    holder.mBitmap = bitmap;
-                    holder.image.setImageBitmap(bitmap);
+            public void call(Subscriber<? super BitmapDrawable> subscriber) {
+                try {
+                    FutureTarget<Bitmap> target = Glide.with(mContext).load(imgUrl).asBitmap() .dontAnimate().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+                    Bitmap bitmap = target.get();
+
+                    if (bitmap != null) {
+                        Bitmap blurBitmap = BlurUtil.blurBitmap2(bitmap, 2, 4);
+                        BitmapDrawable drawable = new BitmapDrawable(mContext.getResources(), blurBitmap);
+                        drawable.setColorFilter(0xFF999999, PorterDuff.Mode.MULTIPLY);
+                        subscriber.onNext(drawable);
+                        subscriber.onCompleted();
+                    } else {
+                        subscriber.onError(new Throwable("null"));
+                    }
+                } catch (Exception e) {
+                    subscriber.onError(e);
                 }
             }
-        });
-        return holder.itemView;
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<BitmapDrawable>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onNext(BitmapDrawable drawable) {
+                        if (holder.position != -1) {
+                            holder.ivBgImageView.setImageDrawable(drawable);
+                        }
+                    }
+                });
     }
 
     public class RecommendPageDetailViewHolder extends ViewHolder {

@@ -61,7 +61,7 @@ public class BeanConvertUtil {
     public static MainImageBean recommendLandBeanBean2MainImageBean(BeanRecommendPageLand fromBean) {
         MainImageBean imgBean = new MainImageBean();
         imgBean.imgId = fromBean.imgId;
-        imgBean.imgSmallUrl = fromBean.imgUrl;
+        imgBean.imgSmallUrl = fromBean.sUrl;
         imgBean.imgBigUrl = fromBean.imgUrl;
         imgBean.imgDesc = fromBean.imgContent;
         imgBean.imgTitle = fromBean.imgTitle;

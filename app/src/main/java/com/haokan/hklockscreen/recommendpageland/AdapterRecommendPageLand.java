@@ -46,10 +46,9 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
     /**
      *自己规定的type, 因为这个详情页有很多类型, 需要区分开
      * 0, 头部
-     * 1, 大图条目
-     * 2, 分享按钮
-     * 3, 广告
-     * 4, 评论
+     * 1, 分享按钮
+     * 2, 广告
+     * 3, 评论
      */
     @Override
     protected ViewHolder onCreateContentItemViewHolder(ViewGroup parent, int contentViewType) {
@@ -64,8 +63,6 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
             View view = LayoutInflater.from(mContext).inflate(R.layout.activity_recommendpageland_item2, parent, false);
             holder = new Item2ViewHolder(view);
         } else if (contentViewType == 3) {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.activity_recommendpageland_item3, parent, false);
-            holder = new Item3ViewHolder(view);
         }
         return holder;
     }
@@ -79,12 +76,17 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
     //-------header begin---------------------
     @Override
     protected int getHeaderItemCount() {
-        return 0;
+        if (mData == null || mData.size() == 0) {
+            return 0;
+        }
+        return 1;
     }
 
     @Override
     protected ViewHolder onCreateHeaderItemViewHolder(ViewGroup parent, int headerViewType) {
-        return null;
+        View view = LayoutInflater.from(mContext).inflate(R.layout.activity_recommendpageland_itemheader, parent, false);
+        ViewHolder holder = new ItemHeaderViewHolder(view);
+        return holder;
     }
 
     @Override
@@ -157,16 +159,16 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
         public void onClick(View v) {
             Intent intent = new Intent(mContext, ActivityDetailPageRecommend.class);
             intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_GROUDDATE, mData);
-            intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_POSITION, mPos);
+            intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_POSITION, Math.max(mPos, 0));
             mContext.startActivity(intent);
             mContext.startActivityAnim();
         }
     }
 
-    public class Item1ViewHolder extends ViewHolder{
+    public class ItemHeaderViewHolder extends ViewHolder{
         private BeanRecommendPageLand mBean;
         public TextView mTvTitle;
-        public Item1ViewHolder(View itemView) {
+        public ItemHeaderViewHolder(View itemView) {
             super(itemView);
             mTvTitle = (TextView) itemView.findViewById(R.id.tv_title);
             mContext.setHeaderItem(this);
@@ -185,9 +187,9 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
         }
     }
 
-    public class Item2ViewHolder extends ViewHolder implements View.OnClickListener {
+    public class Item1ViewHolder extends ViewHolder implements View.OnClickListener {
         private BeanRecommendPageLand mBean;
-        public Item2ViewHolder(View itemView) {
+        public Item1ViewHolder(View itemView) {
             super(itemView);
             itemView.findViewById(R.id.iv_image).setOnClickListener(this);
         }
@@ -199,14 +201,14 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
 
         @Override
         public void onClick(View v) {
-            mContext.shareTo();
+            mContext.showShareLayout();
         }
     }
 
-    public class Item3ViewHolder extends ViewHolder implements View.OnClickListener {
+    public class Item2ViewHolder extends ViewHolder implements View.OnClickListener {
         private BeanRecommendPageLand mBean;
         private ImageView mImageView;
-        public Item3ViewHolder(View itemView) {
+        public Item2ViewHolder(View itemView) {
             super(itemView);
             mImageView = (ImageView) itemView.findViewById(R.id.iv_image);
             itemView.setOnClickListener(this);

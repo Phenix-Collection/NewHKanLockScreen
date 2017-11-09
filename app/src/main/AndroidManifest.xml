@@ -134,12 +134,13 @@
 
         <activity
             android:name=".recommendpagedetail.ActivityDetailPageRecommend"
+            android:theme="@style/MyDetailPage"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".mycollection.ActivityDetailPageMyCollection"
-            android:theme="@style/MyCollectionDetailPage"
+            android:theme="@style/MyDetailPage"
             android:screenOrientation="portrait">
         </activity>
 

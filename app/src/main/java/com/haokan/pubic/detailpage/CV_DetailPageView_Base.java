@@ -39,7 +39,6 @@ import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.MainImageBean;
-import com.haokan.pubic.customview.ViewPagerTransformer;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
@@ -200,7 +199,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         //viewpager区域
         mVpMain = (ViewPager) findViewById(R.id.vp_main);
         mVpMain.setOffscreenPageLimit(1);
-        mVpMain.setPageTransformer(true, new ViewPagerTransformer.ParallaxTransformer(R.id.iv_image));
+//        mVpMain.setPageTransformer(true, new ViewPagerTransformer.ParallaxTransformer(R.id.iv_image));
         mVpMain.addOnPageChangeListener(this);
 
         setVpAdapter();
@@ -607,7 +606,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mTvTitlle.setText(mCurrentImgBean.imgTitle);
 
         if (mTvCount.getVisibility() == VISIBLE) {
-            mTvCount.setText(mCurrentPosition + "/" + (mData.size()));
+            mTvCount.setText((mCurrentPosition+1) + "/" + (mData.size()));
         }
 
         if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {

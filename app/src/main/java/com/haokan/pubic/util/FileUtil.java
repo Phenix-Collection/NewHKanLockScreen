@@ -8,6 +8,7 @@ import android.net.Uri;
 import com.haokan.pubic.logsys.LogHelper;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -222,5 +223,46 @@ public class FileUtil {
             }
         }
         return success;
+    }
+
+    public static void moveFile(File fileFrom, File fileTo) {
+        FileInputStream ins = null;
+        FileOutputStream out = null;
+
+        try {
+            if (!fileFrom.exists()) {
+                fileFrom.createNewFile();
+            }
+
+            if (!fileTo.exists()) {
+                fileTo.createNewFile();
+            }
+
+            ins = new FileInputStream(fileFrom);
+            out = new FileOutputStream(fileTo);
+            byte[] b = new byte[2048];
+            int n=0;
+            while((n=ins.read(b))!=-1){
+                out.write(b, 0, n);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (ins != null) {
+                try {
+                    ins.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

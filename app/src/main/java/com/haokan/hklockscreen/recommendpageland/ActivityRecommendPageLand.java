@@ -15,11 +15,14 @@ import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
+import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.pubic.base.ActivityBase;
+import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
+import com.j256.ormlite.dao.Dao;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -27,6 +30,10 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
 import java.util.ArrayList;
+
+import rx.Scheduler;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by wangzixu on 2017/11/7.
@@ -43,10 +50,11 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
     private AdapterRecommendPageLand mAdapter;
     private ArrayList<BeanRecommendPageLand> mData = new ArrayList<>();
     private int mTitleBottomH;
-    private AdapterRecommendPageLand.Item1ViewHolder mHeaderItem;
+    private AdapterRecommendPageLand.ItemHeaderViewHolder mHeaderItem;
     private View mShareLayout;
     private View mShareLayoutContent;
     private View mShareLayoutBg;
+    private View mTvCollect;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,9 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
         setPromptLayout(loadingLayout, netErrorView, serveErrorView, nocontentView);
 
         mTvTitle = (TextView) findViewById(R.id.tv_title);
+        findViewById(R.id.share).setOnClickListener(this);
+        mTvCollect = findViewById(R.id.collect);
+        mTvCollect.setOnClickListener(this);
 
         //*****底部分享区域begin*********
         mShareLayout = findViewById(R.id.bottom_share);
@@ -129,7 +140,22 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
         });
     }
 
-    public void setHeaderItem(AdapterRecommendPageLand.Item1ViewHolder headerItem) {
+    public void checkCollect() {
+        final Scheduler.Worker worker = Schedulers.io().createWorker();
+        worker.schedule(new Action0() {
+            @Override
+            public void call() {
+                try {
+                    Dao dao = MyDatabaseHelper.getInstance(ActivityRecommendPageLand.this).getDaoQuickly(BeanCollection.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                worker.unsubscribe();
+            }
+        });
+    }
+
+    public void setHeaderItem(AdapterRecommendPageLand.ItemHeaderViewHolder headerItem) {
         mHeaderItem = headerItem;
         mHeaderItem.mTvTitle.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -154,18 +180,12 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
                 }
                 ArrayList<BeanRecommendPageLand> list = res.list;
 
-                //头部标题
-                BeanRecommendPageLand headerBean = new BeanRecommendPageLand();
-                headerBean.imgTitle = mRecommendItemBean.imgTitle;
-                headerBean.myType = 1;
-
                 mData.clear();
-                mData.add(headerBean);
                 mData.addAll(list);
 
                 //分享按钮
                 BeanRecommendPageLand shareItem = new BeanRecommendPageLand();
-                shareItem.myType = 2;
+                shareItem.myType = 1;
                 mData.add(shareItem);
 
                 if (mAdItem != null) {
@@ -218,7 +238,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
                 LogHelper.d("wangzixu", "ModelHaoKanAd landpage onAdResSuccess");
                 //广告
                 mAdItem = new BeanRecommendPageLand();
-                mAdItem.myType = 3;
+                mAdItem.myType = 2;
                 mAdItem.mBeanAdRes = adRes;
 
                 loadData();
@@ -235,10 +255,6 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
     //加载评论
     public void loadComment() {
 
-    }
-
-    public void shareTo() {
-        showShareLayout();
     }
 
     @Override
@@ -270,6 +286,9 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
             case R.id.share_qqzone:
                 shareTo(SHARE_MEDIA.QZONE);
                 hideShareLayout();
+                break;
+            case R.id.share:
+                showShareLayout();
                 break;
             default:
                 break;
@@ -343,7 +362,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
         }
     }
 
-    private void showShareLayout() {
+    public void showShareLayout() {
         if (mShareLayout.getVisibility() != View.VISIBLE) {
             mShareLayout.setVisibility(View.VISIBLE);
             Animation animation = AnimationUtils.loadAnimation(this, R.anim.activity_fade_in);

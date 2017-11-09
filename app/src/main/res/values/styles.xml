@@ -21,7 +21,7 @@
         <item name="android:windowFrame">@null</item>
     </style>
 
-    <style name="MyCollectionDetailPage" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MyDetailPage" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/detailpagebgcolor</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>

@@ -149,7 +149,7 @@
             android:layout_marginBottom="8dp">
 
             <!--android:visibility="gone"-->
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/layout_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -166,23 +166,21 @@
                     android:ellipsize="end"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     android:maxLines="1"
                     android:text=""
-                    android:layout_gravity="center_vertical"
                     android:textColor="@color/bai"
                     android:textSize="18sp"
                     android:layout_marginRight="4dp"
-                    android:maxWidth="270dp"
                     />
 
                 <TextView
                     android:id="@+id/tv_link"
                     android:visibility="gone"
+                    android:layout_toRightOf="@id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
+                    android:layout_centerVertical="true"
                     android:maxLines="1"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
@@ -191,7 +189,7 @@
                     android:text="查看更多"
                     android:textColor="@color/selector_click_bai"
                     android:textSize="13sp"/>
-            </LinearLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_desc_simple"

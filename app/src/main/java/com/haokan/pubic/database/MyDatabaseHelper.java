@@ -111,5 +111,24 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
                 e.printStackTrace();
             }
         }
+
+//        try{
+//            if(oldVersion<
+//                    2){
+//                getUserDao().executeRawNoArgs("ALTER TABLE user_db ADD COLUMN address VARCHAR(60)");
+//            }
+//        }catch
+//                (SQLExceptione){
+//            e.printStackTrace();
+//        }
+
+//        删除字段
+//        getUserDao().executeRawNoArgs("ALTER TABLE user_db DROP COLUMN age")
+//        二、修改字段名：
+//        alter table 表名 rename column A to B
+//        三、修改字段类型：
+//        alter table 表名 alter column UnitPrice decimal(18, 4) not null
+//        三、修改增加字段：
+//        alter table 表名 ADD 字段 类型 NOT NULL Default 0
     }
 }
