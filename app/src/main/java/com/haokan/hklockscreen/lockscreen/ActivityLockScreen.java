@@ -68,7 +68,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private ImageView mPullIvArraw;
     private int mPullRefreshDistence;
     private View mGustureView;
-    private boolean mLockguideup = true;
+    private static boolean sLockguideUpDown = true;
+    private static boolean sLockguideRL = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,12 +90,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         initLockScreenView();
         initRecommendPageView();
 
-        checkStoragePermission();
-
         hideNavigation();
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(this);
-
-        showGestureGudieRl();
     }
 
     @Override
@@ -114,6 +111,42 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                 mScrollView.scrollTo(0, 0);
             }
         }, 200);
+
+        if (sLockguideRL) {
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            sLockguideRL = preferences.getBoolean("lockguiderl", true);
+            if (sLockguideRL) {
+                mGustureView = findViewById(R.id.gusture_rl);
+                mGustureView.setVisibility(View.GONE);
+                mGustureView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mGustureView.setOnClickListener(null);
+                        mGustureView.setVisibility(View.GONE);
+                        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this).edit();
+                        edit.putBoolean("lockguiderl", false).apply();
+                        sLockguideRL = false;
+                        mGustureView = null;
+                    }
+                });
+                App.sMainHanlder.postDelayed(mShowGestureRun, 800);
+            }
+        }
+    }
+
+    Runnable mShowGestureRun = new Runnable() {
+        @Override
+        public void run() {
+            showGestureGudieRl();
+        }
+    };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogHelper.d("wangzixu", "ActivityLockScreen onPause");
+        App.sMainHanlder.removeCallbacks(mShowGestureRun);
+        mGustureView = null;
     }
 
     private void initView() {
@@ -201,8 +234,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (mGustureView != null && mGustureView.getVisibility() == View.VISIBLE) {
-            return super.dispatchTouchEvent(event);
+        if (mGustureView != null) {
+            if (mGustureView.getVisibility() != View.VISIBLE) {
+                return true;
+            } else {
+                return super.dispatchTouchEvent(event);
+            }
         }
         if (mIsAnimingPrompt || mScrollView.isScrolling()) {
             return true;
@@ -431,42 +468,22 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         if (isLock) {
             mUnLockImageView = App.sHaokanLockView.getUnLockView();
         } else {
-            if (mLockguideup) {
-                final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-                mLockguideup = preferences.getBoolean("lockguideup", true);
-                if (mLockguideup) {
-                    App.sMainHanlder.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            showGustureGuideUpDown();
-                        }
-                    });
-                } else {
-                    App.sMainHanlder.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            promptRecommenAnim();
-                        }
-                    }, 250);
+            App.sMainHanlder.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    promptRecommenAnim();
                 }
-            } else {
-                App.sMainHanlder.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        promptRecommenAnim();
-                    }
-                }, 250);
-            }
+            }, 250);
         }
     }
 
     public void showGustureGuideUpDown() {
-        mGustureView = findViewById(R.id.gusture_down);
+        mGustureView = findViewById(R.id.gusture_up);
         mGustureView.setVisibility(View.VISIBLE);
         mGustureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View viewup = findViewById(R.id.gusture_up);
+                View viewup = findViewById(R.id.gusture_down);
                 viewup.setVisibility(View.VISIBLE);
                 mGustureView.setVisibility(View.GONE);
                 mGustureView = viewup;
@@ -477,7 +494,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                         mGustureView.setOnClickListener(null);
                         mGustureView.setVisibility(View.GONE);
                         mGustureView = null;
-                        mLockguideup = false;
+                        sLockguideUpDown = false;
                         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this).edit();
                         edit.putBoolean("lockguideup", false).apply();
                     }
@@ -487,22 +504,21 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
 
     public void showGestureGudieRl() {
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean lockguide = preferences.getBoolean("lockguiderl", true);
-        if (lockguide) {
+        if (mGustureView == null) {
             mGustureView = findViewById(R.id.gusture_rl);
-            mGustureView.setVisibility(View.VISIBLE);
             mGustureView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mGustureView.setOnClickListener(null);
                     mGustureView.setVisibility(View.GONE);
-                    SharedPreferences.Editor edit = preferences.edit();
+                    SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this).edit();
                     edit.putBoolean("lockguiderl", false).apply();
+                    sLockguideRL = false;
                     mGustureView = null;
                 }
             });
         }
+        mGustureView.setVisibility(View.VISIBLE);
     }
 
     public void backToDetailPage() {
@@ -536,6 +552,19 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             @Override
             public void onAnimationEnd(Animator animation) {
                 mIsAnimingPrompt = false;
+
+                if (sLockguideUpDown) {
+                    final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this);
+                    sLockguideUpDown = preferences.getBoolean("lockguideup", true);
+                    if (sLockguideUpDown) {
+                        App.sMainHanlder.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showGustureGuideUpDown();
+                            }
+                        });
+                    }
+                }
             }
         });
 

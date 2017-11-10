@@ -37,11 +37,11 @@ public class CV_DetailPage_Recommend extends CV_DetailPageView_Base{
 
     public CV_DetailPage_Recommend(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        findViewById(R.id.divider1).setVisibility(GONE);
-        findViewById(R.id.divider4).setVisibility(GONE);
-        findViewById(R.id.bottom_collect).setVisibility(GONE);
-        findViewById(R.id.setting).setVisibility(GONE);
-        mTvCount.setVisibility(VISIBLE);
+//        findViewById(R.id.divider1).setVisibility(GONE);
+//        findViewById(R.id.divider4).setVisibility(GONE);
+//        findViewById(R.id.bottom_collect).setVisibility(GONE);
+//        findViewById(R.id.setting).setVisibility(GONE);
+//        mTvCount.setVisibility(VISIBLE);
 
         if (mVpMain instanceof ZoomImageViewPager_new) {
             mAdapterDetailPageRecommend = (ZoomImageViewPager_new) mVpMain;
@@ -56,27 +56,46 @@ public class CV_DetailPage_Recommend extends CV_DetailPageView_Base{
             mAdapterDetailPageRecommend.setOnSlideYListener(new ZoomImageViewPager_new.onSlideYListener() {
                 @Override
                 public void onSlideY(float distance) {
-                    if (mCurrentImageView != null) {
-                        mCurrentImageView.setTranslationY(distance);
-                    }
+//                    if (mCurrentImageView != null) {
+//                        mCurrentImageView.setTranslationY(distance);
+//                    }
                 }
 
                 @Override
-                public void onSlideEnd() {
-                    if (mCurrentImageView != null) {
-                        mCurrentImageView.setTranslationY(0);
+                public void onSlideEnd(float distance) {
+//                    if (mCurrentImageView != null) {
+//                        mCurrentImageView.setTranslationY(0);
+//                    }
+                    if (Math.abs(distance) > 20) {
+                        if (mActivity != null) {
+                            mActivity.finish();
+                            if (distance > 0) {
+                                mActivity.overridePendingTransition(R.anim.activity_retain, R.anim.activity_out_top2bottom);
+                            } else {
+                                mActivity.overridePendingTransition(R.anim.activity_retain, R.anim.activity_out_bottom2top);
+                            }
+                        }
                     }
                 }
             });
         }
 
-        initViewPagerRightEdge();
+        mLayoutMainTop.setVisibility(GONE);
+        mLayoutMainBottom.setVisibility(GONE);
+        mIsCaptionShow = false;
+
+//        initViewPagerRightEdge();
     }
 
     @Override
     public void setVpAdapter() {
         mAdapterVpMain = new Adapter_DetailPage_Recommend(mContext, mData, this, null);
         mVpMain.setAdapter(mAdapterVpMain);
+    }
+
+    @Override
+    protected void onClickBigImage() {
+        onClickBack();
     }
 
     public void initData(ArrayList<MainImageBean> mainList, int position) {
@@ -97,8 +116,6 @@ public class CV_DetailPage_Recommend extends CV_DetailPageView_Base{
 
     @Override
     protected void refreshBottomLayout() {
-        super.refreshBottomLayout();
-
         mCurrentImageView = mAdapterVpMain.getCurrentImageView(mCurrentPosition);
         if (mCurrentImageView instanceof Zoomimageview_new) {
             mAdapterDetailPageRecommend.setZoomImageView((Zoomimageview_new) mCurrentImageView);

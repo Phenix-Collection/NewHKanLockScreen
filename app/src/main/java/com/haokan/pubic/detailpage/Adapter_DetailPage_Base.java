@@ -12,6 +12,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.MainImageBean;
+import com.haokan.pubic.logsys.LogHelper;
 
 import java.util.ArrayList;
 
@@ -53,6 +54,7 @@ public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClic
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
         Object tag = ((View) object).getTag();
+        LogHelper.d("wangzixu", "destroyItem tag instanceof ViewHolder = " + (tag instanceof ViewHolder));
         if (tag != null && tag instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) tag;
             mHolders.remove(holder);

@@ -15,6 +15,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.detailpage.Adapter_DetailPage_Base;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.BlurUtil;
 
 import java.util.ArrayList;
@@ -31,6 +32,11 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
     }
 
     @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
+    }
+
+    @Override
     public Object instantiateItem(ViewGroup container, int position) {
         final MainImageBean imageBean = mData.get(position);
         View view = View.inflate(mContext, R.layout.cv_detailpage_recommend_item, null);
@@ -38,7 +44,7 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
         holder.position = position;
         view.setTag(holder);
         mHolders.add(holder);
-
+        LogHelper.d("wangzixu", "destroyItem mHolders = " + mHolders.size());
         container.addView(holder.itemView);
         loadBigBitmap(imageBean, holder);
         return holder.itemView;
@@ -46,6 +52,35 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
 
     public void loadBigBitmap(MainImageBean imageBean, final RecommendPageDetailViewHolder holder) {
         final String imgUrl = imageBean.imgBigUrl;
+//        Glide.with(mContext).load(imgUrl).asBitmap().listener(new RequestListener<String, Bitmap>() {
+//            @Override
+//            public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+//                e.printStackTrace();
+//                holder.errorView.setVisibility(View.VISIBLE);
+//                holder.loadingView.setVisibility(View.GONE);
+//                holder.image.setVisibility(View.GONE);
+//                holder.mBitmap = null;
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                return false;
+//            }
+//        }).into(new SimpleTarget<Bitmap>() {
+//            @Override
+//            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                if (holder.position != -1) {
+//                    holder.errorView.setVisibility(View.GONE);
+//                    holder.loadingView.setVisibility(View.GONE);
+//                    holder.image.setVisibility(View.VISIBLE);
+//                    holder.mBitmap = resource;
+//                    holder.image.setImageBitmap(resource);
+//                }
+//            }
+//        });
+
+
         Observable.create(new Observable.OnSubscribe<Bitmap>() {
             @Override
             public void call(Subscriber<? super Bitmap> subscriber) {
@@ -56,7 +91,7 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
                     if (bitmap != null) {
                         Bitmap blurBitmap = BlurUtil.blurBitmap2(bitmap, 4, 4);
                         final BitmapDrawable drawable = new BitmapDrawable(mContext.getResources(), blurBitmap);
-                        drawable.setColorFilter(0xFF999999, PorterDuff.Mode.MULTIPLY);
+                        drawable.setColorFilter(0xFF777777, PorterDuff.Mode.MULTIPLY);
                         App.sMainHanlder.post(new Runnable() {
                             @Override
                             public void run() {

@@ -80,6 +80,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
         View nocontentView = findViewById(R.id.layout_nocontent);
         setPromptLayout(loadingLayout, netErrorView, serveErrorView, nocontentView);
 
+        findViewById(R.id.back).setOnClickListener(this);
         mTvTitle = (TextView) findViewById(R.id.tv_title);
         findViewById(R.id.share).setOnClickListener(this);
         mTvCollect = findViewById(R.id.collect);
@@ -138,7 +139,24 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
                 }
             }
         });
+
     }
+
+    public void getBlurBg() {
+//        View view = getWindow().getDecorView();
+//
+//        //设置允许当前窗口保存缓存信息
+//        view.setDrawingCacheEnabled(true);
+//        view.buildDrawingCache();
+//        Bitmap drawingCache = view.getDrawingCache();
+//        if (drawingCache != null) {
+//            Bitmap blurBitmap = BlurUtil.blurBitmap2(drawingCache, 5, 6);
+//            BitmapDrawable mBlurDrawable = new BitmapDrawable(getResources(), blurBitmap);
+//            mBlurDrawable.setColorFilter(0xFF777777, PorterDuff.Mode.MULTIPLY);
+//        }
+//        view.destroyDrawingCache();
+    }
+
 
     public void checkCollect() {
         final Scheduler.Worker worker = Schedulers.io().createWorker();

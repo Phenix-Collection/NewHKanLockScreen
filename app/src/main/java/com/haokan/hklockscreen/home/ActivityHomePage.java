@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
+import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
@@ -28,12 +29,13 @@ import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
 
+import java.util.Random;
+
 /**
  * Created by wangzixu on 2017/10/20.
  */
 public class ActivityHomePage extends ActivityBase {
     private CV_RecommendPage_HomePage mCvHomePage;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +44,9 @@ public class ActivityHomePage extends ActivityBase {
 
         initView();
 //        mCvHomePage.setTypeName("娱乐");
-        mCvHomePage.setTypeName("旅游");
+        Random random = new Random();
+        int anInt = random.nextInt(CV_RecommendPage.sTypes.length);
+        mCvHomePage.setTypeName(CV_RecommendPage.sTypes[anInt]);
         mCvHomePage.loadData(true);
 
         Intent i = new Intent(this, ServiceLockScreen.class);
@@ -55,15 +59,31 @@ public class ActivityHomePage extends ActivityBase {
             preferences.edit().putBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, false).apply();
             Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
             startActivity(intent);
-        } else {
-            UpdateManager.checkUpdate(this, true);
         }
-
     }
 
     private void initView() {
         mCvHomePage = (CV_RecommendPage_HomePage) findViewById(R.id.cv_homepage);
         mCvHomePage.setActivityBase(this);
+    }
+
+    Runnable mPermissionRun = new Runnable() {
+        @Override
+        public void run() {
+            checkStoragePermission();
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        App.sMainHanlder.postDelayed(mPermissionRun, 200);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        App.sMainHanlder.removeCallbacks(mPermissionRun);
     }
 
     //权限相关begin*****
@@ -78,10 +98,10 @@ public class ActivityHomePage extends ActivityBase {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 201);
                 return;
             } else {
-//                UpdateManager.checkUpdate(this, false);
+                UpdateManager.checkUpdate(this, true);
             }
         } else {
-//            UpdateManager.checkUpdate(this, false);;
+            UpdateManager.checkUpdate(this, true);
         }
     }
 
@@ -92,7 +112,7 @@ public class ActivityHomePage extends ActivityBase {
             case 201:
                 if (grantResults.length > 0) {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) { //同意
-//                        UpdateManager.checkUpdate(this, false);
+                        UpdateManager.checkUpdate(this, true);
                     } else {
                         // 不同意
 //                        ToastManager.showCenter(this, "没有授予存储权限, 无法更新, 请去设置打开");

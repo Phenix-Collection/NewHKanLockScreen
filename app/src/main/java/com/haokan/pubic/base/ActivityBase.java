@@ -72,7 +72,7 @@ public class ActivityBase extends Activity {
     }
 
     public void dismissLoadingDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+        if (!mIsDestory && mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
             mProgressDialog = null;
         }

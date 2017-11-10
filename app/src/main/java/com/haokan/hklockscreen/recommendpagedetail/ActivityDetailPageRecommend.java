@@ -45,6 +45,11 @@ public class ActivityDetailPageRecommend extends ActivityBase{
         mCv = (CV_DetailPage_Recommend) findViewById(R.id.cv_detailpage_recommend);
         mCv.setActivity(this);
 
+//        if (ActivityRecommendPageLand.mBlurDrawable != null) {
+//            ImageView ivBg = (ImageView) findViewById(R.id.iv_image);
+//            ivBg.setImageDrawable(ActivityRecommendPageLand.mBlurDrawable);
+//        }
+
         ArrayList<MainImageBean> mainList = new ArrayList<>();
         for (int i = 0; i < mData.size(); i++) {
             BeanRecommendPageLand beanRecommendPageLand = mData.get(i);
@@ -56,5 +61,13 @@ public class ActivityDetailPageRecommend extends ActivityBase{
 
         int i = getIntent().getIntExtra(KEY_INTENT_POSITION, 0);
         mCv.initData(mainList, i);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCv != null) {
+            mCv.onDestory();
+        }
     }
 }

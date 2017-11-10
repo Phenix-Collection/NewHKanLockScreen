@@ -29,7 +29,7 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
     public AdapterRecommendPageLand(ActivityRecommendPageLand context, ArrayList<BeanRecommendPageLand> data) {
         mContext = context;
         mData = data;
-        mItemW = context.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(context,40);
+        mItemW = context.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(context,38);
     }
 
     //-------content begin---------------------
@@ -158,7 +158,7 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(mContext, ActivityDetailPageRecommend.class);
-            intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_GROUDDATE, mData);
+            intent.putParcelableArrayListExtra(ActivityDetailPageRecommend.KEY_INTENT_GROUDDATE, mData);
             intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_POSITION, Math.max(mPos, 0));
             mContext.startActivity(intent);
             mContext.startActivityAnim();

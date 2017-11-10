@@ -48,6 +48,7 @@ public class CV_RecommendPage extends FrameLayout{
     protected View mHeaderView;
     protected View mHeaderViewCopy;
     protected ActivityBase mActivityBase;
+    public static final String[] sTypes = {"美女", "娱乐", "旅游", "好看", "时尚", "资讯", "体育", "美食", "生活", "二次元", "汽车", "艺术", "摄影"};
 
     public CV_RecommendPage(@NonNull Context context) {
         this(context, null);

@@ -7,7 +7,8 @@
     <color name="detailpagebgcolor">#113e69</color>
     <!--<color name="detailpagebgcolor">#808080</color>-->
 
-    <color name="default_bg_color">#ffffffff</color>
+    <!--<color name="default_bg_color">#ffffffff</color>-->
+    <color name="default_bg_color">#fff4f4f4</color>
     <color name="default_color_clicked">#c1c1c1</color>
     <color name="touming">#00000000</color>
 

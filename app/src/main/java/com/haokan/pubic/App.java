@@ -11,13 +11,20 @@ import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.CV_DetailPage_LockScreen;
 import com.haokan.hklockscreen.lockscreen.ReceiverLockScreen;
+import com.haokan.pubic.http.HttpStatusManager;
+import com.haokan.pubic.http.UrlsUtil;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.CommonUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 
 public class App extends Application {
     public static String APP_VERSION_NAME = "";
@@ -30,8 +37,8 @@ public class App extends Application {
     public static String sEID = "138005"; //默认值
     public static String sPhoneModel = "defaultPhone";
     public static String sImgSize_Big = "1080x1920";
+//    public static String sImgSize_Big = "720x1080";
 //    public static String sImgSize_Small = "360x640";
-//    public static String sImgSize_Small = "720x1080";
     public static String sImgSize_Small = "540x960";
     public static String sLanguageCode = "zh";
     public static String sCountryCode = "CN";
@@ -71,6 +78,34 @@ public class App extends Application {
         mReceiver = new ReceiverLockScreen();
         registerReceiver(mReceiver, filter);
         sHaokanLockView = new CV_DetailPage_LockScreen(getApplicationContext());
+
+//        if (LogHelper.DEBUG) {
+//            if (LeakCanary.isInAnalyzerProcess(this)) {
+//                // This process is dedicated to LeakCanary for heap analysis.
+//                // You should not init your app in this process.
+//                return;
+//            }
+//            LeakCanary.install(this);
+//        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(App.sDID).append(",")
+                .append(UrlsUtil.COMPANYID).append(",")
+                .append(App.sEID).append(",")
+                .append(App.sPID).append(",")
+                .append(App.APP_VERSION_CODE).append(",")
+                .append(HttpStatusManager.getIPAddress(this)).append(",")
+                .append(App.sPhoneModel).append(",")
+                .append(HttpStatusManager.getNetworkType(this)).append(",")
+                .append(System.currentTimeMillis());
+        MaidianManager.initUser(builder.toString());
+
+        Schedulers.io().createWorker().schedulePeriodically(new Action0() {
+            @Override
+            public void call() {
+                MaidianManager.actionUpdate();
+            }
+        }, 0, 20, TimeUnit.SECONDS);
     }
 
     public static void init(final Context context) {

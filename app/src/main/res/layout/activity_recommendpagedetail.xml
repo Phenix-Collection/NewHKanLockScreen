@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.haokan.hklockscreen.recommendpagedetail.CV_DetailPage_Recommend
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cv_detailpage_recommend"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
-</com.haokan.hklockscreen.recommendpagedetail.CV_DetailPage_Recommend>
+    android:layout_height="match_parent">
+    <com.haokan.hklockscreen.recommendpagedetail.CV_DetailPage_Recommend
+        android:id="@+id/cv_detailpage_recommend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="false">
+    </com.haokan.hklockscreen.recommendpagedetail.CV_DetailPage_Recommend>
+</merge>

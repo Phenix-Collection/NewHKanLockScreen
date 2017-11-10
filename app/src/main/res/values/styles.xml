@@ -34,8 +34,16 @@
     </style>
         <!--<item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>-->
 
-    <style name="myLoadingProgressBarStyle">
-        <item name="android:indeterminateDrawable">@drawable/loading_anim</item>
+    <style name="myLoadingProgressBarStyle_green">
+        <item name="android:indeterminateDrawable">@drawable/loading_anim_green</item>
+        <item name="android:maxHeight">22dp</item>
+        <item name="android:minHeight">22dp</item>
+        <item name="android:maxWidth">22dp</item>
+        <item name="android:minWidth">22dp</item>
+    </style>
+
+    <style name="myLoadingProgressBarStyle_bai">
+        <item name="android:indeterminateDrawable">@drawable/loading_anim_bai</item>
         <item name="android:maxHeight">22dp</item>
         <item name="android:minHeight">22dp</item>
         <item name="android:maxWidth">22dp</item>

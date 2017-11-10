@@ -18,18 +18,10 @@ import com.haokan.hklockscreen.home.ActivityHomePage;
 import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
-import com.haokan.pubic.http.HttpStatusManager;
-import com.haokan.pubic.http.UrlsUtil;
 import com.haokan.pubic.logsys.LogHelper;
-import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.webview.ActivityWebview;
-
-import java.util.concurrent.TimeUnit;
-
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
 
 
 public class ActivitySplash extends ActivityBase implements View.OnClickListener {
@@ -48,25 +40,6 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
 
         Intent i = new Intent(ActivitySplash.this, ServiceLockScreen.class);
         startService(i);
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(App.sDID).append(",")
-                .append(UrlsUtil.COMPANYID).append(",")
-                .append(App.sEID).append(",")
-                .append(App.sPID).append(",")
-                .append(App.APP_VERSION_CODE).append(",")
-                .append(HttpStatusManager.getIPAddress(this)).append(",")
-                .append(App.sPhoneModel).append(",")
-                .append(HttpStatusManager.getNetworkType(this)).append(",")
-                .append(System.currentTimeMillis());
-        MaidianManager.initUser(builder.toString());
-
-        Schedulers.io().createWorker().schedulePeriodically(new Action0() {
-            @Override
-            public void call() {
-                MaidianManager.actionUpdate();
-            }
-        }, 0, 20, TimeUnit.SECONDS);
     }
 
     private void initView() {

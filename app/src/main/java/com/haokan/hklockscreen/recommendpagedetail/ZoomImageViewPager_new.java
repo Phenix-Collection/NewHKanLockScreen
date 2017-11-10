@@ -285,7 +285,7 @@ public class ZoomImageViewPager_new extends ViewPager {
                         mImgView.flingDistence((int) dx, (int) dy);
                     } else if (mImageMode == 3) {
                         if (mOnSlideYListener != null) {
-                            mOnSlideYListener.onSlideEnd();
+                            mOnSlideYListener.onSlideEnd(event.getY() - mPerformDownY);
                         }
                     }
                     mPointCount = 0;
@@ -336,6 +336,6 @@ public class ZoomImageViewPager_new extends ViewPager {
 
     public interface onSlideYListener {
         void onSlideY(float distance);
-        void onSlideEnd();
+        void onSlideEnd(float distance);
     }
 }
