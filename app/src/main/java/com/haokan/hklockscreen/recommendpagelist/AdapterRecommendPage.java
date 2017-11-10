@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
+import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.DisplayUtil;
 
 import java.util.ArrayList;
 
@@ -22,13 +24,14 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     private ArrayList<BeanRecommendItem> mData = new ArrayList<>();
     private Context mContext;
     private CV_RecommendPage mRecommendPage;
-//    private int mItemW;
+    private int mTopHide1, mTopHide2; //滑动到接近顶部时, view的图说要隐藏, 这俩值就是隐藏的范围
 
     public AdapterRecommendPage(Context context, ArrayList<BeanRecommendItem> data, CV_RecommendPage recommendPage) {
         mContext = context;
         mData = data;
         mRecommendPage = recommendPage;
-//        mItemW = context.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(context,20);
+        mTopHide1 = DisplayUtil.dip2px(context, 114);
+        mTopHide2 = DisplayUtil.dip2px(context, 166);
     }
 
     //-------content begin---------------------
@@ -90,7 +93,8 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     //-------footer end---------------------
 
     //holder begin------------------------------
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public View bottomLayout;
         public ViewHolder(View itemView) {
             super(itemView);
         }
@@ -115,6 +119,8 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
             mTvCollectNum = (TextView) itemView.findViewById(R.id.collect);
             mTvShareNum = (TextView) itemView.findViewById(R.id.share);
             mTvTitle = (TextView) itemView.findViewById(R.id.tv_title);
+            bottomLayout = itemView.findViewById(R.id.bottomlayout);
+            mHolders.add(this);
         }
 
         @Override
@@ -173,8 +179,9 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
         public Item1ViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.iv_image);
-
             tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
+            bottomLayout = itemView.findViewById(R.id.bottomlayout);
+            mHolders.add(this);
         }
 
         @Override
@@ -198,4 +205,38 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
             mRecommendPage.startDetailPage(mBean);
         }
     }
+
+    //-----
+    private ArrayList<ViewHolder> mHolders = new ArrayList<>();
+    public void clearHolder() {
+        mHolders.clear();
+    }
+    public void onScroll() {
+//        LogHelper.d("wangzixu", "adapterRecom onScroll holdesize = " + mHolders.size());
+        long time = System.currentTimeMillis();
+        for (int i = 0; i < mHolders.size(); i++) {
+            ViewHolder holder = mHolders.get(i);
+            int bottom = holder.itemView.getBottom();
+            if (bottom < mTopHide1) {
+                holder.bottomLayout.setVisibility(View.GONE);
+            } else if (bottom > mTopHide2) {
+                if (holder.bottomLayout.getVisibility() != View.VISIBLE) {
+                    holder.bottomLayout.setVisibility(View.VISIBLE);
+                }
+                holder.bottomLayout.setAlpha(1.0f);
+            } else {
+                if (holder.bottomLayout.getVisibility() != View.VISIBLE) {
+                    holder.bottomLayout.setVisibility(View.VISIBLE);
+                }
+                float delta = bottom - mTopHide1;
+                float f = delta/(mTopHide2-mTopHide1);
+                holder.bottomLayout.setAlpha(f);
+            }
+        }
+
+        LogHelper.d("wangzixu", "adapterRecom onScroll time passed = " + (System.currentTimeMillis() - time));
+    }
+
+
+    //-----
 }

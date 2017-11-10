@@ -30,6 +30,7 @@ import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,11 +45,20 @@ public class CV_RecommendPage extends FrameLayout{
     protected ArrayList<BeanRecommendItem> mData = new ArrayList<>();
     protected AdapterRecommendPage mAdapter;
     protected String mTypeName = "";
+    protected String mFirstTypeName = "";
     protected int mPage = 1;
+    protected int mTypePage = 0;
     protected View mHeaderView;
     protected View mHeaderViewCopy;
     protected ActivityBase mActivityBase;
-    public static final String[] sTypes = {"美女", "娱乐", "旅游", "好看", "时尚", "资讯", "体育", "美食", "生活", "二次元", "汽车", "艺术", "摄影"};
+    private static final String[] sTypes = {"美女", "娱乐", "旅游", "好看", "时尚", "资讯", "体育", "美食", "生活", "二次元", "汽车", "艺术", "摄影"};
+    public static final ArrayList<String> sTypesAll = new ArrayList<>();
+    static {
+        for (int i = 0; i < sTypes.length; i++) {
+            sTypesAll.add(sTypes[i]);
+        }
+    }
+    private boolean mIsRandomType = true;
 
     public CV_RecommendPage(@NonNull Context context) {
         this(context, null);
@@ -106,6 +116,7 @@ public class CV_RecommendPage extends FrameLayout{
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mAdapter.onScroll();
             }
 
             @Override
@@ -132,6 +143,7 @@ public class CV_RecommendPage extends FrameLayout{
             if (mRefrsh) {
                 mRefrsh = false;
                 mData.clear();
+                mAdapter.clearHolder();
                 mAdapter.notifyDataSetChanged();
             }
             if (mData.size() == 0) {
@@ -155,10 +167,9 @@ public class CV_RecommendPage extends FrameLayout{
         public void onDataEmpty() {
             LogHelper.d("wangzixu", "recompage loadData onDataEmpty");
 
-            //如果空, 自动取娱乐分类的
-            if (mData.size() == 0) {
-                refreshIfChangeType("娱乐");
-            } else {
+            //如果空
+            mTypePage++;
+            if (mTypePage >= sTypesAll.size() || !mIsRandomType) {
                 dismissAllPromptLayout();
                 mAdapter.hideFooter();
                 if (mData.size() == 0) {
@@ -166,9 +177,11 @@ public class CV_RecommendPage extends FrameLayout{
                 } else {
                     mAdapter.setFooterNoMore();
                 }
-
                 mIsLoading = false;
                 mHasMoreData = false;
+            } else {
+                mPage = 1;
+                loadData(false);
             }
         }
 
@@ -215,25 +228,30 @@ public class CV_RecommendPage extends FrameLayout{
 
     public void setTypeName(String typeName) {
         mTypeName = typeName;
-    }
-
-    public void refreshIfChangeType(String typeName) {
-        if (TextUtils.isEmpty(typeName)) {
-            typeName = "娱乐";
-        }
-        if (mTypeName.equals(typeName)) {
-            return;
-        } else {
-            mTypeName = typeName;
-            loadData(true);
-        }
+        mFirstTypeName = typeName;
     }
 
     public void loadData(final boolean refrsh) {
         if (refrsh) {
             mRefrsh = true;
             mPage = 1;
+            mTypePage = 0;
+            Collections.shuffle(sTypesAll);
         }
+        if (TextUtils.isEmpty(mTypeName) || mTypePage > 0) {
+            if (mTypePage >= sTypesAll.size()) {
+                return;
+            }
+            mTypeName = sTypesAll.get(mTypePage);
+            if (mTypeName.equals(mFirstTypeName)) {
+                mTypePage++;
+                if (mTypePage >= sTypesAll.size()) {
+                    return;
+                }
+                mTypeName = sTypesAll.get(mTypePage);
+            }
+        }
+        LogHelper.d("wangzixu", "recompage loadData mtypeName = " + mTypeName);
         new ModelRecommendPage().getRecommendData(mContext, mTypeName, mPage, mOnDataResponseListener);
     }
 

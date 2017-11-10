@@ -1,6 +1,7 @@
 package com.haokan.hklockscreen.recommendpagelist;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.haokan.pubic.App;
 import com.haokan.pubic.http.HttpRetrofitManager;
@@ -23,7 +24,7 @@ import rx.schedulers.Schedulers;
  */
 public class ModelRecommendPage {
     public void getRecommendData(final Context context, String typeName, final int page, final onDataResponseListener<List<BeanRecommendItem>> listener) {
-        if (listener == null || context == null) {
+        if (listener == null || context == null || TextUtils.isEmpty(typeName)) {
             return;
         }
 

@@ -385,7 +385,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
                             MainImageBean bean = App.sHaokanLockView.getCurrentImageBean();
                             if (bean != null) {
-                                mLockRecommendPage.refreshIfChangeType(bean.typeName);
+                                mLockRecommendPage.setTypeName(bean.typeName);
+                                mLockRecommendPage.loadData(true);
                             }
                         } else {
                             mScrollView.myScrollTo(0, 0, 400);

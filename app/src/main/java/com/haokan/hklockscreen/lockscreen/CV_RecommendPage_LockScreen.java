@@ -61,6 +61,7 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
 //            }
 //        });
 //        valueAnimator.start();
+        mRecyclerView.scrollToPosition(0);
     }
 
     protected void hideHeader() {

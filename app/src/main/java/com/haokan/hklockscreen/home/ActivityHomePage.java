@@ -21,15 +21,12 @@ import android.widget.TextView;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
-import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
-
-import java.util.Random;
 
 /**
  * Created by wangzixu on 2017/10/20.
@@ -44,10 +41,10 @@ public class ActivityHomePage extends ActivityBase {
 
         initView();
 //        mCvHomePage.setTypeName("娱乐");
-        Random random = new Random();
-        int anInt = random.nextInt(CV_RecommendPage.sTypes.length);
+//        Random random = new Random();
+//        int anInt = random.nextInt(CV_RecommendPage.sTypes.length);
 //        mCvHomePage.setTypeName(CV_RecommendPage.sTypes[anInt]);
-        mCvHomePage.setTypeName("艺术");
+//        mCvHomePage.setTypeName("艺术");
         mCvHomePage.loadData(true);
 
         Intent i = new Intent(this, ServiceLockScreen.class);
