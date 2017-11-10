@@ -4,7 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="detailpagebgcolor">#113e69</color>
+    <!--<color name="detailpagebgcolor">#113e69</color>-->
+    <color name="detailpagebgcolor">#ff000000</color>
     <!--<color name="detailpagebgcolor">#808080</color>-->
 
     <!--<color name="default_bg_color">#ffffffff</color>-->

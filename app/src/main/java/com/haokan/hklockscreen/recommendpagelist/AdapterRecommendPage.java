@@ -30,8 +30,8 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
         mContext = context;
         mData = data;
         mRecommendPage = recommendPage;
-        mTopHide1 = DisplayUtil.dip2px(context, 114);
-        mTopHide2 = DisplayUtil.dip2px(context, 166);
+        mTopHide1 = DisplayUtil.dip2px(context, 115);
+        mTopHide2 = DisplayUtil.dip2px(context, 170);
     }
 
     //-------content begin---------------------

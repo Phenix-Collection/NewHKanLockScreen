@@ -90,7 +90,7 @@
             android:id="@+id/iv_gusturedown"
             android:src="@drawable/icon_gusture_down"
             android:layout_marginLeft="170dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="82dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -115,7 +115,7 @@
             android:id="@+id/iv_gustureup"
             android:src="@drawable/icon_gusture_up"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="180dp"
+            android:layout_marginBottom="118dp"
             android:layout_marginLeft="170dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
