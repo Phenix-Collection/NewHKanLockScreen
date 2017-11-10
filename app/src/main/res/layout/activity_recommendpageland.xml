@@ -10,7 +10,7 @@
 
         <ImageView
             android:id="@+id/back"
-            android:layout_width="44dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:background="@drawable/selector_touming_borderless"
             android:scaleType="center"

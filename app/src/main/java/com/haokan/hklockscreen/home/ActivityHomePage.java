@@ -46,7 +46,8 @@ public class ActivityHomePage extends ActivityBase {
 //        mCvHomePage.setTypeName("娱乐");
         Random random = new Random();
         int anInt = random.nextInt(CV_RecommendPage.sTypes.length);
-        mCvHomePage.setTypeName(CV_RecommendPage.sTypes[anInt]);
+//        mCvHomePage.setTypeName(CV_RecommendPage.sTypes[anInt]);
+        mCvHomePage.setTypeName("艺术");
         mCvHomePage.loadData(true);
 
         Intent i = new Intent(this, ServiceLockScreen.class);

@@ -129,7 +129,7 @@ public class ZoomImageViewPager_new extends ViewPager {
 
                     mPerformDownX = mLastX;
                     mPerformDownY = mLastY;
-
+                    mImageMode = -1;
                     mStartClick = true;
                     mPerformDownTime = SystemClock.uptimeMillis();
                     if (mVelocityTracker == null) {
@@ -160,15 +160,14 @@ public class ZoomImageViewPager_new extends ViewPager {
 
                             if (!mImgView.canDrag() && absY > absX) {
                                 mImageMode = 3;
-                            } else
-                            if (mImgView.isOnRightSide()
+                            } else if (mImgView.isOnRightSide()
                                     && deltaX < 0
-//                                    && 2*Math.abs(x) >= Math.abs(y)
+                                    && absX >= absY
                                     ) {
                                 mImageMode = 0;
                             } else if (mImgView.isOnLeftSide()
                                     && deltaX > 0
-//                                    && 2*Math.abs(x) >= Math.abs(y)
+                                    && Math.abs(x) >= Math.abs(y)
                                     ) {
                                 mImageMode = 0;
                             } else {

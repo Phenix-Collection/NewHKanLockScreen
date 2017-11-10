@@ -599,6 +599,7 @@ public class Zoomimageview_new extends AppCompatImageView {
 			}
 		}
 		if (deltaX != 0 || deltaY != 0) {
+//			LogHelper.d("wangzixu", "zoomimageview deltaX = " + deltaX + ", deltaY = " + deltaY + "mIsFirstMove = " + mIsFirstMove);
 			if (mIsFirstMove) { //第一次，由静到动，移动距离应该大于touchslop,防抖
 				mIsFirstMove = false;
 				return true;
