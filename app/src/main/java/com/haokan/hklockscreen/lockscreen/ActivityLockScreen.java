@@ -86,12 +86,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mScreenW = point.x;
         mScreenH = point.y;
 
-        initView();
-        initLockScreenView();
-        initRecommendPageView();
-
         hideNavigation();
         getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(this);
+
+        initView();
+        initRecommendPageView();
+        initLockScreenView();
     }
 
     @Override
@@ -102,15 +102,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         } else {
             MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
         }
-
-        //为了处理一个bug --- 锁屏view不触发layout, 第一帧不绘制
-        App.sMainHanlder.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mScrollView.scrollTo(1, 1);
-                mScrollView.scrollTo(0, 0);
-            }
-        }, 200);
 
         if (sLockguideRL) {
             final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -152,6 +143,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private void initView() {
         mScrollView = (CV_ScrollView) findViewById(R.id.scrollview);
         mRootView = findViewById(R.id.rootview);
+//        mScrollView.setMyOnScrollChangeListener(new CV_ScrollView.MyOnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(int scrollX, int scrollY, int oldX, int oldY) {
+//                LogHelper.d("wangzixu", "ActivityLockScreen myOnScrollChange oldY = " + oldY + ", scrollY = " + scrollY);
+//            }
+//        });
 
         final ViewConfiguration configuration = ViewConfiguration.get(this);
 //        mTouchSlop = configuration.getScaledTouchSlop();
@@ -201,15 +198,20 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         if (params == null) {
             params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mScreenH);
         }
-        params.height = mScreenH;
-        App.sHaokanLockView.setLayoutParams(params);
+
+        if (params.height != mScreenH) {
+            params.height = mScreenH;
+            App.sHaokanLockView.setLayoutParams(params);
+        }
+        App.sHaokanLockView.requestFocus();
+        mScrollView.scrollTo(0,0);
     }
 
     private void initRecommendPageView() {
         mLockRecommendPage = (CV_RecommendPage_LockScreen) findViewById(R.id.cv_recommendpage);
         mLockRecommendPage.setActivityBase(this);
-        mLockRecommendPage.onHide();
         mIsRecommendPage = false;
+        mLockRecommendPage.onHide();
 //        mLockRecommendPage.setTypeName("美女");
 
         ViewGroup.LayoutParams params = mLockRecommendPage.getLayoutParams();
@@ -683,6 +685,18 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
     //权限相关end*****
 
+    @Override
+    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        App.sMainHanlder.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                int scrollY = mScrollView.getScrollY();
+//                LogHelper.d("wangzixu", "ActivityLockScreen onActivityResult requestCode = " + requestCode + ", scrollY = " + scrollY);
+//            }
+//        }, 1500);
+    }
+
 
     //隐藏导航栏相关
     /**
@@ -692,7 +706,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
      * 源码地址：https://github.com/android/platform_development/tree/master/samples/ApiDemos 具体类：SystemUIModes
      * 源码项目运营不了，我是用的模拟器自带的API Demos，对照着源码处理写的
      */
-    private void hideNavigation() {
+    public void hideNavigation() {
         super.onResume();
         View decorView = getWindow().getDecorView();
         int visibility = decorView.getSystemUiVisibility();

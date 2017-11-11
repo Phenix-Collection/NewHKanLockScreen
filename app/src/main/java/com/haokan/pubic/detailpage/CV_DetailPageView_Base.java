@@ -31,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
 import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
@@ -852,6 +853,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             public void onStart() {
                 if (mActivity != null) {
                     mActivity.showLoadingDialog();
+                    if (mActivity instanceof ActivityLockScreen) {
+                        ((ActivityLockScreen)mActivity).hideNavigation();
+                    }
                 }
             }
 

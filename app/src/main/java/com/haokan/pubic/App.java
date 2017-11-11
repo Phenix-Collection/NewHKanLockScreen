@@ -13,7 +13,6 @@ import com.haokan.hklockscreen.lockscreen.CV_DetailPage_LockScreen;
 import com.haokan.hklockscreen.lockscreen.ReceiverLockScreen;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.UrlsUtil;
-import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.CommonUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -118,6 +117,8 @@ public class App extends Application {
         Locale locale = Locale.getDefault();
         sLanguageCode = locale.getLanguage();
         sCountryCode = locale.getCountry();
-        LogHelper.d("wangzixu", "app init sLanguageCode = " + sLanguageCode + ", sCountryCode = " + sCountryCode);
+//        LogHelper.d("wangzixu", "app init = " + CommonUtil.getDevice());
+//        String string = BuildProperties.getSystemProperty("ro.build.display.id");
+//        LogHelper.d("wangzixu", "app init = " + string);
     }
 }

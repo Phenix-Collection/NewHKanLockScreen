@@ -225,7 +225,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 if (mLocalImage1 != null) {
                     deleteLocalImage(mLocalImage1);
                     notifyLocalImageChange();
-                    mIvImage1.setImageResource(R.drawable.icon_seting_add);
+                    mIvImage1.setImageBitmap(null);
                     mLocalImage1 = null;
                     v.setVisibility(View.GONE);
                 }
@@ -234,7 +234,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 if (mLocalImage2 != null) {
                     deleteLocalImage(mLocalImage2);
                     notifyLocalImageChange();
-                    mIvImage2.setImageResource(R.drawable.icon_seting_add);
+                    mIvImage2.setImageBitmap(null);
                     mLocalImage2 = null;
                     v.setVisibility(View.GONE);
                 }
@@ -243,7 +243,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 if (mLocalImage3 != null) {
                     deleteLocalImage(mLocalImage3);
                     notifyLocalImageChange();
-                    mIvImage3.setImageResource(R.drawable.icon_seting_add);
+                    mIvImage3.setImageBitmap(null);
                     mLocalImage3 = null;
                     v.setVisibility(View.GONE);
                 }

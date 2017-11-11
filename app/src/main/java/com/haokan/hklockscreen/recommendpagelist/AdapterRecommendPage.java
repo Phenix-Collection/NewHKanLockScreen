@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
-import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
 
 import java.util.ArrayList;
@@ -120,11 +119,15 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
             mTvShareNum = (TextView) itemView.findViewById(R.id.share);
             mTvTitle = (TextView) itemView.findViewById(R.id.tv_title);
             bottomLayout = itemView.findViewById(R.id.bottomlayout);
-            mHolders.add(this);
         }
 
         @Override
         public void renderView(final int position) {
+            if (!mHolders.contains(this)) {
+                mHolders.add(this);
+            }
+//            long time = System.currentTimeMillis();
+//            LogHelper.d("wangzixu", "adapterRecom onScroll renderView time = " + (System.currentTimeMillis() - time) + " , mHolders.size = " + mHolders.size());
             mBean = mData.get(position);
 //            LogHelper.d("homepage", "pos = " + position + ", mBean.mHeadUrl = " + UrlsUtil.IMAGE_HOST + mBean.mHeadUrl
 //                    + ", url = " + UrlsUtil.IMAGE_HOST + mBean.picUrl);
@@ -181,11 +184,14 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
             imageView = (ImageView) itemView.findViewById(R.id.iv_image);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
             bottomLayout = itemView.findViewById(R.id.bottomlayout);
-            mHolders.add(this);
         }
 
         @Override
         public void renderView(final int position) {
+            if (!mHolders.contains(this)) {
+                mHolders.add(this);
+            }
+
             mBean = mData.get(position);
             imageView.setImageBitmap(null);
             tvTitle.setText("");
@@ -213,7 +219,6 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     }
     public void onScroll() {
 //        LogHelper.d("wangzixu", "adapterRecom onScroll holdesize = " + mHolders.size());
-        long time = System.currentTimeMillis();
         for (int i = 0; i < mHolders.size(); i++) {
             ViewHolder holder = mHolders.get(i);
             int bottom = holder.itemView.getBottom();
@@ -233,10 +238,6 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
                 holder.bottomLayout.setAlpha(f);
             }
         }
-
-        LogHelper.d("wangzixu", "adapterRecom onScroll time passed = " + (System.currentTimeMillis() - time));
     }
-
-
     //-----
 }

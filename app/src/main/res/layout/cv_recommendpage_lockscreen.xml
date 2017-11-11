@@ -6,6 +6,7 @@
 
     <FrameLayout
         android:id="@+id/header"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:background="@drawable/bg_screen_up">
@@ -53,7 +54,6 @@
 
     <RelativeLayout
         android:id="@+id/headercopy"
-        android:visibility="gone"
         android:background="@color/bai"
         android:layout_width="match_parent"
         android:layout_height="48dp">

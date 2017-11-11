@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import com.haokan.pubic.logsys.LogHelper;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
@@ -266,17 +267,32 @@ public class CommonUtil {
         }
     }
 
-    /**
-     * 查询应用是否具有某种权限
-     *
-     * @param context
-     * @param permissionStr
-     * @return
-     */
     public static boolean checkPermission(Context context, String permissionStr) {
         PackageManager pm = context.getPackageManager();
         boolean permission = (PackageManager.PERMISSION_GRANTED == pm.checkPermission(permissionStr, context.getPackageName()));
         return permission;
+    }
+
+    public static String getDevice(){
+        HashMap map = new HashMap();
+
+        map.put("Build.MANUFACTURER", Build.MANUFACTURER);
+//        map.put("Build.MODEL", Build.MODEL);
+//        map.put("Build.VERSION.SDK_INT", Build.VERSION.SDK_INT);
+//        map.put("Build.BOARD", Build.BOARD);
+//        map.put("Build.BOOTLOADER", Build.BOOTLOADER);
+//        map.put("Build.PRODUCT", Build.PRODUCT);
+//        map.put("Build.DISPLAY", Build.DISPLAY);
+        map.put("Build.FINGERPRINT", Build.FINGERPRINT);
+//        map.put("Build.getRadioVersion", Build.getRadioVersion());
+//        map.put("Build.SERIAL", Build.SERIAL);
+//        map.put("Build.ID", Build.ID);
+        map.put("Build.VERSION.INCREMENTAL", Build.VERSION.INCREMENTAL);
+//        map.put("Build..VERSION.BASE_OS", Build.VERSION.BASE_OS);
+//        map.put("Build..VERSION.CODENAME", Build.VERSION.CODENAME);
+//        map.put("Build..VERSION.RELEASE", Build.VERSION.RELEASE);
+//        map.put("Build..VERSION.SECURITY_PATCH", Build.VERSION.SECURITY_PATCH);
+        return transMapToString(map);
     }
 
     private static int[] mColors={0xccF8546B

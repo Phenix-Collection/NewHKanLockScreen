@@ -23,14 +23,6 @@
         clipcoveredview:inner_line_vertical_count="2"
         />
 
-    <include
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_loading"
-        layout="@layout/layout_loading"/>
-
-
     <RelativeLayout
         android:id="@+id/rl_topbar"
         android:layout_width="match_parent"
@@ -82,4 +74,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </RelativeLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/layout_loading"
+        layout="@layout/layout_loading"/>
 </RelativeLayout>

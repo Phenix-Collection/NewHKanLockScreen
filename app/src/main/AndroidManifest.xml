@@ -133,6 +133,7 @@
             android:screenOrientation="portrait">
         </activity>
 
+            <!--android:launchMode="singleTask"-->
         <activity
             android:name=".recommendpagedetail.ActivityDetailPageRecommend"
             android:theme="@style/MyDetailPage"
@@ -164,6 +165,7 @@
         <activity android:name=".timeline.ActivityTimelines"
             android:screenOrientation="portrait"/>
 
+                  <!--android:launchMode="singleTask"-->
         <activity android:name=".recommendpageland.ActivityRecommendPageLand"
                   android:screenOrientation="portrait">
         </activity>

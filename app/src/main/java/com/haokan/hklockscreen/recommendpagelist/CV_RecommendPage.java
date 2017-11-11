@@ -377,11 +377,20 @@ public class CV_RecommendPage extends FrameLayout{
             Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
             intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
             if (mActivityBase != null) {
-                mActivityBase.startActivity(intent);
+                mActivityBase.startActivityForResult(intent, 101);
                 mActivityBase.startActivityAnim();
             } else {
                 mContext.startActivity(intent);
             }
+
+//            Intent intent = new Intent(mContext, ActivityWebview.class);
+//            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.urlClick);
+//            if (mActivityBase != null) {
+//                mActivityBase.startActivity(intent);
+//                mActivityBase.startActivityAnim();
+//            } else {
+//                mContext.startActivity(intent);
+//            }
         } else {
             //跳转webview
             Intent intent = new Intent(mContext, ActivityWebview.class);
