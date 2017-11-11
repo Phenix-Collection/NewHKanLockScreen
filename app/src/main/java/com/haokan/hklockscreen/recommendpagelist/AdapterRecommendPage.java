@@ -239,5 +239,4 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
             }
         }
     }
-    //-----
 }
