@@ -183,6 +183,7 @@ public class ActivityClipImage extends ActivityBase implements View.OnClickListe
             destBitmap.setDensity(source.getDensity());
             destBitmap.setHasAlpha(source.hasAlpha());
             // destBitmap.setPremultiplied(source.isPremultiplied()); // api
+            // 19
 
             canvas.setBitmap(destBitmap);
             canvas.drawBitmap(source, srcR, dstR, null);
