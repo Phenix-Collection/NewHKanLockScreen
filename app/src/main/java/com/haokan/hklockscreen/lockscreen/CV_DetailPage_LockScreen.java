@@ -41,7 +41,7 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
-import com.haokan.pubic.webview.ActivityWebviewLockScreen;
+import com.haokan.pubic.webview.ActivityWebview;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -258,8 +258,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             intoDetialPageState();
         } else {
             if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) {
-                Intent intent = new Intent(mContext, ActivityWebviewLockScreen.class);
-                intent.putExtra(ActivityWebviewLockScreen.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
+                Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+                intent.putExtra(ActivityWebviewForLockPage.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
                 if (mActivity != null) {
                     mActivity.startActivity(intent);
                     mActivity.startActivityAnim();
@@ -294,7 +294,19 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     @Override
     protected void onClickLink() {
         MobclickAgent.onEvent(mContext, "lockscreen_godetail"); //锁屏页进入详情
-        super.onClickLink();
+
+        if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+            return;
+        }
+        Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
+        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
+        if (mActivity != null) {
+            mActivity.startActivity(intent);
+            mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+        } else {
+            mContext.startActivity(intent);
+        }
     }
 
     /**

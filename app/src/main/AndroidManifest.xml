@@ -117,6 +117,11 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".lockscreen.ActivityWebviewForLockPage"
+                  android:launchMode="singleInstance"
+                  android:screenOrientation="portrait">
+        </activity>
+
         <activity
             android:name=".home.ActivityHomePage"
             android:screenOrientation="portrait">
@@ -156,11 +161,6 @@
         <activity android:name=".lockscreen.ActivityLockScreen"
                   android:launchMode="singleInstance"
                   android:theme="@style/myLockScreenActiviyTheme"
-                  android:screenOrientation="portrait">
-        </activity>
-
-        <activity android:name="com.haokan.pubic.webview.ActivityWebviewLockScreen"
-                  android:launchMode="singleInstance"
                   android:screenOrientation="portrait">
         </activity>
 
