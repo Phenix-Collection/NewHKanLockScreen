@@ -854,6 +854,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 if (mActivity != null) {
                     mActivity.showLoadingDialog();
                     if (mActivity instanceof ActivityLockScreen) {
+                        //隐藏导航栏
                         ((ActivityLockScreen)mActivity).hideNavigation();
                     }
                 }
