@@ -682,7 +682,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     @Override
     protected void onClickSetting() {
-        super.onClickSetting();
+        Intent i = new Intent(mContext, ActivitySettingForLockPage.class);
+        if (mActivity != null) {
+            mActivity.startActivity(i);
+            mActivity.startActivityAnim();
+        } else {
+            mContext.startActivity(i);
+        }
+
         MobclickAgent.onEvent(mContext, "lockscreen_set"); //锁屏页进入设置
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override

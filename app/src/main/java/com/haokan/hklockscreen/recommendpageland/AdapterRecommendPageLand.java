@@ -161,7 +161,7 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
             intent.putParcelableArrayListExtra(ActivityDetailPageRecommend.KEY_INTENT_GROUDDATE, mData);
             intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_POSITION, Math.max(mPos, 0));
             mContext.startActivity(intent);
-            mContext.startActivityAnim();
+            mContext.overridePendingTransition(R.anim.activity_fade_bigger_in, R.anim.activity_retain);
         }
     }
 

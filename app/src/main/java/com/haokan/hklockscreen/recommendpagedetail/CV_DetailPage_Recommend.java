@@ -95,7 +95,9 @@ public class CV_DetailPage_Recommend extends CV_DetailPageView_Base{
 
     @Override
     protected void onClickBigImage() {
-        onClickBack();
+        if (mActivity != null) {
+            mActivity.onBackPressed();
+        }
     }
 
     public void initData(ArrayList<MainImageBean> mainList, int position) {

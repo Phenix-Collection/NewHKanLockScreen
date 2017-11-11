@@ -70,4 +70,10 @@ public class ActivityDetailPageRecommend extends ActivityBase{
             mCv.onDestory();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.activity_retain, R.anim.activity_fade_smaller_out);
+    }
 }
