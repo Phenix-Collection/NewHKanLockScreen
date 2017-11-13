@@ -80,5 +80,5 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         android:id="@+id/layout_loading"
-        layout="@layout/layout_loading"/>
+        layout="@layout/layout_loading_baibg"/>
 </RelativeLayout>

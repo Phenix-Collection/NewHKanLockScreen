@@ -28,7 +28,6 @@ public class CV_ScrollView extends ScrollView {
     @Override
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
-        Thread.dumpStack();
         if (mMyOnScrollChangeListener != null) {
             mMyOnScrollChangeListener.onScrollChange(l,t,oldl,oldt);
         }

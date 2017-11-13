@@ -512,11 +512,26 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
 
                                 if (beanOld == null && mTvLocalImageEdit.isSelected()) {
                                     if (index == 1) {
-                                        mIvDelte1.setVisibility(View.VISIBLE);
+                                        App.sMainHanlder.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mIvDelte1.setVisibility(View.VISIBLE);
+                                            }
+                                        });
                                     } else if (index == 2) {
-                                        mIvDelte2.setVisibility(View.VISIBLE);
+                                        App.sMainHanlder.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mIvDelte2.setVisibility(View.VISIBLE);
+                                            }
+                                        });
                                     } else if (index == 3) {
-                                        mIvDelte3.setVisibility(View.VISIBLE);
+                                        App.sMainHanlder.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                mIvDelte3.setVisibility(View.VISIBLE);
+                                            }
+                                        });
                                     }
                                 }
 

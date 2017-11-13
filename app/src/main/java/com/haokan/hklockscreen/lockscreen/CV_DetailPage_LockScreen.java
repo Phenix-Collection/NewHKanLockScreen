@@ -133,6 +133,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     LogHelper.writeLog(mContext, "autoupdate 收到了更新广播");
                     loadSwitchOfflineData(true);
                 } else if ("com.haokan.receiver.localimagechange".equals(action)) { //本地相册变化了
+                    LogHelper.d("wangzixu", "localimagechange 本地相册变化");
                     loadData(true);
                 }
             }
@@ -389,19 +390,17 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
         //处理时间界面上的一些标题等信息
         if (mCurrentImgBean != null) {
-            if (TextUtils.isEmpty(mCurrentImgBean.imgTitle)) {
-                mTimeTitleLayout.setVisibility(GONE);
-            } else {
-                mTimeTitleLayout.setVisibility(VISIBLE);
-                mTvLockTitle.setText(mCurrentImgBean.imgTitle);
+            if (mCurrentImgBean.imgTitle == null) {
+                mCurrentImgBean.imgTitle = "";
+            }
+            mTvLockTitle.setText(mCurrentImgBean.imgTitle);
 
-                if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-                    mTvLockLink.setVisibility(GONE);
-                } else {
-                    mTvLockLink.setBackground(mTvLinkBg);
-                    mTvLockLink.setVisibility(VISIBLE);
-                    mTvLockLink.setText("查看更多");
-                }
+            if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+                mTvLockLink.setVisibility(GONE);
+            } else {
+                mTvLockLink.setBackground(mTvLinkBg);
+                mTvLockLink.setVisibility(VISIBLE);
+                mTvLockLink.setText("查看更多");
             }
         }
 
@@ -653,6 +652,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             public void onDataSucess(List<MainImageBean> mainImageBeen) {
                 mLocalImgData.clear();
                 mLocalImgData.addAll(mainImageBeen);
+                LogHelper.d("wangzixu", "localimagechange 本地相册变化 mainImageBeen size = " + mainImageBeen.size());
                 if (onlyLocalImage) {
                     refreshData(false);
                 } else {

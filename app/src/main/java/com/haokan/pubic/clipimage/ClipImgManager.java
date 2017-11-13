@@ -40,7 +40,7 @@ public class ClipImgManager {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    private String getPath(final Context context, final Uri uri) {
+    public String getPath(final Context context, final Uri uri) {
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {

@@ -221,10 +221,10 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
 
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
-                if (url.contains("pos.baidu.com")) {
-                    return new WebResourceResponse(null, null, null);
-                }
-                LogHelper.i("WebViewActivity", "shouldInterceptRequest mweburl = " + url);
+//                if (url.contains("pos.baidu.com")) {
+//                    return new WebResourceResponse(null, null, null);
+//                }
+//                LogHelper.i("WebViewActivity", "shouldInterceptRequest mweburl = " + url);
                 return super.shouldInterceptRequest(view, url);
             }
 

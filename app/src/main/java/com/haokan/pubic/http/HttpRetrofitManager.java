@@ -3,9 +3,13 @@ package com.haokan.pubic.http;
 
 import com.haokan.pubic.logsys.LogHelper;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -37,6 +41,19 @@ public class HttpRetrofitManager {
         builder.readTimeout(30, TimeUnit.SECONDS);
         builder.writeTimeout(30, TimeUnit.SECONDS);
         builder.retryOnConnectionFailure(true);
+        builder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request()
+                        .newBuilder()
+                        .addHeader("Connection", "close")
+                        .build();
+                return chain.proceed(request);
+            }
+        });
+
+        OkHttpClient build = builder.build();
+
         if (LogHelper.DEBUG) { //okttp显示log
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -44,7 +61,7 @@ public class HttpRetrofitManager {
         }
 
         Retrofit retrofit = new Retrofit.Builder()
-                .client(builder.build())
+                .client(build)
                 .baseUrl("http://levect.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

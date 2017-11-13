@@ -221,6 +221,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
                     return;
                 }
                 dismissAllPromptLayout();
+                showNoContentLayout();
             }
 
             @Override
@@ -229,6 +230,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
                     return;
                 }
                 dismissAllPromptLayout();
+                showServeErrorLayout();
             }
 
             @Override
@@ -237,6 +239,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
                     return;
                 }
                 dismissAllPromptLayout();
+                showServeErrorLayout();
             }
         });
     }

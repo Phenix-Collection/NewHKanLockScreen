@@ -13,7 +13,6 @@ import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.FileUtil;
-import com.haokan.pubic.util.Values;
 
 import java.io.File;
 
@@ -40,7 +39,9 @@ public class ModelDownLoadImage {
                     LogHelper.d("downLoadImg", "sd card none");
                     return;
                 }
-                String path = Environment.getExternalStorageDirectory().toString() + Values.Path.PATH_DOWNLOAD_PIC;
+//                String path = Environment.getExternalStorageDirectory().toString() + Values.Path.PATH_DOWNLOAD_PIC;
+                String path = Environment.getExternalStorageDirectory().toString() + "/HkImages";
+
                 File dir = new File(path);
                 dir.mkdirs();
 

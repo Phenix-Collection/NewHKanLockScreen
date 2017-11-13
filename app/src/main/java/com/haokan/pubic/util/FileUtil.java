@@ -1,10 +1,15 @@
 package com.haokan.pubic.util;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
 
+import com.haokan.pubic.clipimage.ClipImgManager;
 import com.haokan.pubic.logsys.LogHelper;
 
 import java.io.File;
@@ -13,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 
 public class FileUtil {
@@ -185,7 +191,7 @@ public class FileUtil {
     /**
      * 保存bitmap到本地
      */
-    public static boolean saveBitmapToFile(Context context, Bitmap destBitmap, File f, final boolean notifySystem) {
+    public static boolean saveBitmapToFile(Context context, final Bitmap source, File f, final boolean notifySystem) {
         if (!f.exists()) {
             try {
                 f.createNewFile();
@@ -195,33 +201,103 @@ public class FileUtil {
             }
         }
 
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(f);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        if (fos == null) {
-            return false;
-        }
-
-        destBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         boolean success = false;
-        try {
-            fos.flush();
-            fos.close();
-            success = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            //发送扫描文件的广播,使系统读取到刚才存的图片
-            if (notifySystem && f.exists() && success) {
-                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                intent.setData(Uri.fromFile(f));
-                context.sendBroadcast(intent);
+        if (notifySystem) {
+            // 把文件插入到系统图库
+            try {
+                ContentResolver cr = context.getContentResolver();
+
+                long timeMillis = System.currentTimeMillis();
+
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, f.getAbsolutePath());
+                values.put(MediaStore.Images.Media.TITLE, f.getName());
+                values.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, f.getName());
+                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                values.put(MediaStore.Images.Media.BUCKET_DISPLAY_NAME, "好看锁屏");
+//                values.put(MediaStore.Images.Media.DATE_ADDED, timeMillis/1000);
+//                values.put(MediaStore.Images.Media.DATE_TAKEN, timeMillis);
+//                values.put(MediaStore.Images.Media.DATE_MODIFIED, timeMillis/1000);
+                values.put(MediaStore.Images.ImageColumns.WIDTH, source.getWidth());
+                values.put(MediaStore.Images.ImageColumns.HEIGHT, source.getHeight());
+
+                Uri url = null;
+                try {
+//                    url = Uri.parse(MediaStore.Images.Media.insertImage(cr, source, f.getName(), null));
+
+                    url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+                    if (source != null) {
+                        OutputStream imageOut = cr.openOutputStream(url);
+                        try {
+                            source.compress(Bitmap.CompressFormat.JPEG, 100, imageOut);
+                        } finally {
+                            imageOut.close();
+                        }
+
+//                        long id = ContentUris.parseId(url);
+                        // Wait until MINI_KIND thumbnail is generated.
+//                        Bitmap miniThumb = MediaStore.Images.Thumbnails.getThumbnail(cr, id,
+//                                MediaStore.Images.Thumbnails.MINI_KIND, null);
+//                        // This is for backward compatibility.
+//                        Bitmap microThumb = MediaStore.Images.Thumbnails.StoreThumbnail(cr, miniThumb, id, 50F, 50F,
+//                                MediaStore.Images.Thumbnails.MICRO_KIND);
+                        success = true;
+                    } else {
+                        Log.e("wangzixu", "插入图片 Failed to create thumbnail, removing original");
+                        cr.delete(url, null, null);
+                        url = null;
+                    }
+                } catch (Exception e) {
+                    Log.e("wangzixu", "插入图片 Failed to insert image", e);
+                    if (url != null) {
+                        cr.delete(url, null, null);
+                        url = null;
+                    }
+                }
+
+                LogHelper.d("wangzixu", "插入图片 uri = " + url + ", path = " + new ClipImgManager().getPath(context, url));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            //                intent.setData(Uri.fromFile(f));
+            //                context.sendBroadcast(intent);
+        } else {
+            FileOutputStream fos = null;
+            try {
+                fos = new FileOutputStream(f);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (fos == null) {
+                return false;
+            }
+
+            source.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            try {
+                fos.flush();
+                fos.close();
+                success = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (notifySystem) {
+                    MediaScannerConnection.scanFile(context,
+                            new String[] { f.getAbsolutePath() }, null,
+                            new MediaScannerConnection.OnScanCompletedListener() {
+                                @Override
+                                public void onScanCompleted(String path, Uri uri) {
+                                    Log.v("wangzixu", "插入图片 file " + path
+                                            + " was scanned seccessfully: " + uri);
+                                }
+                            });
+                }
             }
         }
+
         return success;
     }
 
