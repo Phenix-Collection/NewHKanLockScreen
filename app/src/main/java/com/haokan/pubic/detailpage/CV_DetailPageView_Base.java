@@ -628,7 +628,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         // 设置标题、图说
         if (mIsCaptionShow
                 && mLayoutMainBottom.getVisibility() != VISIBLE
-//                && mCurrentImgBean.mBeanAdRes == null
+                && mCurrentImgBean.mBeanAdRes == null
                 ) {
             showCaption();
         }
@@ -642,8 +642,23 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             return;
         }
 
-        mLayoutMainBottom.setVisibility(View.VISIBLE);
-        mLayoutMainTop.setVisibility(View.VISIBLE);
+        //如果本来已经是显示, 则不执行显示动画, 否则会看起来闪现一下
+        boolean animBottom = true;
+        boolean animTop = true;
+        if (mLayoutMainBottom.getVisibility() == VISIBLE) {
+            animBottom = false;
+        } else {
+            mLayoutMainBottom.setVisibility(View.VISIBLE);
+        }
+
+        if (mLayoutMainTop.getVisibility() == VISIBLE) {
+            animTop = false;
+        } else {
+            mLayoutMainTop.setVisibility(View.VISIBLE);
+        }
+
+        final boolean ab = animBottom;
+        final boolean at = animTop;
 
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
         valueAnimator.setDuration(sAinmDuration);
@@ -651,8 +666,13 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float f = (float) animation.getAnimatedValue();
-                mLayoutMainBottom.setAlpha(f);
-                mLayoutMainTop.setAlpha(f);
+                if (ab) {
+                    mLayoutMainBottom.setAlpha(f);
+                }
+
+                if (at) {
+                    mLayoutMainTop.setAlpha(f);
+                }
             }
         });
 
@@ -673,6 +693,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
 
+
+
     /**
      * 隐藏图说
      */
@@ -681,14 +703,33 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             return;
         }
 
+        //如果本来已经是隐藏, 则不执行显示动画, 否则会看起来闪现一下
+        boolean animBottom = true;
+        boolean animTop = true;
+        if (mLayoutMainBottom.getVisibility() != VISIBLE) {
+            animBottom = false;
+        }
+
+        if (mLayoutMainTop.getVisibility() != VISIBLE) {
+            animTop = false;
+        }
+
+        final boolean ab = animBottom;
+        final boolean at = animTop;
+
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
         valueAnimator.setDuration(sAinmDuration);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float f = (float) animation.getAnimatedValue();
-                mLayoutMainBottom.setAlpha(1.0f-f);
-                mLayoutMainTop.setAlpha(1.0f-f);
+                if (ab) {
+                    mLayoutMainBottom.setAlpha(1.0f-f);
+                }
+
+                if (at) {
+                    mLayoutMainTop.setAlpha(1.0f-f);
+                }
             }
         });
 

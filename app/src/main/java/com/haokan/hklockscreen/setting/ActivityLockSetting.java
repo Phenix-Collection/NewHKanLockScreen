@@ -388,6 +388,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         }
     }
 
+    BeanAdRes mBeanAdRes;
     private void loadHaoKanAd() {
         BannerReq bannerReq = new BannerReq();
         bannerReq.w = 1080;
@@ -397,6 +398,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
             @Override
             public void onAdResSuccess(final BeanAdRes adRes) {
+                mBeanAdRes = adRes;
+
                 LogHelper.d("wangzixu", "ModelHaoKanAd onAdResSuccess adRes = " + adRes.landPageUrl);
                 Glide.with(ActivityLockSetting.this).load(adRes.imgUrl).into(mIvAdView);
                 mAdSignView.setVisibility(View.VISIBLE);

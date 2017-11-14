@@ -1,6 +1,7 @@
 package com.haokan.hklockscreen.lockscreen;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
+import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
 import com.umeng.analytics.MobclickAgent;
 
@@ -101,20 +104,40 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
         }
     }
 
-//    @Override
-//    public void startDetailPage(String url, String imgTitle) {
-//        Intent intent = new Intent(mContext, ActivityWebviewLockScreen.class);
-//        intent.putExtra(ActivityWebviewLockScreen.KEY_INTENT_WEB_URL, url);
-//        intent.putExtra(ActivityWebviewLockScreen.KEY_INTENT_WEB_TITLE, imgTitle);
-//        if (mActivityBase != null) {
-//            mActivityBase.startActivity(intent);
-//            mActivityBase.startActivityAnim();
-//        } else {
-//            mContext.startActivity(intent);
-//        }
-//
-//        if (mActivityBase instanceof ActivityLockScreen) {
-//            MobclickAgent.onEvent(mContext, "recommend_godetail");
-//        }
-//    }
+    @Override
+    public void startDetailPage(BeanRecommendItem beanRecommendItem) {
+        if (beanRecommendItem == null) {
+            return;
+        }
+
+        if (beanRecommendItem.mBeanAdRes == null) {
+            Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
+            intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            if (mActivityBase != null) {
+                mActivityBase.startActivityForResult(intent, 101);
+                mActivityBase.startActivityAnim();
+            } else {
+                mContext.startActivity(intent);
+            }
+
+//            Intent intent = new Intent(mContext, ActivityWebview.class);
+//            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.urlClick);
+//            if (mActivityBase != null) {
+//                mActivityBase.startActivity(intent);
+//                mActivityBase.startActivityAnim();
+//            } else {
+//                mContext.startActivity(intent);
+//            }
+        } else {
+            //跳转webview
+            Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+            intent.putExtra(ActivityWebviewForLockPage.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
+            if (mActivityBase != null) {
+                mActivityBase.startActivity(intent);
+                mActivityBase.startActivityAnim();
+            } else {
+                mContext.startActivity(intent);
+            }
+        }
+    }
 }

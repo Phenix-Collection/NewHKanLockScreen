@@ -62,6 +62,10 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                 App.sMainHanlder.postDelayed(mLaunchHomeRunnable, 3000);
                 mTvJumpAd.setVisibility(View.VISIBLE);
                 mTvJumpAd.setText("广告3");
+
+                //广告展示上报
+                ModelHaoKanAd.adShowUpLoad(adRes.showUpUrl);
+
                 App.sMainHanlder.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -94,9 +98,6 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                         }
                     });
                 }
-
-                //广告展示上报
-                ModelHaoKanAd.adShowUpLoad(adRes.showUpUrl);
             }
 
             @Override

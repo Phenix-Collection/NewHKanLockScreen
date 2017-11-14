@@ -314,7 +314,18 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
      * 进入详情页状态
      */
     public void intoDetialPageState() {
-        showCaption();
+        if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) { //是广告
+            //显示顶部, 不显示底部
+            mIsCaptionShow = true;
+            mLayoutMainTop.setVisibility(View.VISIBLE);
+
+            int flags = 0;
+            flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            flags = flags | View.SYSTEM_UI_FLAG_VISIBLE;
+            setSystemUiVisibility(flags);
+        } else {
+            showCaption();
+        }
         hideTimeLayout();
         ((Adapter_DetailPage_LockScreen)mAdapterVpMain).setCanUnLock(false);
         mIsLocked = false;
@@ -348,10 +359,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         //显示锁屏时间界面
         showTimeLayout();
         hideCaption();
-//        mLayoutTime.setVisibility(VISIBLE);
-//        mLayoutMainTop.setVisibility(GONE);
-//        mLayoutMainBottom.setVisibility(GONE);
-//        mIsCaptionShow = false;
 
         //自动换下一张的逻辑
         if (scrollNext) {
@@ -428,11 +435,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             super.onPageSelected(position);
         }
 
-//        if (mCurrentImgBean.mBeanAdRes != null) {
-//            if (mLayoutMainBottom.getVisibility() == VISIBLE) {
-//                mLayoutMainBottom.setVisibility(INVISIBLE);
-//            }
-//        }
+        if (mCurrentImgBean.mBeanAdRes != null) {
+            if (mLayoutMainBottom.getVisibility() == VISIBLE) {
+                mLayoutMainBottom.setVisibility(INVISIBLE);
+            }
+            //广告展示上报
+            ModelHaoKanAd.adShowUpLoad(mCurrentImgBean.mBeanAdRes.showUpUrl);
+        }
 
         if (!mHasLoadAd5 && position == mLockPosition + 1) {
             loadHaoKanAdDate5(position);
