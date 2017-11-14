@@ -9,7 +9,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="服务器接口返回失败"
+            android:text="网络不给力"
             android:textColor="#aaaaaa"
             android:textSize="15sp"/>
 </RelativeLayout>

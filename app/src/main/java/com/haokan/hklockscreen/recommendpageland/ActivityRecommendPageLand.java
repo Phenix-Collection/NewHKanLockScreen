@@ -55,6 +55,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
     private View mShareLayoutContent;
     private View mShareLayoutBg;
     private View mTvCollect;
+    private int mLastVisablePos; //用于滑动检测广告上报
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,18 +129,40 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if (mHasMoreData && !mIsLoading) {
-                        boolean can = mRecyclerView.canScrollVertically(1);
-                        if (!can) {
-//                            mAdapter.setFooterLoading();
-                            mRecyclerView.scrollToPosition(mManager.getItemCount() - 1);
-                            loadComment();
+                    if (mAdItem != null && mData.size() > 0) {
+                        int lastpos = mManager.findLastVisibleItemPosition();
+                        if (lastpos != mLastVisablePos) {
+                            if (lastpos == mData.size()) {
+                                ModelHaoKanAd.adShowUpLoad(mAdItem.mBeanAdRes.showUpUrl);
+                            }
+                            mLastVisablePos = lastpos;
                         }
                     }
+                    //加载更多评论相关, 暂时没有
+//                    if (mHasMoreData && !mIsLoading) {
+//                        boolean can = mRecyclerView.canScrollVertically(1);
+//                        if (!can) {
+////                            mAdapter.setFooterLoading();
+//                            mRecyclerView.scrollToPosition(mManager.getItemCount() - 1);
+//                            loadComment();
+//                        }
+//                    }
                 }
             }
         });
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAdItem != null && mAdapter != null && mData.size() > 0) {
+            int i = mManager.findLastVisibleItemPosition();
+            LogHelper.d("wangzixu", "activityRecommend onResume i = " + i + ", mData.size() = " + mData.size());
+            if (i == mData.size()) { //因为有一个header,不在mData中, 所以不是mData.size()-1
+                //上报广告展示
+                ModelHaoKanAd.adShowUpLoad(mAdItem.mBeanAdRes.showUpUrl);
+            }
+        }
     }
 
     public void getBlurBg() {
@@ -211,7 +234,6 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
                 }
 
                 mAdapter.notifyDataSetChanged();
-
                 dismissAllPromptLayout();
             }
 
@@ -242,18 +264,6 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
                 showServeErrorLayout();
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (mAdItem != null && mAdapter != null && mData.size() > 0) {
-            int i = mManager.findLastVisibleItemPosition();
-            if (i == mData.size() - 1) {
-                //上报广告展示
-                ModelHaoKanAd.adShowUpLoad(mAdItem.mBeanAdRes.showUpUrl);
-            }
-        }
     }
 
     BeanRecommendPageLand mAdItem;
