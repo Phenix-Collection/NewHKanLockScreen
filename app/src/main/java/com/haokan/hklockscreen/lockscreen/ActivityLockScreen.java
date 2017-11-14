@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -391,8 +392,11 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
                             MainImageBean bean = App.sHaokanLockView.getCurrentImageBean();
                             if (bean != null) {
-                                mLockRecommendPage.setTypeName(bean.typeName);
-                                mLockRecommendPage.loadData(true);
+                                if (TextUtils.isEmpty(bean.typeName)) {
+                                    bean.typeName = "娱乐"; //默认分类
+                                }
+
+                                mLockRecommendPage.loadDataForLockScreen(bean.typeName);
                             }
                         } else {
                             mScrollView.myScrollTo(0, 0, 400);

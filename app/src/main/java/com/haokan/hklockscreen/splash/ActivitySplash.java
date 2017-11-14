@@ -105,59 +105,6 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                 LogHelper.d("wangzixu", "ModelHaoKanAd splash onAdResFail errmsg = " + errmsg);
             }
         });
-
-//        mAdMediaView.setAdJumpWebview(true);
-//        mAdMediaView.setAdClickListener(new AdClickListener() {
-//            @Override
-//            public void onAdClick() {
-//                App.sMainHanlder.removeCallbacks(mLaunchHomeRunnable);
-//            }
-//        });
-//        Intent i = new Intent(ActivitySplash.this, ActivityHomePage.class);
-//        mAdMediaView.setAdJumpWebViewCloseIntent(i.toUri(0));
-//
-//        HaokanADManager.getInstance().loadAdData(getApplication(), AdTypeCommonUtil.REQUEST_SPLASH_TYPE, "28-53-209", 1080, 1560, new HaokanADInterface() {
-//            @Override
-//            public void onADSuccess(AdData adData) {
-//                mAdMediaView.setNativeAd(adData, new EffectiveAdListener() {
-//                    @Override
-//                    public void onAdInvalid() {
-//                        LogHelper.d("wangzixu", "HaokanADManager  28-53-209 setNativeAd onAdInvalid");
-//                    }
-//
-//                    @Override
-//                    public void onLoadSuccess() {
-//                        LogHelper.d("wangzixu", "HaokanADManager 28-53-209 setNativeAd onLoadSuccess");
-//                        App.sMainHanlder.removeCallbacks(mLaunchHomeRunnable);
-//                        App.sMainHanlder.postDelayed(mLaunchHomeRunnable, 3000);
-//                        mTvJumpAd.setVisibility(View.VISIBLE);
-//                        mTvJumpAd.setText("3");
-//                        App.sMainHanlder.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mTvJumpAd.setText("2");
-//                            }
-//                        }, 1000);
-//                        App.sMainHanlder.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mTvJumpAd.setText("1");
-//                            }
-//                        }, 2000);
-//                    }
-//
-//                    @Override
-//                    public void onLoadFailure() {
-//                        LogHelper.d("wangzixu", "HaokanADManager 28-53-209 setNativeAd onLoadFailure");
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onADError(String s) {
-//                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-209 onADError s = " + s);
-//            }
-//        });
     }
 
     @Override

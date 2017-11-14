@@ -73,7 +73,8 @@ public class ModelHaoKanAd {
     /**
      * 广告展示上报
      */
-    public static void adShowUpLoad(String url) {
+    public static void adShowUpLoad(final String url) {
+        LogHelper.d("wangzixu", "ModelHaoKanAd adShowUpLoad begin url = " + url);
         if (TextUtils.isEmpty(url)) {
             return;
         }
@@ -85,13 +86,13 @@ public class ModelHaoKanAd {
                 .subscribe(new Subscriber<Object>() {
                     @Override
                     public void onCompleted() {
-                        LogHelper.d("wangzixu", "ModelHaoKanAd adShowUpLoad success");
+                        LogHelper.d("wangzixu", "ModelHaoKanAd adShowUpLoad end success url = " + url);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                        LogHelper.d("wangzixu", "ModelHaoKanAd adShowUpLoad onError = " + e.getMessage());
+                        e.printStackTrace();
+                        LogHelper.d("wangzixu", "ModelHaoKanAd adShowUpLoad end success url = " + url);
                     }
 
                     @Override

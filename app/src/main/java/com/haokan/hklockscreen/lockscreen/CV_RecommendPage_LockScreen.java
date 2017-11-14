@@ -42,6 +42,16 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
         mHeaderViewCopy = findViewById(R.id.headercopy);
     }
 
+    public void loadDataForLockScreen(String typeName) {
+        if (typeName.equals(mFirstTypeName)) {
+            mRecyclerView.scrollToPosition(0);
+        } else {
+            mTypeName = typeName;
+            mFirstTypeName = typeName;
+            loadData(true);
+        }
+    }
+
     public void onShow() {
         showHeader();
     }

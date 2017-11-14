@@ -58,7 +58,6 @@ public class CV_RecommendPage extends FrameLayout{
             sTypesAll.add(sTypes[i]);
         }
     }
-    private boolean mIsRandomType = true;
 
     public CV_RecommendPage(@NonNull Context context) {
         this(context, null);
@@ -179,7 +178,7 @@ public class CV_RecommendPage extends FrameLayout{
 
             //如果空
             mTypePage++;
-            if (mTypePage >= sTypesAll.size() || !mIsRandomType) {
+            if (mTypePage >= sTypesAll.size()) {
                 dismissAllPromptLayout();
                 mAdapter.hideFooter();
                 if (mData.size() == 0) {
@@ -234,11 +233,6 @@ public class CV_RecommendPage extends FrameLayout{
         mPage++;
         mIsLoading = false;
         mHasMoreData = true;
-    }
-
-    public void setTypeName(String typeName) {
-        mTypeName = typeName;
-        mFirstTypeName = typeName;
     }
 
     public void loadData(final boolean refrsh) {

@@ -33,6 +33,8 @@ import com.haokan.pubic.util.Values;
  */
 public class ActivityHomePage extends ActivityBase {
     private CV_RecommendPage_HomePage mCvHomePage;
+    private boolean mFirst;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +52,15 @@ public class ActivityHomePage extends ActivityBase {
         Intent i = new Intent(this, ServiceLockScreen.class);
         startService(i);
 
-        App.sMainHanlder.postDelayed(mPermissionRun, 800);
-
         //是否是第一次安装
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean first = preferences.getBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, true);
-        if (first) {
+        boolean mFirst = preferences.getBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, true);
+        if (mFirst) {
             preferences.edit().putBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, false).apply();
             Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
             startActivity(intent);
+        } else {
+            App.sMainHanlder.postDelayed(mPermissionRun, 600);
         }
     }
 

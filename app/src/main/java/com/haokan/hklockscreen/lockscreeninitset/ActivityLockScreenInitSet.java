@@ -1,11 +1,23 @@
 package com.haokan.hklockscreen.lockscreeninitset;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.util.StatusBarUtil;
 
@@ -23,6 +35,12 @@ public class ActivityLockScreenInitSet extends ActivityBase {
         setContentView(R.layout.activity_initlockscreen);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
+        App.sMainHanlder.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkStoragePermission();
+            }
+        }, 500);
     }
 
     private void initView() {
@@ -30,96 +48,83 @@ public class ActivityLockScreenInitSet extends ActivityBase {
         mCvLockScreenInitSetView.setActivityBase(this);
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        if (CommonUtil.isQuickClick()) {
-//            return;
-//        }
-//        switch (v.getId()) {
-//            case R.id.gotest:
-//                goAutoSetActivity();
-//                break;
-//            case R.id.goset:
-////                try {
-//////                    i = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-////                    Intent i = new Intent(this, ActivityLockSetting.class);
-////                    startActivityForResult(i, 101);
-////                    overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
-////
-//////                    App.sMainHanlder.post(new Runnable() {
-//////                        @Override
-//////                        public void run() {
-//////                            Intent i2 = new Intent(ActivityAutoSetLockScreen.this, ActivityPrompt_AutoStart.class);
-//////                            startActivity(i2);
-//////                        }
-//////                    });
-////                } catch (Exception e) {
-////                    e.printStackTrace();
-////                }
-//
-//                if (mView != null) {
-//                    mWindowManager.removeView(mView);
-//                    mView = null;
-//                    return;
-//                }
-//
-//                mWindowManager = (WindowManager)getApplication().getSystemService(Context.WINDOW_SERVICE);
-//
-//                WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
-//                // 设置window type
-//                mParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-////                mParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
-//
-//
-//                mParams.format = PixelFormat.RGBA_8888;
-//                mParams.flags = WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
-//                mParams.flags = mParams.flags | WindowManager.LayoutParams.FLAG_FULLSCREEN;
-////                mParams.flags = mParams.flags | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
-//                mParams.flags = mParams.flags | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-//                mParams.flags = mParams.flags | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
-//                mParams.flags = mParams.flags | WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-//
-//                // 调整悬浮窗显示的停靠位置为左侧置顶
-//                mParams.gravity = Gravity.LEFT | Gravity.TOP;
-//                // 以屏幕左上角为原点，设置x、y初始值，相对于gravity
-//                mParams.x = 0;
-//                mParams.y = 0;
-//
-//                // 屏幕方向
-//                mParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-//                // 设置悬浮窗口长宽数据
-//                mParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-////                mParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-//                mParams.height = 1500;
-//
-////                Class<? extends WindowManager.LayoutParams> mParamsClass = mParams.getClass();
-////                try {
-////                    Field field = mParamsClass.getDeclaredField("hideTimeoutMilliseconds");
-////                    field.setAccessible(true);
-////                    field.set(mParams, 60000l);
-////                } catch (Exception e) {
-////                    e.printStackTrace();
-////                }
-//
-//                // 获取浮动窗口视图所在布局
-//                mView = LayoutInflater.from(this).inflate(R.layout.activity_initlockscreen_view, null, false);
-//                mWindowManager.addView(mView, mParams);
-//
-//                mView.findViewById(R.id.gotest).setOnClickListener(ActivityLockScreenInitSet.this);
-////                App.sMainHanlder.postDelayed(new Runnable() {
-////                    @Override
-////                    public void run() {
-////                        goAutoSetActivity();
-////                    }
-////                }, 3000);
-//
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-
     //权限相关begin*****
+    /**
+     * 检查权限
+     */
+    public void checkStoragePermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            //需要用权限的地方之前，检查是否有某个权限
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) { //没有这个权限
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 201);
+                return;
+            } else {
+//                UpdateManager.checkUpdate(this, true);
+            }
+        } else {
+//            UpdateManager.checkUpdate(this, true);
+        }
+    }
+
+    //检查权限的回调
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 201:
+                if (grantResults.length > 0) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) { //同意
+//                        UpdateManager.checkUpdate(this, true);
+                    } else {
+                        // 不同意
+//                        ToastManager.showCenter(this, "没有授予存储权限, 无法更新, 请去设置打开");
+                        App.sMainHanlder.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                askToOpenPermissions();
+                            }
+                        });
+                    }
+                }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    /**
+     * 提示用户去设置界面开启权限
+     */
+    private void askToOpenPermissions() {
+        View cv = LayoutInflater.from(this).inflate(R.layout.dialog_layout_asksdpermission, null);
+        TextView desc = (TextView) cv.findViewById(R.id.tv_desc);
+        desc.setText("没有授予存储权限, 无法下载和自动更新, 请去设置授予存储权限");
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("重要提示")
+                .setView(cv)
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).setPositiveButton("去开启", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", getPackageName(), null);
+                            intent.setData(uri);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+    //权限相关end*****
 
 
     @Override
