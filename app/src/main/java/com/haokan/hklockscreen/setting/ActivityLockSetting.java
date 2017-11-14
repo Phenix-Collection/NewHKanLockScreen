@@ -103,8 +103,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         setContentView(R.layout.activity_locksetting);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
-        loadHaoKanAd();
         loadLocalImages();
+        loadHaoKanAd();
     }
 
     private void initView() {
@@ -185,6 +185,10 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     if (mHeader.getVisibility() != View.VISIBLE) {
                         mHeader1.setVisibility(View.INVISIBLE);
                         mHeader.setVisibility(View.VISIBLE);
+                        if (mBeanAdRes != null) {
+                            //广告展示上报
+                            ModelHaoKanAd.adShowUpLoad(mBeanAdRes.showUpUrl);
+                        }
                     }
                 }
             }
@@ -204,6 +208,15 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mBeanAdRes != null && mHeader.getVisibility() == View.VISIBLE) {
+            //广告展示上报
+            ModelHaoKanAd.adShowUpLoad(mBeanAdRes.showUpUrl);
+        }
     }
 
     @Override
