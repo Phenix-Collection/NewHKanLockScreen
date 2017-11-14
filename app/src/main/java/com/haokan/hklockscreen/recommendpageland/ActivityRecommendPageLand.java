@@ -343,7 +343,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
             return;
         }
 
-        UMWeb web = new UMWeb(mRecommendItemBean.cover);
+        UMWeb web = new UMWeb(mRecommendItemBean.urlClick);
         web.setTitle(mRecommendItemBean.imgTitle);//标题
         web.setDescription(mRecommendItemBean.imgDesc);
         web.setThumb(new UMImage(this, mRecommendItemBean.cover));  //缩略图

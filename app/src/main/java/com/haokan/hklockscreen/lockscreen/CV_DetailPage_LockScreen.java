@@ -489,6 +489,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
             public void onAdResSuccess(BeanAdRes adRes) {
+                if (mCurrentPosition >= position+4) {
+                    return;
+                }
                 LogHelper.d("wangzixu", "ModelHaoKanAd loadAdData 28-53-206 onADSuccess");
                 MainImageBean imageBean = new MainImageBean();
                 imageBean.mBeanAdRes = adRes;
@@ -518,6 +521,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
             public void onAdResSuccess(BeanAdRes adRes) {
+                if (mCurrentPosition >= position+5) {
+                    return;
+                }
+
                 LogHelper.d("wangzixu", "ModelHaoKanAd loadAdData 28-53-206 onADSuccess");
                 MainImageBean imageBean = new MainImageBean();
                 imageBean.mBeanAdRes = adRes;

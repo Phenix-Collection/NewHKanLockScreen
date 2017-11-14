@@ -443,20 +443,20 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     //开始下拉
     public void onRefreshState1() {
         mPullLayout.setVisibility(View.VISIBLE);
-        mPullTvSwitch.setText("下拉换一换");
+        mPullTvSwitch.setText("下拉换一波新图");
         mPullIvArraw.clearAnimation();
     }
 
     //由松手换一换到下拉换一换
     public void onRefreshState2() {
-        mPullTvSwitch.setText("下拉换一换");
+        mPullTvSwitch.setText("下拉换一波新图");
         mPullIvArraw.clearAnimation();
         mPullIvArraw.startAnimation(mReverseFlipAnimation);
     }
 
     //下拉换一换到松手换一换
     public void onRefreshState3() {
-        mPullTvSwitch.setText("松手换一换");
+        mPullTvSwitch.setText("松手换一波新图");
         mPullIvArraw.clearAnimation();
         mPullIvArraw.startAnimation(mFlipAnimation);
     }
@@ -468,7 +468,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             public void run() {
                 mPullIvArraw.clearAnimation();
                 mPullLayout.setVisibility(View.GONE);
-                mPullTvSwitch.setText("下拉换一换");
+                mPullTvSwitch.setText("下拉换一波新图");
             }
         }, 290);
     }
