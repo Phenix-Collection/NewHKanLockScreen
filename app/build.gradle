@@ -7,7 +7,7 @@ android {
         applicationId "com.haokanhaokan.lockscreen"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 401
+        versionCode 399
         versionName "4.0.1test"
     }
     buildTypes {

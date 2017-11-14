@@ -50,6 +50,8 @@ public class ActivityHomePage extends ActivityBase {
         Intent i = new Intent(this, ServiceLockScreen.class);
         startService(i);
 
+        App.sMainHanlder.postDelayed(mPermissionRun, 800);
+
         //是否是第一次安装
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean first = preferences.getBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, true);
@@ -75,7 +77,6 @@ public class ActivityHomePage extends ActivityBase {
     @Override
     protected void onResume() {
         super.onResume();
-        App.sMainHanlder.postDelayed(mPermissionRun, 250);
         if (mCvHomePage != null) {
             mCvHomePage.onResume();
         }
