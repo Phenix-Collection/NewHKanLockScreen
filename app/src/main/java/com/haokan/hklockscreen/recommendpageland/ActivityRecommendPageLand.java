@@ -128,16 +128,16 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if (mAdItem != null && mData.size() > 0) {
-                        int lastpos = mManager.findLastVisibleItemPosition();
-                        if (lastpos != mLastVisablePos) {
-                            if (lastpos == mData.size()) {
-                                ModelHaoKanAd.adShowUpLoad(mAdItem.mBeanAdRes.showUpUrl);
-                            }
-                            mLastVisablePos = lastpos;
+                if (mAdItem != null && mData.size() > 0) {
+                    int lastpos = mManager.findLastVisibleItemPosition();
+                    if (lastpos != mLastVisablePos) {
+                        if (lastpos == mData.size()) {
+                            ModelHaoKanAd.adShowUpLoad(mAdItem.mBeanAdRes.showUpUrl);
                         }
+                        mLastVisablePos = lastpos;
                     }
+                }
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     //加载更多评论相关, 暂时没有
 //                    if (mHasMoreData && !mIsLoading) {
 //                        boolean can = mRecyclerView.canScrollVertically(1);
