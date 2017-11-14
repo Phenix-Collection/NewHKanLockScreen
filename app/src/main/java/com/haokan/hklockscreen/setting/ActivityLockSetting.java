@@ -175,7 +175,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mScrollview.setMyOnScrollChangeListener(new CV_ScrollView.MyOnScrollChangeListener() {
             @Override
             public void onScrollChange(int scrollX, int scrollY, int oldX, int oldY) {
-//                LogHelper.d("wangzixu", "locksetting height = " + height + ", height1 = " + height1);
+                //LogHelper.d("wangzixu", "locksetting height = " + height + ", height1 = " + height1);
                 if (scrollY >= mHeaderChangeHeigh) {
                     if (mHeader1.getVisibility() != View.VISIBLE) {
                         mHeader1.setVisibility(View.VISIBLE);
