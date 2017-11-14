@@ -1,14 +1,15 @@
 package com.haokan.pubic.util;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.pubic.base.ActivityBase;
 
 /**
  * Created by wangzixu on 2017/11/14.
@@ -24,9 +25,19 @@ public class MyDialogUtil {
         void onClickConfirm(boolean checked);
     }
 
-    public static void showMyDialog(ActivityBase activity, String title, String desc, final boolean hasCheckBox, final myDialogOnClickListener listener) {
+    public static void showMyDialog(Activity activity, String title, String desc
+            , String cancelChar, String confirmChar
+            ,final boolean hasCheckBox, final myDialogOnClickListener listener) {
         if (listener == null) {
             return;
+        }
+
+        if (TextUtils.isEmpty(cancelChar)) {
+            cancelChar = activity.getResources().getString(R.string.cancel);
+        }
+
+        if (TextUtils.isEmpty(confirmChar)) {
+            confirmChar = activity.getResources().getString(R.string.confirm);
         }
 
         View cv = LayoutInflater.from(activity).inflate(R.layout.dialog_layout_nowifi_switch, null);
@@ -44,12 +55,12 @@ public class MyDialogUtil {
         final AlertDialog.Builder builder = new AlertDialog.Builder(activity)
                 .setTitle(title)
                 .setView(cv)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNegativeButton(cancelChar, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         listener.onClickCancel();
                     }
-                }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                }).setPositiveButton(confirmChar, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (hasCheckBox) {

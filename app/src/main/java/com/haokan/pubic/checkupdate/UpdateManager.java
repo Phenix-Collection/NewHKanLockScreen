@@ -1,24 +1,20 @@
 package com.haokan.pubic.checkupdate;
 
 import android.Manifest;
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
 
-import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.ToastManager;
 
 import java.io.File;
@@ -75,31 +71,46 @@ public class UpdateManager {
     /**
      * 显示自定义的对话框
      */
-    private static void showUpdateDialog(final Context context, final BeanUpdate updateResponseBean) {
+    private static void showUpdateDialog(final Activity context, final BeanUpdate updateResponseBean) {
         if (updateResponseBean == null) {
             return;
         }
-        View cv = LayoutInflater.from(context).inflate(R.layout.dialog_layout_update, null);
-        TextView desc = (TextView) cv.findViewById(R.id.tv_desc);
-        desc.setText(updateResponseBean.getVerDesc());
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                .setTitle("新版更新")
-                .setView(cv)
-                .setNegativeButton("下次再说", new DialogInterface.OnClickListener() {
+        MyDialogUtil.showMyDialog(context, "新版更新", updateResponseBean.getVerDesc()
+                , "下次再说", "立即更新", false, new MyDialogUtil.myDialogOnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClickCancel() {
+                        //nothing
                     }
-                }).setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClickConfirm(boolean checked) {
                         Intent intent = new Intent(context, ServiceUpdate.class);
                         intent.putExtra(ServiceUpdate.DOWNLOAD_INFO, updateResponseBean);
                         context.startService(intent);
                     }
                 });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.setCancelable(false);
-        alertDialog.show();
+
+//        View cv = LayoutInflater.from(context).inflate(R.layout.dialog_layout_update, null);
+//        TextView desc = (TextView) cv.findViewById(R.id.tv_desc);
+//        desc.setText(updateResponseBean.getVerDesc());
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(context)
+//                .setTitle("新版更新")
+//                .setView(cv)
+//                .setNegativeButton("下次再说", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                    }
+//                }).setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Intent intent = new Intent(context, ServiceUpdate.class);
+//                        intent.putExtra(ServiceUpdate.DOWNLOAD_INFO, updateResponseBean);
+//                        context.startService(intent);
+//                    }
+//                });
+//        AlertDialog alertDialog = builder.create();
+//        alertDialog.setCancelable(false);
+//        alertDialog.show();
     }
 
     public static void installApp(File file, Context context) {

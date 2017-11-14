@@ -287,7 +287,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 {
                     final SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
                     if (mIvLockscreen.isSelected()) {
-                        MyDialogUtil.showMyDialog(this, "提示", "确定要关闭锁屏功能吗?", false
+                        MyDialogUtil.showMyDialog(this, "提示", "确定要关闭锁屏功能吗?", null, null, false
                                 , new MyDialogUtil.myDialogOnClickListener() {
                                     @Override
                                     public void onClickCancel() {
@@ -310,7 +310,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 {
                     final SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
                     if (mIvAutoupdateImage.isSelected()) {
-                        MyDialogUtil.showMyDialog(this, "提示", "关闭后每天将不会自动更新锁屏图片, 确定要关闭吗?", false
+                        MyDialogUtil.showMyDialog(this, "提示", "关闭后每天将不会自动更新锁屏图片, 确定要关闭吗?",  null, null, false
                                 , new MyDialogUtil.myDialogOnClickListener() {
                                     @Override
                                     public void onClickCancel() {
