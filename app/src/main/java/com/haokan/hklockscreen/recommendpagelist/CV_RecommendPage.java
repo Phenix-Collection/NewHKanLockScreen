@@ -198,7 +198,7 @@ public class CV_RecommendPage extends FrameLayout{
         @Override
         public void onDataFailed(String errmsg) {
             LogHelper.d("wangzixu", "recompage loadData onDataFailed errmsg = " + errmsg);
-            ToastManager.showShort(mContext, "onDataFailed errmsg = " + errmsg);
+//            ToastManager.showShort(mContext, "onDataFailed errmsg = " + errmsg);
             dismissAllPromptLayout();
             mAdapter.hideFooter();
             if (mData.size() == 0) {

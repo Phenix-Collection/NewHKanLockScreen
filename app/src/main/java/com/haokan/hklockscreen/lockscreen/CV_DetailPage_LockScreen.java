@@ -468,6 +468,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         }
     }
 
+    public void onResume() {
+        if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) {
+            //广告展示上报
+            ModelHaoKanAd.adShowUpLoad(mCurrentImgBean.mBeanAdRes.showUpUrl);
+        }
+    }
+
     private boolean mHasLoadAd5;
     private boolean mHasLoadAd11;
     protected void loadHaoKanAdDate5(final int position) {

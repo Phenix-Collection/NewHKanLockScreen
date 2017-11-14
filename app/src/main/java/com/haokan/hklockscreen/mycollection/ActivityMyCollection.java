@@ -233,7 +233,7 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
                 if (mAdapter.getDataBeans().size() == 0) {
                     showServeErrorLayout();
                 }
-                ToastManager.showShort(ActivityMyCollection.this, errmsg);
+//                ToastManager.showShort(ActivityMyCollection.this, errmsg);
             }
 
             @Override

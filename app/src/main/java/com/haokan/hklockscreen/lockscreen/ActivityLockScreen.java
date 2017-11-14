@@ -104,6 +104,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             }
         } else {
             MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
+            App.sHaokanLockView.onResume();
         }
 
         if (sLockguideRL) {
