@@ -3,11 +3,9 @@ package com.haokan.hklockscreen.lockscreen;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -22,7 +20,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,6 +36,7 @@ import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
 import com.haokan.pubic.webview.ActivityWebview;
@@ -110,7 +108,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         mLayoutSwitch = layoutTop.findViewById(R.id.ll_switch);
         mIvSwitch = (ImageView) mLayoutSwitch.findViewById(R.id.iv_switch);
         mTvSwitch = (TextView) mLayoutSwitch.findViewById(R.id.tv_switch);
-        mLayoutSwitch.setOnClickListener(this);
+//        mLayoutSwitch.setOnClickListener(this);
 
 
         mLayoutTime = rootView.findViewById(R.id.layout_time); //底部时间区域
@@ -185,21 +183,16 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 ToastManager.showCenter(mContext, "未设置Activity, 无法弹窗");
                 return;
             }
-            View cv = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_nowifi_switch, null);
-            final CheckBox checkBox = (CheckBox) cv.findViewById(R.id.checkbox);
-            checkBox.setChecked(true);
-
-            final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                    .setTitle("提示")
-                    .setView(cv)
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            MyDialogUtil.showMyDialog(mActivity, "提示", "当前在非wifi环境下, 将会耗费您的移动流量更新图片", null, null
+                    , true, new MyDialogUtil.myDialogOnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClickCancel() {
+                            //nothing
                         }
-                    }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (checkBox.isChecked()) {//勾选存储
+                        public void onClickConfirm(boolean checked) {
+                            if (checked) {//勾选存储
                                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
                                 SharedPreferences.Editor edit = preferences.edit();
                                 edit.putBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, true).apply();
@@ -207,9 +200,32 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                             loadSwitchData();
                         }
                     });
-            AlertDialog alertDialog = builder.create();
-            alertDialog.setCancelable(false);
-            alertDialog.show();
+
+//            View cv = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout_nowifi_switch, null);
+//            final CheckBox checkBox = (CheckBox) cv.findViewById(R.id.checkbox);
+//            checkBox.setChecked(true);
+//
+//            final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
+//                    .setTitle("提示")
+//                    .setView(cv)
+//                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                        }
+//                    }).setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            if (checkBox.isChecked()) {//勾选存储
+//                                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+//                                SharedPreferences.Editor edit = preferences.edit();
+//                                edit.putBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, true).apply();
+//                            }
+//                            loadSwitchData();
+//                        }
+//                    });
+//            AlertDialog alertDialog = builder.create();
+//            alertDialog.setCancelable(false);
+//            alertDialog.show();
         }
     }
 

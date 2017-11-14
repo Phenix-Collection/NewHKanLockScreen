@@ -123,7 +123,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                         mGustureView = null;
                     }
                 });
-                App.sMainHanlder.postDelayed(mShowGestureRun, 800);
+                App.sMainHanlder.postDelayed(mShowGestureRun, 700);
             }
         }
     }
@@ -404,7 +404,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                 float translationY = mScrollView.getTranslationY();
                 if (translationY != 0) { //下拉刷新时抬手
                     if (translationY > mPullRefreshDistence) {
-                        onRefresh();
+                        App.sMainHanlder.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                onRefresh();
+                            }
+                        }, 300);
                     }
                     mScrollView.mySetTranslateY(0, 300);
                     onRefreshState4();

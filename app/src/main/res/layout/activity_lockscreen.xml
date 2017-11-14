@@ -59,30 +59,6 @@
 
     <RelativeLayout
         android:visibility="gone"
-        android:id="@+id/gusture_rl"
-        android:background="@color/hei_50"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/iv_image"
-            android:src="@drawable/icon_gusture_lr"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_below="@+id/iv_image"
-            android:textColor="@color/bai"
-            android:textSize="14sp"
-            android:text="左右滑动查看图片"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:visibility="gone"
         android:id="@+id/gusture_down"
         android:background="@color/hei_50"
         android:layout_width="match_parent"
@@ -132,4 +108,27 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/gusture_rl"
+        android:background="@color/hei_50"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/iv_image"
+            android:src="@drawable/icon_gusture_lr"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_below="@+id/iv_image"
+            android:textColor="@color/bai"
+            android:textSize="14sp"
+            android:text="左右滑动查看图片"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 </FrameLayout>
