@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
+import android.support.v7.app.NotificationCompat;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.logsys.LogHelper;
@@ -37,12 +38,13 @@ public class ServiceLockScreen extends Service {
 //        note.flags |= 32;
 //        startForeground(42, note);
 
-        Notification.Builder builder = new Notification.Builder(this.getApplicationContext()); //获取一个Notification构造器
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getApplicationContext()); //获取一个Notification构造器
         Intent nfIntent = new Intent(this, ActivityLockScreen.class);
         builder.setContentIntent(PendingIntent.getActivity(this, 0, nfIntent, 0)) // 设置PendingIntent
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher)) // 设置下拉列表中的图标(大图标)
+                .setSmallIcon(R.drawable.icon_small_notifycation) // 设置状态栏内的小图标
+                .setColor(0xffCA2D74)
                 .setContentTitle("好看锁屏") // 设置下拉列表里的标题
-                .setSmallIcon(R.drawable.ic_launcher) // 设置状态栏内的小图标
                 .setContentText("正在为你展现精彩内容") // 设置上下文内容
                 .setWhen(System.currentTimeMillis()); // 设置该通知发生的时间
         Notification notification = builder.build(); // 获取构建好的Notification

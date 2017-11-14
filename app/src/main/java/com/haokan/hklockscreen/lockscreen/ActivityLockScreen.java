@@ -99,6 +99,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         super.onResume();
         if (mIsRecommendPage) {
             MobclickAgent.onEvent(this, "recommend_show"); //推荐页show
+            if (mLockRecommendPage != null) {
+                mLockRecommendPage.onResume();
+            }
         } else {
             MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
         }

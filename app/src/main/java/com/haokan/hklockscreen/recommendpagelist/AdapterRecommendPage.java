@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.haokanAd.BeanAdRes;
 import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
 import com.haokan.pubic.util.DisplayUtil;
@@ -191,7 +192,6 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
             if (!mHolders.contains(this)) {
                 mHolders.add(this);
             }
-
             mBean = mData.get(position);
             imageView.setImageBitmap(null);
             tvTitle.setText("");
@@ -209,6 +209,20 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
         @Override
         public void onClick(View v) {
             mRecommendPage.startDetailPage(mBean);
+        }
+    }
+
+    public void onResume(int first, int last) {
+        try {
+            for (int i = first; i < last; i++) {
+                BeanAdRes beanAdRes = mData.get(i).mBeanAdRes;
+                if (beanAdRes != null) {
+                    //上报广告展示
+                    ModelHaoKanAd.adShowUpLoad(beanAdRes.showUpUrl);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

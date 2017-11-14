@@ -47,6 +47,7 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.FileUtil;
+import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.Values;
 import com.haokan.pubic.webview.ActivityWebview;
@@ -284,10 +285,21 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 break;
             case R.id.layoutlockscreen:
                 {
-                    SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+                    final SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
                     if (mIvLockscreen.isSelected()) {
-                        mIvLockscreen.setSelected(false);
-                        edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, false).apply();
+                        MyDialogUtil.showMyDialog(this, "提示", "确定要关闭锁屏功能吗?", false
+                                , new MyDialogUtil.myDialogOnClickListener() {
+                                    @Override
+                                    public void onClickCancel() {
+                                        //nothing
+                                    }
+
+                                    @Override
+                                    public void onClickConfirm(boolean checked) {
+                                        mIvLockscreen.setSelected(false);
+                                        edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, false).apply();
+                                    }
+                                });
                     } else {
                         mIvLockscreen.setSelected(true);
                         edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, true).apply();
@@ -296,10 +308,21 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 break;
             case R.id.layoutautoupdateimg://自动更新锁屏图片
                 {
-                    SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
+                    final SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(this).edit();
                     if (mIvAutoupdateImage.isSelected()) {
-                        mIvAutoupdateImage.setSelected(false);
-                        edit.putBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, false).apply();
+                        MyDialogUtil.showMyDialog(this, "提示", "关闭后每天将不会自动更新锁屏图片, 确定要关闭吗?", false
+                                , new MyDialogUtil.myDialogOnClickListener() {
+                                    @Override
+                                    public void onClickCancel() {
+                                        //nothing
+                                    }
+
+                                    @Override
+                                    public void onClickConfirm(boolean checked) {
+                                        mIvAutoupdateImage.setSelected(false);
+                                        edit.putBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, false).apply();
+                                    }
+                                });
                     } else {
                         mIvAutoupdateImage.setSelected(true);
                         edit.putBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, true).apply();

@@ -75,7 +75,10 @@ public class ActivityHomePage extends ActivityBase {
     @Override
     protected void onResume() {
         super.onResume();
-        App.sMainHanlder.postDelayed(mPermissionRun, 200);
+        App.sMainHanlder.postDelayed(mPermissionRun, 250);
+        if (mCvHomePage != null) {
+            mCvHomePage.onResume();
+        }
     }
 
     @Override

@@ -343,7 +343,7 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
             mWebView.goBack();
         } else {
             super.onBackPressed();
-//            closeActivityAnim();
+            closeActivityAnim();
         }
     }
 

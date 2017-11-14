@@ -244,6 +244,18 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mAdItem != null && mAdapter != null && mData.size() > 0) {
+            int i = mManager.findLastVisibleItemPosition();
+            if (i == mData.size() - 1) {
+                //上报广告展示
+                ModelHaoKanAd.adShowUpLoad(mAdItem.mBeanAdRes.showUpUrl);
+            }
+        }
+    }
+
     BeanRecommendPageLand mAdItem;
     public void loadHaoKanAd() {
         showLoadingLayout();

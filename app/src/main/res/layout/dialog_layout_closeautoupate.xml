@@ -11,24 +11,24 @@
         android:layout_marginRight="25dp"
         android:layout_marginTop="15dp"
         android:lineSpacingExtra="3dp"
-        android:text="当前在非wifi环境下, 将会耗费您的移动流量更新图片"
+        android:text="关闭后每天将不会自动更新锁屏图片, 确定要关闭吗?"
         android:textColor="#666666"
         android:textSize="14sp" />
 
-    <CheckBox
-        android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_title"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:checked="false"
-        android:paddingLeft="5dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:text="不再提醒"
-        android:textColor="#666666"
-        android:textSize="13sp" />
+    <!--<CheckBox-->
+        <!--android:id="@+id/checkbox"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/tv_title"-->
+        <!--android:layout_marginLeft="20dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:checked="true"-->
+        <!--android:paddingLeft="5dp"-->
+        <!--android:paddingRight="10dp"-->
+        <!--android:paddingTop="10dp"-->
+        <!--android:text="不再提醒"-->
+        <!--android:textColor="#666666"-->
+        <!--android:textSize="13sp" />-->
 
     <!--<TextView-->
         <!--android:id="@+id/cancel"-->

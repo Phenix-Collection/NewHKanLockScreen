@@ -136,6 +136,16 @@ public class CV_RecommendPage extends FrameLayout{
         });
     }
 
+    //activity调用, 用来调用广告的曝光上报
+    public void onResume() {
+        if (mAdapter != null) {
+            int first = mManager.findFirstVisibleItemPosition();
+            int last = mManager.findLastVisibleItemPosition();
+            mAdapter.onResume(first, last);
+        }
+
+    }
+
     private boolean mRefrsh;
     onDataResponseListener mOnDataResponseListener = new onDataResponseListener<List<BeanRecommendItem>>() {
         @Override
