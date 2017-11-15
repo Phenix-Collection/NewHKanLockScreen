@@ -186,7 +186,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp">
                 <TextView
-                    android:text="意见反馈"
+                    android:text="意见反馈&amp;热门问题"
                     android:textColor="#666666"
                     android:textSize="14sp"
                     android:gravity="center_vertical"
