@@ -120,5 +120,6 @@ public class App extends Application {
 //        LogHelper.d("wangzixu", "app init = " + CommonUtil.getDevice());
 //        String string = BuildProperties.getSystemProperty("ro.build.display.id");
 //        LogHelper.d("wangzixu", "app init = " + string);
+//        BuildProperties.newInstance();
     }
 }

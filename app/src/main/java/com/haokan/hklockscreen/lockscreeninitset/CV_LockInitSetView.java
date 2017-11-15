@@ -19,7 +19,6 @@ import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
-import com.haokan.pubic.util.ToastManager;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -37,8 +36,12 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     private View mSetAccessLayout; //设置辅助功能界面
     private View mSetSuccessLayout; //自动设置成功该界面
     private View mManulSetLayout; //手动设置界面
-    private View mManulSetTvAutoStartSet;
     private View mManulSetTvStartLock;
+    private int mManusetBit = 0x00000000;
+    private static final int MANUSET_BIT_AUTOSTART = 0x00000001;
+    private static final int MANUSET_BIT_REMOVESYSPSWD = 0x00000010;
+    private static final int MANUSET_BIT_REMOVESYSMAGAZINE = 0x00000100;
+    private static final int MANUSET_BIT_ALLSET = 0x00000111;
 
     public CV_LockInitSetView(@NonNull Context context) {
         this(context, null);
@@ -80,11 +83,12 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         mManulSetLayout = findViewById(R.id.manualsetlayout);
         mManulSetIvCryLaugh = (ImageView) mManulSetLayout.findViewById(R.id.iv_cry_laugh);
         mManulSetTvTitle = (TextView) mManulSetLayout.findViewById(R.id.tv_title);
-        mManulSetTvAutoStartSet = mManulSetLayout.findViewById(R.id.tv_manualset_autostart);
         mManulSetTvStartLock = mManulSetLayout.findViewById(R.id.tvstartlock);
 
         mManulSetLayout.findViewById(R.id.tv_skip).setOnClickListener(this);
-        mManulSetTvAutoStartSet.setOnClickListener(this);
+        mManulSetLayout.findViewById(R.id.tv_manualset_autostart).setOnClickListener(this);
+        mManulSetLayout.findViewById(R.id.tv_manualset_removesyspswd).setOnClickListener(this);
+        mManulSetLayout.findViewById(R.id.tv_manualset_removesysmagazine).setOnClickListener(this);
     }
 
     private void showScanLayout() {
@@ -161,7 +165,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
 
                 //开始自动设置, 跳去设置开机启动的界面
                 Intent intent = SystemIntentUtil.getAutoStartIntent();
-                mActivityBase.startActivityForResult(intent, 103);
+                mActivityBase.startActivityForResult(intent, 102);
                 mActivityBase.startActivityAnim();
                 MobclickAgent.onEvent(mContext, "initset_setting");
             } else {
@@ -223,7 +227,55 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 }
                 break;
             case R.id.tv_manualset_autostart:
-                goAutoSetActivity();
+                try{
+                    Intent intent = SystemIntentUtil.getAutoStartIntent();
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mActivityBase.startActivityForResult(intent, 103);
+                    mActivityBase.startActivityAnim();
+                    App.sMainHanlder.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
+                            mActivityBase.startActivity(i2);
+                        }
+                    });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.tv_manualset_removesyspswd:
+                try{
+                    Intent intent = SystemIntentUtil.getRemoveSysPswdIntent();
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mActivityBase.startActivityForResult(intent, 104);
+                    mActivityBase.startActivityAnim();
+//                    App.sMainHanlder.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
+//                            mActivityBase.startActivity(i2);
+//                        }
+//                    });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.tv_manualset_removesysmagazine:
+                try{
+                    Intent intent = SystemIntentUtil.getRemoveSysMagazineIntent();
+                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mActivityBase.startActivityForResult(intent, 105);
+                    mActivityBase.startActivityAnim();
+//                    App.sMainHanlder.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
+//                            mActivityBase.startActivity(i2);
+//                        }
+//                    });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
             case R.id.tvstartlock:
                 MobclickAgent.onEvent(mContext, "initset_successgolock");
@@ -248,22 +300,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
      * 打开自启动界面, 并提示用户去开启自启动
      */
     public void goAutoSetActivity() {
-        Intent intent = SystemIntentUtil.getAutoStartIntent();
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        try{
-            mActivityBase.startActivityForResult(intent, 102);
-            mActivityBase.startActivityAnim();
-            App.sMainHanlder.post(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
-                    mActivityBase.startActivity(i2);
-                }
-            });
-        }catch (Exception e){
-            e.printStackTrace();
-            ToastManager.showShort(mActivityBase, "");
-        }
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -276,7 +313,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     @Override
                     public void run() {
                         Intent intent = SystemIntentUtil.getAutoStartIntent();
-                        mActivityBase.startActivityForResult(intent, 103);
+                        mActivityBase.startActivityForResult(intent, 102);
                         mActivityBase.startActivityAnim();
 
                         MobclickAgent.onEvent(mContext, "initset_setting");
@@ -289,13 +326,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 mScanLayoutRadarView.stop();
                 mScanLayout.setVisibility(GONE);
             }
-        } else if (requestCode == 102) { //手动自启动回来
-            sIsAutoSetting = false;
-            mManulSetTvStartLock.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
-            mManulSetTvStartLock.setOnClickListener(this);
-            mManulSetIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
-            mManulSetTvTitle.setText("锁屏设置已完成");
-        } else if (requestCode == 103) { //自动设置自启动回来
+        } else if (requestCode == 102) { //自动设置自启动回来
             sIsAutoSetting = false;
 
             if (sAutoSetSuccess) { //自动设置成功回来
@@ -304,6 +335,36 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             } else { //自动设置失败回来
                 MobclickAgent.onEvent(mContext, "initset_failmanual");
                 showManualSetLayout();
+            }
+        } else if (requestCode == 103) { //手动自启动回来
+            sIsAutoSetting = false;
+
+            mManusetBit |= MANUSET_BIT_AUTOSTART;
+            if (mManusetBit == MANUSET_BIT_ALLSET) {
+                mManulSetTvStartLock.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
+                mManulSetTvStartLock.setOnClickListener(this);
+                mManulSetIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
+                mManulSetTvTitle.setText("锁屏设置已完成");
+            }
+        } else if (requestCode == 104) { //手动去密码回来
+            sIsAutoSetting = false;
+
+            mManusetBit |= MANUSET_BIT_REMOVESYSPSWD;
+            if (mManusetBit == MANUSET_BIT_ALLSET) {
+                mManulSetTvStartLock.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
+                mManulSetTvStartLock.setOnClickListener(this);
+                mManulSetIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
+                mManulSetTvTitle.setText("锁屏设置已完成");
+            }
+        } else if (requestCode == 105) { //oppo手机手动去杂志锁屏回来
+            sIsAutoSetting = false;
+
+            mManusetBit |= MANUSET_BIT_REMOVESYSMAGAZINE;
+            if (mManusetBit == MANUSET_BIT_ALLSET) {
+                mManulSetTvStartLock.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
+                mManulSetTvStartLock.setOnClickListener(this);
+                mManulSetIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
+                mManulSetTvTitle.setText("锁屏设置已完成");
             }
         }
     }

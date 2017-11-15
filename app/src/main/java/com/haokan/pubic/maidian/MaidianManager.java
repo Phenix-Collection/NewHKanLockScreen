@@ -10,6 +10,7 @@ import rx.schedulers.Schedulers;
 
 /**
  * Created by wangzixu on 2017/7/7.
+ * 好看自己的埋点
  */
 public class MaidianManager {
 //    private static MaidianManager instance = new MaidianManager();

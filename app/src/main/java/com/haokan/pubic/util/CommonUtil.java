@@ -35,14 +35,14 @@ public class CommonUtil {
      */
     public static String transMapToString(Map map){
         Map.Entry entry;
-        StringBuffer sb = new StringBuffer("[");
-        for(Iterator iterator = map.entrySet().iterator(); iterator.hasNext();)
-        {
+        StringBuffer sb = new StringBuffer("{");
+        for(Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
             entry = (Map.Entry)iterator.next();
-            sb.append(entry.getKey().toString()).append( ":" ).append(null==entry.getValue()?"":
-                    entry.getValue().toString()).append (iterator.hasNext() ? " , " : "");
+            sb.append(entry.getKey().toString()).append( ":" )
+                    .append(null==entry.getValue()?"null": entry.getValue().toString())
+                    .append (iterator.hasNext() ? " , " : "");
         }
-        sb.append("]");
+        sb.append("}");
         return sb.toString();
     }
 
