@@ -1,189 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
-    android:background="#0986cd"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <com.haokan.hklockscreen.lockscreeninitset.CV_ScanRadarView
-        android:id="@+id/radarview"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:layout_width="340dp"
-        android:layout_height="340dp"/>
-
-    <LinearLayout
-        android:id="@+id/checktitlelayout"
-        android:layout_below="@id/radarview"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="正在为您检查锁屏信息"
-            android:textSize="24sp"
-            android:textColor="@color/bai"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginTop="15dp"
-            android:text="用心检查, 只为给您最优质的服务"
-            android:textSize="13sp"
-            android:textColor="@color/bai_80"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/layout_loading"
-        android:layout_marginTop="165dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/iv_gear"
-            android:scaleType="centerInside"
-            android:src="@drawable/anim_gear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tv_percent"
-            android:textColor="@color/bai"
-            android:textSize="30dp"
-            android:text="0%"
-            android:layout_marginTop="135dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:textColor="@color/bai_80"
-            android:textSize="15dp"
-            android:text="正在适配..."
-            android:layout_below="@id/tv_percent"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <ImageView
-        android:visibility="gone"
-        android:id="@+id/iv_cry_laugh"
-        android:src="@drawable/icon_lockinit_cry"
-        android:scaleType="centerInside"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="112dp"
-        android:layout_width="170dp"
-        android:layout_height="170dp"/>
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/autosetcompletelayout"
-        android:layout_below="@id/iv_cry_laugh"
-        android:layout_marginTop="60dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="锁屏设置已开启"
-            android:textSize="24sp"
-            android:textColor="@color/bai"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/startlock"
-            android:layout_marginTop="30dp"
-            android:text="开启锁屏"
-            android:textSize="15sp"
-            android:textColor="@color/bai_80"
-            android:gravity="center"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:background="@drawable/selector_lockinit_btnbg"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/crytvlayout"
-        android:layout_below="@id/iv_cry_laugh"
-        android:layout_marginTop="40dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="锁屏设置尚未开启"
-            android:textSize="24sp"
-            android:textColor="@color/bai"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginTop="15dp"
-            android:text="不能有效保护锁屏稳定运行, 锁屏功能将很容易失效"
-            android:textSize="13sp"
-            android:textColor="@color/bai_80"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_marginTop="10dp"
-            android:text="注: 开启锁屏设置不会影响手机安全"
-            android:textSize="13sp"
-            android:textColor="@color/bai_80"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvaccessset"
-            android:layout_marginTop="30dp"
-            android:text="立即设置"
-            android:textSize="15sp"
-            android:textColor="@color/bai_80"
-            android:gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/selector_lockinit_btnbg"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"/>
-    </LinearLayout>
-
-    <ViewStub
-        android:id="@+id/manualsetlayout"
-        android:inflatedId="@+id/manualsetlayout"
-        android:layout="@layout/cv_lockinit_view_manualset"
+    <include
+        android:id="@+id/scanlayout"
+        layout="@layout/cv_lockinit_view_scaning"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <TextView
-        android:id="@+id/tv_skip"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/selector_click_bai"
-        android:textSize="15sp"
-        android:text="跳过"
-        android:drawablePadding="4dp"
-        android:drawableRight="@drawable/icon_arrow"
-        android:paddingTop="30dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</RelativeLayout>
+    <include
+        android:visibility="gone"
+        android:id="@+id/setaccesslayout"
+        layout="@layout/cv_lockinit_view_setaccess"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <include
+        android:visibility="gone"
+        android:id="@+id/setsuccesslayout"
+        layout="@layout/cv_lockinit_view_setsuccess"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <include
+        android:visibility="gone"
+        android:id="@+id/manualsetlayout"
+        layout="@layout/cv_lockinit_view_manualset"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</merge>

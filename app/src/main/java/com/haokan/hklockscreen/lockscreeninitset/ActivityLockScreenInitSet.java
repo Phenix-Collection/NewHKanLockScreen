@@ -46,6 +46,7 @@ public class ActivityLockScreenInitSet extends ActivityBase {
     private void initView() {
         mCvLockScreenInitSetView = (CV_LockInitSetView) findViewById(R.id.cv_lockinitview);
         mCvLockScreenInitSetView.setActivityBase(this);
+        mCvLockScreenInitSetView.startScanAnim();
     }
 
     //权限相关begin*****

@@ -311,7 +311,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             mScrollView.setTranslationY(0);
                         } else {
                             double pow = Math.pow(mTransLateY, 0.85d);
-                            LogHelper.d("wangzixu", "pullrefresh mTransLateY = " + mTransLateY + ", pow = " + pow);
+//                            LogHelper.d("wangzixu", "pullrefresh mTransLateY = " + mTransLateY + ", pow = " + pow);
 
                             if (pow > mPullRefreshDistence && oldTransLateY <= mPullRefreshDistence) {
                                 onRefreshState3();

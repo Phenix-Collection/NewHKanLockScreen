@@ -52,14 +52,13 @@ public class HttpRetrofitManager {
             }
         });
 
-        OkHttpClient build = builder.build();
-
         if (LogHelper.DEBUG) { //okttp显示log
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(httpLoggingInterceptor);
         }
 
+        OkHttpClient build = builder.build();
         Retrofit retrofit = new Retrofit.Builder()
                 .client(build)
                 .baseUrl("http://levect.com")

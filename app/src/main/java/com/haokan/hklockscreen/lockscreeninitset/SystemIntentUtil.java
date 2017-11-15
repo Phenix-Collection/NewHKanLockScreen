@@ -21,7 +21,6 @@ public class SystemIntentUtil {
         if (manufacturer.equalsIgnoreCase("xiaomi")) {
             pkg = "com.miui.securitycenter";
             cls = "com.miui.permcenter.autostart.AutoStartManagementActivity";
-//            cls = "com.miui.permcenter.autostart.AutoStartDetailManagementActivity";
         } else if (manufacturer.equalsIgnoreCase("huawei")) {
             pkg = "com.huawei.systemmanager";
             cls = "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity";

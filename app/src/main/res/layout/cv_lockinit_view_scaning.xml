@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--扫描界面-->
+
+    <com.haokan.hklockscreen.lockscreeninitset.CV_ScanRadarView
+        android:id="@+id/radarview"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_width="340dp"
+        android:layout_height="340dp"/>
+
+    <TextView
+        android:text="正在为您检查锁屏信息"
+        android:textSize="24sp"
+        android:textColor="@color/bai"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:text="用心检查, 只为给您最优质的服务"
+        android:textSize="13sp"
+        android:textColor="@color/bai_80"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

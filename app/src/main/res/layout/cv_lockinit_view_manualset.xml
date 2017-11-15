@@ -11,12 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="210dp">
 
+        <TextView
+            android:id="@+id/tv_skip"
+            android:layout_gravity="right"
+            android:textColor="@color/selector_click_bai"
+            android:textSize="15sp"
+            android:text="跳过"
+            android:drawablePadding="4dp"
+            android:drawableRight="@drawable/icon_arrow"
+            android:paddingTop="30dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <ImageView
             android:id="@+id/iv_cry_laugh"
             android:src="@drawable/icon_lockinit_cry"
             android:scaleType="centerInside"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
             android:layout_width="80dp"
             android:layout_height="80dp"/>
 
@@ -70,7 +84,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_manualset"
+            android:id="@+id/tv_manualset_autostart"
             android:layout_gravity="center_vertical"
             android:background="@drawable/selector_lockinit_btnbg2"
             android:gravity="center"
@@ -89,15 +103,14 @@
         android:layout_height="1px"/>
 
     <TextView
+        android:id="@+id/tvstartlock"
         android:layout_marginTop="100dp"
-        android:id="@+id/tv_golockmanual"
         android:background="@drawable/selector_lockinit_btnbg3"
         android:gravity="center"
         android:textSize="14sp"
         android:textColor="@color/bai"
         android:text="开启锁屏"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="260dp"
         android:layout_height="46dp"/>
 </LinearLayout>
