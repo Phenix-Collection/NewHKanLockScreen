@@ -40,9 +40,9 @@ import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.StatusBarUtil;
-import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by wangzixu on 2017/3/2.
@@ -98,13 +98,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
+        App.sMainHanlder.postDelayed(mEventRun, 2000);
         if (mIsRecommendPage) {
-            MobclickAgent.onEvent(this, "recommend_show"); //推荐页show
             if (mLockRecommendPage != null) {
                 mLockRecommendPage.onResume();
             }
         } else {
-            MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
             App.sHaokanLockView.onResume();
         }
 
@@ -137,11 +136,23 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         }
     };
 
+    Runnable mEventRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mIsRecommendPage) {
+                UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_076");
+            } else {
+                UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_063");
+            }
+        }
+    };
+
     @Override
     protected void onPause() {
         super.onPause();
         LogHelper.d("wangzixu", "ActivityLockScreen onPause");
         App.sMainHanlder.removeCallbacks(mShowGestureRun);
+        App.sMainHanlder.removeCallbacks(mEventRun);
         mGustureView = null;
     }
 
@@ -233,8 +244,15 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         LogHelper.d("wangzixu", "ActivityLockScreen onNewIntent");
         App.sHaokanLockView.intoLockScreenState(true);
         mScrollView.scrollTo(0,0);
-        mLockRecommendPage.onHide();
-        mIsRecommendPage = false;
+
+        if (mIsRecommendPage == true) {
+            mLockRecommendPage.onHide();
+            mIsRecommendPage = false;
+
+            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_080");
+        } else {
+            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_075");
+        }
 
         hideNavigation();
     }
@@ -372,7 +390,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             mIsRecommendPage = false;
                             mLockRecommendPage.onHide();
 
-                            MobclickAgent.onEvent(this, "lockscreen_show"); //锁屏页show
+                            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_077");
+                            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_063");
                         } else {
                             mScrollView.myScrollTo(0, mScreenH, 400);
 //                            mScrollView.smoothScrollTo(0, mScreenH);
@@ -387,8 +406,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             mIsRecommendPage = true;
                             mLockRecommendPage.onShow();
 
-                            MobclickAgent.onEvent(this, "lockscreen_recommend"); //锁屏页进入推荐
-                            MobclickAgent.onEvent(this, "recommend_show"); //推荐页show
+                            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_076");
+                            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_073");
 
                             MainImageBean bean = App.sHaokanLockView.getCurrentImageBean();
                             if (bean != null) {
@@ -476,6 +495,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     //刷新
     public void onRefresh() {
         App.sHaokanLockView.pullToSwitch();
+
+        UmengMaiDianManager.onEvent(this, "event_102");
     }
 
     CV_UnLockImageView mUnLockImageView;
@@ -697,18 +718,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         alertDialog.show();
     }
     //权限相关end*****
-
-    @Override
-    protected void onActivityResult(final int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        App.sMainHanlder.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                int scrollY = mScrollView.getScrollY();
-//                LogHelper.d("wangzixu", "ActivityLockScreen onActivityResult requestCode = " + requestCode + ", scrollY = " + scrollY);
-//            }
-//        }, 1500);
-    }
 
 
     //隐藏导航栏相关

@@ -13,7 +13,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
-import com.umeng.analytics.MobclickAgent;
+import com.haokan.pubic.maidian.UmengMaiDianManager;
 
 /**
  * Created by wangzixu on 2017/10/20.
@@ -100,13 +100,15 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
             case R.id.back: //回到上面的详情页页
                 if (mActivityBase != null && mActivityBase instanceof ActivityLockScreen) {
                     ((ActivityLockScreen)mActivityBase).backToDetailPage();
-                    MobclickAgent.onEvent(mContext, "recommend_back");
+                    UmengMaiDianManager.onEvent(mContext, "event_077");
+                    UmengMaiDianManager.onEvent(mContext, "event_063");
                 }
                 break;
             case R.id.backlockscreen: //回到上面的详情页页, 并进入锁屏状态
                 if (mActivityBase != null && mActivityBase instanceof ActivityLockScreen) {
                     ((ActivityLockScreen)mActivityBase).backToLockScreenPage();
-                    MobclickAgent.onEvent(mContext, "recommend_backlock");
+                    UmengMaiDianManager.onEvent(mContext, "event_078");
+                    UmengMaiDianManager.onEvent(mContext, "event_063");
                 }
                 break;
             default:
@@ -120,24 +122,17 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
             return;
         }
 
+        UmengMaiDianManager.onEvent(mContext, "event_079");
+
         if (beanRecommendItem.mBeanAdRes == null) {
             Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
             intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
             if (mActivityBase != null) {
-                mActivityBase.startActivityForResult(intent, 101);
+                mActivityBase.startActivity(intent);
                 mActivityBase.startActivityAnim();
             } else {
                 mContext.startActivity(intent);
             }
-
-//            Intent intent = new Intent(mContext, ActivityWebview.class);
-//            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.urlClick);
-//            if (mActivityBase != null) {
-//                mActivityBase.startActivity(intent);
-//                mActivityBase.startActivityAnim();
-//            } else {
-//                mContext.startActivity(intent);
-//            }
         } else {
             //跳转webview
             Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);

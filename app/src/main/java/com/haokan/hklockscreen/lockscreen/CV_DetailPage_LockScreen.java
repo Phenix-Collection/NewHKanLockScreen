@@ -36,16 +36,17 @@ import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
 import com.haokan.pubic.webview.ActivityWebview;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -153,7 +154,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     onClickLink();
                     break;
                 case R.id.backlockscreen:
-                    onClickBack();
+                    intoLockScreenState(false);
+                    UmengMaiDianManager.onEvent(mContext, "event_069");
                     break;
                 case R.id.ll_switch:
                     pullToSwitch();
@@ -285,6 +287,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 }
             } else {
                 super.onClickBigImage();
+
+                if (mCurrentImgBean != null) {
+                    if (mIsCaptionShow) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("type", mCurrentImgBean.typeName);
+                        UmengMaiDianManager.onEvent(mContext, "event_072", map);
+                    }
+                }
             }
         }
     }
@@ -292,6 +302,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     @Override
     protected void onClickBack() {
         intoLockScreenState(false);
+        UmengMaiDianManager.onEvent(mContext, "event_068");
     }
 
     @Override
@@ -310,11 +321,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     @Override
     protected void onClickLink() {
-        MobclickAgent.onEvent(mContext, "lockscreen_godetail"); //锁屏页进入详情
-
         if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
             return;
         }
+        HashMap<String, String> map = new HashMap<>();
+        map.put("type", mCurrentImgBean.typeName);
+        UmengMaiDianManager.onEvent(mContext, "event_064", map);
+
         Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
         intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
         intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
@@ -323,6 +336,25 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
         } else {
             mContext.startActivity(intent);
+        }
+    }
+
+    protected void onClickCollect(final View view) {
+        super.onClickCollect(view);
+        if (mCurrentImgBean != null) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("type", mCurrentImgBean.typeName);
+            UmengMaiDianManager.onEvent(mContext, "event_070", map);
+        }
+    }
+
+    @Override
+    public void downloadImage(@NonNull MainImageBean bean) {
+        super.downloadImage(bean);
+        if (mCurrentImgBean != null) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("type", mCurrentImgBean.typeName);
+            UmengMaiDianManager.onEvent(mContext, "event_071", map);
         }
     }
 
@@ -741,7 +773,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             mContext.startActivity(i);
         }
 
-        MobclickAgent.onEvent(mContext, "lockscreen_set"); //锁屏页进入设置
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -750,12 +781,18 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 }
             }
         }, 500);
+        UmengMaiDianManager.onEvent(mContext, "event_066");
     }
 
     @Override
     protected void shareTo(SHARE_MEDIA platfrom) {
         super.shareTo(platfrom);
-        MobclickAgent.onEvent(mContext, "lockscreen_share"); //锁屏页进入分享
+
+        if (mCurrentImgBean != null) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("type", mCurrentImgBean.typeName);
+            UmengMaiDianManager.onEvent(mContext, "event_067", map);
+        }
     }
 
     @Override
@@ -764,7 +801,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         if (mActivity != null) {
             mActivity.onBackPressed();
         }
-        MobclickAgent.onEvent(mContext, "lockscreen_unlock"); //锁屏页解锁
         CV_DetailPage_LockScreen.this.setVisibility(INVISIBLE);
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override
@@ -774,6 +810,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 mLayoutMainBottom.setAlpha(1.0f);
             }
         }, 500);
+
+        UmengMaiDianManager.onEvent(mContext, "event_065");
     }
 
     @Override
