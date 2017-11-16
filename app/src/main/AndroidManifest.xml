@@ -180,6 +180,12 @@
                   android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name="com.haokan.pubic.maidian.UmengMaiDianActivity"
+                  android:theme="@style/myLockScreenActiviyTheme"
+                  android:launchMode="singleInstance"
+                  android:screenOrientation="portrait">
+        </activity>
+
         <activity android:name="com.haokan.pubic.clipimage.ActivityClipImage"
                   android:theme="@style/ClipImageActivityTheme"
                   android:screenOrientation="portrait">

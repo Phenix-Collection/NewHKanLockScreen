@@ -13,7 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
@@ -23,10 +22,6 @@ import com.haokan.pubic.util.StatusBarUtil;
 
 
 public class ActivityLockScreenInitSet extends ActivityBase {
-    private View mBtnGoSet;
-    private CV_ScanRadarView mRadarView;
-    private WindowManager mWindowManager;
-    private View mView;
     private CV_LockInitSetView mCvLockScreenInitSetView;
 
     @Override

@@ -125,18 +125,22 @@ public class CV_ScanRadarView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        //每当空间尺寸改变时, 需要重新获取控件的大小, 并设置颜色渲染器的大小
-        mViewSize = getMeasuredWidth();
-        mRadarRadius = mViewSize/4;
-        initRippleRidus();
+        if (w > 0 && w != oldw) {
+            //每当空间尺寸改变时, 需要重新获取控件的大小, 并设置颜色渲染器的大小
+            mViewSize = getMeasuredWidth();
+            mRadarRadius = mViewSize/4;
+            initRippleRidus();
 
-        //波纹生成用的颜色渲染器
-        mRippleCreatGradient = new RadialGradient(mViewSize /2.0f, mViewSize /2.0f, mRadarRadius, mColors, mPositions, Shader.TileMode.CLAMP);
+            //波纹生成用的颜色渲染器
+            mRippleCreatGradient = new RadialGradient(mViewSize /2.0f, mViewSize /2.0f, mRadarRadius, mColors, mPositions, Shader.TileMode.CLAMP);
 
-        //雷达用的颜色渲染器
-        SweepGradient sweepGradient = new SweepGradient(mViewSize /2.0f, mViewSize /2.0f, Color.TRANSPARENT, Color.WHITE);
-        //mPaintRadar设置颜色渐变渲染器
-        mPaintRadar.setShader(sweepGradient);
+            //雷达用的颜色渲染器
+            SweepGradient sweepGradient = new SweepGradient(mViewSize /2.0f, mViewSize /2.0f, Color.TRANSPARENT, Color.WHITE);
+            //mPaintRadar设置颜色渐变渲染器
+            mPaintRadar.setShader(sweepGradient);
+
+            mMatrix.setRotate(0, mViewSize/2.0f, mViewSize/2.0f);
+        }
     }
 
     @Override

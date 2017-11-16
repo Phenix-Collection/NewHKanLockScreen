@@ -26,4 +26,8 @@ public class UmengMaiDianManager {
             MobclickAgent.onEvent(context, eventId);
         }
     }
+
+    public static void onEvent(Context context, String eventId) {
+        onEvent(context, eventId, null);
+    }
 }

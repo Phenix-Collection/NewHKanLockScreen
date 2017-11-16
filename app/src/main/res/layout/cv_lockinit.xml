@@ -6,28 +6,28 @@
 
     <include
         android:id="@+id/scanlayout"
-        layout="@layout/cv_lockinit_view_scaning"
+        layout="@layout/cv_lockinit_scaning"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <include
         android:visibility="gone"
         android:id="@+id/setaccesslayout"
-        layout="@layout/cv_lockinit_view_setaccess"
+        layout="@layout/cv_lockinit_setaccess"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <include
         android:visibility="gone"
         android:id="@+id/setsuccesslayout"
-        layout="@layout/cv_lockinit_view_setsuccess"
+        layout="@layout/cv_lockinit_setsuccess"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <include
         android:visibility="gone"
         android:id="@+id/manualsetlayout"
-        layout="@layout/cv_lockinit_view_manualset"
+        layout="@layout/cv_lockinit_manualset"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </merge>

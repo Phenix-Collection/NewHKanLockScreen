@@ -10,6 +10,17 @@ import com.haokan.pubic.logsys.LogHelper;
  * Created by wangzixu on 2017/10/11.
  */
 public class SystemIntentUtil {
+    public static boolean isOppo() {
+        String manufacturer = Build.MANUFACTURER;
+        return manufacturer.equalsIgnoreCase("oppo");
+    }
+
+    public static boolean isXiaomi() {
+        String manufacturer = Build.MANUFACTURER;
+        return manufacturer.equalsIgnoreCase("xiaomi");
+    }
+
+
     public static Intent getAutoStartIntent() {
         Intent intent = new Intent();
         String pkg = "com.miui.securitycenter";

@@ -45,6 +45,7 @@ import com.haokan.pubic.clipimage.ClipImgManager;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.MyDialogUtil;
@@ -54,6 +55,7 @@ import com.haokan.pubic.webview.ActivityWebview;
 import com.j256.ormlite.dao.Dao;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.Scheduler;
@@ -106,6 +108,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         initView();
         loadLocalImages();
         loadHaoKanAd();
+
+        UmengMaiDianManager.onEvent(this, "event_085");
     }
 
     private void initView() {
@@ -242,6 +246,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     mIvImage1.setImageBitmap(null);
                     mLocalImage1 = null;
                     v.setVisibility(View.GONE);
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_097");
                 }
                 break;
             case R.id.iv_close2:
@@ -251,6 +257,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     mIvImage2.setImageBitmap(null);
                     mLocalImage2 = null;
                     v.setVisibility(View.GONE);
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_097");
                 }
                 break;
             case R.id.iv_close3:
@@ -260,6 +268,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     mIvImage3.setImageBitmap(null);
                     mLocalImage3 = null;
                     v.setVisibility(View.GONE);
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_097");
                 }
                 break;
             case R.id.edit:
@@ -281,6 +291,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     if (mLocalImage3 != null) {
                         mIvDelte3.setVisibility(View.VISIBLE);
                     }
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_093");
                 }
                 break;
             case R.id.layoutlockscreen:
@@ -298,11 +310,19 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                                     public void onClickConfirm(boolean checked) {
                                         mIvLockscreen.setSelected(false);
                                         edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, false).apply();
+
+                                        HashMap<String, String> map = new HashMap<>();
+                                        map.put("开/关", "关");
+                                        UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_087", map);
                                     }
                                 });
                     } else {
                         mIvLockscreen.setSelected(true);
                         edit.putBoolean(Values.PreferenceKey.KEY_SP_OPENLOCKSCREEN, true).apply();
+
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("开/关", "开");
+                        UmengMaiDianManager.onEvent(this, "event_087", map);
                     }
                 }
                 break;
@@ -321,11 +341,19 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                                     public void onClickConfirm(boolean checked) {
                                         mIvAutoupdateImage.setSelected(false);
                                         edit.putBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, false).apply();
+
+                                        HashMap<String, String> map = new HashMap<>();
+                                        map.put("开/关", "关");
+                                        UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_088", map);
                                     }
                                 });
                     } else {
                         mIvAutoupdateImage.setSelected(true);
                         edit.putBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, true).apply();
+
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("开/关", "开");
+                        UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_088", map);
                     }
                 }
                 break;
@@ -335,11 +363,15 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     Intent intent = new Intent(this, ActivityMyCollection.class);
                     startActivity(intent);
                     startActivityAnim();
+
+                    UmengMaiDianManager.onEvent(this, "event_086");
                 }
                 break;
             case R.id.layout_fadeback:
                 {
                     FeedbackAPI.openFeedbackActivity();
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_090");
                 }
                 break;
             case R.id.layout_aboutus:
@@ -347,16 +379,22 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     Intent intent = new Intent(this, ActivityAboutUs.class);
                     startActivity(intent);
                     startActivityAnim();
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_092");
                 }
                 break;
             case R.id.layout_checkupdate:
                 checkStoragePermission();
+
+                UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_091");
                 break;
             case R.id.layout_initset:
                 {
                     Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
                     startActivity(intent);
                     startActivityAnim();
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_089");
                 }
                 break;
             case R.id.iv_image1:
@@ -366,6 +404,18 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                         mClipImgManager = new ClipImgManager();
                     }
                     mClipImgManager.startChose(this, 101);
+
+                    if (mLocalImage1 == null) { //加新图
+                        if (mTvLocalImageEdit.isSelected()) {
+                            //event_098,8-设置页-我的故事-加图,0
+                            UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_098");
+                        } else {
+                            //event_094,9-设置页-点击我的故事-加图,0
+                            UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_094");
+                        }
+                    } else { //换图
+                        UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_096");
+                    }
                 } else {
                     ViewParent parent = mIvBigImage.getParent();
                     if (parent != null) {
@@ -377,6 +427,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
                     decorView.addView(mIvBigImage);
                     Glide.with(this).load(mLocalImage1.imgUrl).into(mIvBigImage);
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_095");
                 }
                 break;
             case R.id.iv_image2:
@@ -386,6 +438,18 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                         mClipImgManager = new ClipImgManager();
                     }
                     mClipImgManager.startChose(this, 101);
+
+                    if (mLocalImage2 == null) { //加新图
+                        if (mTvLocalImageEdit.isSelected()) {
+                            //event_098,8-设置页-我的故事-加图,0
+                            UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_098");
+                        } else {
+                            //event_094,9-设置页-点击我的故事-加图,0
+                            UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_094");
+                        }
+                    } else { //换图
+                        UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_096");
+                    }
                 } else {
                     ViewParent parent = mIvBigImage.getParent();
                     if (parent != null) {
@@ -397,6 +461,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
                     decorView.addView(mIvBigImage);
                     Glide.with(this).load(mLocalImage2.imgUrl).into(mIvBigImage);
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_095");
                 }
                 break;
             case R.id.iv_image3:
@@ -406,6 +472,18 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                         mClipImgManager = new ClipImgManager();
                     }
                     mClipImgManager.startChose(this, 101);
+
+                    if (mLocalImage3 == null) { //加新图
+                        if (mTvLocalImageEdit.isSelected()) {
+                            //event_098,8-设置页-我的故事-加图,0
+                            UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_098");
+                        } else {
+                            //event_094,9-设置页-点击我的故事-加图,0
+                            UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_094");
+                        }
+                    } else { //换图
+                        UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_096");
+                    }
                 } else {
                     ViewParent parent = mIvBigImage.getParent();
                     if (parent != null) {
@@ -417,6 +495,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
                     decorView.addView(mIvBigImage);
                     Glide.with(this).load(mLocalImage3.imgUrl).into(mIvBigImage);
+
+                    UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_095");
                 }
                 break;
             default:

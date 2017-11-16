@@ -24,6 +24,7 @@ import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
+import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
@@ -175,9 +176,8 @@ public class ActivityHomePage extends ActivityBase {
             mExitTime = SystemClock.uptimeMillis();
             ToastManager.showShort(this, "再按一次退出");
         } else {
+            UmengMaiDianManager.onEvent(this, "event_084");
             super.onBackPressed();
-//            Process.killProcess(Process.myPid());
-//            System.exit(0);
         }
     }
 }

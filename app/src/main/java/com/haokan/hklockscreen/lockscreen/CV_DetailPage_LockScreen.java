@@ -128,7 +128,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     setTime();
                 } else if ("com.haokan.receiver.autoupdateimage".equals(action)) { //自动更新了图片
                     LogHelper.d("wangzixu", "autoupdate 收到了更新广播");
-                    LogHelper.writeLog(mContext, "autoupdate 收到了更新广播");
+//                    LogHelper.writeLog(mContext, "autoupdate 收到了更新广播");
                     loadSwitchOfflineData(true);
                 } else if ("com.haokan.receiver.localimagechange".equals(action)) { //本地相册变化了
                     LogHelper.d("wangzixu", "localimagechange 本地相册变化");

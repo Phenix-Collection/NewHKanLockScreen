@@ -15,6 +15,7 @@ import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.UmengMaiDianActivity;
 import com.haokan.pubic.util.Values;
 
 import java.util.List;
@@ -36,7 +37,8 @@ public class ServiceAutoUpdateImage extends Service {
         boolean auto = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Values.PreferenceKey.KEY_SP_AUTOUPDATEIMAGE, true);
         if (!auto) {
             LogHelper.d("wangzixu", "autoupdate onStartCommand auto = false");
-            LogHelper.writeLog(this, "autoupdate onStartCommand auto = false");
+//            LogHelper.writeLog(this, "autoupdate onStartCommand auto = false");
+
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
@@ -59,7 +61,16 @@ public class ServiceAutoUpdateImage extends Service {
         }
 
         LogHelper.d("wangzixu", "autoupdate onStartCommand");
-        LogHelper.writeLog(this, "autoupdate onStartCommand");
+
+        {
+            Intent maidianIntent = new Intent(this, UmengMaiDianActivity.class);
+            maidianIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_EVENTID, "event_100");
+//            maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_ARGS, new String[]{"remarks"});
+//            maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_VALUES, new String[]{"关闭自动更新"});
+            startActivity(maidianIntent);
+        }
+
         autoUpdateData();
         return super.onStartCommand(intent, flags, startId);
     }
@@ -83,6 +94,12 @@ public class ServiceAutoUpdateImage extends Service {
                 LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData onDataSucess");
                 Intent intent = new Intent("com.haokan.receiver.autoupdateimage");
                 sendBroadcast(intent);
+
+                Intent maidianIntent = new Intent(ServiceAutoUpdateImage.this, UmengMaiDianActivity.class);
+                maidianIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_EVENTID, "event_101");
+                startActivity(maidianIntent);
+
                 App.sMainHanlder.post(new Runnable() {
                     @Override
                     public void run() {

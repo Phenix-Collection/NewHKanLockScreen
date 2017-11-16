@@ -10,16 +10,20 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
+import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItemsBase;
+import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_Oppo;
+import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_Xiaomi;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
-import com.umeng.analytics.MobclickAgent;
+import com.haokan.pubic.maidian.UmengMaiDianManager;
 
 /**
  * Created by wangzixu on 2017/10/23.
@@ -37,11 +41,15 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     private View mSetSuccessLayout; //自动设置成功该界面
     private View mManulSetLayout; //手动设置界面
     private View mManulSetTvStartLock;
-    private int mManusetBit = 0x00000000;
-    private static final int MANUSET_BIT_AUTOSTART = 0x00000001;
-    private static final int MANUSET_BIT_REMOVESYSPSWD = 0x00000010;
-    private static final int MANUSET_BIT_REMOVESYSMAGAZINE = 0x00000100;
-    private static final int MANUSET_BIT_ALLSET = 0x00000111;
+    private CV_LockInit_ManualSetItemsBase mManualSetItemsLayout;
+
+    /**
+     * For 熊守义的需求, 初检失败还是成功.还是未适配
+     * 这个变量用来记录刚开始检测到的是开启还是没有开启辅助功能,或者未适配
+     * 没有开启时产品叫做"初检失败"
+     * 1初检失败 2初检成功 3未适配s
+     */
+    public static int sInitCheckStatus = 1;
 
     public CV_LockInitSetView(@NonNull Context context) {
         this(context, null);
@@ -54,7 +62,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     public CV_LockInitSetView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        LayoutInflater.from(mContext).inflate(R.layout.cv_lockinit_view, this, true);
+        LayoutInflater.from(mContext).inflate(R.layout.cv_lockinit, this, true);
 
         initScanLayout();
         initSetAccessLayout();
@@ -70,7 +78,14 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     private void initSetAccessLayout() {
         mSetAccessLayout = findViewById(R.id.setaccesslayout);
         mSetAccessLayout.findViewById(R.id.tvsetaccess).setOnClickListener(this);
-        mSetAccessLayout.findViewById(R.id.tv_skip).setOnClickListener(this);
+        mSetAccessLayout.findViewById(R.id.tv_skip).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UmengMaiDianManager.onEvent(mContext, "event_046", null);
+                mActivityBase.finish();
+                mActivityBase.closeActivityAnim();
+            }
+        });
     }
 
     private void initSetSuccessLayout() {
@@ -83,12 +98,46 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         mManulSetLayout = findViewById(R.id.manualsetlayout);
         mManulSetIvCryLaugh = (ImageView) mManulSetLayout.findViewById(R.id.iv_cry_laugh);
         mManulSetTvTitle = (TextView) mManulSetLayout.findViewById(R.id.tv_title);
-        mManulSetTvStartLock = mManulSetLayout.findViewById(R.id.tvstartlock);
+        mManulSetTvStartLock = mManulSetLayout.findViewById(R.id.tvstartlock_manual);
 
-        mManulSetLayout.findViewById(R.id.tv_skip).setOnClickListener(this);
-        mManulSetLayout.findViewById(R.id.tv_manualset_autostart).setOnClickListener(this);
-        mManulSetLayout.findViewById(R.id.tv_manualset_removesyspswd).setOnClickListener(this);
-        mManulSetLayout.findViewById(R.id.tv_manualset_removesysmagazine).setOnClickListener(this);
+        mManulSetLayout.findViewById(R.id.tv_skip).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sInitCheckStatus == 1) {
+                    UmengMaiDianManager.onEvent(mContext, "event_054", null);
+                } else if (sInitCheckStatus == 2) {
+                    UmengMaiDianManager.onEvent(mContext, "event_061", null);
+                }
+                mActivityBase.finish();
+                mActivityBase.closeActivityAnim();
+            }
+        });
+
+        FrameLayout frameLayout = (FrameLayout) mManulSetLayout.findViewById(R.id.manualsetitemslayout);
+        //根据适配的机型, 添加不同的条目
+        if (SystemIntentUtil.isOppo()) {
+            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_Oppo(mContext);
+
+        } else if (SystemIntentUtil.isXiaomi()) {
+            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_Xiaomi(mContext);
+
+        } else {
+            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_Xiaomi(mContext);
+        }
+
+        mManualSetItemsLayout.setActivityBase(mActivityBase);
+        FrameLayout.LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        frameLayout.addView(mManualSetItemsLayout, lp);
+
+        mManualSetItemsLayout.setOnAllItemSetListener(new CV_LockInit_ManualSetItemsBase.onAllItemSetListener() {
+            @Override
+            public void onAllItemSet() {
+                mManulSetTvStartLock.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
+                mManulSetTvStartLock.setOnClickListener(CV_LockInitSetView.this);
+                mManulSetIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
+                mManulSetTvTitle.setText("锁屏设置已完成");
+            }
+        });
     }
 
     private void showScanLayout() {
@@ -125,6 +174,9 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
 
     public void setActivityBase(ActivityBase activityBase) {
         mActivityBase = activityBase;
+        if (mManualSetItemsLayout != null) {
+            mManualSetItemsLayout.setActivityBase(mActivityBase);
+        }
     }
 
     public void startScanAnim() {
@@ -135,6 +187,8 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     startScanAnim();
                 } else {
                     mScanLayoutRadarView.start();
+
+                    UmengMaiDianManager.onEvent(mContext, "event_040", null);
                     App.sMainHanlder.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -143,7 +197,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     }, 1500);
                 }
             }
-        }, 50);
+        }, 30);
     }
 
     /**
@@ -167,14 +221,20 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 Intent intent = SystemIntentUtil.getAutoStartIntent();
                 mActivityBase.startActivityForResult(intent, 102);
                 mActivityBase.startActivityAnim();
-                MobclickAgent.onEvent(mContext, "initset_setting");
+
+                sInitCheckStatus = 2;
+                UmengMaiDianManager.onEvent(mContext, "event_042");
             } else {
                 showSetAccessLayout();
-                MobclickAgent.onEvent(mContext, "initset_checkfailed");
+
+                sInitCheckStatus = 1;
+                UmengMaiDianManager.onEvent(mContext, "event_041");
             }
         } else {
             showSetSuccessLayout();
-            MobclickAgent.onEvent(mContext, "initset_checkfailed");
+
+            sInitCheckStatus = 3;
+            UmengMaiDianManager.onEvent(mContext, "event_043");
         }
     }
 
@@ -224,66 +284,39 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                             mActivityBase.startActivity(i2);
                         }
                     });
-                }
-                break;
-            case R.id.tv_manualset_autostart:
-                try{
-                    Intent intent = SystemIntentUtil.getAutoStartIntent();
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mActivityBase.startActivityForResult(intent, 103);
-                    mActivityBase.startActivityAnim();
-                    App.sMainHanlder.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
-                            mActivityBase.startActivity(i2);
-                        }
-                    });
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.tv_manualset_removesyspswd:
-                try{
-                    Intent intent = SystemIntentUtil.getRemoveSysPswdIntent();
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mActivityBase.startActivityForResult(intent, 104);
-                    mActivityBase.startActivityAnim();
-//                    App.sMainHanlder.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
-//                            mActivityBase.startActivity(i2);
-//                        }
-//                    });
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.tv_manualset_removesysmagazine:
-                try{
-                    Intent intent = SystemIntentUtil.getRemoveSysMagazineIntent();
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mActivityBase.startActivityForResult(intent, 105);
-                    mActivityBase.startActivityAnim();
-//                    App.sMainHanlder.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
-//                            mActivityBase.startActivity(i2);
-//                        }
-//                    });
-                }catch (Exception e){
-                    e.printStackTrace();
+
+                    UmengMaiDianManager.onEvent(mContext, "event_045");
                 }
                 break;
             case R.id.tvstartlock:
-                MobclickAgent.onEvent(mContext, "initset_successgolock");
+                {
+                    if (sInitCheckStatus == 1) {
+                        UmengMaiDianManager.onEvent(mContext, "event_049");
+                    } else if (sInitCheckStatus == 2) {
+                        UmengMaiDianManager.onEvent(mContext, "event_056");
+                    } else if (sInitCheckStatus == 3) {
+                        UmengMaiDianManager.onEvent(mContext, "event_062");
+                    }
 
-                Intent i = new Intent(mContext, ActivityLockScreen.class);
-                mActivityBase.startActivity(i);
-                mActivityBase.finish();
-                mActivityBase.overridePendingTransition(0,0);
+                    Intent i = new Intent(mContext, ActivityLockScreen.class);
+                    mActivityBase.startActivity(i);
+                    mActivityBase.finish();
+                    mActivityBase.overridePendingTransition(0,0);
+                }
+                break;
+            case R.id.tvstartlock_manual:
+                {
+                    if (sInitCheckStatus == 1) {
+                        UmengMaiDianManager.onEvent(mContext, "event_053");
+                    } else if (sInitCheckStatus == 2) {
+                        UmengMaiDianManager.onEvent(mContext, "event_060");
+                    }
+
+                    Intent i = new Intent(mContext, ActivityLockScreen.class);
+                    mActivityBase.startActivity(i);
+                    mActivityBase.finish();
+                    mActivityBase.overridePendingTransition(0,0);
+                }
                 break;
             case R.id.tv_skip:
                 {
@@ -294,13 +327,6 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             default:
                 break;
         }
-    }
-
-    /**
-     * 打开自启动界面, 并提示用户去开启自启动
-     */
-    public void goAutoSetActivity() {
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -316,11 +342,10 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                         mActivityBase.startActivityForResult(intent, 102);
                         mActivityBase.startActivityAnim();
 
-                        MobclickAgent.onEvent(mContext, "initset_setting");
+                        UmengMaiDianManager.onEvent(mContext, "event_047", null);
                     }
                 },300);
             } else {
-                MobclickAgent.onEvent(mContext, "initset_checkfailed");
 
                 mManulSetLayout.setVisibility(VISIBLE);
                 mScanLayoutRadarView.stop();
@@ -329,42 +354,26 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         } else if (requestCode == 102) { //自动设置自启动回来
             sIsAutoSetting = false;
 
-            if (sAutoSetSuccess) { //自动设置成功回来
-                MobclickAgent.onEvent(mContext, "initset_success");
+            if (sAutoSetSuccess) { //自动设置成功回来, 开启进入锁屏界面
                 showSetSuccessLayout();
-            } else { //自动设置失败回来
-                MobclickAgent.onEvent(mContext, "initset_failmanual");
+
+                if (sInitCheckStatus == 1) {
+                    UmengMaiDianManager.onEvent(mContext, "event_048");
+                } else if (sInitCheckStatus == 2){
+                    UmengMaiDianManager.onEvent(mContext, "event_055");
+                }
+            } else { //自动设置失败回来, 开启手动设置界面
                 showManualSetLayout();
-            }
-        } else if (requestCode == 103) { //手动自启动回来
-            sIsAutoSetting = false;
 
-            mManusetBit |= MANUSET_BIT_AUTOSTART;
-            if (mManusetBit == MANUSET_BIT_ALLSET) {
-                mManulSetTvStartLock.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
-                mManulSetTvStartLock.setOnClickListener(this);
-                mManulSetIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
-                mManulSetTvTitle.setText("锁屏设置已完成");
+                if (sInitCheckStatus == 1) {
+                    UmengMaiDianManager.onEvent(mContext, "event_050");
+                } else if (sInitCheckStatus == 2) {
+                    UmengMaiDianManager.onEvent(mContext, "event_057");
+                }
             }
-        } else if (requestCode == 104) { //手动去密码回来
-            sIsAutoSetting = false;
-
-            mManusetBit |= MANUSET_BIT_REMOVESYSPSWD;
-            if (mManusetBit == MANUSET_BIT_ALLSET) {
-                mManulSetTvStartLock.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
-                mManulSetTvStartLock.setOnClickListener(this);
-                mManulSetIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
-                mManulSetTvTitle.setText("锁屏设置已完成");
-            }
-        } else if (requestCode == 105) { //oppo手机手动去杂志锁屏回来
-            sIsAutoSetting = false;
-
-            mManusetBit |= MANUSET_BIT_REMOVESYSMAGAZINE;
-            if (mManusetBit == MANUSET_BIT_ALLSET) {
-                mManulSetTvStartLock.setBackgroundResource(R.drawable.selector_lockinit_btnbg2);
-                mManulSetTvStartLock.setOnClickListener(this);
-                mManulSetIvCryLaugh.setImageResource(R.drawable.icon_lockinit_laugh);
-                mManulSetTvTitle.setText("锁屏设置已完成");
+        } else {
+            if (mManualSetItemsLayout != null) {
+                mManualSetItemsLayout.onActivityResult(requestCode, resultCode,data);
             }
         }
     }

@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
+import com.haokan.pubic.maidian.UmengMaiDianManager;
 
 /**
  * Created by wangzixu on 2017/10/20.
@@ -35,6 +37,8 @@ public class CV_RecommendPage_HomePage extends CV_RecommendPage implements View.
         View view = LayoutInflater.from(mContext).inflate(R.layout.cv_recommendpage_homepage, this, true);
 
         view.findViewById(R.id.setting).setOnClickListener(this);
+
+        UmengMaiDianManager.onEvent(mContext, "event_081");
     }
 
     @Override
@@ -48,9 +52,17 @@ public class CV_RecommendPage_HomePage extends CV_RecommendPage implements View.
                 } else {
                     mContext.startActivity(i);
                 }
+
+                UmengMaiDianManager.onEvent(mContext, "event_082");
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void startDetailPage(BeanRecommendItem beanRecommendItem) {
+        super.startDetailPage(beanRecommendItem);
+        UmengMaiDianManager.onEvent(mContext, "event_083");
     }
 }
