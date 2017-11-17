@@ -134,11 +134,25 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 } else if ("com.haokan.receiver.localimagechange".equals(action)) { //本地相册变化了
                     LogHelper.d("wangzixu", "localimagechange 本地相册变化");
                     loadData(true);
+                } else if (Intent.ACTION_SCREEN_ON.equals(action)) {
+                    if (mIsLocked && mCurrentImgBean != null) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("action", "亮屏");
+                        if (mCurrentImgBean.mBeanAdRes != null) {
+                            map.put("from", "广告图片");
+                        } else if (mCurrentImgBean.myType == 3){
+                            map.put("from", "我的相册图片");
+                        } else {
+                            map.put("from", "离线图片");
+                        }
+                        UmengMaiDianManager.onEvent(mContext, "event_074", map);
+                    }
                 }
             }
         };
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_TIME_TICK);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction("com.haokan.receiver.autoupdateimage");
         filter.addAction("com.haokan.receiver.localimagechange");
         mContext.registerReceiver(mReceiver, filter);
@@ -498,6 +512,19 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         if (!mHasLoadAd11 && position == mLockPosition + 5) {
             loadHaoKanAdDate11(position);
         }
+
+        if (mCurrentImgBean != null && !mIsLocked) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("action", "滑动");
+            if (mCurrentImgBean.mBeanAdRes != null) {
+                map.put("from", "广告图片");
+            } else if (mCurrentImgBean.myType == 3){
+                map.put("from", "我的相册图片");
+            } else {
+                map.put("from", "离线图片");
+            }
+            UmengMaiDianManager.onEvent(mContext, "event_074", map);
+        }
     }
 
     public void onResume() {
@@ -802,6 +829,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             mActivity.onBackPressed();
         }
         CV_DetailPage_LockScreen.this.setVisibility(INVISIBLE);
+        mIsLocked = false;
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -36,7 +36,7 @@ public class ModelRecommendPage {
         body.imageSize = App.sImgSize_Small;
         body.eid = App.sEID;
         body.page = page;
-        body.size = 20;
+        body.size = 10;
         body.typeName = typeName;
 
         RequestHeader<RequestBody_Recommend> header = new RequestHeader(body);

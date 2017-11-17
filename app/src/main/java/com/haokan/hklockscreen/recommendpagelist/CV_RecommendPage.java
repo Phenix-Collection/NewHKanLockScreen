@@ -25,6 +25,7 @@ import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
@@ -164,12 +165,8 @@ public class CV_RecommendPage extends FrameLayout{
         @Override
         public void onDataSucess(List<BeanRecommendItem> beanRecommendItems) {
             LogHelper.d("wangzixu", "recompage loadData onDataSucess size = " + beanRecommendItems.size());
-
-            if (mData.size() == 0) { //从头开始加载, 需请求广告
-                loadHaoKanAdData5(beanRecommendItems);
-            } else {
-                setDataSuccess(beanRecommendItems);
-            }
+            loadHaoKanAdData5(beanRecommendItems);
+            UmengMaiDianManager.onEvent(mContext, "event_103");
         }
 
         @Override
@@ -262,9 +259,8 @@ public class CV_RecommendPage extends FrameLayout{
     //请求第五个位置的广告数据
     public void loadHaoKanAdData5(final List<BeanRecommendItem> beanRecommendItems) {
         //第5信息流
-        if (beanRecommendItems.size() > 4) {
-//        if (false) {
-
+//        if (beanRecommendItems.size() > 4) {
+        if (mData.size() < 5 && mData.size() + beanRecommendItems.size() >= 5) {
             NativeReq nativeReq = new NativeReq();
             nativeReq.w = 540;
             nativeReq.h = 960;
@@ -277,7 +273,8 @@ public class CV_RecommendPage extends FrameLayout{
                     LogHelper.d("wangzixu", "ModelHaoKanAd loadHaoKanAdData 5 onAdResSuccess");
                     BeanRecommendItem adBean = new BeanRecommendItem();
                     adBean.mBeanAdRes = adRes;
-                    beanRecommendItems.add(4, adBean);
+                    beanRecommendItems.add(4-mData.size(), adBean);
+
                     loadHaoKanAdData11(beanRecommendItems);
                 }
 
@@ -288,15 +285,14 @@ public class CV_RecommendPage extends FrameLayout{
                 }
             });
         } else {
-            setDataSuccess(beanRecommendItems);
+            loadHaoKanAdData11(beanRecommendItems);
         }
     }
 
     //请求第11个位置的广告数据
     public void loadHaoKanAdData11(final List<BeanRecommendItem> beanRecommendItems) {
         //第11信息流
-        if (beanRecommendItems.size() > 10) {
-//        if (false) {
+        if (mData.size() < 11 && mData.size() + beanRecommendItems.size() >= 11) {
             NativeReq nativeReq = new NativeReq();
             nativeReq.w = 540;
             nativeReq.h = 960;
@@ -309,7 +305,7 @@ public class CV_RecommendPage extends FrameLayout{
                     LogHelper.d("wangzixu", "ModelHaoKanAd loadHaoKanAdData 10 onAdResSuccess");
                     BeanRecommendItem adBean = new BeanRecommendItem();
                     adBean.mBeanAdRes = adRes;
-                    beanRecommendItems.add(10, adBean);
+                    beanRecommendItems.add(10-mData.size(), adBean);
 
                     setDataSuccess(beanRecommendItems);
                 }

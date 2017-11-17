@@ -98,7 +98,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     protected void onResume() {
         super.onResume();
-        App.sMainHanlder.postDelayed(mEventRun, 2000);
+        App.sMainHanlder.postDelayed(mEventRun, 1500);
         if (mIsRecommendPage) {
             if (mLockRecommendPage != null) {
                 mLockRecommendPage.onResume();

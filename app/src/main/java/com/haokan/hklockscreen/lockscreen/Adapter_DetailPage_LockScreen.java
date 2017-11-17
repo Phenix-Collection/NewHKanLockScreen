@@ -66,9 +66,6 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
             url = imageBean.mBeanAdRes.imgUrl;
         } else {
             url = imageBean.imgBigUrl;
-            if (imageBean.myType == 1) {
-                url = imageBean.localUrl;
-            }
         }
 
         BitmapRequestBuilder<String, Bitmap> builder = Glide.with(mContext).load(url).asBitmap().dontAnimate();
