@@ -35,6 +35,7 @@ import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
+import com.haokan.hklockscreen.lockscreeninitset.SystemLockAdapterUtil;
 import com.haokan.hklockscreen.mycollection.ActivityMyCollection;
 import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.App;
@@ -76,6 +77,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private RelativeLayout mLayoutFadeback;
     private RelativeLayout mLayoutCheckupdate;
     private RelativeLayout mLayoutAboutus;
+    private RelativeLayout mLayoutCloseSysLock;
     private ImageView mIvImage1;
     private ImageView mIvImage2;
     private ImageView mIvImage3;
@@ -125,6 +127,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mLayoutFadeback = (RelativeLayout) findViewById(R.id.layout_fadeback);
         mLayoutCheckupdate = (RelativeLayout) findViewById(R.id.layout_checkupdate);
         mLayoutAboutus = (RelativeLayout) findViewById(R.id.layout_aboutus);
+        mLayoutCloseSysLock = (RelativeLayout) findViewById(R.id.closesyslock);
         mIvImage1 = (ImageView) findViewById(R.id.iv_image1);
         mIvImage2 = (ImageView) findViewById(R.id.iv_image2);
         mIvImage3 = (ImageView) findViewById(R.id.iv_image3);
@@ -174,6 +177,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mIvDelte2.setOnClickListener(this);
         mIvDelte3.setOnClickListener(this);
         mIvAdView.setOnClickListener(this);
+        mLayoutCloseSysLock.setOnClickListener(this);
 
         //顶部banner高-mHeader1高
         mHeaderChangeHeigh = DisplayUtil.dip2px(this, 220-65);
@@ -213,6 +217,13 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
             }
         });
+
+        //根据是否适配, 显示一些条目
+        if (SystemLockAdapterUtil.isAdaptedPhone()) {
+            mLayoutCloseSysLock.setVisibility(View.VISIBLE);
+        } else {
+            mLayoutCloseSysLock.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -227,6 +238,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.closesyslock:
+
+                break;
             case R.id.adview:
                 if (!TextUtils.isEmpty(mAdLandPageUrl)) {
                     Intent intent = new Intent(ActivityLockSetting.this, ActivityWebview.class);

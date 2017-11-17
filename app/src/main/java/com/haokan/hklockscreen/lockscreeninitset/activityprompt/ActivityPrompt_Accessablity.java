@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreeninitset;
+package com.haokan.hklockscreen.lockscreeninitset.activityprompt;
 
 import android.os.Bundle;
 import android.view.View;

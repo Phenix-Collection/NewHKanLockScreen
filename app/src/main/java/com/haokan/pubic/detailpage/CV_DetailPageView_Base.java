@@ -35,6 +35,8 @@ import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
 import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
+import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
@@ -348,17 +350,34 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
     protected void onClickLink(){
-        if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+        if (mCurrentImgBean == null) {
             return;
         }
-        Intent intent = new Intent(mContext, ActivityWebview.class);
-        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
-        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
-        if (mActivity != null) {
-            mActivity.startActivity(intent);
-            mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+        if (mCurrentImgBean.is_jump == 1) {
+            Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
+            BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
+            beanRecommendItem.GroupId = mCurrentImgBean.jump_id;
+            beanRecommendItem.cover = mCurrentImgBean.imgSmallUrl;
+            beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
+            beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
+            beanRecommendItem.imgDesc = mCurrentImgBean.imgDesc;
+            intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            if (mActivity != null) {
+                mActivity.startActivity(intent);
+                mActivity.startActivityAnim();
+            } else {
+                mContext.startActivity(intent);
+            }
         } else {
-            mContext.startActivity(intent);
+            Intent intent = new Intent(mContext, ActivityWebview.class);
+            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
+            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
+            if (mActivity != null) {
+                mActivity.startActivity(intent);
+                mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+            } else {
+                mContext.startActivity(intent);
+            }
         }
     }
 
@@ -585,7 +604,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
     protected void refreshBottomLayout() {
-        if (mData.size() == 0) {
+        if (mData.size() == 0 || mCurrentImgBean == null) {
             return;
         }
 
@@ -611,7 +630,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             mTvCount.setText((mCurrentPosition+1) + "/" + (mData.size()));
         }
 
-        if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+        if (mCurrentImgBean.is_jump == 0 && TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
             mLayoutCaption.setOnClickListener(null);
             mTvLink.setVisibility(View.GONE);
         } else {

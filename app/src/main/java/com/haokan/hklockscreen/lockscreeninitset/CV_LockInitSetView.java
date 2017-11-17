@@ -2,7 +2,6 @@ package com.haokan.hklockscreen.lockscreeninitset;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
+import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_Accessablity;
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItemsBase;
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_Oppo;
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_Xiaomi;
@@ -115,10 +115,10 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
 
         FrameLayout frameLayout = (FrameLayout) mManulSetLayout.findViewById(R.id.manualsetitemslayout);
         //根据适配的机型, 添加不同的条目
-        if (SystemIntentUtil.isOppo()) {
+        if (SystemLockAdapterUtil.isOppo()) {
             mManualSetItemsLayout = new CV_LockInit_ManualSetItems_Oppo(mContext);
 
-        } else if (SystemIntentUtil.isXiaomi()) {
+        } else if (SystemLockAdapterUtil.isXiaomi()) {
             mManualSetItemsLayout = new CV_LockInit_ManualSetItems_Xiaomi(mContext);
 
         } else {
@@ -200,25 +200,13 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         }, 30);
     }
 
-    /**
-     * 是否是已经适配的手机
-     * @return
-     */
-    public boolean isAdaptedPhone() {
-        String manufacturer = Build.MANUFACTURER;
-        if (manufacturer.equalsIgnoreCase("xiaomi") || manufacturer.equalsIgnoreCase("oppo")) {
-            return true;
-        }
-        return false;
-    }
-
     private void checkAccessibility() {
-        if (isAdaptedPhone()) {
+        if (SystemLockAdapterUtil.isAdaptedPhone()) {
             if (isAccessibilitySettingsOn(mContext)) {
                 sIsAutoSetting = true;
 
                 //开始自动设置, 跳去设置开机启动的界面
-                Intent intent = SystemIntentUtil.getAutoStartIntent();
+                Intent intent = SystemLockAdapterUtil.getAutoStartIntent();
                 mActivityBase.startActivityForResult(intent, 102);
                 mActivityBase.startActivityAnim();
 
@@ -338,7 +326,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 App.sMainHanlder.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent intent = SystemIntentUtil.getAutoStartIntent();
+                        Intent intent = SystemLockAdapterUtil.getAutoStartIntent();
                         mActivityBase.startActivityForResult(intent, 102);
                         mActivityBase.startActivityAnim();
 

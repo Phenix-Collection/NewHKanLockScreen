@@ -97,7 +97,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_manualset_removesyspswd"
+            android:id="@+id/tv_manualset_closesyspswd"
             android:layout_gravity="center_vertical"
             android:background="@drawable/selector_lockinit_btnbg2"
             android:gravity="center"
@@ -148,7 +148,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_manualset_removesysmagazine"
+            android:id="@+id/tv_manualset_closesysmagazine"
             android:layout_gravity="center_vertical"
             android:background="@drawable/selector_lockinit_btnbg2"
             android:gravity="center"

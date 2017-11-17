@@ -30,6 +30,8 @@ import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
+import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
@@ -335,21 +337,39 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     @Override
     protected void onClickLink() {
-        if (mCurrentImgBean == null || TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+        if (mCurrentImgBean == null) {
             return;
         }
+
         HashMap<String, String> map = new HashMap<>();
         map.put("type", mCurrentImgBean.typeName);
         UmengMaiDianManager.onEvent(mContext, "event_064", map);
 
-        Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
-        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
-        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
-        if (mActivity != null) {
-            mActivity.startActivity(intent);
-            mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+        if (mCurrentImgBean.is_jump == 1) {
+            Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
+            BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
+            beanRecommendItem.GroupId = mCurrentImgBean.jump_id;
+            beanRecommendItem.cover = mCurrentImgBean.imgSmallUrl;
+            beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
+            beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
+            beanRecommendItem.imgDesc = mCurrentImgBean.imgDesc;
+            intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            if (mActivity != null) {
+                mActivity.startActivity(intent);
+                mActivity.startActivityAnim();
+            } else {
+                mContext.startActivity(intent);
+            }
         } else {
-            mContext.startActivity(intent);
+            Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
+            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
+            if (mActivity != null) {
+                mActivity.startActivity(intent);
+                mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
+            } else {
+                mContext.startActivity(intent);
+            }
         }
     }
 

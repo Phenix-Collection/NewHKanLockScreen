@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreeninitset.ActivityPrompt_AutoStart;
+import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_AutoStart;
 import com.haokan.hklockscreen.lockscreeninitset.CV_LockInitSetView;
-import com.haokan.hklockscreen.lockscreeninitset.SystemIntentUtil;
+import com.haokan.hklockscreen.lockscreeninitset.SystemLockAdapterUtil;
+import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_CloseSysMagazine_oppo;
+import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_CloseSysPswd_oppo;
 import com.haokan.pubic.App;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 
@@ -40,8 +42,8 @@ public class CV_LockInit_ManualSetItems_Oppo extends CV_LockInit_ManualSetItemsB
         LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_oppo, this, true);
 
         findViewById(R.id.tv_manualset_autostart).setOnClickListener(this);
-        findViewById(R.id.tv_manualset_removesyspswd).setOnClickListener(this);
-        findViewById(R.id.tv_manualset_removesysmagazine).setOnClickListener(this);
+        findViewById(R.id.tv_manualset_closesyspswd).setOnClickListener(this);
+        findViewById(R.id.tv_manualset_closesysmagazine).setOnClickListener(this);
     }
 
     @Override
@@ -49,7 +51,7 @@ public class CV_LockInit_ManualSetItems_Oppo extends CV_LockInit_ManualSetItemsB
         switch (v.getId()) {
             case R.id.tv_manualset_autostart:
                 try{
-                    Intent intent = SystemIntentUtil.getAutoStartIntent();
+                    Intent intent = SystemLockAdapterUtil.getAutoStartIntent();
                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivityBase.startActivityForResult(intent, 201);
                     mActivityBase.startActivityAnim();
@@ -70,19 +72,20 @@ public class CV_LockInit_ManualSetItems_Oppo extends CV_LockInit_ManualSetItemsB
                     e.printStackTrace();
                 }
                 break;
-            case R.id.tv_manualset_removesyspswd:
+            case R.id.tv_manualset_closesyspswd:
                 try{
-                    Intent intent = SystemIntentUtil.getRemoveSysPswdIntent();
+                    Intent intent = SystemLockAdapterUtil.getRemoveSysPswdIntent();
                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivityBase.startActivityForResult(intent, 202);
                     mActivityBase.startActivityAnim();
-//                    App.sMainHanlder.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
-//                            mActivityBase.startActivity(i2);
-//                        }
-//                    });
+                    App.sMainHanlder.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i2 = new Intent(mContext, ActivityPrompt_CloseSysPswd_oppo.class);
+                            mActivityBase.startActivity(i2);
+                        }
+                    });
+
                     HashMap<String, String> map = new HashMap<>();
                     map.put("type", "关闭系统密码解锁");
                     if (CV_LockInitSetView.sInitCheckStatus == 1) {
@@ -94,19 +97,19 @@ public class CV_LockInit_ManualSetItems_Oppo extends CV_LockInit_ManualSetItemsB
                     e.printStackTrace();
                 }
                 break;
-            case R.id.tv_manualset_removesysmagazine:
+            case R.id.tv_manualset_closesysmagazine:
                 try{
-                    Intent intent = SystemIntentUtil.getRemoveSysMagazineIntent();
+                    Intent intent = SystemLockAdapterUtil.getRemoveSysMagazineIntent();
                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivityBase.startActivityForResult(intent, 203);
                     mActivityBase.startActivityAnim();
-//                    App.sMainHanlder.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Intent i2 = new Intent(mContext, ActivityPrompt_AutoStart.class);
-//                            mActivityBase.startActivity(i2);
-//                        }
-//                    });
+                    App.sMainHanlder.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i2 = new Intent(mContext, ActivityPrompt_CloseSysMagazine_oppo.class);
+                            mActivityBase.startActivity(i2);
+                        }
+                    });
 
                     HashMap<String, String> map = new HashMap<>();
                     map.put("type", "关闭锁屏杂志");

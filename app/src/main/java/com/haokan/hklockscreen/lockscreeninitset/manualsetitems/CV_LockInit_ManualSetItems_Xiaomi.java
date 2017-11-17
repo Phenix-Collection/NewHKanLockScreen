@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreeninitset.ActivityPrompt_AutoStart;
+import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_AutoStart;
 import com.haokan.hklockscreen.lockscreeninitset.CV_LockInitSetView;
-import com.haokan.hklockscreen.lockscreeninitset.SystemIntentUtil;
+import com.haokan.hklockscreen.lockscreeninitset.SystemLockAdapterUtil;
 import com.haokan.pubic.App;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 
@@ -43,7 +43,7 @@ public class CV_LockInit_ManualSetItems_Xiaomi extends CV_LockInit_ManualSetItem
         switch (v.getId()) {
             case R.id.tv_manualset_autostart:
                 try{
-                    Intent intent = SystemIntentUtil.getAutoStartIntent();
+                    Intent intent = SystemLockAdapterUtil.getAutoStartIntent();
                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivityBase.startActivityForResult(intent, 201);
                     mActivityBase.startActivityAnim();

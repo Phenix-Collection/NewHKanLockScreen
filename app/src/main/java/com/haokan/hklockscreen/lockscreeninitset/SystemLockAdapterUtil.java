@@ -9,7 +9,7 @@ import com.haokan.pubic.logsys.LogHelper;
 /**
  * Created by wangzixu on 2017/10/11.
  */
-public class SystemIntentUtil {
+public class SystemLockAdapterUtil {
     public static boolean isOppo() {
         String manufacturer = Build.MANUFACTURER;
         return manufacturer.equalsIgnoreCase("oppo");
@@ -18,6 +18,18 @@ public class SystemIntentUtil {
     public static boolean isXiaomi() {
         String manufacturer = Build.MANUFACTURER;
         return manufacturer.equalsIgnoreCase("xiaomi");
+    }
+
+    /**
+     * 是否是已经适配的手机
+     * @return
+     */
+    public static boolean isAdaptedPhone() {
+        String manufacturer = Build.MANUFACTURER;
+        if (manufacturer.equalsIgnoreCase("oppo")) {
+            return true;
+        }
+        return false;
     }
 
 

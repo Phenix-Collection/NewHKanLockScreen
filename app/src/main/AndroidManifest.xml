@@ -128,13 +128,25 @@
         </activity>
 
         <activity
-            android:name=".lockscreeninitset.ActivityPrompt_AutoStart"
+            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_AutoStart"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".lockscreeninitset.ActivityPrompt_Accessablity"
+            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_Accessablity"
+            android:theme="@style/ActivityPromptTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_CloseSysMagazine_oppo"
+            android:theme="@style/ActivityPromptTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_CloseSysPswd_oppo"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
