@@ -122,6 +122,16 @@
                   android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name=".lockscreen.ActivityLandDetailPageForLockPage"
+                  android:launchMode="singleInstance"
+                  android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name=".lockscreen.ActivityLandPageForLockPage"
+                  android:launchMode="singleInstance"
+                  android:screenOrientation="portrait">
+        </activity>
+
         <activity
             android:name=".home.ActivityHomePage"
             android:screenOrientation="portrait">
@@ -140,19 +150,25 @@
         </activity>
 
         <activity
-            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_CloseSysMagazine_oppo"
+            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_CloseSysMagazine_1"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_CloseSysPswd_oppo"
+            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_CloseSysPswd_1"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
             android:name=".mycollection.ActivityMyCollection"
+            android:screenOrientation="portrait">
+        </activity>
+
+
+        <activity
+            android:name=".setting.ActivityLockSetting_CloseSysLock_1"
             android:screenOrientation="portrait">
         </activity>
 
@@ -184,7 +200,7 @@
             android:screenOrientation="portrait"/>
 
                   <!--android:launchMode="singleTask"-->
-        <activity android:name=".recommendpageland.ActivityRecommendPageLand"
+        <activity android:name=".recommendpageland.ActivityLandPageRecommend"
                   android:screenOrientation="portrait">
         </activity>
 

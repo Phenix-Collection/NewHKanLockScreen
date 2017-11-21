@@ -1,6 +1,7 @@
 package com.haokan.hklockscreen.splash;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,9 +20,14 @@ import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.BuildProperties;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.webview.ActivityWebview;
+
+import rx.Scheduler;
+import rx.functions.Action0;
+import rx.schedulers.Schedulers;
 
 
 public class ActivitySplash extends ActivityBase implements View.OnClickListener {
@@ -40,6 +46,8 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
 
         Intent i = new Intent(ActivitySplash.this, ServiceLockScreen.class);
         startService(i);
+
+        checkIsAdapter();
     }
 
     private void initView() {
@@ -103,6 +111,36 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
             @Override
             public void onAdResFail(String errmsg) {
                 LogHelper.d("wangzixu", "ModelHaoKanAd splash onAdResFail errmsg = " + errmsg);
+            }
+        });
+    }
+
+    public void checkIsAdapter() {
+        final Scheduler.Worker worker = Schedulers.io().createWorker();
+        worker.schedule(new Action0() {
+            @Override
+            public void call() {
+                App.sIsAdapterPhone = 0;
+
+                boolean hasAdapter = false;
+
+                //适配机型
+                String property = BuildProperties.newInstance().getProperty("ro.build.version.opporom");
+                if (!TextUtils.isEmpty(property)) {
+                    if (property.contains("V3.") && Build.VERSION.SDK_INT >= 23) {
+                        hasAdapter = true;
+                        App.sIsAdapterPhone = 1; //第一类型, colorOs-3.0.0i-Android6.0
+                    }
+                }
+
+                if (!hasAdapter) {
+                    if (Build.MANUFACTURER.equalsIgnoreCase("xiaomi")) {
+                        hasAdapter = true;
+                        App.sIsAdapterPhone = 2; //第二类型, 小米, 自启动
+                    }
+                }
+
+                worker.unsubscribe();
             }
         });
     }

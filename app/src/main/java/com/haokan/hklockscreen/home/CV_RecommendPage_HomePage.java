@@ -35,10 +35,7 @@ public class CV_RecommendPage_HomePage extends CV_RecommendPage implements View.
 
     private void initView() {
         View view = LayoutInflater.from(mContext).inflate(R.layout.cv_recommendpage_homepage, this, true);
-
         view.findViewById(R.id.setting).setOnClickListener(this);
-
-        UmengMaiDianManager.onEvent(mContext, "event_081");
     }
 
     @Override

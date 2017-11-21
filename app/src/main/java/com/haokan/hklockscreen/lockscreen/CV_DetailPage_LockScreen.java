@@ -30,7 +30,7 @@ import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
-import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
+import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.MainImageBean;
@@ -57,7 +57,7 @@ import java.util.List;
  */
 public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements CV_UnLockImageView.onUnLockListener {
     protected volatile boolean mIsDestory;
-    protected boolean mIsLocked; //当前是否是锁屏状态
+    protected boolean mIsLocked = true; //当前是否是锁屏状态
     protected int mLockPosition; //当前锁屏的位置
     private View mLayoutTime;
     private ImageView mIvSwitch;
@@ -131,7 +131,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     setTime();
                 } else if ("com.haokan.receiver.autoupdateimage".equals(action)) { //自动更新了图片
                     LogHelper.d("wangzixu", "autoupdate 收到了更新广播");
-//                    LogHelper.writeLog(mContext, "autoupdate 收到了更新广播");
+                    LogHelper.writeLog(mContext, "autoupdate 收到了更新广播");
                     loadSwitchOfflineData(true);
                 } else if ("com.haokan.receiver.localimagechange".equals(action)) { //本地相册变化了
                     LogHelper.d("wangzixu", "localimagechange 本地相册变化");
@@ -345,15 +345,15 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         map.put("type", mCurrentImgBean.typeName);
         UmengMaiDianManager.onEvent(mContext, "event_064", map);
 
-        if (mCurrentImgBean.is_jump == 1) {
-            Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
+        if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+            Intent intent = new Intent(mContext, ActivityLandPageForLockPage.class);
             BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
             beanRecommendItem.GroupId = mCurrentImgBean.jump_id;
             beanRecommendItem.cover = mCurrentImgBean.imgSmallUrl;
             beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
             beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
             beanRecommendItem.imgDesc = mCurrentImgBean.imgDesc;
-            intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
             if (mActivity != null) {
                 mActivity.startActivity(intent);
                 mActivity.startActivityAnim();
@@ -426,6 +426,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         }
 
         LogHelper.d("wangzixu", "lockscreenview intoLockScreenState scrollNext = " + scrollNext);
+//        Thread.dumpStack();
 
         //隐藏分享界面
         if (mShareLayout.getVisibility() == VISIBLE) {
@@ -441,6 +442,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         //显示锁屏时间界面
         showTimeLayout();
         hideCaption();
+
+        mIsLocked = true;
 
         //自动换下一张的逻辑
         if (scrollNext) {
@@ -493,7 +496,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             }
         }
 
-        mIsLocked = true;
         ((Adapter_DetailPage_LockScreen)mAdapterVpMain).setCanUnLock(true);
         mLockPosition = mCurrentPosition; //记录下锁屏的位置, 滑动解锁使用到, 来判断是否是滑动解锁
         if (mOnLockScreenStateChangeListener != null) {
@@ -846,7 +848,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     public void onUnLockSuccess() {
         LogHelper.d("wangzixu", "ActivityLockScreen onUnLockSuccess");
         if (mActivity != null) {
-            mActivity.onBackPressed();
+            mActivity.finish();
         }
         CV_DetailPage_LockScreen.this.setVisibility(INVISIBLE);
         mIsLocked = false;

@@ -13,8 +13,11 @@ import com.haokan.hklockscreen.lockscreen.CV_DetailPage_LockScreen;
 import com.haokan.hklockscreen.lockscreen.ReceiverLockScreen;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.UrlsUtil;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
+import com.haokan.pubic.util.BuildProperties;
 import com.haokan.pubic.util.CommonUtil;
+import com.squareup.leakcanary.LeakCanary;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -48,6 +51,13 @@ public class App extends Application {
     private ReceiverLockScreen mReceiver;
     public static CV_DetailPage_LockScreen sHaokanLockView;
 
+    /**
+     * 是否是已经适配了的手机, 0代表未适配<br/>
+     * 1:colorOs-3.0.0i-Android6.0 <br/>
+     * 2, 小米v9
+     */
+    public static int sIsAdapterPhone = 0;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -78,14 +88,14 @@ public class App extends Application {
         registerReceiver(mReceiver, filter);
         sHaokanLockView = new CV_DetailPage_LockScreen(getApplicationContext());
 
-//        if (LogHelper.DEBUG) {
-//            if (LeakCanary.isInAnalyzerProcess(this)) {
-//                // This process is dedicated to LeakCanary for heap analysis.
-//                // You should not init your app in this process.
-//                return;
-//            }
-//            LeakCanary.install(this);
-//        }
+        if (LogHelper.DEBUG) {
+            if (LeakCanary.isInAnalyzerProcess(this)) {
+                // This process is dedicated to LeakCanary for heap analysis.
+                // You should not init your app in this process.
+                return;
+            }
+            LeakCanary.install(this);
+        }
 
         StringBuilder builder = new StringBuilder();
         builder.append(App.sDID).append(",")
@@ -120,6 +130,6 @@ public class App extends Application {
 //        LogHelper.d("wangzixu", "app init = " + CommonUtil.getDevice());
 //        String string = BuildProperties.getSystemProperty("ro.build.display.id");
 //        LogHelper.d("wangzixu", "app init = " + string);
-//        BuildProperties.newInstance();
+        BuildProperties.newInstance();
     }
 }

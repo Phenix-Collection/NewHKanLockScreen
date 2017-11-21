@@ -1,5 +1,6 @@
 package com.haokan.hklockscreen.recommendpageland;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,12 +17,14 @@ import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.mycollection.BeanCollection;
+import com.haokan.hklockscreen.recommendpagedetail.ActivityDetailPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
+import com.haokan.pubic.webview.ActivityWebview;
 import com.j256.ormlite.dao.Dao;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
@@ -38,7 +41,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by wangzixu on 2017/11/7.
  */
-public class ActivityRecommendPageLand extends ActivityBase implements View.OnClickListener {
+public class ActivityLandPageRecommend extends ActivityBase implements View.OnClickListener {
     private TextView mTvTitle;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mManager;
@@ -47,10 +50,10 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
     private int mCommentPage;
     private BeanRecommendItem mRecommendItemBean;
     public static final String KEY_INTENT_RECOMMENDBEAN = "recommenbean";
-    private AdapterRecommendPageLand mAdapter;
+    private AdapterLandPageRecommend mAdapter;
     private ArrayList<BeanRecommendPageLand> mData = new ArrayList<>();
     private int mTitleBottomH;
-    private AdapterRecommendPageLand.ItemHeaderViewHolder mHeaderItem;
+    private AdapterLandPageRecommend.ItemHeaderViewHolder mHeaderItem;
     private View mShareLayout;
     private View mShareLayoutContent;
     private View mShareLayoutBg;
@@ -108,7 +111,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mAdapter = new AdapterRecommendPageLand(this, mData);
+        mAdapter = new AdapterLandPageRecommend(this, mData);
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -187,7 +190,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
             @Override
             public void call() {
                 try {
-                    Dao dao = MyDatabaseHelper.getInstance(ActivityRecommendPageLand.this).getDaoQuickly(BeanCollection.class);
+                    Dao dao = MyDatabaseHelper.getInstance(ActivityLandPageRecommend.this).getDaoQuickly(BeanCollection.class);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -196,7 +199,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
         });
     }
 
-    public void setHeaderItem(AdapterRecommendPageLand.ItemHeaderViewHolder headerItem) {
+    public void setHeaderItem(AdapterLandPageRecommend.ItemHeaderViewHolder headerItem) {
         mHeaderItem = headerItem;
         mHeaderItem.mTvTitle.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
@@ -370,7 +373,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
          */
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            ToastManager.showShort(ActivityRecommendPageLand.this, "已分享");
+            ToastManager.showShort(ActivityLandPageRecommend.this, "已分享");
             hideShareLayout();
         }
 
@@ -381,7 +384,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
          */
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            ToastManager.showShort(ActivityRecommendPageLand.this, "分享失败");
+            ToastManager.showShort(ActivityLandPageRecommend.this, "分享失败");
             LogHelper.d("share","分享失败:"+t);
         }
 
@@ -391,7 +394,7 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
          */
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            ToastManager.showShort(ActivityRecommendPageLand.this, "分享取消");
+            ToastManager.showShort(ActivityLandPageRecommend.this, "分享取消");
         }
     };
 
@@ -440,5 +443,26 @@ public class ActivityRecommendPageLand extends ActivityBase implements View.OnCl
             animation1.setFillAfter(true);
             mShareLayoutContent.startAnimation(animation1);
         }
+    }
+
+    public void startDetailPage(ArrayList<BeanRecommendPageLand> data, int pos) {
+        if (data == null) {
+            return;
+        }
+        Intent intent = new Intent(this, ActivityDetailPageRecommend.class);
+        intent.putParcelableArrayListExtra(ActivityDetailPageRecommend.KEY_INTENT_GROUDDATE, data);
+        intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_POSITION, Math.max(pos, 0));
+        startActivity(intent);
+        overridePendingTransition(R.anim.activity_fade_bigger_in, R.anim.activity_retain);
+    }
+
+    public void startAdDetailPage(BeanRecommendPageLand mBean) {
+        if (mBean.mBeanAdRes == null) {
+            return;
+        }
+        Intent intent = new Intent(this, ActivityWebview.class);
+        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBean.mBeanAdRes.landPageUrl);
+        startActivity(intent);
+        startActivityAnim();
     }
 }

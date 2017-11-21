@@ -35,7 +35,7 @@ import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
 import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
-import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
+import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
@@ -353,15 +353,15 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (mCurrentImgBean == null) {
             return;
         }
-        if (mCurrentImgBean.is_jump == 1) {
-            Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
+        if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+            Intent intent = new Intent(mContext, ActivityLandPageRecommend.class);
             BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
             beanRecommendItem.GroupId = mCurrentImgBean.jump_id;
             beanRecommendItem.cover = mCurrentImgBean.imgSmallUrl;
             beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
             beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
             beanRecommendItem.imgDesc = mCurrentImgBean.imgDesc;
-            intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
             if (mActivity != null) {
                 mActivity.startActivity(intent);
                 mActivity.startActivityAnim();
@@ -630,18 +630,18 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             mTvCount.setText((mCurrentPosition+1) + "/" + (mData.size()));
         }
 
-        if (mCurrentImgBean.is_jump == 0 && TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-            mLayoutCaption.setOnClickListener(null);
-            mTvLink.setVisibility(View.GONE);
-        } else {
-    //        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
-    //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
-            mLayoutCaption.setOnClickListener(this);
-            mTvLinkBg.setColor(getLinkBgColor());
-            mTvLink.setBackground(mTvLinkBg);
-            mTvLink.setText("查看更多");
-            mTvLink.setVisibility(View.VISIBLE);
-        }
+//        if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+//            mLayoutCaption.setOnClickListener(null);
+//            mTvLink.setVisibility(View.GONE);
+//        } else {
+//    //        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
+//    //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
+//        }
+        mLayoutCaption.setOnClickListener(this);
+        mTvLinkBg.setColor(getLinkBgColor());
+        mTvLink.setBackground(mTvLinkBg);
+        mTvLink.setText("查看更多");
+        mTvLink.setVisibility(View.VISIBLE);
 
 
         // 设置标题、图说

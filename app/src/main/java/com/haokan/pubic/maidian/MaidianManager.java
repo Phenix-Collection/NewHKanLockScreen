@@ -23,7 +23,7 @@ public class MaidianManager {
         final MaidianUpBean requestEntity = new MaidianUpBean();
         requestEntity.data = userInfo;
 
-        Observable<MaidianResponse> observable = HttpRetrofitManager.getInstance().getRetrofitService().maidianUpload("http://glog.gray.levect.com/api/user/log", requestEntity);
+        Observable<MaidianResponse> observable = HttpRetrofitManager.getInstance().getRetrofitService().maidianUpload("http://glog.levect.com/10000/user/log", requestEntity);
         observable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -79,7 +79,7 @@ public class MaidianManager {
         final MaidianUpBean requestEntity = new MaidianUpBean();
         requestEntity.data = mActionInfoTemp;
 
-        Observable<MaidianResponse> observable = HttpRetrofitManager.getInstance().getRetrofitService().maidianUpload("http://glog.gray.levect.com/api/action/log", requestEntity);
+        Observable<MaidianResponse> observable = HttpRetrofitManager.getInstance().getRetrofitService().maidianUpload("http://glog.levect.com/10000/action/log", requestEntity);
         observable
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<MaidianResponse>() {

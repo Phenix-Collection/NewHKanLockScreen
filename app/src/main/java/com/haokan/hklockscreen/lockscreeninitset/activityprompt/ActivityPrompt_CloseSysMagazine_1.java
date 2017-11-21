@@ -11,12 +11,12 @@ import com.haokan.pubic.util.StatusBarUtil;
 /**
  * oppo手机关闭锁屏杂志的提示
  */
-public class ActivityPrompt_CloseSysPswd_oppo extends ActivityBase implements View.OnClickListener {
+public class ActivityPrompt_CloseSysMagazine_1 extends ActivityBase implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prompt_closesyspswd_oppo);
+        setContentView(R.layout.activity_prompt_closesysmagazine_oppo);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
     }

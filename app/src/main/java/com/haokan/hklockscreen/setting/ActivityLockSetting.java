@@ -35,7 +35,6 @@ import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
-import com.haokan.hklockscreen.lockscreeninitset.SystemLockAdapterUtil;
 import com.haokan.hklockscreen.mycollection.ActivityMyCollection;
 import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.App;
@@ -219,7 +218,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         });
 
         //根据是否适配, 显示一些条目
-        if (SystemLockAdapterUtil.isAdaptedPhone()) {
+        if (App.sIsAdapterPhone == 1 || true) {
             mLayoutCloseSysLock.setVisibility(View.VISIBLE);
         } else {
             mLayoutCloseSysLock.setVisibility(View.GONE);
@@ -239,7 +238,11 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.closesyslock:
-
+                {
+                    Intent intent = new Intent(ActivityLockSetting.this, ActivityLockSetting_CloseSysLock_1.class);
+                    startActivity(intent);
+                    startActivityAnim();
+                }
                 break;
             case R.id.adview:
                 if (!TextUtils.isEmpty(mAdLandPageUrl)) {

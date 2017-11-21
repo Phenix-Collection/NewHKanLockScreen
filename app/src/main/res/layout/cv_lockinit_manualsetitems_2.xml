@@ -12,6 +12,7 @@
         android:layout_height="1px"/>
 
     <LinearLayout
+        android:id="@+id/autostartlayout"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="80dp">

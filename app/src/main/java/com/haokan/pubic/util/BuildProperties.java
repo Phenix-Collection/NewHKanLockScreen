@@ -97,8 +97,7 @@ public class BuildProperties {
             if(input != null) {
                 try {
                     input.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                 }
             }
         }

@@ -8,13 +8,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="false"
     >
-    <item android:drawable="@drawable/icon_gear1" android:duration="45"></item>
-    <item android:drawable="@drawable/icon_gear2" android:duration="45"></item>
-    <item android:drawable="@drawable/icon_gear3" android:duration="45"></item>
-    <item android:drawable="@drawable/icon_gear4" android:duration="45"></item>
-    <item android:drawable="@drawable/icon_gear5" android:duration="45"></item>
-    <item android:drawable="@drawable/icon_gear6" android:duration="45"></item>
-    <item android:drawable="@drawable/icon_gear7" android:duration="45"></item>
-    <item android:drawable="@drawable/icon_gear8" android:duration="45"></item>
-    <item android:drawable="@drawable/icon_gear9" android:duration="45"></item>
+    <item android:drawable="@drawable/icon_gear1" android:duration="16"></item>
+    <item android:drawable="@drawable/icon_gear2" android:duration="16"></item>
+    <item android:drawable="@drawable/icon_gear3" android:duration="16"></item>
+    <item android:drawable="@drawable/icon_gear4" android:duration="16"></item>
+    <item android:drawable="@drawable/icon_gear5" android:duration="16"></item>
+    <item android:drawable="@drawable/icon_gear6" android:duration="16"></item>
+    <item android:drawable="@drawable/icon_gear7" android:duration="16"></item>
+    <item android:drawable="@drawable/icon_gear8" android:duration="16"></item>
+    <item android:drawable="@drawable/icon_gear9" android:duration="16"></item>
 </animation-list>

@@ -5,8 +5,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
@@ -18,7 +21,6 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -71,6 +73,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private View mGustureView;
     private static boolean sLockguideUpDown = true;
     private static boolean sLockguideRL = true;
+    private BroadcastReceiver mReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,26 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         initView();
         initRecommendPageView();
         initLockScreenView();
+
+        //监听home键, 关闭锁屏
+        final IntentFilter filter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                LogHelper.d("wangzixu", "homehome onReceive intent = " + intent.getAction());
+                App.sMainHanlder.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                        if (App.sHaokanLockView != null) {
+                            App.sHaokanLockView.mIsLocked = false;
+                        }
+                        UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_065");
+                    }
+                }, 0);
+            }
+        };
+        registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -632,13 +655,18 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     /**
      * 屏蔽掉返回键
      */
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if(keyCode==KeyEvent.KEYCODE_BACK || keyCode==KeyEvent.KEYCODE_HOME){
+//            return true;
+//        }else {
+//            return super.onKeyDown(keyCode, event);
+//        }
+//    }
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode==KeyEvent.KEYCODE_BACK || keyCode==KeyEvent.KEYCODE_HOME){
-            return true;
-        }else {
-            return super.onKeyDown(keyCode, event);
-        }
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 
     //权限相关begin*****
@@ -747,6 +775,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     protected void onDestroy() {
         LogHelper.d("wangzixu", "ActivityLockScreen onDestroy");
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
         if (App.sHaokanLockView != null) {
             App.sHaokanLockView.setActivity(null);
             App.sHaokanLockView.setOnLockScreenStateListener(null);

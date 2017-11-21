@@ -1,6 +1,5 @@
 package com.haokan.hklockscreen.recommendpageland;
 
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,22 +9,20 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.recommendpagedetail.ActivityDetailPageRecommend;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
 import com.haokan.pubic.util.DisplayUtil;
-import com.haokan.pubic.webview.ActivityWebview;
 
 import java.util.ArrayList;
 
 /**
  * Created by wangzixu on 2016/8/18.
  */
-public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAdapter<AdapterRecommendPageLand.ViewHolder> {
+public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAdapter<AdapterLandPageRecommend.ViewHolder> {
     private ArrayList<BeanRecommendPageLand> mData = new ArrayList<>();
-    private ActivityRecommendPageLand mContext;
+    private ActivityLandPageRecommend mContext;
     private int mItemW;
 
-    public AdapterRecommendPageLand(ActivityRecommendPageLand context, ArrayList<BeanRecommendPageLand> data) {
+    public AdapterLandPageRecommend(ActivityLandPageRecommend context, ArrayList<BeanRecommendPageLand> data) {
         mContext = context;
         mData = data;
         mItemW = context.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(context,38);
@@ -156,11 +153,7 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(mContext, ActivityDetailPageRecommend.class);
-            intent.putParcelableArrayListExtra(ActivityDetailPageRecommend.KEY_INTENT_GROUDDATE, mData);
-            intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_POSITION, Math.max(mPos, 0));
-            mContext.startActivity(intent);
-            mContext.overridePendingTransition(R.anim.activity_fade_bigger_in, R.anim.activity_retain);
+            mContext.startDetailPage(mData, mPos);
         }
     }
 
@@ -226,13 +219,7 @@ public class AdapterRecommendPageLand extends DefaultHeaderFooterRecyclerViewAda
 
         @Override
         public void onClick(View v) {
-            if (mBean.mBeanAdRes == null) {
-                return;
-            }
-            Intent intent = new Intent(mContext, ActivityWebview.class);
-            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBean.mBeanAdRes.landPageUrl);
-            mContext.startActivity(intent);
-            mContext.startActivityAnim();
+            mContext.startAdDetailPage(mBean);
         }
     }
 }

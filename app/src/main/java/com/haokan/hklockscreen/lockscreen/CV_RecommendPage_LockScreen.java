@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.recommendpageland.ActivityRecommendPageLand;
+import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
@@ -125,8 +125,8 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
         UmengMaiDianManager.onEvent(mContext, "event_079");
 
         if (beanRecommendItem.mBeanAdRes == null) {
-            Intent intent = new Intent(mContext, ActivityRecommendPageLand.class);
-            intent.putExtra(ActivityRecommendPageLand.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            Intent intent = new Intent(mContext, ActivityLandPageForLockPage.class);
+            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
             if (mActivityBase != null) {
                 mActivityBase.startActivity(intent);
                 mActivityBase.startActivityAnim();

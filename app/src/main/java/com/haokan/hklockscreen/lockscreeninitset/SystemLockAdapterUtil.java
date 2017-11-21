@@ -20,19 +20,6 @@ public class SystemLockAdapterUtil {
         return manufacturer.equalsIgnoreCase("xiaomi");
     }
 
-    /**
-     * 是否是已经适配的手机
-     * @return
-     */
-    public static boolean isAdaptedPhone() {
-        String manufacturer = Build.MANUFACTURER;
-        if (manufacturer.equalsIgnoreCase("oppo")) {
-            return true;
-        }
-        return false;
-    }
-
-
     public static Intent getAutoStartIntent() {
         Intent intent = new Intent();
         String pkg = "com.miui.securitycenter";
@@ -62,59 +49,4 @@ public class SystemLockAdapterUtil {
         return intent;
     }
 
-    public static Intent getRemoveSysPswdIntent() {
-        Intent intent = new Intent();
-        String pkg = "com.coloros.fingerprint";
-        String cls = "com.coloros.fingerprint.FingerLockActivity";
-
-        String manufacturer = Build.MANUFACTURER;
-        LogHelper.d("wangzixu", "SystemIntentUtil manufacturer = " + manufacturer);
-
-        if (manufacturer.equalsIgnoreCase("xiaomi")) {
-            pkg = "com.miui.securitycenter";
-            cls = "com.miui.permcenter.autostart.AutoStartManagementActivity";
-        } else if (manufacturer.equalsIgnoreCase("huawei")) {
-            pkg = "com.huawei.systemmanager";
-            cls = "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity";
-
-        } else if (manufacturer.equalsIgnoreCase("oppo")) {
-            pkg = "com.coloros.fingerprint";
-            cls = "com.coloros.fingerprint.FingerLockActivity";
-        } else if (manufacturer.equalsIgnoreCase("vivo")) {
-            pkg = "com.iqoo.secure";
-            cls = ".ui.phoneoptimize.AddWhiteListActivity";
-        }
-
-        ComponentName componentName = new ComponentName(pkg, cls);
-        intent.setComponent(componentName);
-        return intent;
-    }
-
-    public static Intent getRemoveSysMagazineIntent() {
-        Intent intent = new Intent();
-        String pkg = "com.oppo.screenlock.pictorial";
-        String cls = "com.oppo.screenlock.pictorial.MainActivity";
-
-        String manufacturer = Build.MANUFACTURER;
-        LogHelper.d("wangzixu", "SystemIntentUtil manufacturer = " + manufacturer);
-
-        if (manufacturer.equalsIgnoreCase("xiaomi")) {
-            pkg = "com.miui.securitycenter";
-            cls = "com.miui.permcenter.autostart.AutoStartManagementActivity";
-        } else if (manufacturer.equalsIgnoreCase("huawei")) {
-            pkg = "com.huawei.systemmanager";
-            cls = "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity";
-
-        } else if (manufacturer.equalsIgnoreCase("oppo")) {
-            pkg = "com.oppo.screenlock.pictorial";
-            cls = "com.oppo.screenlock.pictorial.MainActivity";
-        } else if (manufacturer.equalsIgnoreCase("vivo")) {
-            pkg = "com.iqoo.secure";
-            cls = ".ui.phoneoptimize.AddWhiteListActivity";
-        }
-
-        ComponentName componentName = new ComponentName(pkg, cls);
-        intent.setComponent(componentName);
-        return intent;
-    }
 }

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_AutoStart;
@@ -17,29 +18,32 @@ import com.haokan.pubic.maidian.UmengMaiDianManager;
 /**
  * Created by wangzixu on 2017/11/16.
  */
-public class CV_LockInit_ManualSetItems_Xiaomi extends CV_LockInit_ManualSetItemsBase implements View.OnClickListener {
+public class CV_LockInit_ManualSetItems_2 extends CV_LockInit_ManualSetItemsBase implements View.OnClickListener {
     private int mManusetBit = 0x00000000;
     private final int MANUSET_BIT_AUTOSTART = 0x00000001;
     private final int MANUSET_BIT_ALLSET = 0x00000001;
+    private View mAutoStartLayout;
+    private TextView mTvAutoStart;
 
-    public CV_LockInit_ManualSetItems_Xiaomi(Context context) {
+    public CV_LockInit_ManualSetItems_2(Context context) {
         this(context, null);
     }
 
-    public CV_LockInit_ManualSetItems_Xiaomi(Context context, @Nullable AttributeSet attrs) {
+    public CV_LockInit_ManualSetItems_2(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CV_LockInit_ManualSetItems_Xiaomi(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CV_LockInit_ManualSetItems_2(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_xiaomi, this, true);
-
-        findViewById(R.id.tv_manualset_autostart).setOnClickListener(this);
+        LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_2, this, true);
+        mAutoStartLayout = findViewById(R.id.autostartlayout);
+        mTvAutoStart = (TextView) findViewById(R.id.tv_manualset_autostart);
+        mTvAutoStart.setOnClickListener(this);
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.tv_manualset_autostart:
                 try{
@@ -60,6 +64,16 @@ public class CV_LockInit_ManualSetItems_Xiaomi extends CV_LockInit_ManualSetItem
                     } else {
                         UmengMaiDianManager.onEvent(mContext, "event_058");
                     }
+
+                    //显示已经设置过的状态
+                    App.sMainHanlder.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTvAutoStart.setSelected(true);
+                            mTvAutoStart.setText("已设置");
+                            mAutoStartLayout.setBackgroundColor(0xfff4f4f4);
+                        }
+                    }, 500);
                 }catch (Exception e){
                     e.printStackTrace();
                 }

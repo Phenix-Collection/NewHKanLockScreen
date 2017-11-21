@@ -23,7 +23,6 @@ public class MainImageBean implements Serializable{
     public int commentNum;//评论数量
     public String cpId; //cpid
     public String cpName; //cpName
-    public int is_jump; //是否跳转外链 //和jump_id完全不是一回事, 这里是指的是否要跳转linkUrl
     public String jump_id; //本地详情页组图id
 
     /**

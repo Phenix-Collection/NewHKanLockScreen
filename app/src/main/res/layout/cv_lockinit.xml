@@ -3,12 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <include
+        android:visibility="gone"
+        android:id="@+id/setprogresslayout"
+        layout="@layout/cv_lockinit_progress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <include
         android:id="@+id/scanlayout"
         layout="@layout/cv_lockinit_scaning"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 
     <include
         android:visibility="gone"

@@ -77,18 +77,29 @@ public class ActivityHomePage extends ActivityBase {
         }
     };
 
+    //熊守义友盟埋点, 统计这个页的曝光, 类似统计广告的方式来统计的页面
+    Runnable mUmMaidianRun = new Runnable() {
+        @Override
+        public void run() {
+            UmengMaiDianManager.onEvent(ActivityHomePage.this, "event_081");
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();
         if (mCvHomePage != null) {
             mCvHomePage.onResume();
         }
+
+        App.sMainHanlder.postDelayed(mUmMaidianRun, 1000);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         App.sMainHanlder.removeCallbacks(mPermissionRun);
+        App.sMainHanlder.removeCallbacks(mUmMaidianRun);
     }
 
     //权限相关begin*****
