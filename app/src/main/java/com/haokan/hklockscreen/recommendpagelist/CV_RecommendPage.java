@@ -253,7 +253,7 @@ public class CV_RecommendPage extends FrameLayout{
             }
         }
         LogHelper.d("wangzixu", "recompage loadData mtypeName = " + mTypeName);
-        new ModelRecommendPage().getRecommendData(mContext, mTypeName, mPage, mOnDataResponseListener);
+        new ModelRecommendPage().getRecommendData(mContext.getApplicationContext(), mTypeName, mPage, mOnDataResponseListener);
     }
 
     //请求第五个位置的广告数据

@@ -61,7 +61,7 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
         bannerReq.h = 1560;
         BidRequest request = ModelHaoKanAd.getBidRequest("28-53-209", 5, null, bannerReq);
 
-        ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
+        ModelHaoKanAd.getAd(this.getApplicationContext(), request, new onAdResListener<BeanAdRes>() {
             @Override
             public void onAdResSuccess(final BeanAdRes adRes) {
                 LogHelper.d("wangzixu", "ModelHaoKanAd splash onAdResSuccess");

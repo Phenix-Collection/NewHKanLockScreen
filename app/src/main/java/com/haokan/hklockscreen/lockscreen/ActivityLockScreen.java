@@ -261,24 +261,24 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mLockRecommendPage.setLayoutParams(params);
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        LogHelper.d("wangzixu", "ActivityLockScreen onNewIntent");
-        App.sHaokanLockView.intoLockScreenState(true);
-        mScrollView.scrollTo(0,0);
-
-        if (mIsRecommendPage == true) {
-            mLockRecommendPage.onHide();
-            mIsRecommendPage = false;
-
-            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_080");
-        } else {
-            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_075");
-        }
-
-        hideNavigation();
-    }
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        LogHelper.d("wangzixu", "ActivityLockScreen onNewIntent");
+//        App.sHaokanLockView.intoLockScreenState(true);
+//        mScrollView.scrollTo(0,0);
+//
+//        if (mIsRecommendPage == true) {
+//            mLockRecommendPage.onHide();
+//            mIsRecommendPage = false;
+//
+//            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_080");
+//        } else {
+//            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_075");
+//        }
+//
+//        hideNavigation();
+//    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {

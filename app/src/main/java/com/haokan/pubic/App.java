@@ -1,11 +1,14 @@
 package com.haokan.pubic;
 
 import android.app.Application;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.Looper;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 
 import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.haokan.hklockscreen.R;
@@ -83,6 +86,8 @@ public class App extends Application {
         IntentFilter filter=new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+        filter.addAction("android.intent.action.PHONE_STATE");
         filter.setPriority(Integer.MAX_VALUE);
         mReceiver = new ReceiverLockScreen();
         registerReceiver(mReceiver, filter);
@@ -115,6 +120,26 @@ public class App extends Application {
                 MaidianManager.actionUpdate();
             }
         }, 0, 20, TimeUnit.SECONDS);
+
+        TelephonyManager tm = (TelephonyManager)getSystemService(Service.TELEPHONY_SERVICE);
+        tm.listen(new PhoneStateListener(){
+                      @Override
+                      public void onCallStateChanged(int state, String incomingNumber) {
+                          //注意，方法必须写在super方法后面，否则incomingNumber无法获取到值。
+                          super.onCallStateChanged(state, incomingNumber);
+                          switch(state){
+                              case TelephonyManager.CALL_STATE_IDLE:
+                                  LogHelper.d("wangzixu", "phonestate 挂断");
+                                  break;
+                              case TelephonyManager.CALL_STATE_OFFHOOK:
+                                  LogHelper.d("wangzixu", "phonestate 接听");
+                                  break;
+                              case TelephonyManager.CALL_STATE_RINGING:
+                                  LogHelper.d("wangzixu", "phonestate 响铃:来电号码"+incomingNumber);
+                                  //输出来电号码
+                                  break;
+                          }
+                      }}, PhoneStateListener.LISTEN_CALL_STATE);
     }
 
     public static void init(final Context context) {
