@@ -821,7 +821,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     @Override
     protected void onClickSetting() {
         Intent i = new Intent(mContext, ActivitySettingForLockPage.class);
+//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (mActivity != null) {
+//            mActivity.startActivityForResult(i, 101);
             mActivity.startActivity(i);
             mActivity.startActivityAnim();
         } else {

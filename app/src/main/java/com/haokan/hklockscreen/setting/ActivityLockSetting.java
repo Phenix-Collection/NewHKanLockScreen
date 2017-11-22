@@ -394,6 +394,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 {
                     Intent intent = new Intent(this, ActivityAboutUs.class);
                     startActivityForResult(intent, 300);
+//                    startActivity(intent);
                     startActivityAnim();
 
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_092");

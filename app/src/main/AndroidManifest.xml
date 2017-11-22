@@ -112,9 +112,10 @@
             android:screenOrientation="portrait">
         </activity>
 
+            <!--android:launchMode="singleInstance"-->
         <activity
             android:name=".lockscreen.activityforlockscreen.ActivitySettingForLockPage"
-            android:launchMode="singleInstance"
+            android:taskAffinity="com.hk.lockscreentask"
             android:screenOrientation="portrait">
         </activity>
 
@@ -204,7 +205,7 @@
                   android:screenOrientation="portrait">
         </activity>
 
-                  <!--android:launchMode="singleInstance"-->
+
         <activity android:name=".setting.ActivityAboutUs"
                   android:screenOrientation="portrait">
         </activity>

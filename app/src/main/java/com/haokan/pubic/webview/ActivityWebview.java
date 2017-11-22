@@ -176,6 +176,7 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
         //设置接受第三方的cooke, 很重要, 必须设置才能正确接受cookie
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
 
         mWebView.setDownloadListener(new DownloadListener() {//实现文件下载功能

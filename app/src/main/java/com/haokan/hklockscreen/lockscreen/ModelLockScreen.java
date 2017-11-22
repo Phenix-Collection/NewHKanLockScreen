@@ -407,7 +407,7 @@ public class ModelLockScreen {
 
                         imageBean.localUrl = file.getAbsolutePath();
                         imageBean.imgBigUrl = imageBean.localUrl;
-                        imageBean.imgSmallUrl = imageBean.imgBigUrl;
+                        imageBean.imgSmallUrl = imageBean.localUrl;
                     } catch (Exception e) {
                         if (LogHelper.DEBUG) {
                             LogHelper.e("wangzixu", "saveSwitchData ----下载失败了一张 Glide load i = " + i + " , url = " + url);
