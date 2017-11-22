@@ -194,7 +194,7 @@
             <TextView
                 android:id="@+id/tv_desc_simple"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:maxLines="2"
                 android:layout_below="@id/layout_title"
                 android:layout_marginLeft="15dp"

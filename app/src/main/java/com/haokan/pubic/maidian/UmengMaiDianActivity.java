@@ -38,6 +38,7 @@ public class UmengMaiDianActivity extends Activity {
         params.width = 1;
         window.setAttributes(params);
 
+        //5秒后销毁, 给友盟存log的时间, 否则友盟log会报异常
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -65,6 +66,7 @@ public class UmengMaiDianActivity extends Activity {
             String eventid = intent.getStringExtra(KEY_INTENT_EVENTID);
             LogHelper.d("wangzixu", "UmengMaiDianActivity uploadEvent eventid = " + eventid);
             if (!TextUtils.isEmpty(eventid)) {
+                //取出传入的参数和值, 参数和值有可能有多个
                 String[] args = intent.getStringArrayExtra(KEY_INTENT_ARGS);
                 String[] values = intent.getStringArrayExtra(KEY_INTENT_VALUES);
                 if (args == null || values == null || args.length != values.length) {
@@ -86,14 +88,4 @@ public class UmengMaiDianActivity extends Activity {
         MobclickAgent.onPause(this);
         super.onDestroy();
     }
-
-//    private boolean mIsFinish = false;
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (!mIsFinish) {
-//            mIsFinish = true;
-//            moveTaskToBack(true); //回后台, 不能销毁
-//        }
-//        return super.dispatchTouchEvent(ev);
-//    }
 }

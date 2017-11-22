@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
@@ -47,12 +48,12 @@ public class ModelCollection {
             public void call(Subscriber<? super BeanCollection> subscriber) {
                 File file = null;
                 try {
-
                     //存下这个图片
                     if (TextUtils.isEmpty(imageBean.imgId)) {
                         imageBean.imgId = ModelLocalImage.sLocalImgIdPreffix + System.currentTimeMillis();
                     }
                     file = new File(getCollectImageDir(context), imageBean.imgId + ".jpg");
+
                     FutureTarget<File> target = Glide.with(context).load(imageBean.imgBigUrl).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
                     File bitmapFile = target.get();
                     FileUtil.moveFile(bitmapFile, file);
@@ -61,6 +62,32 @@ public class ModelCollection {
                     imageBean.imgSmallUrl = file.getAbsolutePath();
                     Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanCollection.class);
                     dao.createOrUpdate(imageBean);
+
+//                    App.sMainHanlder.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Glide.with(context).load(oldUrl).asBitmap().listener(new RequestListener<String, Bitmap>() {
+//                                @Override
+//                                public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
+//                                    LogHelper.d("wangzixu", "collection addCollection onException");
+//                                    e.printStackTrace();
+//                                    return false;
+//                                }
+//
+//                                @Override
+//                                public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+//                                    LogHelper.d("wangzixu", "collection addCollection onResourceReady resource = " + resource);
+//                                    return false;
+//                                }
+//                            }).into(new SimpleTarget<Bitmap>() {
+//                                @Override
+//                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                                    LogHelper.d("wangzixu", "collection addCollection resource = " + resource);
+//                                    FileUtil.saveBitmapToFile(context, resource, file, false);
+//                                }
+//                            });
+//                        }
+//                    });
 
                     subscriber.onNext(imageBean);
                     subscriber.onCompleted();

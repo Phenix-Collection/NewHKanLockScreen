@@ -127,7 +127,7 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                 //适配机型
                 String property = BuildProperties.newInstance().getProperty("ro.build.version.opporom");
                 if (!TextUtils.isEmpty(property)) {
-                    if (property.contains("V3.") && Build.VERSION.SDK_INT >= 23) {
+                    if (property.contains("V3.0") && Build.VERSION.SDK_INT == 23) {
                         hasAdapter = true;
                         App.sIsAdapterPhone = 1; //第一类型, colorOs-3.0.0i-Android6.0
                     }

@@ -63,6 +63,7 @@ public class ServiceLockScreen extends Service {
             try {
                 Intent intent1 = new Intent(this, ActivityLockScreen.class);
                 intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 this.startActivity(intent1);
                 LogHelper.d("wangzixu", "ActivityLockScreen onReceive ServiceLockScreen startActivity");
             } catch (Exception e) {

@@ -66,8 +66,8 @@ public class ServiceAutoUpdateImage extends Service {
             Intent maidianIntent = new Intent(this, UmengMaiDianActivity.class);
             maidianIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_EVENTID, "event_100");
-//            maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_ARGS, new String[]{"remarks"});
-//            maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_VALUES, new String[]{"关闭自动更新"});
+            //maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_ARGS, new String[]{"remarks"});
+            //maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_VALUES, new String[]{"关闭自动更新"});
             startActivity(maidianIntent);
         }
 

@@ -188,9 +188,10 @@
         </activity>
 
 
+                  <!--android:taskAffinity="com.hk.lockscreentask"-->
         <activity android:name=".lockscreen.ActivityLockScreen"
-                  android:launchMode="singleInstance"
                   android:theme="@style/myLockScreenActiviyTheme"
+                  android:launchMode="singleInstance"
                   android:screenOrientation="portrait">
         </activity>
 
@@ -210,10 +211,11 @@
                   android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name="com.haokan.pubic.maidian.UmengMaiDianActivity"
-                  android:theme="@style/myLockScreenActiviyTheme"
-                  android:launchMode="singleInstance"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name="com.haokan.pubic.maidian.UmengMaiDianActivity"
+            android:theme="@style/myLockScreenActiviyTheme"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait">
         </activity>
 
         <activity android:name="com.haokan.pubic.clipimage.ActivityClipImage"

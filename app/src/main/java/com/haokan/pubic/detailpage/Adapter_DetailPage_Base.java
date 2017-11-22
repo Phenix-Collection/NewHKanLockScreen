@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
@@ -79,7 +80,7 @@ public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClic
         container.addView(holder.itemView);
 
         String url = imageBean.imgBigUrl;
-        Glide.with(mContext).load(url).asBitmap().dontAnimate().listener(new RequestListener<String, Bitmap>() {
+        Glide.with(mContext).load(url).asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL).dontAnimate().listener(new RequestListener<String, Bitmap>() {
             @Override
             public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
                 holder.errorView.setVisibility(View.VISIBLE);
