@@ -16,7 +16,7 @@ public class ActivityPrompt_CloseSysPswd_1 extends ActivityBase implements View.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prompt_closesyspswd_oppo);
+        setContentView(R.layout.activity_prompt_closesyspswd_1);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
     }

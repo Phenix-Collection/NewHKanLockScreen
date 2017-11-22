@@ -8,6 +8,8 @@ import java.io.Serializable;
  * Created by wangzixu on 2017/3/18.
  */
 public class MainImageBean implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     public String imgId; //id
     public String imgSmallUrl; //缩略图url
     public String imgBigUrl; //图片url

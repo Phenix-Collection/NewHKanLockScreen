@@ -20,7 +20,6 @@ import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.BuildProperties;
 import com.haokan.pubic.util.CommonUtil;
-import com.squareup.leakcanary.LeakCanary;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -93,14 +92,14 @@ public class App extends Application {
         registerReceiver(mReceiver, filter);
         sHaokanLockView = new CV_DetailPage_LockScreen(getApplicationContext());
 
-        if (LogHelper.DEBUG) {
-            if (LeakCanary.isInAnalyzerProcess(this)) {
-                // This process is dedicated to LeakCanary for heap analysis.
-                // You should not init your app in this process.
-                return;
-            }
-            LeakCanary.install(this);
-        }
+//        if (LogHelper.DEBUG) {
+//            if (LeakCanary.isInAnalyzerProcess(this)) {
+//                // This process is dedicated to LeakCanary for heap analysis.
+//                // You should not init your app in this process.
+//                return;
+//            }
+//            LeakCanary.install(this);
+//        }
 
         StringBuilder builder = new StringBuilder();
         builder.append(App.sDID).append(",")
@@ -121,6 +120,8 @@ public class App extends Application {
             }
         }, 0, 20, TimeUnit.SECONDS);
 
+        //控制接听电话的状态, 需要2步, 先注册这个, 有的rom注册了这个会一直生效, 有的rom会只生效一次,
+        //需要ACTION_NEW_OUTGOING_CALL和android.intent.action.PHONE_STATE广播, 靠广告中获取状态
         TelephonyManager tm = (TelephonyManager)getSystemService(Service.TELEPHONY_SERVICE);
         tm.listen(new PhoneStateListener(){
                       @Override
@@ -129,13 +130,16 @@ public class App extends Application {
                           super.onCallStateChanged(state, incomingNumber);
                           switch(state){
                               case TelephonyManager.CALL_STATE_IDLE:
-                                  LogHelper.d("wangzixu", "phonestate 挂断");
+                                  LogHelper.d("wangzixu", "phonestate TelephonyManager 挂断");
+                                  ReceiverLockScreen.sIsCallIng = false;
                                   break;
                               case TelephonyManager.CALL_STATE_OFFHOOK:
-                                  LogHelper.d("wangzixu", "phonestate 接听");
+                                  LogHelper.d("wangzixu", "phonestate TelephonyManager 接听");
+                                  ReceiverLockScreen.sIsCallIng = true;
                                   break;
                               case TelephonyManager.CALL_STATE_RINGING:
-                                  LogHelper.d("wangzixu", "phonestate 响铃:来电号码"+incomingNumber);
+                                  LogHelper.d("wangzixu", "phonestate TelephonyManager 响铃:来电号码"+incomingNumber);
+                                  ReceiverLockScreen.sIsCallIng = true;
                                   //输出来电号码
                                   break;
                           }

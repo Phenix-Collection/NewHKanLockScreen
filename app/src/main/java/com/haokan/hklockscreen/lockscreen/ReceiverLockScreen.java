@@ -32,10 +32,14 @@ public class ReceiverLockScreen extends BroadcastReceiver {
                     return;
                 }
                 try {
-                    Intent intent1 = new Intent(context, ActivityLockScreen.class);
-                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.getApplicationContext().startActivity(intent1);
-                    LogHelper.d("wangzixu", "ActivityLockScreen onReceive ServiceLockScreen startActivity");
+//                    Intent intent1 = new Intent(context, ActivityLockScreen.class);
+//                    intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    context.startActivity(intent1);
+//                    LogHelper.d("wangzixu", "ActivityLockScreen onReceive ServiceLockScreen startActivity");
+
+                    Intent intent1 = new Intent(context, ServiceLockScreen.class);
+                    intent1.putExtra("type", 1);
+                    context.startService(intent1);
                 } catch (Exception e) {
                     e.printStackTrace();
                     LogHelper.d("wangzixu", "ActivityLockScreen onReceive Exception");
@@ -45,7 +49,7 @@ public class ReceiverLockScreen extends BroadcastReceiver {
                 break;
             case "android.intent.action.PHONE_STATE":
                 String extra = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-                LogHelper.d("wangzixu", "ActivityLockScreen onReceive PHONE_STATE----" + extra);
+                LogHelper.d("wangzixu", "phonestate onReceive PHONE_STATE----" + extra);
                 if (TelephonyManager.EXTRA_STATE_IDLE.equals(extra)) {
                     sIsCallIng = false;
                 } else {

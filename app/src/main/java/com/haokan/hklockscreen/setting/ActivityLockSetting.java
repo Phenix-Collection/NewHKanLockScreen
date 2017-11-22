@@ -218,7 +218,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         });
 
         //根据是否适配, 显示一些条目
-        if (App.sIsAdapterPhone == 1 || true) {
+        if (App.sIsAdapterPhone == 1) {
             mLayoutCloseSysLock.setVisibility(View.VISIBLE);
         } else {
             mLayoutCloseSysLock.setVisibility(View.GONE);
@@ -238,7 +238,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.closesyslock:
-                {
+                if (App.sIsAdapterPhone == 1) {
                     Intent intent = new Intent(ActivityLockSetting.this, ActivityLockSetting_CloseSysLock_1.class);
                     startActivity(intent);
                     startActivityAnim();

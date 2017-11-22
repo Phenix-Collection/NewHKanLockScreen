@@ -16,7 +16,7 @@ public class ActivityPrompt_CloseSysMagazine_1 extends ActivityBase implements V
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prompt_closesysmagazine_oppo);
+        setContentView(R.layout.activity_prompt_closesysmagazine_1);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
     }
