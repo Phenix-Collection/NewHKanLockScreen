@@ -12,7 +12,6 @@ public class Values {
         public static final String PATH_BASE = "/Levect/" + PACKAGE_NAME + "/";
 
         public static final String PATH_DOWNLOADAPK = PATH_BASE + "update";
-        public static final String PATH_DOWNLOAD_PIC = PATH_BASE + "HkImages/";
         public static final String PATH_LOG = PATH_BASE + "Log/";
     }
 

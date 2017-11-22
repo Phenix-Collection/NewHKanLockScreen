@@ -1,11 +1,11 @@
 package com.haokan.hklockscreen.mycollection;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
-import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.database.MyDatabaseHelper;
@@ -27,6 +27,15 @@ import rx.schedulers.Schedulers;
  * 所有收藏相关的接口
  */
 public class ModelCollection {
+    public static File getCollectImageDir(Context context) {
+        File filesDir = context.getFilesDir();
+        File dir = new File(filesDir, "collect/");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
     public void addCollection(final Context context, final BeanCollection imageBean, final onDataResponseListener<BeanCollection> listener) {
         if (listener == null || context == null) {
             return;
@@ -36,30 +45,30 @@ public class ModelCollection {
         Observable<BeanCollection> observable = Observable.create(new Observable.OnSubscribe<BeanCollection>() {
             @Override
             public void call(Subscriber<? super BeanCollection> subscriber) {
+                File file = null;
                 try {
+
+                    //存下这个图片
+                    if (TextUtils.isEmpty(imageBean.imgId)) {
+                        imageBean.imgId = ModelLocalImage.sLocalImgIdPreffix + System.currentTimeMillis();
+                    }
+                    file = new File(getCollectImageDir(context), imageBean.imgId + ".jpg");
+                    FutureTarget<File> target = Glide.with(context).load(imageBean.imgBigUrl).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+                    File bitmapFile = target.get();
+                    FileUtil.moveFile(bitmapFile, file);
+
+                    imageBean.imgBigUrl = file.getAbsolutePath();
+                    imageBean.imgSmallUrl = file.getAbsolutePath();
                     Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanCollection.class);
                     dao.createOrUpdate(imageBean);
-
-                    //如果是本地图片, 需要看是否有没有这个文件
-                    if (!imageBean.imgBigUrl.startsWith("http")) {
-                        final File file = new File(imageBean.imgBigUrl);
-                        if (!file.exists() || file.length() == 0) {
-                            FutureTarget<File> target = Glide.with(context).load(imageBean.imgBigUrl).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
-                            File bitmapFile = target.get();
-                            FileUtil.moveFile(bitmapFile, file);
-//                            Glide.with(context).load(imageBean.imgBigUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
-//                                @Override
-//                                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                                    FileUtil.saveBitmapToFile(context, resource, file, false);
-//                                }
-//                            });
-                        }
-                    }
 
                     subscriber.onNext(imageBean);
                     subscriber.onCompleted();
                 } catch (Exception e) {
                     subscriber.onError(e);
+                    if (file != null && file.length() > 0) {
+                        FileUtil.deleteFile(file);
+                    }
                 }
             }
         });
@@ -97,18 +106,15 @@ public class ModelCollection {
             public void call(Subscriber<? super Integer> subscriber) {
                 try {
                     Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanCollection.class);
-                    int delete = dao.deleteById(bean.imgId);
+                    Object o = dao.queryForId(bean.imgId);
+                    int delete = 0;
+                    if (o != null) {
+                        BeanCollection collection = (BeanCollection) o;
+                        File file = new File(collection.imgBigUrl);
+                        FileUtil.deleteFile(file);
 
-                    //如果是收藏的本地图片, 需要考虑是否要删除原图
-                    if (bean.myType == 3) {
-                        Dao dao1 = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanLocalImage.class);
-                        Object forId = dao1.queryForId(bean.imgId);
-                        if (forId == null) {
-                            File imgFile = new File(bean.imgBigUrl);
-                            FileUtil.deleteFile(imgFile);
-                        }
+                        delete = dao.deleteById(bean.imgId);
                     }
-
                     subscriber.onNext(delete);
                     subscriber.onCompleted();
                 } catch (Exception e) {
@@ -140,7 +146,7 @@ public class ModelCollection {
     }
 
     public void delCollections(final Context context, final List<BeanCollection> delList, final onDataResponseListener<Integer> listener) {
-        if (listener == null || context == null) {
+        if (listener == null || context == null || delList == null) {
             return;
         }
 
@@ -150,20 +156,15 @@ public class ModelCollection {
             public void call(Subscriber<? super Integer> subscriber) {
                 try {
                     Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanCollection.class);
-                    int delete = dao.delete(delList);
-
-                    //如果是收藏的本地图片, 需要考虑是否要删除原图
-                    Dao dao1 = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanLocalImage.class);
                     for (int i = 0; i < delList.size(); i++) {
-                        BeanCollection bean = delList.get(i);
-                        if (bean.imgId != null && bean.imgId.startsWith(ModelLocalImage.sLocalImgIdPreffix)) {
-                            Object forId = dao1.queryForId(bean.imgId);
-                            if (forId == null) {
-                                File imgFile = new File(bean.imgBigUrl);
-                                FileUtil.deleteFile(imgFile);
-                            }
+                        Object o = dao.queryForId(delList.get(i).imgId);
+                        if (o != null) {
+                            BeanCollection collection = (BeanCollection) o;
+                            File file = new File(collection.imgBigUrl);
+                            FileUtil.deleteFile(file);
                         }
                     }
+                    int delete = dao.delete(delList);
 
                     subscriber.onNext(delete);
                     subscriber.onCompleted();

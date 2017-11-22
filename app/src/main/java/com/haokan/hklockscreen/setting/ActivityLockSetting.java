@@ -36,7 +36,6 @@ import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
 import com.haokan.hklockscreen.mycollection.ActivityMyCollection;
-import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
@@ -47,14 +46,12 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
-import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.Values;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.j256.ormlite.dao.Dao;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -687,17 +684,10 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
 
     protected void deleteLocalImage(BeanLocalImage beanOld) {
         if (beanOld != null) {
-            Dao daoLocalImg = null;
+            Dao daoLocalImg;
             try {
                 daoLocalImg = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanLocalImage.class);
                 daoLocalImg.delete(beanOld);
-                //之前的本地图, 如果这个图片没有被收藏, 则应该删除, 如果被收藏了, 就不能删除
-                Dao daoCollection = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanCollection.class);
-                Object forId = daoCollection.queryForId(beanOld.imgId);
-                if (forId == null) {
-                    File imgFile = new File(beanOld.imgUrl);
-                    FileUtil.deleteFile(imgFile);
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
