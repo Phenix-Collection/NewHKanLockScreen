@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivityLandPageForLockPage;
+import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivityWebviewForLockPage;
 import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;

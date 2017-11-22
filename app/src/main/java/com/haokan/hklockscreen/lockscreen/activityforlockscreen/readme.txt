@@ -1,0 +1,2 @@
+有锁屏页进入的activity很特殊, 需要不能拉起应用本身的task(可以通过startActivityForResult解决), 大部分还需要监听锁屏广播而关闭本身
+所以又锁屏拉起的应用中某界面, 都应该有个锁屏的专门acitivy继承那个activiy, 然后实现监听锁屏广播结束自己

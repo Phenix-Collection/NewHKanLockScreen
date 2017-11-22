@@ -1,19 +1,21 @@
-package com.haokan.hklockscreen.lockscreen;
+package com.haokan.hklockscreen.lockscreen.activityforlockscreen;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.View;
 
-import com.haokan.pubic.webview.ActivityWebview;
+import com.haokan.hklockscreen.setting.ActivityLockSetting;
 
 /**
+ * Created by wangzixu on 2017/11/11.
  * 锁屏界面跳转的设置页面, 和应用内跳转的是一个页面, 但是有一些特殊的操作, 所以独立出来一个
  */
-public class ActivityWebviewForLockPage extends ActivityWebview implements View.OnClickListener {
+public class ActivitySettingForLockPage extends ActivityLockSetting {
+
     private BroadcastReceiver mReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +30,6 @@ public class ActivityWebviewForLockPage extends ActivityWebview implements View.
         };
         registerReceiver(mReceiver, filter);
     }
-
 
     @Override
     protected void onDestroy() {

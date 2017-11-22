@@ -240,7 +240,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             case R.id.closesyslock:
                 if (App.sIsAdapterPhone == 1) {
                     Intent intent = new Intent(ActivityLockSetting.this, ActivityLockSetting_CloseSysLock_1.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 303);
                     startActivityAnim();
                 }
                 break;
@@ -248,7 +248,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 if (!TextUtils.isEmpty(mAdLandPageUrl)) {
                     Intent intent = new Intent(ActivityLockSetting.this, ActivityWebview.class);
                     intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mAdLandPageUrl);
-                    startActivity(intent);
+                    startActivityForResult(intent, 306);
                     startActivityAnim();
                 }
                 break;
@@ -378,7 +378,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             case R.id.setting_collect1:
                 {
                     Intent intent = new Intent(this, ActivityMyCollection.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 304);
                     startActivityAnim();
 
                     UmengMaiDianManager.onEvent(this, "event_086");
@@ -387,14 +387,13 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             case R.id.layout_fadeback:
                 {
                     FeedbackAPI.openFeedbackActivity();
-
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_090");
                 }
                 break;
             case R.id.layout_aboutus:
                 {
                     Intent intent = new Intent(this, ActivityAboutUs.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 300);
                     startActivityAnim();
 
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_092");
@@ -408,7 +407,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             case R.id.layout_initset:
                 {
                     Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, 301);
                     startActivityAnim();
 
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_089");
@@ -775,7 +774,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                             Uri uri = Uri.fromParts("package", getPackageName(), null);
                             intent.setData(uri);
-                            startActivity(intent);
+                            startActivityForResult(intent, 305);
                             overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
                         } catch (Exception e) {
                             e.printStackTrace();

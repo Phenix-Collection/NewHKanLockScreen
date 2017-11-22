@@ -100,6 +100,7 @@
             </intent-filter>
         </activity>
 
+            <!--android:launchMode="singleInstance"-->
         <activity
             android:name=".lockscreeninitset.ActivityLockScreenInitSet"
             android:screenOrientation="portrait">
@@ -112,22 +113,22 @@
         </activity>
 
         <activity
-            android:name=".lockscreen.ActivitySettingForLockPage"
+            android:name=".lockscreen.activityforlockscreen.ActivitySettingForLockPage"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".lockscreen.ActivityWebviewForLockPage"
+        <activity android:name=".lockscreen.activityforlockscreen.ActivityWebviewForLockPage"
                   android:launchMode="singleInstance"
                   android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".lockscreen.ActivityLandDetailPageForLockPage"
+        <activity android:name=".lockscreen.activityforlockscreen.ActivityLandDetailPageForLockPage"
                   android:launchMode="singleInstance"
                   android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".lockscreen.ActivityLandPageForLockPage"
+        <activity android:name=".lockscreen.activityforlockscreen.ActivityLandPageForLockPage"
                   android:launchMode="singleInstance"
                   android:screenOrientation="portrait">
         </activity>
@@ -199,11 +200,11 @@
         <activity android:name=".timeline.ActivityTimelines"
             android:screenOrientation="portrait"/>
 
-                  <!--android:launchMode="singleTask"-->
         <activity android:name=".recommendpageland.ActivityLandPageRecommend"
                   android:screenOrientation="portrait">
         </activity>
 
+                  <!--android:launchMode="singleInstance"-->
         <activity android:name=".setting.ActivityAboutUs"
                   android:screenOrientation="portrait">
         </activity>

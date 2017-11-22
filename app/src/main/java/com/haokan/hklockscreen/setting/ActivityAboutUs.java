@@ -58,6 +58,7 @@ public class ActivityAboutUs extends ActivityBase implements View.OnClickListene
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        //singinstance的,去掉动画
         overridePendingTransition(R.anim.activity_in_left2right, R.anim.activity_out_left2right);
     }
 

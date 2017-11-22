@@ -18,7 +18,6 @@ import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.UrlsUtil;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
-import com.haokan.pubic.util.BuildProperties;
 import com.haokan.pubic.util.CommonUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
@@ -159,6 +158,6 @@ public class App extends Application {
 //        LogHelper.d("wangzixu", "app init = " + CommonUtil.getDevice());
 //        String string = BuildProperties.getSystemProperty("ro.build.display.id");
 //        LogHelper.d("wangzixu", "app init = " + string);
-        BuildProperties.newInstance();
+//        BuildProperties.newInstance();
     }
 }

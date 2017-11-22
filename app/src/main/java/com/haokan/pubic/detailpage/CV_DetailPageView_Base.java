@@ -630,18 +630,18 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             mTvCount.setText((mCurrentPosition+1) + "/" + (mData.size()));
         }
 
-//        if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-//            mLayoutCaption.setOnClickListener(null);
-//            mTvLink.setVisibility(View.GONE);
-//        } else {
-//    //        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
-//    //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
-//        }
-        mLayoutCaption.setOnClickListener(this);
-        mTvLinkBg.setColor(getLinkBgColor());
-        mTvLink.setBackground(mTvLinkBg);
-        mTvLink.setText("查看更多");
-        mTvLink.setVisibility(View.VISIBLE);
+        if (mCurrentImgBean.myType == 3) {
+            mLayoutCaption.setOnClickListener(null);
+            mTvLink.setVisibility(View.GONE);
+        } else {
+    //        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
+    //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
+            mLayoutCaption.setOnClickListener(this);
+            mTvLinkBg.setColor(getLinkBgColor());
+            mTvLink.setBackground(mTvLinkBg);
+            mTvLink.setText("查看更多");
+            mTvLink.setVisibility(View.VISIBLE);
+        }
 
 
         // 设置标题、图说

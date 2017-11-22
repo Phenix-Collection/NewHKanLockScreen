@@ -29,6 +29,9 @@ import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
+import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivityLandPageForLockPage;
+import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivitySettingForLockPage;
+import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivityWebviewForLockPage;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
 import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
@@ -349,6 +352,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             Intent intent = new Intent(mContext, ActivityLandPageForLockPage.class);
             BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
             beanRecommendItem.GroupId = mCurrentImgBean.jump_id;
+            if (TextUtils.isEmpty(beanRecommendItem.GroupId)) {
+                beanRecommendItem.GroupId = mCurrentImgBean.imgId;
+            }
             beanRecommendItem.cover = mCurrentImgBean.imgSmallUrl;
             beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
             beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
@@ -487,7 +493,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             }
             mTvLockTitle.setText(mCurrentImgBean.imgTitle);
 
-            if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+            if (mCurrentImgBean.myType == 3) {
                 mTvLockLink.setVisibility(GONE);
             } else {
                 mTvLockLink.setBackground(mTvLinkBg);

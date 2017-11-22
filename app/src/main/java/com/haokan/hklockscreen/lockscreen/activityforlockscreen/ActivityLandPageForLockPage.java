@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreen;
+package com.haokan.hklockscreen.lockscreen.activityforlockscreen;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
