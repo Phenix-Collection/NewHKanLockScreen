@@ -7,7 +7,9 @@ import java.io.Serializable;
 /**
  * Created by wangzixu on 2017/3/18.
  */
-public class MainImageBean implements Serializable{
+public class MainImageBeanNew implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     public String imgId; //id
     public String imgSmallUrl; //缩略图url
     public String imgBigUrl; //图片url
@@ -23,6 +25,7 @@ public class MainImageBean implements Serializable{
     public int commentNum;//评论数量
     public String cpId; //cpid
     public String cpName; //cpName
+    public String jump_id; //本地详情页组图id
 
     /**
      * 自己定义的类型, 0代表需要网络下载的图片, 1代表存储的离线图片, 2代表读取的asset中的默认图片, 3代表添加的本地相册图片

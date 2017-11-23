@@ -10,7 +10,7 @@ import com.haokan.hklockscreen.recommendpageland.BeanRecommendPageLand;
  * Created by wangzixu on 2017/10/26.
  */
 public class BeanConvertUtil {
-    public static BeanCollection mainImageBean2CollectionBean(MainImageBean imageBean) {
+    public static BeanCollection mainImageBean2CollectionBean(MainImageBeanNew imageBean) {
         BeanCollection collectionBean = new BeanCollection();
         collectionBean.imgId = imageBean.imgId;
         if (TextUtils.isEmpty(collectionBean.imgId)) {
@@ -34,8 +34,8 @@ public class BeanConvertUtil {
         return collectionBean;
     }
 
-    public static MainImageBean collectionBean2MainImageBean(BeanCollection collectionBean) {
-        MainImageBean imgBean = new MainImageBean();
+    public static MainImageBeanNew collectionBean2MainImageBean(BeanCollection collectionBean) {
+        MainImageBeanNew imgBean = new MainImageBeanNew();
         imgBean.imgId = collectionBean.imgId;
         imgBean.imgSmallUrl = collectionBean.imgSmallUrl;
         imgBean.imgBigUrl = collectionBean.imgBigUrl;
@@ -58,8 +58,8 @@ public class BeanConvertUtil {
         return imgBean;
     }
 
-    public static MainImageBean recommendLandBeanBean2MainImageBean(BeanRecommendPageLand fromBean) {
-        MainImageBean imgBean = new MainImageBean();
+    public static MainImageBeanNew recommendLandBeanBean2MainImageBean(BeanRecommendPageLand fromBean) {
+        MainImageBeanNew imgBean = new MainImageBeanNew();
         imgBean.imgId = fromBean.imgId;
         imgBean.imgSmallUrl = fromBean.sUrl;
         imgBean.imgBigUrl = fromBean.imgUrl;

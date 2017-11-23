@@ -13,7 +13,7 @@ import android.view.View;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
-import com.haokan.pubic.bean.MainImageBean;
+import com.haokan.pubic.bean.MainImageBeanNew;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.logsys.LogHelper;
 
@@ -100,7 +100,7 @@ public class CV_DetailPage_Recommend extends CV_DetailPageView_Base{
         }
     }
 
-    public void initData(ArrayList<MainImageBean> mainList, int position) {
+    public void initData(ArrayList<MainImageBeanNew> mainList, int position) {
         mData.clear();
         mData.addAll(mainList);
         setVpAdapter();

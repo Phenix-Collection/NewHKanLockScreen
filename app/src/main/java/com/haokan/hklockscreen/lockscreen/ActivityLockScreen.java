@@ -40,7 +40,7 @@ import android.widget.TextView;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
-import com.haokan.pubic.bean.MainImageBean;
+import com.haokan.pubic.bean.MainImageBeanNew;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
@@ -432,7 +432,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_076");
                             UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_073");
 
-                            MainImageBean bean = App.sHaokanLockView.getCurrentImageBean();
+                            MainImageBeanNew bean = App.sHaokanLockView.getCurrentImageBean();
                             if (bean != null) {
                                 if (TextUtils.isEmpty(bean.typeName)) {
                                     bean.typeName = "娱乐"; //默认分类

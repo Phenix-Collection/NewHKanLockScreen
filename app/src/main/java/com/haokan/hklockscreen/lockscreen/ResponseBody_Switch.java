@@ -1,6 +1,6 @@
 package com.haokan.hklockscreen.lockscreen;
 
-import com.haokan.pubic.bean.MainImageBean;
+import com.haokan.pubic.bean.MainImageBeanNew;
 
 import java.util.ArrayList;
 
@@ -9,5 +9,5 @@ import java.util.ArrayList;
  */
 public class ResponseBody_Switch {
     public int page;
-    public ArrayList<MainImageBean> list;
+    public ArrayList<MainImageBeanNew> list;
 }

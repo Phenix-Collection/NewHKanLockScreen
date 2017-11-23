@@ -41,7 +41,7 @@ import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BeanConvertUtil;
-import com.haokan.pubic.bean.MainImageBean;
+import com.haokan.pubic.bean.MainImageBeanNew;
 import com.haokan.pubic.customview.ViewPagerTransformer;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
@@ -90,10 +90,10 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected int mShareLayoutH;
     protected View mShareLayoutContent;
     protected CV_ShareBgImageView mShareBlurBgView;
-    protected ArrayList<MainImageBean> mData = new ArrayList<>();
+    protected ArrayList<MainImageBeanNew> mData = new ArrayList<>();
     protected Adapter_DetailPage_Base mAdapterVpMain;
     protected int mCurrentPosition;
-    protected MainImageBean mCurrentImgBean;
+    protected MainImageBeanNew mCurrentImgBean;
     protected View mTvBottomCollect;
     protected TextView mTvBottomCollectTitle;
     protected View mLayoutTitleLink;
@@ -215,7 +215,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mVpMain.setAdapter(mAdapterVpMain);
     }
 
-    public MainImageBean getCurrentImageBean() {
+    public MainImageBeanNew getCurrentImageBean() {
         return mCurrentImgBean;
     }
 
@@ -892,7 +892,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         animator.start();
     }
 
-    public void refreshCollectNum(MainImageBean bean) {
+    public void refreshCollectNum(MainImageBeanNew bean) {
         if (bean == null) {
             return;
         }
@@ -900,7 +900,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
 
-    public void downloadImage(@NonNull MainImageBean bean) {
+    public void downloadImage(@NonNull MainImageBeanNew bean) {
         if (mCurrentImgBean == null) {
             return;
         }
@@ -960,7 +960,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
     //******设置为桌面 begin *******
-    public void setWallPaper(@NonNull final MainImageBean bean) {
+    public void setWallPaper(@NonNull final MainImageBeanNew bean) {
         if (bean == null) {
             return;
         }
@@ -1020,7 +1020,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             if (event.mIsAdd) {
                 BeanCollection bean = event.mBean;
                 for (int i = 0; i < mData.size(); i++) {
-                    MainImageBean mainImageBean = mData.get(i);
+                    MainImageBeanNew mainImageBean = mData.get(i);
                     if (bean.imgId != null && bean.imgId.equals(mainImageBean.imgId)) {
                         mainImageBean.isCollect = 1;
                         if (mainImageBean == mCurrentImgBean) {
@@ -1031,7 +1031,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             } else {
                 String[] split = event.imgIds.split(",");
                 for (int i = 0; i < mData.size(); i++) {
-                    MainImageBean bean = mData.get(i);
+                    MainImageBeanNew bean = mData.get(i);
                     for (int j = 0; j < split.length; j++) {
                         if (bean.imgId != null && bean.imgId.equals(split[j])) {
                             bean.isCollect = 0;

@@ -11,7 +11,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.haokan.hklockscreen.lockscreen.ModelLockScreen;
 import com.haokan.pubic.App;
-import com.haokan.pubic.bean.MainImageBean;
+import com.haokan.pubic.bean.MainImageBeanNew;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
@@ -81,14 +81,14 @@ public class ServiceAutoUpdateImage extends Service {
         if (mIsSwitching) {
             return;
         }
-        ModelLockScreen.getAutoUpdateData(this, new onDataResponseListener<List<MainImageBean>>() {
+        ModelLockScreen.getAutoUpdateData(this, new onDataResponseListener<List<MainImageBeanNew>>() {
             @Override
             public void onStart() {
                 mIsSwitching = true;
             }
 
             @Override
-            public void onDataSucess(List<MainImageBean> mainImageBeen) {
+            public void onDataSucess(List<MainImageBeanNew> mainImageBeen) {
                 mIsSwitching = false;
                 LogHelper.d("wangzixu", "autoupdate autoUpdateData onDataSucess");
                 LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData onDataSucess");

@@ -4,11 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
-import com.haokan.pubic.bean.MainImageBean;
+import com.haokan.pubic.bean.MainImageBeanNew;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
@@ -122,7 +121,7 @@ public class ModelCollection {
                 });
     }
 
-    public void delCollection(final Context context, final MainImageBean bean, final onDataResponseListener<Integer> listener) {
+    public void delCollection(final Context context, final MainImageBeanNew bean, final onDataResponseListener<Integer> listener) {
         if (listener == null || context == null) {
             return;
         }

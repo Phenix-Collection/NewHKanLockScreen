@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.BeanConvertUtil;
-import com.haokan.pubic.bean.MainImageBean;
+import com.haokan.pubic.bean.MainImageBeanNew;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
@@ -49,7 +49,7 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
         initViewPagerRightEdge();
     }
 
-    public void initData(ArrayList<MainImageBean> mainList, int position) {
+    public void initData(ArrayList<MainImageBeanNew> mainList, int position) {
         mData.clear();
         mData.addAll(mainList);
         setVpAdapter();
@@ -81,9 +81,9 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
                 mIsLoading = false;
                 mHasMoreData = false;
 
-                ArrayList<MainImageBean> mainList = new ArrayList<MainImageBean>();
+                ArrayList<MainImageBeanNew> mainList = new ArrayList<MainImageBeanNew>();
                 for (int i = 0; i < list.size(); i++) {
-                    MainImageBean mainImageBean = BeanConvertUtil.collectionBean2MainImageBean(list.get(i));
+                    MainImageBeanNew mainImageBean = BeanConvertUtil.collectionBean2MainImageBean(list.get(i));
                     mainList.add(mainImageBean);
                 }
 
