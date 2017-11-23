@@ -126,7 +126,6 @@ public class ModelLockScreen {
                     subscriber.onNext(list);
                     subscriber.onCompleted();
                 } catch (Exception e) {
-                    LogHelper.d("wangzixu", "getOffineSwitchData 取默认图 失败");
                     subscriber.onError(e);
                     return;
                 }
