@@ -58,6 +58,28 @@ public class BeanConvertUtil {
         return imgBean;
     }
 
+    public static BigImageBean mainImageBean2BigImageBean(MainImageBean fromBean) {
+        BigImageBean imgBean = new BigImageBean();
+        imgBean.imgId = fromBean.imgId;
+        imgBean.imgSmallUrl = fromBean.imgSmallUrl;
+        imgBean.imgBigUrl = fromBean.imgBigUrl;
+        imgBean.imgDesc = fromBean.imgDesc;
+        imgBean.imgTitle = fromBean.imgTitle;
+        imgBean.linkTitle = fromBean.linkTitle;
+        imgBean.linkUrl = fromBean.linkUrl;
+        imgBean.typeId = fromBean.typeId;
+        imgBean.typeName = fromBean.typeName;
+        imgBean.shareUrl = fromBean.shareUrl;
+        imgBean.colNum = fromBean.colNum;
+        imgBean.commentNum = fromBean.commentNum;
+        imgBean.cpId = fromBean.cpId;
+        imgBean.cpName = fromBean.cpName;
+        imgBean.isCollect = fromBean.isCollect;
+        imgBean.myType = fromBean.myType;
+        imgBean.jump_id = fromBean.imgId;
+        return imgBean;
+    }
+
     public static BigImageBean recommendLandBeanBean2MainImageBean(BeanRecommendPageLand fromBean) {
         BigImageBean imgBean = new BigImageBean();
         imgBean.imgId = fromBean.imgId;

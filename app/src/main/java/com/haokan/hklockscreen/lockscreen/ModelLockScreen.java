@@ -12,7 +12,9 @@ import com.google.gson.reflect.TypeToken;
 import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.App;
+import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.BigImageBean;
+import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.cachesys.ACache;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.HttpRetrofitManager;
@@ -72,26 +74,39 @@ public class ModelLockScreen {
                 try {
                     ACache aCache = ACache.get(context);
                     Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
+                    LogHelper.d("wangzixu", "getOffineSwitchData asObject = " + asObject);
                     if (asObject != null && asObject instanceof ArrayList) {
-                        list = (ArrayList<BigImageBean>) asObject;
-                        LogHelper.d("wangzixu", "getOffineSwitchData list = " + list);
+                        try {
+                            ArrayList<BigImageBean> tempList = (ArrayList<BigImageBean>) asObject;
+                            BigImageBean bigImageBean = tempList.get(0); //验证是否会强转失败, 因为老的数据存储的是mainImageBean
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            LogHelper.d("wangzixu", "getOffineSwitchData 强转失败, 老数据强转成mainimageBean");
+                            ArrayList<MainImageBean> oldList = (ArrayList<MainImageBean>) asObject;
+                            for (int i = 0; i < oldList.size(); i++) {
+                                MainImageBean imageBean = oldList.get(i);
+                                BigImageBean bigImageBean = BeanConvertUtil.mainImageBean2BigImageBean(imageBean);
+                                list.add(bigImageBean);
+                            }
+                        }
+                        LogHelper.d("wangzixu", "getOffineSwitchData list = " + list.size());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                if (list != null && list.size() > 0) {
-                    for (int i = 0; i < list.size(); i++) {
-                        BigImageBean bean = list.get(i);
-                        bean.myType = 0;
-                        if (!TextUtils.isEmpty(bean.localUrl)) {
-                            File file = new File(bean.localUrl);
-                            if (file.exists()) {
-                                bean.myType = 1;
-                            }
-                        }
-                    }
-                }
+//                if (list != null && list.size() > 0) {
+//                    for (int i = 0; i < list.size(); i++) {
+//                        BigImageBean bean = list.get(i);
+//                        bean.myType = 0;
+//                        if (!TextUtils.isEmpty(bean.localUrl)) {
+//                            File file = new File(bean.localUrl);
+//                            if (file.exists()) {
+//                                bean.myType = 1;
+//                            }
+//                        }
+//                    }
+//                }
 
                 try {
                     if (list == null || list.size() == 0) {
@@ -102,14 +117,15 @@ public class ModelLockScreen {
                                 list.get(i).myType = 2;
                             }
                         }
+                        LogHelper.d("wangzixu", "getOffineSwitchData 取默认图 list = " + list.size());
                     }
-
                     //处理收藏的状态
                     processCollect(context, list);
 
                     subscriber.onNext(list);
                     subscriber.onCompleted();
                 } catch (Exception e) {
+                    LogHelper.d("wangzixu", "getOffineSwitchData 取默认图 失败");
                     subscriber.onError(e);
                     return;
                 }
@@ -184,7 +200,7 @@ public class ModelLockScreen {
 
                             BigImageBean imageBean = new BigImageBean();
                             imageBean.myType = 3;
-                            imageBean.imgBigUrl = imageBean.imgSmallUrl = imageBean.localUrl = beanLocalImage.imgUrl;
+                            imageBean.imgBigUrl = imageBean.imgSmallUrl = beanLocalImage.imgUrl;
                             imageBean.imgId = beanLocalImage.imgId;
                             imageBean.imgTitle = beanLocalImage.imgTitle;
                             imageBean.imgDesc = beanLocalImage.imgDesc;
@@ -405,9 +421,8 @@ public class ModelLockScreen {
                         Bitmap bitmap = Glide.with(context).load(url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
                         FileUtil.saveBitmapToFile(context, bitmap, file, false);
 
-                        imageBean.localUrl = file.getAbsolutePath();
-                        imageBean.imgBigUrl = imageBean.localUrl;
-                        imageBean.imgSmallUrl = imageBean.localUrl;
+                        imageBean.imgBigUrl = file.getAbsolutePath();;
+                        imageBean.imgSmallUrl = imageBean.imgBigUrl;
                     } catch (Exception e) {
                         if (LogHelper.DEBUG) {
                             LogHelper.e("wangzixu", "saveSwitchData ----下载失败了一张 Glide load i = " + i + " , url = " + url);
@@ -416,8 +431,7 @@ public class ModelLockScreen {
                         e.printStackTrace();
                     }
                 } else {
-                    imageBean.localUrl = file.getAbsolutePath();
-                    imageBean.imgBigUrl = imageBean.localUrl;
+                    imageBean.imgBigUrl = file.getAbsolutePath();
                     imageBean.imgSmallUrl = imageBean.imgBigUrl;
                 }
             }
@@ -435,7 +449,7 @@ public class ModelLockScreen {
 
                 for (int j = 0; j < list.size(); j++) {
                     BigImageBean imageBean = list.get(j);
-                    if (file.getAbsolutePath().equals(imageBean.localUrl)) {
+                    if (file.getAbsolutePath().equals(imageBean.imgBigUrl)) {
                         delete = false;
                         break;
                     }

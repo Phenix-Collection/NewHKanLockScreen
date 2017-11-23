@@ -28,10 +28,10 @@ public class BigImageBean implements Serializable{
     public String jump_id; //本地详情页组图id
 
     /**
-     * 自己定义的类型, 0代表需要网络下载的图片, 1代表存储的离线图片, 2代表读取的asset中的默认图片, 3代表添加的本地相册图片
+     * 自己定义的类型, 0代表离线图片, 1预留字段, 2代表读取的asset中的默认图片, 3代表添加的本地相册图片
      */
     public int myType;
-    public String localUrl;//当图片类型为1时, 为存储的离线图片, 用此地址
+    public int removeFromLock; //是否已经从锁屏上换掉的大图, 0否, 1是
 
-    public BeanAdRes mBeanAdRes;
+    public BeanAdRes mBeanAdRes; //广告数据
  }
