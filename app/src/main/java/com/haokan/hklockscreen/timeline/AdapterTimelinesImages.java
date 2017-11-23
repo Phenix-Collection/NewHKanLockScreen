@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.util.DisplayUtil;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class AdapterTimelinesImages extends RecyclerView.Adapter<AdapterTimelinesImages.MyRecycleViewHolder> {
     private LayoutInflater mInflater;
-    private List<MainImageBeanNew> mList = new ArrayList<>();
+    private List<BigImageBean> mList = new ArrayList<>();
     private Context context;
 
     public AdapterTimelinesImages(Context context) {
@@ -33,11 +33,11 @@ public class AdapterTimelinesImages extends RecyclerView.Adapter<AdapterTimeline
         mInflater = LayoutInflater.from(context);
     }
 
-    public void addData(List<MainImageBeanNew> model) {
+    public void addData(List<BigImageBean> model) {
         mList.addAll(model);
     }
 
-    public void setData(List<MainImageBeanNew> model) {
+    public void setData(List<BigImageBean> model) {
         mList.clear();
         mList.addAll(model);
     }
@@ -83,7 +83,7 @@ public class AdapterTimelinesImages extends RecyclerView.Adapter<AdapterTimeline
 
         }
 
-        public void bindHolder(MainImageBeanNew data) {
+        public void bindHolder(BigImageBean data) {
             Glide.with(context).load(data.imgBigUrl).into(iv_image);
         }
     }

@@ -7,7 +7,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.recommendpageland.BeanRecommendPageLand;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BeanConvertUtil;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 
@@ -50,11 +50,11 @@ public class ActivityDetailPageRecommend extends ActivityBase{
 //            ivBg.setImageDrawable(ActivityRecommendPageLand.mBlurDrawable);
 //        }
 
-        ArrayList<MainImageBeanNew> mainList = new ArrayList<>();
+        ArrayList<BigImageBean> mainList = new ArrayList<>();
         for (int i = 0; i < mData.size(); i++) {
             BeanRecommendPageLand beanRecommendPageLand = mData.get(i);
             if (beanRecommendPageLand.myType == 0) {
-                MainImageBeanNew mainImageBean = BeanConvertUtil.recommendLandBeanBean2MainImageBean(beanRecommendPageLand);
+                BigImageBean mainImageBean = BeanConvertUtil.recommendLandBeanBean2MainImageBean(beanRecommendPageLand);
                 mainList.add(mainImageBean);
             }
         }

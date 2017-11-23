@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.FileUtil;
@@ -30,7 +30,7 @@ public class ModelDownLoadImage {
      * @param context
      * @param listener
      */
-    public static void downLoadImg(final Context context, @NonNull final MainImageBeanNew imageBean, @NonNull final onDataResponseListener<File> listener) {
+    public static void downLoadImg(final Context context, @NonNull final BigImageBean imageBean, @NonNull final onDataResponseListener<File> listener) {
         Observable.create(new Observable.OnSubscribe<File>() {
             @Override
             public void call(Subscriber<? super File> subscriber) {

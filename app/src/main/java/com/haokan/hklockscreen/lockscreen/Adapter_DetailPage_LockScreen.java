@@ -11,7 +11,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.detailpage.Adapter_DetailPage_Base;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
     private boolean mCanUnLock = true;
 
-    public Adapter_DetailPage_LockScreen(Context context, ArrayList<MainImageBeanNew> data, View.OnClickListener onClickListener, View.OnLongClickListener longClickListener) {
+    public Adapter_DetailPage_LockScreen(Context context, ArrayList<BigImageBean> data, View.OnClickListener onClickListener, View.OnLongClickListener longClickListener) {
         super(context, data, onClickListener, longClickListener);
     }
 
@@ -37,7 +37,7 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        final MainImageBeanNew imageBean = mData.get(position);
+        final BigImageBean imageBean = mData.get(position);
 
         View view;
         if (imageBean.mBeanAdRes != null) { //是广告

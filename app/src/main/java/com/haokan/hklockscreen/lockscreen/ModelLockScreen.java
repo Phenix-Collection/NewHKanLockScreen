@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.App;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.cachesys.ACache;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.HttpRetrofitManager;
@@ -61,19 +61,19 @@ public class ModelLockScreen {
         return dir;
     }
 
-    public static void getOffineSwitchData(final Context context, final onDataResponseListener<List<MainImageBeanNew>> listener) {
+    public static void getOffineSwitchData(final Context context, final onDataResponseListener<List<BigImageBean>> listener) {
         if (listener == null) {
             return;
         }
-        Observable.create(new Observable.OnSubscribe<ArrayList<MainImageBeanNew>>() {
+        Observable.create(new Observable.OnSubscribe<ArrayList<BigImageBean>>() {
             @Override
-            public void call(Subscriber<? super ArrayList<MainImageBeanNew>> subscriber) {
-                ArrayList<MainImageBeanNew> list = new ArrayList<>();
+            public void call(Subscriber<? super ArrayList<BigImageBean>> subscriber) {
+                ArrayList<BigImageBean> list = new ArrayList<>();
                 try {
                     ACache aCache = ACache.get(context);
                     Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
                     if (asObject != null && asObject instanceof ArrayList) {
-                        list = (ArrayList<MainImageBeanNew>) asObject;
+                        list = (ArrayList<BigImageBean>) asObject;
                         LogHelper.d("wangzixu", "getOffineSwitchData list = " + list);
                     }
                 } catch (Exception e) {
@@ -82,7 +82,7 @@ public class ModelLockScreen {
 
                 if (list != null && list.size() > 0) {
                     for (int i = 0; i < list.size(); i++) {
-                        MainImageBeanNew bean = list.get(i);
+                        BigImageBean bean = list.get(i);
                         bean.myType = 0;
                         if (!TextUtils.isEmpty(bean.localUrl)) {
                             File file = new File(bean.localUrl);
@@ -96,7 +96,7 @@ public class ModelLockScreen {
                 try {
                     if (list == null || list.size() == 0) {
                         InputStream open = context.getAssets().open("default_offline_china.txt");
-                        list = JsonUtil.fromJson(open, new TypeToken<ArrayList<MainImageBeanNew>>() {}.getType());
+                        list = JsonUtil.fromJson(open, new TypeToken<ArrayList<BigImageBean>>() {}.getType());
                         if (list != null) {
                             for (int i = 0; i < list.size(); i++) {
                                 list.get(i).myType = 2;
@@ -117,7 +117,7 @@ public class ModelLockScreen {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ArrayList<MainImageBeanNew>>() {
+                .subscribe(new Subscriber<ArrayList<BigImageBean>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -129,7 +129,7 @@ public class ModelLockScreen {
                     }
 
                     @Override
-                    public void onNext(ArrayList<MainImageBeanNew> list) {
+                    public void onNext(ArrayList<BigImageBean> list) {
                         if (list != null && list.size() > 0) {
                             listener.onDataSucess(list);
                         } else {
@@ -139,14 +139,14 @@ public class ModelLockScreen {
                 });
     }
 
-    private static void processCollect(Context context, List<MainImageBeanNew> list) {
+    private static void processCollect(Context context, List<BigImageBean> list) {
         if (list == null) {
             return;
         }
         try {
             Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanCollection.class);
             for (int i = 0; i < list.size(); i++) {
-                MainImageBeanNew bean = list.get(i);
+                BigImageBean bean = list.get(i);
                 Object o = dao.queryForId(bean.imgId);
                 if (o != null) {
                     bean.isCollect = 1;
@@ -162,19 +162,19 @@ public class ModelLockScreen {
     /**
      * 获取本地相册的图片
      */
-    public static void getLocalImg(final Context context, @NonNull final onDataResponseListener<List<MainImageBeanNew>> listener) {
+    public static void getLocalImg(final Context context, @NonNull final onDataResponseListener<List<BigImageBean>> listener) {
         if (listener == null) {
             return;
         }
-        Observable.create(new Observable.OnSubscribe<ArrayList<MainImageBeanNew>>() {
+        Observable.create(new Observable.OnSubscribe<ArrayList<BigImageBean>>() {
             @Override
-            public void call(Subscriber<? super ArrayList<MainImageBeanNew>> subscriber) {
+            public void call(Subscriber<? super ArrayList<BigImageBean>> subscriber) {
                 if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                     subscriber.onError(new Throwable("sd卡不可用"));
                     return;
                 }
 
-                ArrayList<MainImageBeanNew> list = new ArrayList<>();
+                ArrayList<BigImageBean> list = new ArrayList<>();
                 try {
                     Dao daoLocalImg = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanLocalImage.class);
                     List<BeanLocalImage> list1 = daoLocalImg.queryForAll();
@@ -182,7 +182,7 @@ public class ModelLockScreen {
                         for (int i = 0; i < list1.size(); i++) {
                             BeanLocalImage beanLocalImage = list1.get(i);
 
-                            MainImageBeanNew imageBean = new MainImageBeanNew();
+                            BigImageBean imageBean = new BigImageBean();
                             imageBean.myType = 3;
                             imageBean.imgBigUrl = imageBean.imgSmallUrl = imageBean.localUrl = beanLocalImage.imgUrl;
                             imageBean.imgId = beanLocalImage.imgId;
@@ -201,7 +201,7 @@ public class ModelLockScreen {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ArrayList<MainImageBeanNew>>() {
+                .subscribe(new Subscriber<ArrayList<BigImageBean>>() {
                     @Override
                     public void onCompleted() {
                     }
@@ -213,7 +213,7 @@ public class ModelLockScreen {
                     }
 
                     @Override
-                    public void onNext(ArrayList<MainImageBeanNew> list) {
+                    public void onNext(ArrayList<BigImageBean> list) {
                         if (list != null && list.size() > 0) {
                             listener.onDataSucess(list);
                         } else {
@@ -224,7 +224,7 @@ public class ModelLockScreen {
     }
 
 
-    public static void getSwitchData(final Context context, final int page, final onDataResponseListener<List<MainImageBeanNew>> listener) {
+    public static void getSwitchData(final Context context, final int page, final onDataResponseListener<List<BigImageBean>> listener) {
         if (listener == null || context == null) {
             return;
         }
@@ -382,14 +382,14 @@ public class ModelLockScreen {
 //                });
 //    }
 
-    private static synchronized void saveSwitchDataSync(Context context, ArrayList<MainImageBeanNew> list) {
+    private static synchronized void saveSwitchDataSync(Context context, ArrayList<BigImageBean> list) {
         if (list != null && list.size() > 0) {
-            ArrayList<MainImageBeanNew> failList = new ArrayList<>();
+            ArrayList<BigImageBean> failList = new ArrayList<>();
 
             //存储图片文件
             File offlineDir = getOfflineDir(context);
             for (int i = 0; i < list.size(); i++) {
-                MainImageBeanNew imageBean = list.get(i);
+                BigImageBean imageBean = list.get(i);
                 String url = imageBean.imgBigUrl;
                 String name;
                 if (TextUtils.isEmpty(imageBean.imgId)) {
@@ -434,7 +434,7 @@ public class ModelLockScreen {
                 boolean delete = true;
 
                 for (int j = 0; j < list.size(); j++) {
-                    MainImageBeanNew imageBean = list.get(j);
+                    BigImageBean imageBean = list.get(j);
                     if (file.getAbsolutePath().equals(imageBean.localUrl)) {
                         delete = false;
                         break;
@@ -450,7 +450,7 @@ public class ModelLockScreen {
 
 
 
-    public static void getAutoUpdateData(final Context context, final onDataResponseListener<List<MainImageBeanNew>> listener) {
+    public static void getAutoUpdateData(final Context context, final onDataResponseListener<List<BigImageBean>> listener) {
         if (listener == null || context == null) {
             return;
         }

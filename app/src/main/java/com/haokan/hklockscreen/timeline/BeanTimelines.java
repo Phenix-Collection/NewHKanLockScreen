@@ -1,6 +1,6 @@
 package com.haokan.hklockscreen.timeline;
 
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 
 import java.util.List;
 
@@ -15,6 +15,6 @@ public class BeanTimelines {
     public int type = TYPE_ITEM;
 
 
-    public List<MainImageBeanNew> list;
+    public List<BigImageBean> list;
     public String createdAt;
 }

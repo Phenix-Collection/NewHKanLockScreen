@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by wangzixu on 2017/3/18.
  */
-public class MainImageBeanNew implements Serializable{
+public class BigImageBean implements Serializable{
     private static final long serialVersionUID = 1L;
 
     public String imgId; //id

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.ToastManager;
 
@@ -101,8 +101,8 @@ public class AdapterTimelines extends RecyclerView.Adapter<AdapterTimelines.MyRe
         private TextView tv_day, tv_year_month, tv_week;
 
         private int showCount = 5;
-        private List<MainImageBeanNew> allListData;
-        private List<MainImageBeanNew> showListData;
+        private List<BigImageBean> allListData;
+        private List<BigImageBean> showListData;
         private boolean isShowAll;
 
         public MyRecycleViewHolderImages(View itemView) {

@@ -36,7 +36,7 @@ import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
 import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.pubic.App;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
@@ -69,9 +69,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     private TextView mTvLockTitle;
     private TextView mTvLockLink;
     public static boolean sIsSwitching = false; //是否在换一换
-    protected ArrayList<MainImageBeanNew> mLocalImgData = new ArrayList<>(); //锁屏的数据分成两部分, 一部分是本地添加的照片, 一部分是网络更新的数据
-    protected ArrayList<MainImageBeanNew> mSwitchImgData = new ArrayList<>();
-    protected ArrayList<MainImageBeanNew> mTempData = new ArrayList<>();
+    protected ArrayList<BigImageBean> mLocalImgData = new ArrayList<>(); //锁屏的数据分成两部分, 一部分是本地添加的照片, 一部分是网络更新的数据
+    protected ArrayList<BigImageBean> mSwitchImgData = new ArrayList<>();
+    protected ArrayList<BigImageBean> mTempData = new ArrayList<>();
     private int mLocalLockIndex = 0; //本地图片循环时用的
     private int mNoLocalLockIndex = 0; //没有本地图片循环时用的
     private boolean mIsFrist = true;
@@ -80,11 +80,11 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     protected int mInitIndex; //初始在第几页
     private View mTimeTitleLayout;
 
-    private MainImageBeanNew mAdData5; //第5个位置和第11个位置的广告
-    private MainImageBeanNew mAdData11;
+    private BigImageBean mAdData5; //第5个位置和第11个位置的广告
+    private BigImageBean mAdData11;
     //为动态插入第5帧广告而用的集合, 始终保持有5条数据, 广告数据向后接续
     //需要把date分成2份, [lockindex, lockindex+5]和[lockindex+6~~因为要往11位置~~lockindex]
-    private ArrayList<MainImageBeanNew> mImgDataForAd5 = new ArrayList<>();
+    private ArrayList<BigImageBean> mImgDataForAd5 = new ArrayList<>();
     private View mLayoutSwitch;
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
@@ -389,7 +389,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     @Override
-    public void downloadImage(@NonNull MainImageBeanNew bean) {
+    public void downloadImage(@NonNull BigImageBean bean) {
         super.downloadImage(bean);
         if (mCurrentImgBean != null) {
             HashMap<String, String> map = new HashMap<>();
@@ -580,7 +580,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     return;
                 }
                 LogHelper.d("wangzixu", "ModelHaoKanAd loadAdData 28-53-206 onADSuccess");
-                MainImageBeanNew imageBean = new MainImageBeanNew();
+                BigImageBean imageBean = new BigImageBean();
                 imageBean.mBeanAdRes = adRes;
                 imageBean.imgBigUrl = adRes.imgUrl;
                 imageBean.imgSmallUrl = adRes.imgUrl;
@@ -613,7 +613,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 }
 
                 LogHelper.d("wangzixu", "ModelHaoKanAd loadAdData 28-53-206 onADSuccess");
-                MainImageBeanNew imageBean = new MainImageBeanNew();
+                BigImageBean imageBean = new BigImageBean();
                 imageBean.mBeanAdRes = adRes;
                 imageBean.imgBigUrl = adRes.imgUrl;
                 imageBean.imgSmallUrl = adRes.imgUrl;
@@ -648,14 +648,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     private int mSwitchDataPage = 1;
     protected void loadSwitchData() {
-        ModelLockScreen.getSwitchData(mContext, mSwitchDataPage, new onDataResponseListener<List<MainImageBeanNew>>() {
+        ModelLockScreen.getSwitchData(mContext, mSwitchDataPage, new onDataResponseListener<List<BigImageBean>>() {
             @Override
             public void onStart() {
                 setIvSwitching(true);
             }
 
             @Override
-            public void onDataSucess(List<MainImageBeanNew> mainImageBeen) {
+            public void onDataSucess(List<BigImageBean> mainImageBeen) {
                 if (mIsDestory) {
                     return;
                 }
@@ -733,13 +733,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     public void loadSwitchOfflineData(final boolean showOfflineImage) {
-        ModelLockScreen.getOffineSwitchData(mContext, new onDataResponseListener<List<MainImageBeanNew>>() {
+        ModelLockScreen.getOffineSwitchData(mContext, new onDataResponseListener<List<BigImageBean>>() {
             @Override
             public void onStart() {
             }
 
             @Override
-            public void onDataSucess(List<MainImageBeanNew> mainImageBeen) {
+            public void onDataSucess(List<BigImageBean> mainImageBeen) {
                 mSwitchImgData.clear();
                 mSwitchImgData.addAll(mainImageBeen);
 
@@ -769,13 +769,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
      * @param onlyLocalImage  是否只加载本地图片
      */
     public void loadData(final boolean onlyLocalImage) {
-        ModelLockScreen.getLocalImg(mContext, new onDataResponseListener<List<MainImageBeanNew>>() {
+        ModelLockScreen.getLocalImg(mContext, new onDataResponseListener<List<BigImageBean>>() {
             @Override
             public void onStart() {
             }
 
             @Override
-            public void onDataSucess(List<MainImageBeanNew> mainImageBeen) {
+            public void onDataSucess(List<BigImageBean> mainImageBeen) {
                 mLocalImgData.clear();
                 mLocalImgData.addAll(mainImageBeen);
                 LogHelper.d("wangzixu", "localimagechange 本地相册变化 mainImageBeen size = " + mainImageBeen.size());

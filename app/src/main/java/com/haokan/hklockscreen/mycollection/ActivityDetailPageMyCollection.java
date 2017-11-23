@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BeanConvertUtil;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.util.StatusBarUtil;
 
 import java.util.ArrayList;
@@ -47,9 +47,9 @@ public class ActivityDetailPageMyCollection extends ActivityBase {
         if (list == null) {
             return;
         }
-        ArrayList<MainImageBeanNew> mainList = new ArrayList<>();
+        ArrayList<BigImageBean> mainList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            MainImageBeanNew mainImageBean = BeanConvertUtil.collectionBean2MainImageBean(list.get(i));
+            BigImageBean mainImageBean = BeanConvertUtil.collectionBean2MainImageBean(list.get(i));
             mainList.add(mainImageBean);
         }
 

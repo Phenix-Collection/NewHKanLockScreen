@@ -13,7 +13,7 @@ import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.detailpage.Adapter_DetailPage_Base;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.BlurUtil;
@@ -27,7 +27,7 @@ import rx.schedulers.Schedulers;
 
 
 public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
-    public Adapter_DetailPage_Recommend(Context context, ArrayList<MainImageBeanNew> data, View.OnClickListener onClickListener, View.OnLongClickListener longClickListener) {
+    public Adapter_DetailPage_Recommend(Context context, ArrayList<BigImageBean> data, View.OnClickListener onClickListener, View.OnLongClickListener longClickListener) {
         super(context, data, onClickListener, longClickListener);
     }
 
@@ -38,7 +38,7 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        final MainImageBeanNew imageBean = mData.get(position);
+        final BigImageBean imageBean = mData.get(position);
         View view = View.inflate(mContext, R.layout.cv_detailpage_recommend_item, null);
         final RecommendPageDetailViewHolder holder = new RecommendPageDetailViewHolder(view);
         holder.position = position;
@@ -50,7 +50,7 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
         return holder.itemView;
     }
 
-    public void loadBigBitmap(MainImageBeanNew imageBean, final RecommendPageDetailViewHolder holder) {
+    public void loadBigBitmap(BigImageBean imageBean, final RecommendPageDetailViewHolder holder) {
         final String imgUrl = imageBean.imgBigUrl;
 //        Glide.with(mContext).load(imgUrl).asBitmap().listener(new RequestListener<String, Bitmap>() {
 //            @Override
@@ -138,7 +138,7 @@ public class Adapter_DetailPage_Recommend extends Adapter_DetailPage_Base {
                 });
     }
 
-    public void loadBlurBitmap(MainImageBeanNew imageBean, final RecommendPageDetailViewHolder holder) {
+    public void loadBlurBitmap(BigImageBean imageBean, final RecommendPageDetailViewHolder holder) {
         final String imgUrl = imageBean.imgSmallUrl;
         Observable.create(new Observable.OnSubscribe<BitmapDrawable>() {
             @Override

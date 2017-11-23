@@ -12,19 +12,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
-import com.haokan.pubic.bean.MainImageBeanNew;
+import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.logsys.LogHelper;
 
 import java.util.ArrayList;
 
 public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClickListener {
     protected final Context mContext; //用activity，利用glide的生命周期控制系统
-    protected ArrayList<MainImageBeanNew> mData = new ArrayList<>();
+    protected ArrayList<BigImageBean> mData = new ArrayList<>();
     protected ArrayList<ViewHolder> mHolders = new ArrayList<>();
     protected View.OnClickListener mOnClickListener;
     protected View.OnLongClickListener mOnLongClickListener;
 
-    public Adapter_DetailPage_Base(Context context, ArrayList<MainImageBeanNew> data
+    public Adapter_DetailPage_Base(Context context, ArrayList<BigImageBean> data
             , View.OnClickListener onClickListener, View.OnLongClickListener longClickListener) {
         mContext = context;
         mData = data;
@@ -32,7 +32,7 @@ public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClic
         mOnLongClickListener = longClickListener;
     }
 
-    public ArrayList<MainImageBeanNew> getData() {
+    public ArrayList<BigImageBean> getData() {
         return mData;
     }
 
@@ -66,7 +66,7 @@ public class Adapter_DetailPage_Base extends PagerAdapter implements View.OnClic
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        final MainImageBeanNew imageBean = mData.get(position);
+        final BigImageBean imageBean = mData.get(position);
 
         View view = View.inflate(mContext, R.layout.cv_detailpage_base_item, null);
         final ViewHolder holder = new ViewHolder(view);
