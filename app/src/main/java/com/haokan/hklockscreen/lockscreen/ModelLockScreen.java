@@ -79,6 +79,7 @@ public class ModelLockScreen {
                         try {
                             ArrayList<BigImageBean> tempList = (ArrayList<BigImageBean>) asObject;
                             BigImageBean bigImageBean = tempList.get(0); //验证是否会强转失败, 因为老的数据存储的是mainImageBean
+                            list.addAll(tempList);
                         } catch (Exception e) {
                             e.printStackTrace();
                             LogHelper.d("wangzixu", "getOffineSwitchData 强转失败, 老数据强转成mainimageBean");
