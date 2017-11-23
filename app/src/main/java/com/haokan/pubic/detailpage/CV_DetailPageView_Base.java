@@ -524,7 +524,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 }
             });
         } else {
-            BeanCollection bean = BeanConvertUtil.mainImageBean2CollectionBean(mCurrentImgBean);
+            BeanCollection bean = BeanConvertUtil.bigImageBean2CollectionBean(mCurrentImgBean);
             new ModelCollection().addCollection(mContext, bean, new onDataResponseListener<BeanCollection>() {
                 @Override
                 public void onStart() {

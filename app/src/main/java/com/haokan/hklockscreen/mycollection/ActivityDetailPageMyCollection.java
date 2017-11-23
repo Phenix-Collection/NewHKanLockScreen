@@ -49,7 +49,7 @@ public class ActivityDetailPageMyCollection extends ActivityBase {
         }
         ArrayList<BigImageBean> mainList = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
-            BigImageBean mainImageBean = BeanConvertUtil.collectionBean2MainImageBean(list.get(i));
+            BigImageBean mainImageBean = BeanConvertUtil.collectionBean2BigImageBean(list.get(i));
             mainList.add(mainImageBean);
         }
 

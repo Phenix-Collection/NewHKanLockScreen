@@ -83,7 +83,7 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
 
                 ArrayList<BigImageBean> mainList = new ArrayList<BigImageBean>();
                 for (int i = 0; i < list.size(); i++) {
-                    BigImageBean mainImageBean = BeanConvertUtil.collectionBean2MainImageBean(list.get(i));
+                    BigImageBean mainImageBean = BeanConvertUtil.collectionBean2BigImageBean(list.get(i));
                     mainList.add(mainImageBean);
                 }
 
