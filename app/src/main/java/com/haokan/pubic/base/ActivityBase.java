@@ -68,6 +68,7 @@ public class ActivityBase extends Activity {
             mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.setContentView(R.layout.dialog_layout_loading);
         }
+        mProgressDialog.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         mProgressDialog.show();
     }
 

@@ -59,6 +59,7 @@ public class ActivityHomePage extends ActivityBase {
         if (mFirst) {
             preferences.edit().putBoolean(Values.PreferenceKey.KEY_SP_FIRSTINSTALL, false).apply();
             Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
+            intent.putExtra(ActivityLockScreenInitSet.KEY_INTENT_FROMHOME, true);
             startActivity(intent);
         } else {
             App.sMainHanlder.postDelayed(mPermissionRun, 600);

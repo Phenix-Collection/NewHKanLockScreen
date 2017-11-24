@@ -21,6 +21,7 @@ import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_A
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItemsBase;
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_1;
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_2;
+import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_3;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
@@ -101,8 +102,17 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 UmengMaiDianManager.onEvent(mContext, "event_046", null);
-                mActivityBase.finish();
-                mActivityBase.closeActivityAnim();
+                if (mSkipToLock) {
+                    Intent intent1 = new Intent(mActivityBase, ActivityLockScreen.class);
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    mActivityBase.startActivity(intent1);
+                    mActivityBase.finish();
+                    mActivityBase.startActivityAnim();
+                } else {
+                    mActivityBase.finish();
+                    mActivityBase.closeActivityAnim();
+                }
             }
         });
     }
@@ -127,8 +137,17 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 } else if (sInitCheckStatus == 2) {
                     UmengMaiDianManager.onEvent(mContext, "event_061", null);
                 }
-                mActivityBase.finish();
-                mActivityBase.closeActivityAnim();
+                if (mSkipToLock) {
+                    Intent intent1 = new Intent(mActivityBase, ActivityLockScreen.class);
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    mActivityBase.startActivity(intent1);
+                    mActivityBase.finish();
+                    mActivityBase.startActivityAnim();
+                } else {
+                    mActivityBase.finish();
+                    mActivityBase.closeActivityAnim();
+                }
             }
         });
 
@@ -141,7 +160,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             mManualSetItemsLayout = new CV_LockInit_ManualSetItems_2(mContext);
 
         } else {
-            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_2(mContext);
+            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_3(mContext);
         }
 
         mManualSetItemsLayout.setActivityBase(mActivityBase);
@@ -255,6 +274,11 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         }
     }
 
+    boolean mSkipToLock = false;
+    public void setSkipToLock(boolean skipToLock) {
+        mSkipToLock = skipToLock;
+    }
+
     public void startScanAnim() {
         App.sMainHanlder.postDelayed(new Runnable() {
             @Override
@@ -339,7 +363,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     Intent i = new Intent(mContext, ActivityLockScreen.class);
                     mActivityBase.startActivity(i);
                     mActivityBase.finish();
-                    mActivityBase.overridePendingTransition(0,0);
+                    mActivityBase.startActivityAnim();
                 }
                 break;
             case R.id.tvstartlock_manual:
@@ -353,13 +377,22 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                     Intent i = new Intent(mContext, ActivityLockScreen.class);
                     mActivityBase.startActivity(i);
                     mActivityBase.finish();
-                    mActivityBase.overridePendingTransition(0,0);
+                    mActivityBase.startActivityAnim();
                 }
                 break;
-            case R.id.tv_skip:
-                {
-                    mActivityBase.finish();
-                    mActivityBase.closeActivityAnim();
+            case R.id.tv_skip: {
+//                    LogHelper.d("wangzixu", "tv_skip mSkipToLock = " + mSkipToLock);
+                    if (mSkipToLock) {
+                        Intent intent1 = new Intent(mActivityBase, ActivityLockScreen.class);
+                        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        mActivityBase.startActivity(intent1);
+                        mActivityBase.finish();
+                        mActivityBase.startActivityAnim();
+                    } else {
+                        mActivityBase.finish();
+                        mActivityBase.closeActivityAnim();
+                    }
                 }
                 break;
             default:

@@ -22,6 +22,7 @@ import com.haokan.pubic.util.StatusBarUtil;
 
 
 public class ActivityLockScreenInitSet extends ActivityBase {
+    public static final String KEY_INTENT_FROMHOME = "ishome";
     private CV_LockInitSetView mCvLockScreenInitSetView;
 
     @Override
@@ -39,8 +40,11 @@ public class ActivityLockScreenInitSet extends ActivityBase {
     }
 
     private void initView() {
+        boolean extra = getIntent().getBooleanExtra(KEY_INTENT_FROMHOME, false);
+
         mCvLockScreenInitSetView = (CV_LockInitSetView) findViewById(R.id.cv_lockinitview);
         mCvLockScreenInitSetView.setActivityBase(this);
+        mCvLockScreenInitSetView.setSkipToLock(extra);
         mCvLockScreenInitSetView.startScanAnim();
     }
 

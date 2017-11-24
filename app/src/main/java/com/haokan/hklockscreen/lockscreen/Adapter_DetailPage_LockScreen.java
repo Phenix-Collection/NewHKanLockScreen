@@ -90,36 +90,5 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
             }
         }).into(holder.image);
         return holder.itemView;
-
-//        if (imageBean.mBeanAdRes != null) { //是广告
-//            LogHelper.d("wangzixu", "HaokanADManager  detailpage AD position = " + position);
-//            View view = View.inflate(mContext, R.layout.cv_detailpage_lockscreen_item_ad, null);
-//            final ImageView image = (ImageView) view.findViewById(R.id.iv_image);
-//            final View errorView = view.findViewById(R.id.layout_fail);
-//            final View loadingView = view.findViewById(R.id.layout_loading);
-//            loadingView.setVisibility(View.VISIBLE);
-//            Glide.with(mContext).load(imageBean.mBeanAdRes.imgUrl).asBitmap().dontAnimate().listener(new RequestListener<String, Bitmap>() {
-//                @Override
-//                public boolean onException(Exception e, String model, Target<Bitmap> target, boolean isFirstResource) {
-//                    errorView.setVisibility(View.VISIBLE);
-//                    loadingView.setVisibility(View.GONE);
-//                    image.setVisibility(View.GONE);
-//                    return false;
-//                }
-//
-//                @Override
-//                public boolean onResourceReady(Bitmap resource, String model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
-//                    errorView.setVisibility(View.GONE);
-//                    loadingView.setVisibility(View.GONE);
-//                    image.setVisibility(View.VISIBLE);
-//                    return false;
-//                }
-//            }).into(image);
-//
-//            container.addView(view);
-//            return view;
-//        } else {
-//
-//        }
     }
 }

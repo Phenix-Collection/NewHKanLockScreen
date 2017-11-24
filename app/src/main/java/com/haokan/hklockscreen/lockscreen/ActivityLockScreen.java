@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -81,7 +82,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         disableKeyGuard();
         StatusBarUtil.setStatusBarTransparnet(this);
         setContentView(R.layout.activity_lockscreen);
-        LogHelper.d("wangzixu", "ActivityLockScreen onCreate");
 
         disableKeyGuard();
 //        mScreenH = getResources().getDisplayMetrics().heightPixels;
@@ -102,26 +102,45 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                LogHelper.d("wangzixu", "homehome onReceive intent = " + intent.getAction());
-                App.sMainHanlder.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                        if (App.sHaokanLockView != null) {
-                            App.sHaokanLockView.mIsLocked = false;
+                String reason = intent.getStringExtra("reason");
+                LogHelper.d("wangzixu", "homehome onReceive intent = " + intent.getAction()
+                        + ", reason = " + reason);
+                //recentapps最近任务, homekey  home键
+                if (!TextUtils.isEmpty(reason) && reason.equals("homekey")) {
+                    App.sMainHanlder.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                            if (App.sHaokanLockView != null) {
+                                App.sHaokanLockView.mIsLocked = false;
+                            }
+                            UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_065");
                         }
-                        UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_065");
-                    }
-                }, 0);
+                    }, 0);
+                }
             }
         };
         registerReceiver(mReceiver, filter);
+
+        LogHelper.d("wangzixu", "ActivityLockScreen onCreate " + this);
+
+//        try {
+//            Object service = getSystemService("statusbar");
+//            Class<?> statusBarManager = Class.forName("android.app.StatusBarManager");
+//            Method disable = statusBarManager.getMethod("disable", int.class);
+//            disable.setAccessible(true);
+//            disable.invoke(service, 0x00200000); // 为View.STATUS_BAR_DISABLE_HOME 的值
+////          disable.invoke(service, 0x00400000); // 为View.STATUS_BAR_DISABLE_BACK  的值
+////            disable.invoke(service, 0x01000000); // 为View.STATUS_BAR_DISABLE_RECENT的值
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        LogHelper.d("wangzixu", "ActivityLockScreen onCreate onNewIntent");
+        LogHelper.d("wangzixu", "ActivityLockScreen onCreate onNewIntent " + this);
         App.sHaokanLockView.intoLockScreenState(true);
         mScrollView.scrollTo(0,0);
 
@@ -192,7 +211,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     protected void onPause() {
         super.onPause();
-        LogHelper.d("wangzixu", "ActivityLockScreen onPause");
+        LogHelper.d("wangzixu", "ActivityLockScreen onPause " + this);
         App.sMainHanlder.removeCallbacks(mShowGestureRun);
         App.sMainHanlder.removeCallbacks(mEventRun);
         mGustureView = null;
@@ -641,10 +660,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
-//        KeyguardManager.KeyguardLock mKeyguardLock;
-//        KeyguardManager km = (KeyguardManager) this.getApplication().getSystemService(Context.KEYGUARD_SERVICE);
-//        mKeyguardLock = km.newKeyguardLock("keyguard");
-//        mKeyguardLock.disableKeyguard();
+        KeyguardManager km = (KeyguardManager) this.getApplication().getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager.KeyguardLock mKeyguardLock = km.newKeyguardLock("keyguard");
+        mKeyguardLock.disableKeyguard();
     }
 
 
@@ -773,8 +791,15 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     }
 
     @Override
+    public void finish() {
+        Thread.dumpStack();
+        LogHelper.d("wangzixu", "ActivityLockScreen onfinish "  + this);
+        super.finish();
+    }
+
+    @Override
     protected void onDestroy() {
-        LogHelper.d("wangzixu", "ActivityLockScreen onDestroy");
+        LogHelper.d("wangzixu", "ActivityLockScreen onDestroy "  + this);
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }

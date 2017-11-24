@@ -189,7 +189,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 mIsUnLonking = false;
                 mMinY  = y;
                 mDownY = y;
-                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_DOWN = " + y);
+//                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_DOWN = " + y);
 
                 mCancelLongClick = false;
                 mHasLongClicked = false;
@@ -266,7 +266,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
      */
     private void calcDisplayRect(int foreGroundbottom) {
         // 要把bitmap画到屏幕上，分成两部分，上面是不透明部分，下面是透明渐变部分
-        // 所以我们要知道4个方框：原图的上半部分方框，原图的半透明部分方框，目标屏幕的上半部分，目标屏幕的下半部分。
+        // 所以我们要知道4个方框：原图的上半部分方框，原图的半透明部分方框，目标屏幕的上半部分，目标屏幕的下半部分半透明区域
 
         // 目标屏幕要画的两个区域大小基于我们手指上划的距离，传进来的foreGroundbottom代表目标屏幕上面区域的底边
         // 所以可以根据这个值很容易计算出目标屏幕的两个方框，如下：
@@ -382,6 +382,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
         if (mImageBitmap != null) {
             mBitmapH = mImageBitmap.getHeight();
             mBitmapW = mImageBitmap.getWidth();
+            LogHelper.d("wangzixu", "unlockview mBitmapW,H = " + mBitmapW + ", " + mBitmapH);
         }
     }
 

@@ -140,6 +140,14 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                     }
                 }
 
+                if (!hasAdapter) {
+//                    if (Build.MANUFACTURER.equalsIgnoreCase("xiaomi")) {
+//                        hasAdapter = true;
+//                    }
+                    App.sIsAdapterPhone = 3; //第二类型, 小米, 自启动
+                }
+
+
                 worker.unsubscribe();
             }
         });
