@@ -1,5 +1,6 @@
 package com.haokan.hklockscreen.lockscreeninitset.manualsetitems;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -10,13 +11,13 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreeninitset.CV_LockInitSetView;
-import com.haokan.hklockscreen.lockscreeninitset.SystemLockAdapterUtil;
 import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_AutoStart;
 import com.haokan.pubic.App;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 
 /**
  * Created by wangzixu on 2017/11/16.
+ * //第3类型, 华为emui4.0.x- Android6.0
  */
 public class CV_LockInit_ManualSetItems_3 extends CV_LockInit_ManualSetItemsBase implements View.OnClickListener {
     private int mManusetBit = 0x00000000;
@@ -47,7 +48,10 @@ public class CV_LockInit_ManualSetItems_3 extends CV_LockInit_ManualSetItemsBase
         switch (v.getId()) {
             case R.id.tv_manualset_autostart:
                 try{
-                    Intent intent = SystemLockAdapterUtil.getAutoStartIntent();
+                    Intent intent = new Intent();
+                    ComponentName componentName = new ComponentName("com.huawei.systemmanager"
+                            , "com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity");
+                    intent.setComponent(componentName);
                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivityBase.startActivityForResult(intent, 201);
                     mActivityBase.startActivityAnim();

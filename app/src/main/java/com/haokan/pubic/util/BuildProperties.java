@@ -19,60 +19,61 @@ import java.util.Set;
  * Created by wangzixu on 2017/11/11.
  */
 public class BuildProperties {
-    private final Properties properties;
+    private final Properties mProperties;
 
     private BuildProperties(){
-        properties = new Properties();
+        mProperties = new Properties();
         try {
-            properties.load(new FileInputStream(new File(Environment.getRootDirectory(), "build.prop")));
+            mProperties.load(new FileInputStream(new File(Environment.getRootDirectory(), "build.prop")));
 
-            Set<Map.Entry<Object, Object>> entrySet = properties.entrySet();//返回的属性键值对实体
-            for (Map.Entry<Object, Object> entry : entrySet) {
-                LogHelper.d("wangzixu", "app init : " + entry.getKey() + " = " + entry.getValue());
-            }
-        } catch (IOException e) {
+//            Set<Map.Entry<Object, Object>> entrySet = mProperties.entrySet();//返回的属性键值对实体
+//            for (Map.Entry<Object, Object> entry : entrySet) {
+//                LogHelper.d("wangzixu", "app init : " + entry.getKey() + " = " + entry.getValue());
+//            }
+        } catch (Exception e) {
+            LogHelper.d("wangzixu", "app init 获取不到build.prop");
             e.printStackTrace();
         }
     }
 
     public boolean containsKey(final Object key) {
-        return properties.containsKey(key);
+        return mProperties.containsKey(key);
     }
 
     public boolean containsValue(final Object value) {
-        return properties.containsValue(value);
+        return mProperties.containsValue(value);
     }
 
     public Set<Map.Entry<Object, Object>> entrySet() {
-        return properties.entrySet();
+        return mProperties.entrySet();
     }
 
     public String getProperty(final String name) {
-        return properties.getProperty(name);
+        return mProperties.getProperty(name);
     }
 
     public String getProperty(final String name, final String defaultValue) {
-        return properties.getProperty(name, defaultValue);
+        return mProperties.getProperty(name, defaultValue);
     }
 
     public boolean isEmpty() {
-        return properties.isEmpty();
+        return mProperties.isEmpty();
     }
 
     public Enumeration<Object> keys() {
-        return properties.keys();
+        return mProperties.keys();
     }
 
     public Set<Object> keySet() {
-        return properties.keySet();
+        return mProperties.keySet();
     }
 
     public int size() {
-        return properties.size();
+        return mProperties.size();
     }
 
     public Collection<Object> values() {
-        return properties.values();
+        return mProperties.values();
     }
 
     public static BuildProperties newInstance(){

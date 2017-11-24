@@ -792,7 +792,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
     @Override
     public void finish() {
-        Thread.dumpStack();
         LogHelper.d("wangzixu", "ActivityLockScreen onfinish "  + this);
         super.finish();
     }

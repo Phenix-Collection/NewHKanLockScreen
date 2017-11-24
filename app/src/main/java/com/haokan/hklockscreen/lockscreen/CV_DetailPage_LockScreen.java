@@ -455,13 +455,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         //自动换下一张的逻辑
         if (scrollNext) {
             if (mLocalImgData.size() > 0) {
+                mLocalLockIndex = (mLocalLockIndex+1)%mLocalImgData.size();
                 mInitIndex = mTempData.size()*9+mLocalLockIndex;
                 mCurrentPosition = mInitIndex;
-                mLocalLockIndex = (mLocalLockIndex+1)%mLocalImgData.size();
             } else {
+                mNoLocalLockIndex = (mNoLocalLockIndex+1)%mTempData.size();
                 mInitIndex = mTempData.size()*9+mNoLocalLockIndex;
                 mCurrentPosition = mInitIndex;
-                mNoLocalLockIndex = (mNoLocalLockIndex+1)%mTempData.size();
 
 //                int indexOf = mCurrentPosition + 1;
 //                if (indexOf >= mData.size()) {
@@ -532,6 +532,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             }
             //广告展示上报
             ModelHaoKanAd.adShowUpLoad(mCurrentImgBean.mBeanAdRes.showUpUrl);
+        } else if (mCurrentImgBean.myType == 3) {
+            mLocalLockIndex = position;
+        } else {
+            mNoLocalLockIndex = position;
         }
 
         if (!mHasLoadAd5 && position == mLockPosition + 1) {

@@ -25,6 +25,9 @@ import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.webview.ActivityWebview;
 
+import java.util.Map;
+import java.util.Set;
+
 import rx.Scheduler;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
@@ -122,29 +125,37 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
             public void call() {
                 App.sIsAdapterPhone = 0;
 
-                boolean hasAdapter = false;
+                boolean beginAdapter = true;
+
+                BuildProperties properties = BuildProperties.newInstance();
+                Set<Map.Entry<Object, Object>> entrySet = properties.entrySet();//返回的属性键值对实体
+                for (Map.Entry<Object, Object> entry : entrySet) {
+                    LogHelper.d("wangzixu", "app init : " + entry.getKey() + " = " + entry.getValue());
+//                    LogHelper.writeLog(ActivitySplash.this, "app init : " + entry.getKey() + " = " + entry.getValue());
+                }
 
                 //适配机型
-                String property = BuildProperties.newInstance().getProperty("ro.build.version.opporom");
-                if (!TextUtils.isEmpty(property)) {
-                    if (property.contains("V3.0") && Build.VERSION.SDK_INT == 23) {
-                        hasAdapter = true;
-                        App.sIsAdapterPhone = 1; //第一类型, colorOs-3.0.0i-Android6.0
+                if (beginAdapter) {
+                    String property = properties.getProperty("ro.build.version.opporom");
+                    if (!TextUtils.isEmpty(property) && property.contains("V3.0") && Build.VERSION.SDK_INT == 23) {
+                        beginAdapter = false;
+                        App.sIsAdapterPhone = 1; //第一类型, oppo的 colorOs-3.0.0i-Android6.0
                     }
                 }
 
-                if (!hasAdapter) {
+                if (beginAdapter) {
                     if (Build.MANUFACTURER.equalsIgnoreCase("xiaomi")) {
-                        hasAdapter = true;
-                        App.sIsAdapterPhone = 2; //第二类型, 小米, 自启动
+                        beginAdapter = false;
+                        App.sIsAdapterPhone = 2; //第二类型, 小米v9, 自启动
                     }
                 }
 
-                if (!hasAdapter) {
-//                    if (Build.MANUFACTURER.equalsIgnoreCase("xiaomi")) {
-//                        hasAdapter = true;
-//                    }
-                    App.sIsAdapterPhone = 3; //第二类型, 小米, 自启动
+                if (beginAdapter) {
+                    String property = properties.getProperty("ro.build.version.emui");
+                    if (!TextUtils.isEmpty(property) && property.contains("EmotionUI_4.0") && Build.VERSION.SDK_INT == 23) {
+                        beginAdapter = false;
+                        App.sIsAdapterPhone = 3; //第3类型, 华为emui4.0.x- Android6.0
+                    }
                 }
 
 
