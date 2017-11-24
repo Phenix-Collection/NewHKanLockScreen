@@ -331,9 +331,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     mVelocityTracker = VelocityTracker.obtain();
                 }
                 mVelocityTracker.clear();
-                if (mVelocityTracker != null) {
-                    mVelocityTracker.addMovement(event);
-                }
+                mVelocityTracker.addMovement(event);
                 break;
             case MotionEvent.ACTION_MOVE:
 
@@ -343,9 +341,10 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
                 float x = event.getX();
                 float y = event.getY();
-                if (mVelocityTracker != null) {
-                    mVelocityTracker.addMovement(event);
+                if (mVelocityTracker == null) {
+                    mVelocityTracker = VelocityTracker.obtain();
                 }
+                mVelocityTracker.addMovement(event);
 
                 if (scrollY < mScreenH) {
                     if (scrollY > 0 || mScrollViewMove) { //2在推荐和锁屏页之间, 拦截掉事件, 自己处理
@@ -413,9 +412,10 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                if (mVelocityTracker != null) {
-                    mVelocityTracker.addMovement(event);
+                if (mVelocityTracker == null) {
+                    mVelocityTracker = VelocityTracker.obtain();
                 }
+                mVelocityTracker.addMovement(event);
 
                 //如果当前在推荐和锁屏页中间, 拦截掉事件, 自己处理. 其他情况都交由系统处理
                 if (scrollY > 0 && scrollY < mScreenH) {
@@ -792,8 +792,11 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
     @Override
     public void finish() {
-        LogHelper.d("wangzixu", "ActivityLockScreen onfinish "  + this);
-        super.finish();
+        try {
+            super.finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
