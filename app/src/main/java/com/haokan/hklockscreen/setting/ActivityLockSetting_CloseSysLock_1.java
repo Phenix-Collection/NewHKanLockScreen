@@ -13,6 +13,7 @@ import com.haokan.pubic.base.ActivityBase;
 
 /**
  * Created by wangzixu on 2017/10/20.
+ * 设置页中, 点击去除双锁屏条目进来的页面
  */
 public class ActivityLockSetting_CloseSysLock_1 extends ActivityBase implements View.OnClickListener {
     @Override

@@ -108,31 +108,38 @@
 
         <activity
             android:name=".setting.ActivityLockSetting"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait">
+        </activity>
+
+                  <!--android:launchMode="singleInstance"-->
+                  <!--android:launchMode="singleTask"-->
+        <activity android:name=".lockscreen.ActivityLockScreen"
+                  android:theme="@style/myLockScreenActiviyTheme"
+                  android:taskAffinity="com.hk.lockscreentask"
+                  android:screenOrientation="portrait">
         </activity>
 
             <!--android:launchMode="singleInstance"-->
-        <activity
-            android:name=".lockscreen.activityforlockscreen.ActivitySettingForLockPage"
-            android:taskAffinity="com.hk.lockscreentask"
-            android:screenOrientation="portrait">
-        </activity>
+        <!--<activity-->
+            <!--android:name=".lockscreen.activityforlockscreen.ActivitySettingForLockPage"-->
+            <!--android:taskAffinity="com.hk.lockscreentask"-->
+            <!--android:screenOrientation="portrait">-->
+        <!--</activity>-->
 
-        <activity android:name=".lockscreen.activityforlockscreen.ActivityWebviewForLockPage"
-                  android:launchMode="singleInstance"
-                  android:screenOrientation="portrait">
-        </activity>
+        <!--<activity android:name=".lockscreen.activityforlockscreen.ActivityWebviewForLockPage"-->
+                  <!--android:launchMode="singleInstance"-->
+                  <!--android:screenOrientation="portrait">-->
+        <!--</activity>-->
 
-        <activity android:name=".lockscreen.activityforlockscreen.ActivityLandDetailPageForLockPage"
-                  android:launchMode="singleInstance"
-                  android:screenOrientation="portrait">
-        </activity>
+        <!--<activity android:name=".lockscreen.activityforlockscreen.ActivityLandDetailPageForLockPage"-->
+                  <!--android:launchMode="singleInstance"-->
+                  <!--android:screenOrientation="portrait">-->
+        <!--</activity>-->
 
-        <activity android:name=".lockscreen.activityforlockscreen.ActivityLandPageForLockPage"
-                  android:launchMode="singleInstance"
-                  android:screenOrientation="portrait">
-        </activity>
+        <!--<activity android:name=".lockscreen.activityforlockscreen.ActivityLandPageForLockPage"-->
+                  <!--android:launchMode="singleInstance"-->
+                  <!--android:screenOrientation="portrait">-->
+        <!--</activity>-->
 
         <activity
             android:name=".home.ActivityHomePage"
@@ -185,14 +192,6 @@
             android:name=".mycollection.ActivityDetailPageMyCollection"
             android:theme="@style/MyDetailPage"
             android:screenOrientation="portrait">
-        </activity>
-
-
-                  <!--android:taskAffinity="com.hk.lockscreentask"-->
-        <activity android:name=".lockscreen.ActivityLockScreen"
-                  android:theme="@style/myLockScreenActiviyTheme"
-                  android:launchMode="singleInstance"
-                  android:screenOrientation="portrait">
         </activity>
 
         <activity android:name="com.haokan.pubic.webview.ActivityWebview"

@@ -29,12 +29,10 @@ import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
-import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivityLandPageForLockPage;
-import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivitySettingForLockPage;
-import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivityWebviewForLockPage;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
 import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
+import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
@@ -296,8 +294,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             intoDetialPageState();
         } else {
             if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) {
-                Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
-                intent.putExtra(ActivityWebviewForLockPage.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
+                Intent intent = new Intent(mContext, ActivityWebview.class);
+//                Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
                 if (mActivity != null) {
                     mActivity.startActivity(intent);
                     mActivity.startActivityAnim();
@@ -349,7 +348,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         UmengMaiDianManager.onEvent(mContext, "event_064", map);
 
         if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-            Intent intent = new Intent(mContext, ActivityLandPageForLockPage.class);
+//            Intent intent = new Intent(mContext, ActivityLandPageForLockPage.class);
+            Intent intent = new Intent(mContext, ActivityLandPageRecommend.class);
             BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
             beanRecommendItem.GroupId = mCurrentImgBean.jump_id;
             if (TextUtils.isEmpty(beanRecommendItem.GroupId)) {
@@ -367,7 +367,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 mContext.startActivity(intent);
             }
         } else {
-            Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+//            Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+            Intent intent = new Intent(mContext, ActivityWebview.class);
             intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
             intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
             if (mActivity != null) {
@@ -820,10 +821,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     @Override
     protected void onClickSetting() {
-        Intent i = new Intent(mContext, ActivitySettingForLockPage.class);
-//        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        Intent i = new Intent(mContext, ActivitySettingForLockPage.class);
+        Intent i = new Intent(mContext, ActivityLockSetting.class);
         if (mActivity != null) {
-//            mActivity.startActivityForResult(i, 101);
             mActivity.startActivity(i);
             mActivity.startActivityAnim();
         } else {

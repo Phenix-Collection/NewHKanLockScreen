@@ -42,7 +42,8 @@ public class ActivityLandPageForLockPage extends ActivityLandPageRecommend {
         if (data == null) {
             return;
         }
-        Intent intent = new Intent(this, ActivityLandDetailPageForLockPage.class);
+//        Intent intent = new Intent(this, ActivityLandDetailPageForLockPage.class);
+        Intent intent = new Intent(this, ActivityDetailPageRecommend.class);
         intent.putParcelableArrayListExtra(ActivityDetailPageRecommend.KEY_INTENT_GROUDDATE, data);
         intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_POSITION, Math.max(pos, 0));
         startActivity(intent);

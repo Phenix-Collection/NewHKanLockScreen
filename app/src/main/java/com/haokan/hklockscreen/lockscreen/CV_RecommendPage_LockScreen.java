@@ -10,12 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivityLandPageForLockPage;
-import com.haokan.hklockscreen.lockscreen.activityforlockscreen.ActivityWebviewForLockPage;
 import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
+import com.haokan.pubic.webview.ActivityWebview;
 
 /**
  * Created by wangzixu on 2017/10/20.
@@ -127,7 +126,7 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
         UmengMaiDianManager.onEvent(mContext, "event_079");
 
         if (beanRecommendItem.mBeanAdRes == null) {
-            Intent intent = new Intent(mContext, ActivityLandPageForLockPage.class);
+            Intent intent = new Intent(mContext, ActivityLandPageRecommend.class);
             intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
             if (mActivityBase != null) {
                 mActivityBase.startActivity(intent);
@@ -137,8 +136,9 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
             }
         } else {
             //跳转webview
-            Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
-            intent.putExtra(ActivityWebviewForLockPage.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
+//            Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+            Intent intent = new Intent(mContext, ActivityWebview.class);
+            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
             if (mActivityBase != null) {
                 mActivityBase.startActivity(intent);
                 mActivityBase.startActivityAnim();
