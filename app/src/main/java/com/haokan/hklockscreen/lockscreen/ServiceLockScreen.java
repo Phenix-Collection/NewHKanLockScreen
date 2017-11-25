@@ -60,17 +60,19 @@ public class ServiceLockScreen extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int type = intent.getIntExtra("type", 0);
-        if (type == 1) {
-            try {
-                Intent intent1 = new Intent(this, ActivityLockScreen.class);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                this.startActivity(intent1);
-                LogHelper.d("wangzixu", "ActivityLockScreen onReceive ServiceLockScreen startActivity");
-            } catch (Exception e) {
-                e.printStackTrace();
-                LogHelper.d("wangzixu", "ActivityLockScreen onReceive Exception");
+        if (intent != null) {
+            int type = intent.getIntExtra("type", 0);
+            if (type == 1) {
+                try {
+                    Intent intent1 = new Intent(this, ActivityLockScreen.class);
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    this.startActivity(intent1);
+                    LogHelper.d("wangzixu", "ActivityLockScreen onReceive ServiceLockScreen startActivity");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    LogHelper.d("wangzixu", "ActivityLockScreen onReceive Exception");
+                }
             }
         }
         return START_STICKY;

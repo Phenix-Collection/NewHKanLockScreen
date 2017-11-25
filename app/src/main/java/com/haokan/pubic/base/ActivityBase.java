@@ -53,6 +53,24 @@ public class ActivityBase extends Activity {
         overridePendingTransition(R.anim.activity_in_left2right, R.anim.activity_out_left2right);
     }
 
+    @Override
+    public void onBackPressed() {
+        try {
+            super.onBackPressed();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void finish() {
+        try {
+            super.finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     //*******************4种提示框相关的布局 begin*************************
     private View mNetErrorLayout;
     private View mLoadingLayout;
