@@ -19,9 +19,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="15dp"
             android:src="@drawable/icon_restart"
-            android:scaleType="centerInside"
-            android:layout_width="26dp"
-            android:layout_height="26dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_marginLeft="20dp"
@@ -38,7 +37,7 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:layout_marginTop="5dp"
-                android:text="请添加【好看锁屏到开机启动】"
+                android:text="请添加【好看锁屏】到开机启动"
                 android:textColor="#999999"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
@@ -47,6 +46,58 @@
 
         <TextView
             android:id="@+id/tv_manualset_autostart"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selector_lockinit_btnbg2"
+            android:gravity="center"
+            android:layout_marginRight="15dp"
+            android:textSize="14sp"
+            android:textColor="@color/bai"
+            android:text="手动设置"
+            android:layout_width="80dp"
+            android:layout_height="32dp"/>
+    </LinearLayout>
+
+    <View
+        android:background="#d8d8d8"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <LinearLayout
+        android:id="@+id/whitelistlayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/icon_safe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="防止被系统自动清理"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginTop="5dp"
+                android:text="请添加【好看锁屏】到白名单"
+                android:textColor="#999999"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_manualset_whitelist"
             android:layout_gravity="center_vertical"
             android:background="@drawable/selector_lockinit_btnbg2"
             android:gravity="center"
@@ -84,7 +135,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content">
             <TextView
-                android:text="防止双锁屏(一)"
+                android:text="防止双锁屏"
                 android:textColor="#333333"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
@@ -110,59 +161,6 @@
             android:layout_width="80dp"
             android:layout_height="32dp"/>
     </LinearLayout>
-    <View
-        android:background="#d8d8d8"
-        android:layout_width="match_parent"
-        android:layout_height="1px"/>
-
-    <LinearLayout
-        android:id="@+id/closesysmagezinelayout"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="80dp">
-        <ImageView
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/icon_closemagazine"
-            android:scaleType="centerInside"
-            android:layout_width="26dp"
-            android:layout_height="26dp"/>
-
-        <LinearLayout
-            android:layout_marginLeft="20dp"
-            android:orientation="vertical"
-            android:layout_gravity="center_vertical"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="防止双锁屏(二)"
-                android:textColor="#333333"
-                android:textSize="16sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:layout_marginTop="5dp"
-                android:text="请关闭系统的锁屏杂志"
-                android:textColor="#999999"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/tv_manualset_closesysmagazine"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/selector_lockinit_btnbg2"
-            android:gravity="center"
-            android:layout_marginRight="15dp"
-            android:textSize="14sp"
-            android:textColor="@color/bai"
-            android:text="手动设置"
-            android:layout_width="80dp"
-            android:layout_height="32dp"/>
-    </LinearLayout>
-
     <View
         android:background="#d8d8d8"
         android:layout_width="match_parent"

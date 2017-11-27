@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_CloseSysMagazine_1;
-import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_CloseSysPswd_1;
+import com.haokan.hklockscreen.lockscreeninitset.phone1.ActivityPrompt_CloseSysMagazine_1;
+import com.haokan.hklockscreen.lockscreeninitset.phone1.ActivityPrompt_CloseSysPswd_1;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 

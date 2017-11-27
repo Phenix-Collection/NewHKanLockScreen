@@ -16,7 +16,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <application
         android:name="com.haokan.pubic.App"
@@ -148,25 +147,43 @@
         </activity>
 
         <activity
-            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_AutoStart"
+            android:name=".lockscreeninitset.ActivityPrompt_AutoStart"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_Accessablity"
+            android:name=".lockscreeninitset.phone4.ActivityPrompt_AutoStart_4"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_CloseSysMagazine_1"
+            android:name=".lockscreeninitset.phone4.ActivityPrompt_WhiteList_4"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>
 
         <activity
-            android:name=".lockscreeninitset.activityprompt.ActivityPrompt_CloseSysPswd_1"
+            android:name=".lockscreeninitset.ActivityPrompt_Accessablity"
+            android:theme="@style/ActivityPromptTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".lockscreeninitset.phone1.ActivityPrompt_CloseSysMagazine_1"
+            android:theme="@style/ActivityPromptTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".lockscreeninitset.phone1.ActivityPrompt_CloseSysPswd_1"
+            android:theme="@style/ActivityPromptTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
+            android:name=".lockscreeninitset.phone4.ActivityPrompt_CloseSysPswd_4"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
         </activity>

@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreeninitset.manualsetitems;
+package com.haokan.hklockscreen.lockscreeninitset.phone3;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreeninitset.CV_LockInitSetView;
-import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_AutoStart;
+import com.haokan.hklockscreen.lockscreeninitset.ActivityPrompt_AutoStart;
+import com.haokan.hklockscreen.lockscreeninitset.CV_LockInit_ManualSetItemsBase;
 import com.haokan.pubic.App;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 
@@ -19,22 +20,22 @@ import com.haokan.pubic.maidian.UmengMaiDianManager;
  * Created by wangzixu on 2017/11/16.
  * //第3类型, 华为emui4.0.x- Android6.0
  */
-public class CV_LockInit_ManualSetItems_3 extends CV_LockInit_ManualSetItemsBase implements View.OnClickListener {
+public class ManualSetItems_3 extends CV_LockInit_ManualSetItemsBase implements View.OnClickListener {
     private int mManusetBit = 0x00000000;
     private final int MANUSET_BIT_AUTOSTART = 0x00000001;
     private final int MANUSET_BIT_ALLSET = 0x00000001;
     private View mAutoStartLayout;
     private TextView mTvAutoStart;
 
-    public CV_LockInit_ManualSetItems_3(Context context) {
+    public ManualSetItems_3(Context context) {
         this(context, null);
     }
 
-    public CV_LockInit_ManualSetItems_3(Context context, @Nullable AttributeSet attrs) {
+    public ManualSetItems_3(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CV_LockInit_ManualSetItems_3(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ManualSetItems_3(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_2, this, true);
@@ -79,6 +80,10 @@ public class CV_LockInit_ManualSetItems_3 extends CV_LockInit_ManualSetItemsBase
                         }
                     }, 500);
                 }catch (Exception e){
+                    mTvAutoStart.setSelected(true);
+                    mTvAutoStart.setText("已设置");
+                    mAutoStartLayout.setBackgroundColor(0xfff4f4f4);
+                    onActivityResult(201, 0, null);
                     e.printStackTrace();
                 }
                 break;

@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreeninitset.activityprompt;
+package com.haokan.hklockscreen.lockscreeninitset.phone4;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,12 +8,12 @@ import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 
-public class ActivityPrompt_Accessablity extends ActivityBase implements View.OnClickListener {
+public class ActivityPrompt_WhiteList_4 extends ActivityBase implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prompt_accessablity);
+        setContentView(R.layout.activity_prompt_whitelist_4);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
     }
@@ -28,6 +28,5 @@ public class ActivityPrompt_Accessablity extends ActivityBase implements View.On
             return;
         }
         onBackPressed();
-        overridePendingTransition(0,0);
     }
 }

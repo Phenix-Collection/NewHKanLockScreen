@@ -5,7 +5,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.AlertDialog;
-import android.app.KeyguardManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -80,7 +79,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        disableKeyGuard();
         StatusBarUtil.setStatusBarTransparnet(this);
         setContentView(R.layout.activity_lockscreen);
 
@@ -670,9 +668,11 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
 
-        KeyguardManager km = (KeyguardManager) this.getApplication().getSystemService(Context.KEYGUARD_SERVICE);
-        KeyguardManager.KeyguardLock mKeyguardLock = km.newKeyguardLock("keyguard");
-        mKeyguardLock.disableKeyguard();
+//        KeyguardManager km = (KeyguardManager) this.getApplication().getSystemService(Context.KEYGUARD_SERVICE);
+//        KeyguardManager.KeyguardLock mKeyguardLock = km.newKeyguardLock("keyguard");
+//        mKeyguardLock.disableKeyguard();
+        //| WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED); //在系统锁屏之上显示
     }
 
 

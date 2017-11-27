@@ -17,12 +17,10 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ActivityLockScreen;
-import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_Accessablity;
-import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItemsBase;
-import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_1;
-import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_2;
-import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_3;
-import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_4;
+import com.haokan.hklockscreen.lockscreeninitset.phone1.ManualSetItems_1;
+import com.haokan.hklockscreen.lockscreeninitset.phone2.ManualSetItems_2;
+import com.haokan.hklockscreen.lockscreeninitset.phone3.ManualSetItems_3;
+import com.haokan.hklockscreen.lockscreeninitset.phone4.ManualSetItems_4;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
@@ -155,18 +153,18 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         FrameLayout frameLayout = (FrameLayout) mManulSetLayout.findViewById(R.id.manualsetitemslayout);
         //根据适配的机型, 添加不同的条目
         if (App.sIsAdapterPhone == 1) {
-            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_1(mContext);
+            mManualSetItemsLayout = new ManualSetItems_1(mContext);
 
         } else if (App.sIsAdapterPhone == 2) {
-            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_2(mContext);
+            mManualSetItemsLayout = new ManualSetItems_2(mContext);
 
         } else if (App.sIsAdapterPhone == 3) {
-            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_3(mContext);
+            mManualSetItemsLayout = new ManualSetItems_3(mContext);
 
         } else  if (App.sIsAdapterPhone == 4) {
-            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_4(mContext);
+            mManualSetItemsLayout = new ManualSetItems_4(mContext);
         } else {
-            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_4(mContext);
+            mManualSetItemsLayout = new ManualSetItems_4(mContext);
         }
 
         mManualSetItemsLayout.setActivityBase(mActivityBase);

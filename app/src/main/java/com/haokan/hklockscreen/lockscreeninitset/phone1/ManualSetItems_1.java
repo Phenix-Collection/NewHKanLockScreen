@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreeninitset.manualsetitems;
+package com.haokan.hklockscreen.lockscreeninitset.phone1;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,9 +12,8 @@ import android.widget.TextView;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreeninitset.CV_LockInitSetView;
 import com.haokan.hklockscreen.lockscreeninitset.SystemLockAdapterUtil;
-import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_AutoStart;
-import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_CloseSysMagazine_1;
-import com.haokan.hklockscreen.lockscreeninitset.activityprompt.ActivityPrompt_CloseSysPswd_1;
+import com.haokan.hklockscreen.lockscreeninitset.ActivityPrompt_AutoStart;
+import com.haokan.hklockscreen.lockscreeninitset.CV_LockInit_ManualSetItemsBase;
 import com.haokan.pubic.App;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 
@@ -23,40 +22,43 @@ import java.util.HashMap;
 /**
  * Created by wangzixu on 2017/11/16.
  */
-public class CV_LockInit_ManualSetItems_1 extends CV_LockInit_ManualSetItemsBase implements View.OnClickListener {
+public class ManualSetItems_1 extends CV_LockInit_ManualSetItemsBase implements View.OnClickListener {
     private int mManusetBit = 0x00000000;
     private final int MANUSET_BIT_AUTOSTART = 0x00000001;
-    private final int MANUSET_BIT_REMOVESYSPSWD = 0x00000010;
+    private final int MANUSET_BIT_CLOSESYSPSWD = 0x00000010;
     private final int MANUSET_BIT_REMOVESYSMAGAZINE = 0x00000100;
     private final int MANUSET_BIT_ALLSET = 0x00000111;
     private View mAutoStartLayout;
-    private View mCloseSysPswdLayout;
-    private View mCloseSysMagazineLayout;
     private TextView mTvAutoStart;
+
+    private View mCloseSysPswdLayout;
     private TextView mTvClosePswd;
+
+    private View mCloseSysMagazineLayout;
     private TextView mTvCloseMagazine;
 
-    public CV_LockInit_ManualSetItems_1(Context context) {
+    public ManualSetItems_1(Context context) {
         this(context, null);
     }
 
-    public CV_LockInit_ManualSetItems_1(Context context, @Nullable AttributeSet attrs) {
+    public ManualSetItems_1(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CV_LockInit_ManualSetItems_1(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ManualSetItems_1(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_1, this, true);
 
         mAutoStartLayout = findViewById(R.id.autostartlayout);
-        mCloseSysPswdLayout = findViewById(R.id.closesyspswdlayout);
-        mCloseSysMagazineLayout = findViewById(R.id.closesysmagezinelayout);
-
         mTvAutoStart = (TextView) findViewById(R.id.tv_manualset_autostart);
         mTvAutoStart.setOnClickListener(this);
+
+        mCloseSysPswdLayout = findViewById(R.id.closesyspswdlayout);
         mTvClosePswd = (TextView) findViewById(R.id.tv_manualset_closesyspswd);
         mTvClosePswd.setOnClickListener(this);
+
+        mCloseSysMagazineLayout = findViewById(R.id.closesysmagezinelayout);
         mTvCloseMagazine = (TextView) findViewById(R.id.tv_manualset_closesysmagazine);
         mTvCloseMagazine.setOnClickListener(this);
     }
@@ -94,6 +96,10 @@ public class CV_LockInit_ManualSetItems_1 extends CV_LockInit_ManualSetItemsBase
                         }
                     }, 500);
                 }catch (Exception e){
+                    mTvAutoStart.setSelected(true);
+                    mTvAutoStart.setText("已设置");
+                    mAutoStartLayout.setBackgroundColor(0xfff4f4f4);
+                    onActivityResult(201, 0, null);
                     e.printStackTrace();
                 }
                 break;
@@ -132,6 +138,10 @@ public class CV_LockInit_ManualSetItems_1 extends CV_LockInit_ManualSetItemsBase
                         }
                     }, 500);
                 }catch (Exception e){
+                    mTvClosePswd.setSelected(true);
+                    mTvClosePswd.setText("已设置");
+                    mCloseSysPswdLayout.setBackgroundColor(0xfff4f4f4);
+                    onActivityResult(202, 0, null);
                     e.printStackTrace();
                 }
                 break;
@@ -170,6 +180,10 @@ public class CV_LockInit_ManualSetItems_1 extends CV_LockInit_ManualSetItemsBase
                         }
                     }, 500);
                 }catch (Exception e){
+                    mTvCloseMagazine.setSelected(true);
+                    mTvCloseMagazine.setText("已设置");
+                    mCloseSysMagazineLayout.setBackgroundColor(0xfff4f4f4);
+                    onActivityResult(203, 0, null);
                     e.printStackTrace();
                 }
                 break;
@@ -195,7 +209,7 @@ public class CV_LockInit_ManualSetItems_1 extends CV_LockInit_ManualSetItemsBase
                 }
             }
         } else if (requestCode == 202) { //手动去密码回来
-            mManusetBit |= MANUSET_BIT_REMOVESYSPSWD;
+            mManusetBit |= MANUSET_BIT_CLOSESYSPSWD;
             if (mManusetBit == MANUSET_BIT_ALLSET) {
                 if (mOnAllItemSetListener != null) {
                     mOnAllItemSetListener.onAllItemSet();

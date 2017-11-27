@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreeninitset.activityprompt;
+package com.haokan.hklockscreen.lockscreeninitset.phone1;
 
 import android.os.Bundle;
 import android.view.View;
@@ -11,12 +11,12 @@ import com.haokan.pubic.util.StatusBarUtil;
 /**
  * oppo手机关闭锁屏杂志的提示
  */
-public class ActivityPrompt_CloseSysPswd_1 extends ActivityBase implements View.OnClickListener {
+public class ActivityPrompt_CloseSysMagazine_1 extends ActivityBase implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prompt_closesyspswd_1);
+        setContentView(R.layout.activity_prompt_closesysmagazine_1);
         StatusBarUtil.setStatusBarTransparnet(this);
         initView();
     }

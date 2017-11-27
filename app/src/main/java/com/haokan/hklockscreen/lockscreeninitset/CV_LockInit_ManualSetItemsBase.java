@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.lockscreeninitset.manualsetitems;
+package com.haokan.hklockscreen.lockscreeninitset;
 
 import android.content.Context;
 import android.content.Intent;
