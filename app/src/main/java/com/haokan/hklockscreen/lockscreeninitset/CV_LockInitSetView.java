@@ -22,6 +22,7 @@ import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_Manu
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_1;
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_2;
 import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_3;
+import com.haokan.hklockscreen.lockscreeninitset.manualsetitems.CV_LockInit_ManualSetItems_4;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
@@ -159,8 +160,13 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         } else if (App.sIsAdapterPhone == 2) {
             mManualSetItemsLayout = new CV_LockInit_ManualSetItems_2(mContext);
 
-        } else {
+        } else if (App.sIsAdapterPhone == 3) {
             mManualSetItemsLayout = new CV_LockInit_ManualSetItems_3(mContext);
+
+        } else  if (App.sIsAdapterPhone == 4) {
+            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_4(mContext);
+        } else {
+            mManualSetItemsLayout = new CV_LockInit_ManualSetItems_4(mContext);
         }
 
         mManualSetItemsLayout.setActivityBase(mActivityBase);

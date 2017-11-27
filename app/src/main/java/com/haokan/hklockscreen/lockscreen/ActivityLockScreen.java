@@ -22,6 +22,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -301,6 +302,15 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
+        try {
+            return myHandDispatchEvent(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    private boolean myHandDispatchEvent(MotionEvent event) {
         if (mGustureView != null) {
             if (mGustureView.getVisibility() != View.VISIBLE) {
                 return true;
@@ -673,14 +683,17 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     /**
      * 屏蔽掉返回键
      */
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        LogHelper.d("wangzixu", "ActivityLockScreen onKeyDown keyCode = " + keyCode);
 //        if(keyCode==KeyEvent.KEYCODE_BACK || keyCode==KeyEvent.KEYCODE_HOME){
 //            return true;
 //        }else {
 //            return super.onKeyDown(keyCode, event);
 //        }
-//    }
+
+        return true;
+    }
 
     @Override
     public void onBackPressed() {
@@ -805,7 +818,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
-        if (App.sHaokanLockView != null && App.sHaokanLockView.getParent() != mLockScreenLayout) {
+        if (App.sHaokanLockView != null && App.sHaokanLockView.getParent() != null && App.sHaokanLockView.getParent() == mLockScreenLayout) {
 //            App.sHaokanLockView.setActivity(null);
 //            App.sHaokanLockView.setOnLockScreenStateListener(null);
             ViewParent parent = App.sHaokanLockView.getParent();

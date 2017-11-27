@@ -128,6 +128,8 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                 boolean beginAdapter = true;
 
                 BuildProperties properties = BuildProperties.newInstance();
+                int sdkInt = Build.VERSION.SDK_INT;
+
                 Set<Map.Entry<Object, Object>> entrySet = properties.entrySet();//返回的属性键值对实体
                 for (Map.Entry<Object, Object> entry : entrySet) {
                     LogHelper.d("wangzixu", "app init : " + entry.getKey() + " = " + entry.getValue());
@@ -137,7 +139,7 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                 //适配机型
                 if (beginAdapter) {
                     String property = properties.getProperty("ro.build.version.opporom");
-                    if (!TextUtils.isEmpty(property) && property.contains("V3.0") && Build.VERSION.SDK_INT == 23) {
+                    if (!TextUtils.isEmpty(property) && property.contains("V3.0") && sdkInt == 23) {
                         beginAdapter = false;
                         App.sIsAdapterPhone = 1; //第一类型, oppo的 colorOs-3.0.0i-Android6.0
                     }
@@ -152,9 +154,17 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
 
                 if (beginAdapter) {
                     String property = properties.getProperty("ro.build.version.emui");
-                    if (!TextUtils.isEmpty(property) && property.contains("EmotionUI_4.0") && Build.VERSION.SDK_INT == 23) {
+                    if (!TextUtils.isEmpty(property) && property.contains("EmotionUI_4.0") && sdkInt == 23) {
                         beginAdapter = false;
-                        App.sIsAdapterPhone = 3; //第3类型, 华为emui4.0.x- Android6.0
+                        App.sIsAdapterPhone = 3; //第3类型, 华为emui4.0.1- Android6.0
+                    }
+                }
+
+                if (beginAdapter) {
+                    String property = properties.getProperty("ro.build.display.id");
+                    if (!TextUtils.isEmpty(property) && property.contains("amigo3.5") && sdkInt == 23) {
+                        beginAdapter = false;
+                        App.sIsAdapterPhone = 4; //第4类型, 金立GN8002S为蓝本, amigo3.5.11- Android6.0
                     }
                 }
 
