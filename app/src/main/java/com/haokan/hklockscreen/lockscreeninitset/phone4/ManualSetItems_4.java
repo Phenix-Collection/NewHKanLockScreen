@@ -1,9 +1,9 @@
 package com.haokan.hklockscreen.lockscreeninitset.phone4;
 
+import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -152,9 +152,10 @@ public class ManualSetItems_4 extends CV_LockInit_ManualSetItemsBase implements 
                 break;
             case R.id.tv_manualset_closesyspswd:
                 try{
-                    Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
+//                    Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
 //                    intent.setData(Uri.parse("package:" + mContext.getPackageName()));
 //                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
                     mActivityBase.startActivityForResult(intent, 203);
                     mActivityBase.startActivityAnim();
                     App.sMainHanlder.post(new Runnable() {

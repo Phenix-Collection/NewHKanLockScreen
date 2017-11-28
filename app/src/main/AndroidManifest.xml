@@ -183,6 +183,12 @@
         </activity>
 
         <activity
+            android:name=".lockscreeninitset.phone3.ActivityPrompt_CloseSysPswd_3"
+            android:theme="@style/ActivityPromptTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name=".lockscreeninitset.phone4.ActivityPrompt_CloseSysPswd_4"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">

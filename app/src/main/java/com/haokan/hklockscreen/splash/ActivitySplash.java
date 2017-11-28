@@ -164,7 +164,15 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                     String property = properties.getProperty("ro.build.display.id");
                     if (!TextUtils.isEmpty(property) && property.contains("amigo3.5") && sdkInt == 23) {
                         beginAdapter = false;
-                        App.sIsAdapterPhone = 4; //第4类型, 金立GN8002S为蓝本, amigo3.5.11- Android6.0
+                        App.sIsAdapterPhone = 4; //第4类型, 金立GN8002S, amigo3.5.11- Android6.0
+                    }
+                }
+
+                if (beginAdapter) {
+                    String property = properties.getProperty("ro.build.display.id");
+                    if (!TextUtils.isEmpty(property) && property.contains("amigo3.5") && sdkInt == 23) {
+                        beginAdapter = false;
+                        App.sIsAdapterPhone = 5; //第5类型, 三星
                     }
                 }
 
