@@ -16,8 +16,8 @@
             android:textSize="15sp"
             android:textColor="#666666"
             android:text="请按照如下步骤设置:\n
-              1,点击  【应用管理】\n
-              2,点击  【应用自启】\n
+              1,点击  【应用程序管理】\n
+              2,点击  【管理自动运行】\n
               3,滑动列表, 找到 【好看锁屏】, 并开启自启动开关."
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"

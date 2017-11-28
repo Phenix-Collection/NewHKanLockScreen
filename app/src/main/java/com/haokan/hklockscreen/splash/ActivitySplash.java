@@ -169,10 +169,10 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                 }
 
                 if (beginAdapter) {
-                    String property = properties.getProperty("ro.build.display.id");
-                    if (!TextUtils.isEmpty(property) && property.contains("amigo3.5") && sdkInt == 23) {
+                    String property = properties.getProperty("ro.security.vpnpp.release");
+                    if (!TextUtils.isEmpty(property) && property.startsWith("8.1") && sdkInt == 24) {
                         beginAdapter = false;
-                        App.sIsAdapterPhone = 5; //第5类型, 三星
+                        App.sIsAdapterPhone = 5; //第5类型, 三星se 8.1 android7.0
                     }
                 }
 

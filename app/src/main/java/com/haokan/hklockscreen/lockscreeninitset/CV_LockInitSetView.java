@@ -21,6 +21,7 @@ import com.haokan.hklockscreen.lockscreeninitset.phone1.ManualSetItems_1;
 import com.haokan.hklockscreen.lockscreeninitset.phone2.ManualSetItems_2;
 import com.haokan.hklockscreen.lockscreeninitset.phone3.ManualSetItems_3;
 import com.haokan.hklockscreen.lockscreeninitset.phone4.ManualSetItems_4;
+import com.haokan.hklockscreen.lockscreeninitset.phone5.ManualSetItems_5;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
@@ -163,7 +164,11 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
 
         } else  if (App.sIsAdapterPhone == 4) {
             mManualSetItemsLayout = new ManualSetItems_4(mContext);
-        } else {
+
+        } else  if (App.sIsAdapterPhone == 5) {
+            mManualSetItemsLayout = new ManualSetItems_5(mContext);
+
+        }  else {
             mManualSetItemsLayout = new ManualSetItems_4(mContext);
         }
 

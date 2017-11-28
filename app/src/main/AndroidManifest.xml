@@ -159,6 +159,12 @@
         </activity>
 
         <activity
+            android:name=".lockscreeninitset.phone5.ActivityPrompt_AutoStart_5"
+            android:theme="@style/ActivityPromptTheme"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name=".lockscreeninitset.phone4.ActivityPrompt_WhiteList_4"
             android:theme="@style/ActivityPromptTheme"
             android:screenOrientation="portrait">
