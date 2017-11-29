@@ -3,6 +3,7 @@ package com.haokan.pubic.clipimage;
 import android.content.Context;
 import android.os.SystemClock;
 import android.view.animation.Interpolator;
+
 import com.haokan.pubic.logsys.LogHelper;
 
 
@@ -10,10 +11,12 @@ public class MyScroller {
 	private static final Interpolator sInterpolator = new Interpolator() {
 		public float getInterpolation(float t) {
 			t -= 1.0f;
-			return t * t * t * t * t + 1.0f;
+			return t * t * t + 1.0f;
+//			return t * t * t * t * t + 1.0f;
 		}
 	};
 
+//	private static final Interpolator sInterpolator = new DecelerateInterpolator();
 
 	private Context mContext;
 	public MyScroller(Context context){
