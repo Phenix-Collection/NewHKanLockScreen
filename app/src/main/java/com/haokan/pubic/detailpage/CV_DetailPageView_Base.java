@@ -1005,11 +1005,15 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         });
     }
 
-    private int[] mLinkBgColors={0xccF8546B,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD,0xccBD0FE1};
+    private int[] mLinkBgColors={0xccF8546B,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD};
     private int mLingBgColorIndex = 0;
+    //获取链接背景的随机颜色值
     public int getLinkBgColor(){
         int i = mLingBgColorIndex % mLinkBgColors.length;
         mLingBgColorIndex++;
+        if (mLingBgColorIndex >= mLinkBgColors.length) {
+            mLingBgColorIndex = 0;
+        }
         return mLinkBgColors[i];
     }
 

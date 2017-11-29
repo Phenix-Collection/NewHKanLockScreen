@@ -22,7 +22,6 @@ import com.haokan.pubic.logsys.LogHelper;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 
 public class CommonUtil {
     private static final String TAG = "CommonUtil";
@@ -293,13 +292,5 @@ public class CommonUtil {
 //        map.put("Build..VERSION.RELEASE", Build.VERSION.RELEASE);
 //        map.put("Build..VERSION.SECURITY_PATCH", Build.VERSION.SECURITY_PATCH);
         return transMapToString(map);
-    }
-
-    private static int[] mColors={0xccF8546B
-            ,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD,0xccBD0FE1};
-    public static  int getRandomColor(){
-        Random rand = new Random();
-        int randNum = rand.nextInt(mColors.length);
-        return mColors[randNum];
     }
 }

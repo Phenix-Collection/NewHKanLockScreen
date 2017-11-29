@@ -355,8 +355,8 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
             unregisterReceiver(mReceiver);
         }
         if(mWebView!=null){
-            // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，需要先onDetachedFromWindow()，再
-            // destory()
+            // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，
+            // 需要先onDetachedFromWindow()，再destory()
             ViewParent parent = mWebView.getParent();
             if (parent != null) {
                 ((ViewGroup) parent).removeView(mWebView);
