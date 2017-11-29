@@ -118,7 +118,7 @@
 
                     <TextView
                         android:text="WIFI下每天自动更新锁屏图片"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="5dp"
                         android:textColor="#b0b0b0"
                         android:textSize="12sp"
                         android:layout_width="wrap_content"
@@ -181,7 +181,7 @@
 
                     <TextView
                         android:text="消除因系统锁屏出现的双锁屏"
-                        android:layout_marginTop="7dp"
+                        android:layout_marginTop="5dp"
                         android:textColor="#b0b0b0"
                         android:textSize="12sp"
                         android:layout_width="wrap_content"
@@ -346,17 +346,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <ImageView
-                            android:background="@drawable/shape_setting_addbg"
-                            android:src="@drawable/icon_addto"
-                            android:scaleType="centerInside"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                        <!--<ImageView-->
+                            <!--android:background="@drawable/shape_setting_addbg"-->
+                            <!--android:scaleType="centerInside"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent"/>-->
+                            <!--android:padding="1px"-->
 
                         <ImageView
-                            android:padding="1px"
+                            android:background="@drawable/shape_setting_addbg"
                             android:id="@+id/iv_image1"
-                            android:scaleType="centerCrop"
+                            android:src="@drawable/icon_addto"
+                            android:scaleType="centerInside"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"/>
                     </android.support.v7.widget.CardView>
@@ -384,17 +385,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <ImageView
-                            android:scaleType="centerInside"
-                            android:background="@drawable/shape_setting_addbg"
-                            android:src="@drawable/icon_addto"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                        <!--<ImageView-->
+                            <!--android:scaleType="centerInside"-->
+                            <!--android:background="@drawable/shape_setting_addbg"-->
+                            <!--android:src="@drawable/icon_addto"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent"/>-->
 
                         <ImageView
+                            android:background="@drawable/shape_setting_addbg"
                             android:id="@+id/iv_image2"
-                            android:scaleType="centerCrop"
-                            android:padding="1px"
+                            android:src="@drawable/icon_addto"
+                            android:scaleType="centerInside"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"/>
                     </android.support.v7.widget.CardView>
@@ -421,17 +423,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
-                        <ImageView
-                            android:scaleType="centerInside"
-                            android:background="@drawable/shape_setting_addbg"
-                            android:src="@drawable/icon_addto"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"/>
+                        <!--<ImageView-->
+                            <!--android:scaleType="centerInside"-->
+                            <!--android:background="@drawable/shape_setting_addbg"-->
+                            <!--android:src="@drawable/icon_addto"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent"/>-->
 
                         <ImageView
                             android:id="@+id/iv_image3"
-                            android:scaleType="centerCrop"
-                            android:padding="1px"
+                            android:background="@drawable/shape_setting_addbg"
+                            android:src="@drawable/icon_addto"
+                            android:scaleType="centerInside"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"/>
                     </android.support.v7.widget.CardView>

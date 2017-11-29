@@ -148,7 +148,7 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                 if (beginAdapter) {
                     if (Build.MANUFACTURER.equalsIgnoreCase("xiaomi")) {
                         beginAdapter = false;
-                        App.sIsAdapterPhone = 2; //第二类型, 小米v9, 自启动
+                        App.sIsAdapterPhone = 2; //第二类型, 小米v9, 自启动, 无法适配其去除系统锁屏
                     }
                 }
 

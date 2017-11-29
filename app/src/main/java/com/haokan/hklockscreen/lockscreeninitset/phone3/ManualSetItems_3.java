@@ -45,7 +45,7 @@ public class ManualSetItems_3 extends CV_LockInit_ManualSetItemsBase implements 
     public ManualSetItems_3(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_2, this, true);
+        LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_3, this, true);
         mAutoStartLayout = findViewById(R.id.autostartlayout);
         mTvAutoStart = (TextView) findViewById(R.id.tv_manualset_autostart);
         mTvAutoStart.setOnClickListener(this);

@@ -29,6 +29,7 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <!--透明-->
     <style name="myLockScreenActiviyTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/touming</item>
         <item name="android:windowAnimationStyle">@null</item>

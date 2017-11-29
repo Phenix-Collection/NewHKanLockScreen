@@ -45,7 +45,7 @@ public class ManualSetItems_5 extends CV_LockInit_ManualSetItemsBase implements 
     public ManualSetItems_5(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_2, this, true);
+        LayoutInflater.from(context).inflate(R.layout.cv_lockinit_manualsetitems_5, this, true);
         mAutoStartLayout = findViewById(R.id.autostartlayout);
         mTvAutoStart = (TextView) findViewById(R.id.tv_manualset_autostart);
         mTvAutoStart.setOnClickListener(this);
@@ -114,7 +114,7 @@ public class ManualSetItems_5 extends CV_LockInit_ManualSetItemsBase implements 
                     App.sMainHanlder.post(new Runnable() {
                         @Override
                         public void run() {
-                            Intent i2 = new Intent(mContext, ActivityPrompt_CloseSysPswd_3.class);
+                            Intent i2 = new Intent(mContext, ActivityPrompt_CloseSysPswd_5.class);
                             mActivityBase.startActivity(i2);
                         }
                     });

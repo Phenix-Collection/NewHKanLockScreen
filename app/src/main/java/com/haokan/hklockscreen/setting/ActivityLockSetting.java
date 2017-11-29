@@ -2,6 +2,7 @@ package com.haokan.hklockscreen.setting;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.admin.DevicePolicyManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,6 +36,9 @@ import com.haokan.hklockscreen.localDICM.BeanLocalImage;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
+import com.haokan.hklockscreen.lockscreeninitset.phone3.ActivityPrompt_CloseSysPswd_3;
+import com.haokan.hklockscreen.lockscreeninitset.phone4.ActivityPrompt_CloseSysPswd_4;
+import com.haokan.hklockscreen.lockscreeninitset.phone5.ActivityPrompt_CloseSysPswd_5;
 import com.haokan.hklockscreen.mycollection.ActivityMyCollection;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
@@ -215,7 +219,11 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         });
 
         //根据是否适配, 显示一些条目
-        if (App.sIsAdapterPhone == 1) {
+        if (App.sIsAdapterPhone == 1
+                || App.sIsAdapterPhone == 3
+                || App.sIsAdapterPhone == 4
+                || App.sIsAdapterPhone == 5
+                ) {
             mLayoutCloseSysLock.setVisibility(View.VISIBLE);
         } else {
             mLayoutCloseSysLock.setVisibility(View.GONE);
@@ -239,6 +247,51 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     Intent intent = new Intent(ActivityLockSetting.this, ActivityLockSetting_CloseSysLock_1.class);
                     startActivityForResult(intent, 303);
                     startActivityAnim();
+                } else if (App.sIsAdapterPhone == 3) {
+                    try{
+                        Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
+                        startActivity(intent);
+                        startActivityAnim();
+                        App.sMainHanlder.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i2 = new Intent(ActivityLockSetting.this, ActivityPrompt_CloseSysPswd_3.class);
+                                ActivityLockSetting.this.startActivity(i2);
+                            }
+                        });
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                } else if (App.sIsAdapterPhone == 4) {
+                    try{
+                        Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
+                        startActivity(intent);
+                        startActivityAnim();
+                        App.sMainHanlder.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i2 = new Intent(ActivityLockSetting.this, ActivityPrompt_CloseSysPswd_4.class);
+                                ActivityLockSetting.this.startActivity(i2);
+                            }
+                        });
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                } else if (App.sIsAdapterPhone == 5) {
+                    try{
+                        Intent intent = new Intent(DevicePolicyManager.ACTION_SET_NEW_PASSWORD);
+                        startActivity(intent);
+                        startActivityAnim();
+                        App.sMainHanlder.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i2 = new Intent(ActivityLockSetting.this, ActivityPrompt_CloseSysPswd_5.class);
+                                ActivityLockSetting.this.startActivity(i2);
+                            }
+                        });
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case R.id.adview:
@@ -257,7 +310,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 if (mLocalImage1 != null) {
                     deleteLocalImage(mLocalImage1);
                     notifyLocalImageChange();
-                    mIvImage1.setImageBitmap(null);
+                    mIvImage1.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    mIvImage1.setBackgroundResource(R.drawable.shape_setting_addbg);
+                    mIvImage1.setImageResource(R.drawable.icon_addto);
                     mLocalImage1 = null;
                     v.setVisibility(View.GONE);
 
@@ -268,7 +323,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 if (mLocalImage2 != null) {
                     deleteLocalImage(mLocalImage2);
                     notifyLocalImageChange();
-                    mIvImage2.setImageBitmap(null);
+                    mIvImage2.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    mIvImage2.setBackgroundResource(R.drawable.shape_setting_addbg);
+                    mIvImage2.setImageResource(R.drawable.icon_addto);
                     mLocalImage2 = null;
                     v.setVisibility(View.GONE);
 
@@ -279,7 +336,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 if (mLocalImage3 != null) {
                     deleteLocalImage(mLocalImage3);
                     notifyLocalImageChange();
-                    mIvImage3.setImageBitmap(null);
+                    mIvImage3.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                    mIvImage3.setBackgroundResource(R.drawable.shape_setting_addbg);
+                    mIvImage3.setImageResource(R.drawable.icon_addto);
                     mLocalImage3 = null;
                     v.setVisibility(View.GONE);
 
@@ -294,6 +353,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     mIvDelte2.setVisibility(View.GONE);
                     mIvDelte3.setVisibility(View.GONE);
                 } else {
+                    if (mLocalImage1 == null && mLocalImage2 == null && mLocalImage3 == null) {
+                        return;
+                    }
                     mTvLocalImageEdit.setText("取消");
                     mTvLocalImageEdit.setSelected(true);
                     if (mLocalImage1 != null) {
@@ -560,15 +622,21 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 for (int i = 0; i < list.size(); i++) {
                     BeanLocalImage imageBean = list.get(i);
                     if (imageBean.index == 1) {
-                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage1);
+                        mIvImage1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        mIvImage1.setBackground(null);
+                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).into(mIvImage1);
                         mLocalImage1 = imageBean;
                     } else
                     if (imageBean.index == 2) {
-                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage2);
+                        mIvImage2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        mIvImage2.setBackground(null);
+                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).into(mIvImage2);
                         mLocalImage2 = imageBean;
                     } else
                     if (imageBean.index == 3) {
-                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).dontAnimate().into(mIvImage3);
+                        mIvImage3.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        mIvImage3.setBackground(null);
+                        Glide.with(ActivityLockSetting.this).load(imageBean.imgUrl).into(mIvImage3);
                         mLocalImage3 = imageBean;
                     }
                 }
@@ -607,7 +675,9 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 final String path = data.getStringExtra(ActivityClipImage.KEY_INTENT_CLIPIMG_DOWN_PATH);
                 LogHelper.d("wangzixu", "clipimg onActivityResult 102 path = " + path);
                 if (!TextUtils.isEmpty(path)) {
-                    Glide.with(this).load(path).dontAnimate().into(mCurrentImage);
+                    mCurrentImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    mCurrentImage.setBackground(null);
+                    Glide.with(this).load(path).into(mCurrentImage);
 
                     final Scheduler.Worker worker = Schedulers.io().createWorker();
                     worker.schedule(new Action0() {
