@@ -21,7 +21,6 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -487,6 +486,10 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     }
                     mScrollView.mySetTranslateY(0, 300);
                     onRefreshState4();
+                } else if (mPullLayout.getVisibility() == View.VISIBLE) {
+                    mPullIvArraw.clearAnimation();
+                    mPullLayout.setVisibility(View.GONE);
+                    mPullTvSwitch.setText("下拉换一波新图");
                 }
 
                 if (mScrollViewMove || mPullToRefresh) {
@@ -680,24 +683,14 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     public void onClick(View v) {
     }
 
-    /**
-     * 屏蔽掉返回键
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        LogHelper.d("wangzixu", "ActivityLockScreen onKeyDown keyCode = " + keyCode);
-//        if(keyCode==KeyEvent.KEYCODE_BACK || keyCode==KeyEvent.KEYCODE_HOME){
-//            return true;
-//        }else {
-//            return super.onKeyDown(keyCode, event);
-//        }
-
-        return true;
-    }
-
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        if (mIsRecommendPage) {
+            mLockRecommendPage.clickBack();
+        } else {
+            App.sHaokanLockView.onClickBack();
+        }
     }
 
     //权限相关begin*****

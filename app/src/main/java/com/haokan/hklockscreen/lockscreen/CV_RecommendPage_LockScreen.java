@@ -98,12 +98,8 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back: //回到上面的详情页页
-                if (mActivityBase != null && mActivityBase instanceof ActivityLockScreen) {
-                    ((ActivityLockScreen)mActivityBase).backToDetailPage();
-                    UmengMaiDianManager.onEvent(mContext, "event_077");
-                    UmengMaiDianManager.onEvent(mContext, "event_063");
-                }
+            case R.id.back:
+                clickBack();
                 break;
             case R.id.backlockscreen: //回到上面的详情页页, 并进入锁屏状态
                 if (mActivityBase != null && mActivityBase instanceof ActivityLockScreen) {
@@ -114,6 +110,15 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
                 break;
             default:
                 break;
+        }
+    }
+
+    //回到上面的详情页页
+    public void clickBack() {
+        if (mActivityBase != null && mActivityBase instanceof ActivityLockScreen) {
+            ((ActivityLockScreen)mActivityBase).backToDetailPage();
+            UmengMaiDianManager.onEvent(mContext, "event_077");
+            UmengMaiDianManager.onEvent(mContext, "event_063");
         }
     }
 

@@ -23,6 +23,7 @@ import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.j256.ormlite.dao.Dao;
@@ -446,7 +447,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
     }
 
     public void startDetailPage(ArrayList<BeanRecommendPageLand> data, int pos) {
-        if (data == null) {
+        if (data == null || CommonUtil.isQuickClick()) {
             return;
         }
         Intent intent = new Intent(this, ActivityDetailPageRecommend.class);
@@ -457,7 +458,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
     }
 
     public void startAdDetailPage(BeanRecommendPageLand mBean) {
-        if (mBean.mBeanAdRes == null) {
+        if (mBean.mBeanAdRes == null || CommonUtil.isQuickClick()) {
             return;
         }
         Intent intent = new Intent(this, ActivityWebview.class);

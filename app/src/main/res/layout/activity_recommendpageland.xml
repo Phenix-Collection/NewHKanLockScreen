@@ -59,9 +59,11 @@
             android:background="#d8d8d8" />
     </RelativeLayout>
 
+        <!--android:overScrollMode="never"-->
+        <!--android:fadeScrollbars="true"-->
+        <!--android:scrollbars="vertical"-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyview"
-        android:overScrollMode="never"
         android:layout_below="@id/header"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

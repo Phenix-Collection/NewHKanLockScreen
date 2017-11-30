@@ -319,8 +319,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     @Override
     protected void onClickBack() {
-        intoLockScreenState(false);
-        UmengMaiDianManager.onEvent(mContext, "event_068");
+        if (!mIsLocked) {
+            intoLockScreenState(false);
+            UmengMaiDianManager.onEvent(mContext, "event_068");
+        }
     }
 
     @Override

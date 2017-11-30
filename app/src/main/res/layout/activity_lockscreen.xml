@@ -7,7 +7,7 @@
     <RelativeLayout
         android:visibility="gone"
         android:id="@+id/pullrefreshlayout"
-        android:background="#13354d"
+        android:background="@color/detailpagebgcolor"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
