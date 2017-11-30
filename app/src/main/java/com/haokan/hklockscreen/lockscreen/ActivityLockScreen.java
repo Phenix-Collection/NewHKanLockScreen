@@ -79,6 +79,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarUtil.setStatusBarTransparnet(this);
+        hideNavigation();
+        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(this);
         setContentView(R.layout.activity_lockscreen);
 
         disableKeyGuard();
@@ -88,8 +90,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mScreenW = point.x;
         mScreenH = point.y;
 
-        hideNavigation();
-        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(this);
 
         initView();
         initRecommendPageView();
@@ -121,18 +121,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         registerReceiver(mReceiver, filter);
 
         LogHelper.d("wangzixu", "ActivityLockScreen onCreate " + this);
-
-//        try {
-//            Object service = getSystemService("statusbar");
-//            Class<?> statusBarManager = Class.forName("android.app.StatusBarManager");
-//            Method disable = statusBarManager.getMethod("disable", int.class);
-//            disable.setAccessible(true);
-//            disable.invoke(service, 0x00200000); // 为View.STATUS_BAR_DISABLE_HOME 的值
-////          disable.invoke(service, 0x00400000); // 为View.STATUS_BAR_DISABLE_BACK  的值
-////            disable.invoke(service, 0x01000000); // 为View.STATUS_BAR_DISABLE_RECENT的值
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
@@ -785,8 +773,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         View decorView = getWindow().getDecorView();
         int visibility = decorView.getSystemUiVisibility();
         visibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;//隐藏导航栏
-//        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;//view获取焦点后导航栏不显示. 边缘向内化导航栏一直显示, 出发listenrer
-        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;//view获取焦点后导航栏不显示. 边缘向内化导航栏暂时显示, 不触发listener
+        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;//view获取焦点后导航栏不显示. 边缘向内化导航栏一直显示, 出发listenrer
+//        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;//view获取焦点后导航栏不显示. 边缘向内化导航栏暂时显示, 不触发listener
         visibility |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;//view全屏
         decorView.setSystemUiVisibility(visibility);
     }

@@ -64,6 +64,7 @@ public class UpdateManager {
             @Override
             public void onNetError() {
                 LogHelper.d("wangzixu", "checkUpdata onNetError");
+                ToastManager.showNetErrorToast(context);
             }
         });
     }
