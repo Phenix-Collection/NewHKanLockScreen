@@ -126,7 +126,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        LogHelper.d("wangzixu", "ActivityLockScreen onCreate onNewIntent " + this);
+        LogHelper.d("wangzixu", "ActivityLockScreen onNewIntent " + this);
         App.sHaokanLockView.intoLockScreenState(true);
         mScrollView.scrollTo(0,0);
 
@@ -139,7 +139,12 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             UmengMaiDianManager.onEvent(ActivityLockScreen.this, "event_075");
         }
 
-        hideNavigation();
+        App.sHaokanLockView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideNavigation();
+            }
+        }, 500);
     }
 
     @Override
@@ -773,6 +778,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         View decorView = getWindow().getDecorView();
         int visibility = decorView.getSystemUiVisibility();
         visibility |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;//隐藏导航栏
+//        visibility |= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;//隐藏导航栏
         visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE;//view获取焦点后导航栏不显示. 边缘向内化导航栏一直显示, 出发listenrer
 //        visibility |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;//view获取焦点后导航栏不显示. 边缘向内化导航栏暂时显示, 不触发listener
         visibility |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;//view全屏
@@ -782,6 +788,15 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     @Override
     public void onSystemUiVisibilityChange(int visibility) {
         hideNavigation();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LogHelper.d("wangzixu", "ActivityLockScreen onActivityResult requestCode "  + requestCode + ", resultCode = " + resultCode);
+        if (requestCode == 201 && resultCode == RESULT_OK) { //锁屏上打开设置页, 并且手动点击了返回
+            finish();
+        }
     }
 
     @Override

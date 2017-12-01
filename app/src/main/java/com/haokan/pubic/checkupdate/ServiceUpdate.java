@@ -5,15 +5,18 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
+
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.http.HttpRetrofitManager;
-import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
 
@@ -80,7 +83,7 @@ public class ServiceUpdate extends Service {
             }
 
             String url = updateBean.getVerDownUrl();
-            String apkName = App.sPID +"_" + updateBean.getVerCode() + ".apk";
+            String apkName = App.sPID + "_" + updateBean.getVerCode() + ".apk";
 
             final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + Values.Path.PATH_DOWNLOADAPK;
             final File dir = new File(path);
@@ -108,7 +111,7 @@ public class ServiceUpdate extends Service {
             final File fileTemp = new File(dir, temp_name);
             if (!fileTemp.exists()) {
                 try {
-                    if(!fileTemp.createNewFile()) {
+                    if (!fileTemp.createNewFile()) {
                         LogHelper.i(TAG, "startDownload file.createNewFile() fail");
                         return;
                     }
@@ -135,21 +138,34 @@ public class ServiceUpdate extends Service {
 
     private void initNotification() {
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(this)
+
+        mBuilder = new NotificationCompat.Builder(this); //获取一个Notification构造器
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher)) // 设置下拉列表中的图标(大图标)
+                .setSmallIcon(R.drawable.icon_small_notifycation) // 设置状态栏内的小图标
+                .setColor(0xffCA2D74)
+                .setContentTitle("好看锁屏") // 设置下拉列表里的标题
+                .setContentText("下载中, 请稍后...") // 设置上下文内容
                 .setTicker("下载中...")
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setProgress(100, 0, true)
-                .setContentTitle("下载中, 请稍后...")
-                .setOngoing(true);
-        Notification notification = mBuilder.build();
+                .setProgress(100, 0, false)
+                .setWhen(System.currentTimeMillis()); // 设置该通知发生的时间
+        Notification notification = mBuilder.build(); // 获取构建好的Notification
         mNotificationManager.notify(NOTIFY_ID, notification);
+
+//        mBuilder = new NotificationCompat.Builder(this)
+//                .setTicker("下载中...")
+//                .setSmallIcon(R.drawable.ic_launcher)
+//                .setProgress(100, 0, true)
+//                .setContentTitle("下载中, 请稍后...")
+//                .setOngoing(true);
+//        Notification notification = mBuilder.build();
+//        mNotificationManager.notify(NOTIFY_ID, notification);
     }
 
     /**
      * Java原生的API可用于发送HTTP请求，即java.net.URL、java.net.URLConnection，这些API很好用、很常用，但不够简便；
      * 1.通过统一资源定位器（java.net.URL）获取连接器（java.net.URLConnection） 2.设置请求的参数 3.发送请求
      * 4.以输入流的形式获取返回内容 5.关闭输入流
-     *
+     * <p>
      * 好处是可以监听到下载的进度, 用retrofit下载, 监听进度就很麻烦
      */
     public void downloadFileWithUrlConn(final String urlPath, final File fileTemp, final File file) {
@@ -169,6 +185,7 @@ public class ServiceUpdate extends Service {
                     httpURLConnection.setConnectTimeout(10000);
                     //读数据的超时时间
                     httpURLConnection.setReadTimeout(10000);
+                    httpURLConnection.setInstanceFollowRedirects(true);
                     // 设置字符编码
                     //httpURLConnection.setRequestProperty("Charset", "UTF-8");
 
@@ -231,15 +248,30 @@ public class ServiceUpdate extends Service {
                                 });
                             }
                         });
+                    } else {
+                        if (responseCode == 301 || responseCode == 302) {
+                            LogHelper.d("wangzixu", "downloadFileCall 重定向");
+                            String url302 = httpURLConnection.getHeaderField("Location");
+                            if (TextUtils.isEmpty(url302)) {
+                                url302 = httpURLConnection.getHeaderField("location"); //临时重定向和永久重定向location的大小写有区分
+                            }
+                            if (!url302.startsWith("http://") && !url302.startsWith("https://")) { //某些时候会省略host，只返回后面的path，所以需要补全url
+                                url302 = url.getProtocol() + "://" + url.getHost() + ":" + url.getPort() + url302;
+                            }
+                            downloadFileWithUrlConn(url302, fileTemp, file);
+                        } else {
+                            throw new Exception("responseCode = " + responseCode);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    LogHelper.d("wangzixu", "downloadFileCall Exception = " + e.getMessage());
                     mNotificationManager.cancel(NOTIFY_ID);
                     mIsDownLoading = false;
                     App.sMainHanlder.post(new Runnable() {
                         @Override
                         public void run() {
-                            ToastManager.showShort(getApplicationContext(), "下载失败 Exception");
+                            ToastManager.showShort(getApplicationContext(), "下载失败");
                             ServiceUpdate.this.stopSelf();
                         }
                     });

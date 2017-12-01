@@ -68,7 +68,7 @@ public class FileUtil {
                     listener.onProgress(size, totalSize);
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             if (listener != null) {
                 listener.onFailure(e);
             }

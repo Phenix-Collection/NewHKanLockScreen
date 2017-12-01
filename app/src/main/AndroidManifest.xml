@@ -112,9 +112,9 @@
         </activity>
 
                   <!--android:launchMode="singleInstance"-->
-                  <!--android:launchMode="singleTask"-->
         <activity android:name=".lockscreen.ActivityLockScreen"
                   android:theme="@style/myLockScreenActiviyTheme"
+                  android:launchMode="singleTask"
                   android:taskAffinity="com.hk.lockscreentask"
                   android:screenOrientation="portrait">
         </activity>

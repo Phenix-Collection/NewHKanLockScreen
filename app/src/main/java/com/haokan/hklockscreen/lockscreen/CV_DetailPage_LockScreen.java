@@ -830,20 +830,11 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 //        Intent i = new Intent(mContext, ActivitySettingForLockPage.class);
         Intent i = new Intent(mContext, ActivityLockSetting.class);
         if (mActivity != null) {
-            mActivity.startActivity(i);
+            mActivity.startActivityForResult(i, 201); //锁屏上打开设置页
             mActivity.startActivityAnim();
         } else {
             mContext.startActivity(i);
         }
-
-        App.sMainHanlder.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mActivity != null) {
-                    mActivity.finish();
-                }
-            }
-        }, 500);
         UmengMaiDianManager.onEvent(mContext, "event_066");
     }
 

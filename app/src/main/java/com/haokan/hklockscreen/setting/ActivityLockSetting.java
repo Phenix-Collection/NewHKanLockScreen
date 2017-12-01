@@ -856,6 +856,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             mIvBigImage.setImageBitmap(null);
             mIvBigImage.setVisibility(View.GONE);
         } else {
+            setResult(RESULT_OK);
             super.onBackPressed();
             closeActivityAnim();
         }

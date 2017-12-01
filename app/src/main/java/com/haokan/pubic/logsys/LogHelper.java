@@ -105,6 +105,8 @@ public class LogHelper {
             boolean append = true;
             if (file.exists() && file.length() > 1048576) { //最大存1M的log
                 append = false;
+            } else if (!file.exists()) {
+                file.createNewFile();
             }
 
             writer = new BufferedWriter(new FileWriter(file, append), 1024);

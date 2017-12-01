@@ -40,8 +40,9 @@ public class ServiceLockScreen extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this.getApplicationContext()); //获取一个Notification构造器
         Intent intent1 = new Intent(this, ActivityLockScreen.class);
-        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         builder.setContentIntent(PendingIntent.getActivity(this, 0, intent1, 0)) // 设置PendingIntent
                 .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_launcher)) // 设置下拉列表中的图标(大图标)
                 .setSmallIcon(R.drawable.icon_small_notifycation) // 设置状态栏内的小图标
@@ -66,13 +67,13 @@ public class ServiceLockScreen extends Service {
                 try {
                     Intent intent1 = new Intent(this, ActivityLockScreen.class);
                     intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent1.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//                    intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     this.startActivity(intent1);
-                    LogHelper.d("wangzixu", "ActivityLockScreen onReceive ServiceLockScreen startActivity");
+//                    LogHelper.d("wangzixu", "ActivityLockScreen onReceive ServiceLockScreen startActivity");
                 } catch (Exception e) {
                     e.printStackTrace();
-                    LogHelper.d("wangzixu", "ActivityLockScreen onReceive Exception");
+//                    LogHelper.d("wangzixu", "ActivityLockScreen onReceive Exception");
                 }
             }
         }
