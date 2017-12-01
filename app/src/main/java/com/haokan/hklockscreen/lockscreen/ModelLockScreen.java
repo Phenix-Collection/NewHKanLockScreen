@@ -430,7 +430,7 @@ public class ModelLockScreen {
                         failList.add(imageBean);
                         e.printStackTrace();
                     }
-                } else {
+                } else {//图片文件已经存在, 无需下载
                     imageBean.imgBigUrl = file.getAbsolutePath();
                     imageBean.imgSmallUrl = imageBean.imgBigUrl;
                 }

@@ -31,8 +31,7 @@ public class HttpStatusManager {
      * 当前是不是wifi链接
      */
     public static boolean isWifi(Context mContext) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) mContext
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetInfo != null && activeNetInfo.getState() == NetworkInfo.State.CONNECTED && activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
@@ -48,10 +47,12 @@ public class HttpStatusManager {
         try {
             ConnectivityManager connectMgr = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo info = connectMgr.getActiveNetworkInfo();
-            if (info != null && info.getType() == ConnectivityManager.TYPE_WIFI) {
-                type = 1;
-            } else if (info != null && info.getType() == ConnectivityManager.TYPE_MOBILE) {
-                type = 2;
+            if (info != null && info.isConnected()) {
+                if (info.getType() == ConnectivityManager.TYPE_WIFI) {
+                    type = 1;
+                } else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
+                    type = 2;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

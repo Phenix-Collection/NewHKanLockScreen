@@ -17,10 +17,10 @@ public class MyDateTimeUtil {
     public static final long YEAR_IN_SECOND = MONTH_IN_SECOND * 12;
     public static final NumberFormat sNumberFormat = NumberFormat.getInstance();;
 
-    public static String simpleData(long time) {
+    public static String getCurrentSimpleData() {
         // HH:mm:ss
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        return formatter.format(new Date(time*1000));
+        return formatter.format(new Date());
     }
 
     public static String getLogTime(long timeMills) {

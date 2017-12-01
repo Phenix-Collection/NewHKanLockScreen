@@ -14,6 +14,7 @@ import com.alibaba.sdk.android.feedback.impl.FeedbackAPI;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.CV_DetailPage_LockScreen;
 import com.haokan.hklockscreen.lockscreen.ReceiverLockScreen;
+import com.haokan.hklockscreen.lockscreenautoupdateimage.ServiceAutoUpdateImage;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.UrlsUtil;
 import com.haokan.pubic.logsys.LogHelper;
@@ -59,9 +60,13 @@ public class App extends Application {
      */
     public static int sIsAdapterPhone = 0;
 
+    public static App sApp;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        sApp = this;
+
         init(this);
 
         //友盟分享初始化begin
@@ -160,4 +165,28 @@ public class App extends Application {
 //        LogHelper.d("wangzixu", "app init = " + string);
 //        BuildProperties.newInstance();
     }
+
+    /**
+     * 通过切换网络发出的自动更新通知, 切换网络后立即取网络状态, 取出的是非wifi, 所以需要延时一段时间再去取
+     */
+    public static void startAutoUpdate() {
+        LogHelper.d("wangzixu", "WiFiChangeReceiver autoupdate startAutoUpdate");
+        sMainHanlder.removeCallbacks(sAutoUpdataRun);
+        sMainHanlder.postDelayed(sAutoUpdataRun, 3000);
+    }
+
+    public static Runnable sAutoUpdataRun = new Runnable() {
+        @Override
+        public void run() {
+            if (sApp == null) {
+                return;
+            }
+            int networkType = HttpStatusManager.getNetworkType(sApp);
+            LogHelper.d("wangzixu", "WiFiChangeReceiver autoupdate networkType = " + networkType);
+            if (networkType == 1) {
+                Intent i = new Intent(sApp, ServiceAutoUpdateImage.class);
+                sApp.startService(i);
+            }
+        }
+    };
 }

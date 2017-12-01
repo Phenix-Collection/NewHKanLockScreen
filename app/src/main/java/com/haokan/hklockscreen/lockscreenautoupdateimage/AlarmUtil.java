@@ -38,6 +38,7 @@ public class AlarmUtil {
         Intent intent = new Intent();
         intent.setPackage(context.getPackageName());
         intent.setAction("com.haokan.service.autoupdateimage");
+        intent.putExtra("type", 1); //代表是通过alarm启动的service
         //com.haokan.service.autoupdateimage
         PendingIntent pendingIntent = PendingIntent.getService(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

@@ -20,11 +20,13 @@ import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.lockscreen.ServiceLockScreen;
+import com.haokan.hklockscreen.lockscreenautoupdateimage.ServiceAutoUpdateImage;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
+import com.haokan.pubic.util.MyDateTimeUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
@@ -61,6 +63,9 @@ public class ActivityHomePage extends ActivityBase {
             Intent intent = new Intent(this, ActivityLockScreenInitSet.class);
             intent.putExtra(ActivityLockScreenInitSet.KEY_INTENT_FROMHOME, true);
             startActivity(intent);
+
+            String curTime = MyDateTimeUtil.getCurrentSimpleData();
+            preferences.edit().putString(ServiceAutoUpdateImage.KEY_AUTOUPDATA_TIME, curTime).apply();
         } else {
             App.sMainHanlder.postDelayed(mPermissionRun, 600);
         }
