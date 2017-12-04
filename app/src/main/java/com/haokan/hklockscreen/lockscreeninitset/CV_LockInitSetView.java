@@ -196,7 +196,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         mManulSetLayout.setVisibility(GONE);
     }
 
-    private void showSetProgressLayout() {
+    private void showProgressLayout() {
         mSetProgressLayout.setVisibility(VISIBLE);
 
         final CV_ScanRadarView scanRadarView = (CV_ScanRadarView) mSetProgressLayout.findViewById(R.id.radarview);
@@ -204,7 +204,7 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
             App.sMainHanlder.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showSetProgressLayout();
+                    showProgressLayout();
                 }
             }, 30);
             return;
@@ -217,36 +217,18 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
         AnimationDrawable drawable = (AnimationDrawable) imageView.getDrawable();
         drawable.start();
 
-        //---------------------------
+        mScanLayout.setVisibility(GONE);
+        mSetAccessLayout.setVisibility(GONE);
+        mScanLayoutRadarView.start();
+        mSetSuccessLayout.setVisibility(GONE);
+        mManulSetLayout.setVisibility(GONE);
+
         if (sInitCheckStatus == 1) {
             UmengMaiDianManager.onEvent(mContext, "event_047");
         } else if (sInitCheckStatus == 2) {
             UmengMaiDianManager.onEvent(mContext, "event_042");
         }
 
-        if (App.sIsAdapterPhone == 1) {
-
-        } else if (App.sIsAdapterPhone == 2) {
-//                    sIsAutoSetting = true;
-//                    //开始自动设置, 跳去设置开机启动的界面
-//                    Intent intent = SystemLockAdapterUtil.getAutoStartIntent();
-//                    mActivityBase.startActivityForResult(intent, 102);
-//                    mActivityBase.startActivityAnim();
-        }
-
-        App.sMainHanlder.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sAutoSetSuccess = false;
-                onActivityResult(102, 0, null);
-            }
-        }, 2000);
-
-        mScanLayout.setVisibility(GONE);
-        mSetAccessLayout.setVisibility(GONE);
-        mScanLayoutRadarView.start();
-        mSetSuccessLayout.setVisibility(GONE);
-        mManulSetLayout.setVisibility(GONE);
     }
 
     private void showSetAccessLayout() {
@@ -343,7 +325,6 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
                 {
                     //进入辅助功能呢界面, 提示用户开启辅助功能
                     Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivityBase.startActivityForResult(intent, 101);
                     mActivityBase.startActivityAnim();
 
@@ -429,16 +410,41 @@ public class CV_LockInitSetView extends FrameLayout implements View.OnClickListe
     }
 
     private void beginAutoSetup() {
-        showSetProgressLayout();
+        if (App.sIsAdapterPhone == 1) {
+
+        } else if (App.sIsAdapterPhone == 2) {
+//                    sIsAutoSetting = true;
+//                    //开始自动设置, 跳去设置开机启动的界面
+//                    Intent intent = SystemLockAdapterUtil.getAutoStartIntent();
+//                    mActivityBase.startActivityForResult(intent, 102);
+//                    mActivityBase.startActivityAnim();
+        }
+
+        App.sMainHanlder.postDelayed(new Runnable() { //没有适配的, 直接调用手动适配失败的路线
+            @Override
+            public void run() {
+                sAutoSetSuccess = false;
+                onActivityResult(102, 0, null);
+            }
+        }, 0);
     }
 
+
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LogHelper.d("wangzixu", "lockinit onActivityResult requestCode = " + requestCode);
         if (requestCode == 101) { //辅助功能界面回来
-            if (isAccessibilitySettingsOn(mContext)) {
-                beginAutoSetup();
-            } else {
-                showManualSetLayout();
-            }
+            showProgressLayout();
+            App.sMainHanlder.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (isAccessibilitySettingsOn(mContext)) {
+                        beginAutoSetup();
+                    } else {
+                        showManualSetLayout();
+                    }
+                }
+            }, 1000);
         } else if (requestCode == 102) { //自动设置自启动回来
             sIsAutoSetting = false;
 

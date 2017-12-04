@@ -143,7 +143,6 @@ public class CV_RecommendPage extends FrameLayout{
             int last = mManager.findLastVisibleItemPosition();
             mAdapter.onResume(first, last);
         }
-
     }
 
     private boolean mRefrsh;
@@ -166,7 +165,7 @@ public class CV_RecommendPage extends FrameLayout{
         public void onDataSucess(List<BeanRecommendItem> beanRecommendItems) {
             LogHelper.d("wangzixu", "recompage loadData onDataSucess size = " + beanRecommendItems.size());
             loadHaoKanAdData5(beanRecommendItems);
-            UmengMaiDianManager.onEvent(mContext, "event_103");
+            onLoadDataSuccessForManDian();
         }
 
         @Override
@@ -219,6 +218,13 @@ public class CV_RecommendPage extends FrameLayout{
             mHasMoreData = true;
         }
     };
+
+    /**
+     * 拉取数据成功的埋点, 因为有的推荐页实现不需要埋点, 或者点不一样, 所以需要区分开
+     */
+    protected void onLoadDataSuccessForManDian() {
+        UmengMaiDianManager.onEvent(mContext, "event_103");
+    }
 
     public void setDataSuccess(List<BeanRecommendItem> beanRecommendItems) {
         int start = mData.size();

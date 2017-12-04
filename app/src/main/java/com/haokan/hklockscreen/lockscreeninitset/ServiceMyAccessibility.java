@@ -50,9 +50,21 @@ public class ServiceMyAccessibility extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(final AccessibilityEvent event) {
         LogHelper.d("wangzixu", "onAccessibilityEvent getEventType = " + event + ", CV_LockInitSetView.sIsAutoSetting = " + CV_LockInitSetView.sIsAutoSetting);
+//        用户打开辅助功能后自动退出的流程
+        int eventType = event.getEventType();
+//        if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED && event.getClassName().equals("com.android.settings.SubSettings")) {
+//            Message messageBack = Message.obtain();
+//            messageBack.what = 101; //后退
+//            mHandler.sendMessageDelayed(messageBack, 0);
+//
+//            Message messageBack1 = Message.obtain();
+//            messageBack1.what = 101; //后退
+//            mHandler.sendMessageDelayed(messageBack1, mStepDuration);
+//            return;
+//        }
+
         if (CV_LockInitSetView.sIsAutoSetting) {
             try {
-                int eventType = event.getEventType();
                 if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                     CharSequence className = event.getClassName();
                     if ("com.miui.permcenter.autostart.AutoStartManagementActivity".equals(className)) {//小米自动启动管理界面

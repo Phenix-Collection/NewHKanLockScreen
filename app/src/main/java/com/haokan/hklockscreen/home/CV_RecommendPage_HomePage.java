@@ -58,6 +58,11 @@ public class CV_RecommendPage_HomePage extends CV_RecommendPage implements View.
     }
 
     @Override
+    protected void onLoadDataSuccessForManDian() {
+        UmengMaiDianManager.onEvent(mContext, "event_104");
+    }
+
+    @Override
     public void startDetailPage(BeanRecommendItem beanRecommendItem) {
         super.startDetailPage(beanRecommendItem);
         UmengMaiDianManager.onEvent(mContext, "event_083");
