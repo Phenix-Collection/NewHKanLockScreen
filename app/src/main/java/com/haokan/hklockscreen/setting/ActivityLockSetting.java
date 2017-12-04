@@ -46,12 +46,14 @@ import com.haokan.pubic.checkupdate.UpdateManager;
 import com.haokan.pubic.clipimage.ActivityClipImage;
 import com.haokan.pubic.clipimage.ClipImgManager;
 import com.haokan.pubic.database.MyDatabaseHelper;
+import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.StatusBarUtil;
+import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.j256.ormlite.dao.Dao;
@@ -444,9 +446,11 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
                 break;
             case R.id.layout_fadeback:
-                {
+                if (HttpStatusManager.checkNetWorkConnect(this)) {
                     FeedbackAPI.openFeedbackActivity();
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_090");
+                } else {
+                    ToastManager.showNetErrorToast(this);
                 }
                 break;
             case R.id.layout_aboutus:

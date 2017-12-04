@@ -249,6 +249,7 @@ public class ServiceUpdate extends Service {
                             }
                         });
                     } else {
+                        //永久重定向和临时重定向
                         if (responseCode == 301 || responseCode == 302) {
                             LogHelper.d("wangzixu", "downloadFileCall 重定向");
                             String url302 = httpURLConnection.getHeaderField("Location");
