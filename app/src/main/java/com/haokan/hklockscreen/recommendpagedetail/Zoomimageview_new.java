@@ -673,25 +673,16 @@ public class Zoomimageview_new extends AppCompatImageView {
 	}
 
 	public boolean canHorizontalDrag() {
-		if (mCurrentScale > mZoomMinScale && mRedundantXSpace > 0) {
-			return true;
-		}
-		return false;
-	}
+        return mCurrentScale > mZoomMinScale && mRedundantXSpace > 0;
+    }
 
     public boolean canVerticalDrag() {
-        if (mCurrentScale > mZoomMinScale && mRedundantYSpace > 0) {
-            return true;
-        }
-        return false;
+        return mCurrentScale > mZoomMinScale && mRedundantYSpace > 0;
     }
 
 	public boolean canDrag() {
-		if (mCurrentScale > mZoomMinScale) {
-			return true;
-		}
-		return false;
-	}
+        return mCurrentScale > mZoomMinScale;
+    }
 
 	public float getCurrentScale() {
 		return mCurrentScale;

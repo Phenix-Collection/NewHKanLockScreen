@@ -360,7 +360,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
             beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
             beanRecommendItem.imgDesc = mCurrentImgBean.imgDesc;
-            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
             if (mActivity != null) {
                 mActivity.startActivity(intent);
                 mActivity.startActivityAnim();

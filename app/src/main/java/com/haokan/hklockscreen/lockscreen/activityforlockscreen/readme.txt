@@ -1,7 +1,0 @@
-有锁屏页进入的activity很特殊, 需要不能拉起应用本身的task(可以通过startActivityForResult解决, FLAG_ACTIVITY_CLEAR_TASK解决), 大部分还需要监听锁屏广播而关闭本身
-所以又锁屏拉起的应用中某界面, 都应该有个锁屏的专门acitivy继承那个activiy, 然后实现监听锁屏广播结束自己
-
-#应该可以用 ActivityScreen设置android:taskAffinity="com.hk.lockscreentask"属性, 然后启动时设置FLAG_ACTIVITY_CLEAR_TASK来解决
-#这样每次启动ActivityScreen时, ActivityScreen都会作为跟节点
-
-#clearTaskOnLaunch这个东西和FLAG_ACTIVITY_CLEAR_TASK类似, 但是不会清除根activity, 并且只有作为跟节点时才有用

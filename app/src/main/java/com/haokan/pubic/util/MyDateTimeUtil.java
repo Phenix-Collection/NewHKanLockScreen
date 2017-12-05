@@ -15,7 +15,7 @@ public class MyDateTimeUtil {
     public static final long DAY_IN_SECOND = HOUR_IN_SECOND * 24;
     public static final long MONTH_IN_SECOND = DAY_IN_SECOND * 30;
     public static final long YEAR_IN_SECOND = MONTH_IN_SECOND * 12;
-    public static final NumberFormat sNumberFormat = NumberFormat.getInstance();;
+    public static final NumberFormat sNumberFormat = NumberFormat.getInstance();
 
     public static String getCurrentSimpleData() {
         // HH:mm:ss

@@ -132,7 +132,7 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
 
         if (beanRecommendItem.mBeanAdRes == null) {
             Intent intent = new Intent(mContext, ActivityLandPageRecommend.class);
-            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
             if (mActivityBase != null) {
                 mActivityBase.startActivity(intent);
                 mActivityBase.startActivityAnim();

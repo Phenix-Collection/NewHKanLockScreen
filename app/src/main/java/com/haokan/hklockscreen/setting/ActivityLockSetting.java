@@ -789,7 +789,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 UpdateManager.checkUpdate(this, false);
             }
         } else {
-            UpdateManager.checkUpdate(this, false);;
+            UpdateManager.checkUpdate(this, false);
         }
     }
 

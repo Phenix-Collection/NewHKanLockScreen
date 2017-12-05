@@ -53,11 +53,7 @@ public class CommonUtil {
             packageInfo = null;
             e.printStackTrace();
         }
-        if (packageInfo == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return packageInfo != null;
     }
 
     /**

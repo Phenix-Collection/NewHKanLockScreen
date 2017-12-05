@@ -361,7 +361,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
             beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
             beanRecommendItem.imgDesc = mCurrentImgBean.imgDesc;
-            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);;
+            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
             if (mActivity != null) {
                 mActivity.startActivity(intent);
                 mActivity.startActivityAnim();

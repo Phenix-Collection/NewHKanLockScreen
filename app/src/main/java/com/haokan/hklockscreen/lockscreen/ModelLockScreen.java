@@ -421,7 +421,7 @@ public class ModelLockScreen {
                         Bitmap bitmap = Glide.with(context).load(url).asBitmap().into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
                         FileUtil.saveBitmapToFile(context, bitmap, file, false);
 
-                        imageBean.imgBigUrl = file.getAbsolutePath();;
+                        imageBean.imgBigUrl = file.getAbsolutePath();
                         imageBean.imgSmallUrl = imageBean.imgBigUrl;
                     } catch (Exception e) {
                         if (LogHelper.DEBUG) {

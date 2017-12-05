@@ -30,7 +30,7 @@ public class AlarmUtil {
 
         if (LogHelper.DEBUG) {
             // HH:mm:ss
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());;
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             LogHelper.d("wangzixu", "autoupdate AlarmUtil setOfflineAlarm time = " + formatter.format(calendar.getTimeInMillis()));
             LogHelper.writeLog(context, "autoupdate AlarmUtil setOfflineAlarm time = " + formatter.format(calendar.getTimeInMillis()));
         }
