@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-        android:color="#7b7c86">
-    <!--android:id="@+id/mask"-->
-    <item>
-        <color android:color="@color/default_bg_color" />
-    </item>
-</ripple>
