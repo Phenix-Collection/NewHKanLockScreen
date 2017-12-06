@@ -691,51 +691,41 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                         public void call() {
                             try {
                                 BeanLocalImage beanOld = null;
-                                int index = 1;
-                                if (mCurrentImage == mIvImage1) {
-                                    beanOld = mLocalImage1;
-                                    index = 1;
-                                } else if (mCurrentImage == mIvImage2) {
-                                    beanOld = mLocalImage2;
-                                    index = 2;
-                                } else if (mCurrentImage == mIvImage3) {
-                                    beanOld = mLocalImage3;
-                                    index = 3;
-                                }
-
-                                Dao daoLocalImg = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanLocalImage.class);
                                 BeanLocalImage beanNew = new BeanLocalImage();
                                 beanNew.imgId = ModelLocalImage.sLocalImgIdPreffix + System.currentTimeMillis();
                                 beanNew.imgUrl = path;
-                                beanNew.index = index;
+                                beanNew.index = 1;
                                 beanNew.create_time = System.currentTimeMillis();
-                                daoLocalImg.delete(beanOld);
-                                daoLocalImg.create(beanNew);
-
-                                if (index == 1) {
+                                if (mCurrentImage == mIvImage1) {
+                                    beanOld = mLocalImage1;
+                                    beanNew.index = 1;
                                     mLocalImage1 = beanNew;
-                                } else if (index == 2) {
+                                } else if (mCurrentImage == mIvImage2) {
+                                    beanOld = mLocalImage2;
+                                    beanNew.index = 2;
                                     mLocalImage2 = beanNew;
-                                } else if (index == 3) {
+                                } else if (mCurrentImage == mIvImage3) {
+                                    beanOld = mLocalImage3;
+                                    beanNew.index = 3;
                                     mLocalImage3 = beanNew;
                                 }
 
                                 if (beanOld == null && mTvLocalImageEdit.isSelected()) {
-                                    if (index == 1) {
+                                    if (beanNew.index == 1) {
                                         App.sMainHanlder.post(new Runnable() {
                                             @Override
                                             public void run() {
                                                 mIvDelte1.setVisibility(View.VISIBLE);
                                             }
                                         });
-                                    } else if (index == 2) {
+                                    } else if (beanNew.index == 2) {
                                         App.sMainHanlder.post(new Runnable() {
                                             @Override
                                             public void run() {
                                                 mIvDelte2.setVisibility(View.VISIBLE);
                                             }
                                         });
-                                    } else if (index == 3) {
+                                    } else if (beanNew.index == 3) {
                                         App.sMainHanlder.post(new Runnable() {
                                             @Override
                                             public void run() {
@@ -745,12 +735,15 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                                     }
                                 }
 
-
-                                File file = new File(beanOld.imgUrl);
-                                if (file.exists()) {
-                                    FileUtil.deleteFile(file);
+                                Dao daoLocalImg = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanLocalImage.class);
+                                if (beanOld != null) {
+                                    daoLocalImg.delete(beanOld);
+                                    File file = new File(beanOld.imgUrl);
+                                    if (file.exists()) {
+                                        FileUtil.deleteFile(file);
+                                    }
                                 }
-
+                                daoLocalImg.create(beanNew);
                                 notifyLocalImageChange();
                             } catch (Exception e) {
                                 e.printStackTrace();
