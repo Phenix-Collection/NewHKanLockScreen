@@ -501,7 +501,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             if (mCurrentImgBean.myType == 3) {
                 mTvLockLink.setVisibility(GONE);
             } else {
-                mTvLockLink.setBackground(mTvLinkBg);
+                mTvLockLink.setBackgroundResource(getLinkBgColor());
                 mTvLockLink.setVisibility(VISIBLE);
                 mTvLockLink.setText("查看更多");
             }

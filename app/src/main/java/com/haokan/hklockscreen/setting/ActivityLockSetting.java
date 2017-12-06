@@ -51,6 +51,7 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
+import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 import com.haokan.pubic.util.ToastManager;
@@ -58,6 +59,7 @@ import com.haokan.pubic.util.Values;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.j256.ormlite.dao.Dao;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -541,7 +543,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
                     decorView.addView(mIvBigImage);
                     Glide.with(this).load(mLocalImage2.imgUrl).into(mIvBigImage);
-
+                    LogHelper.d("wangzixu", "clipimg clickimage2 mLocalImage2.imgUrl = " + mLocalImage2.imgUrl);
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_095");
                 }
                 break;
@@ -707,6 +709,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                                 beanNew.imgUrl = path;
                                 beanNew.index = index;
                                 beanNew.create_time = System.currentTimeMillis();
+                                daoLocalImg.delete(beanOld);
                                 daoLocalImg.create(beanNew);
 
                                 if (index == 1) {
@@ -742,10 +745,16 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                                     }
                                 }
 
-                                deleteLocalImage(beanOld);
+
+                                File file = new File(beanOld.imgUrl);
+                                if (file.exists()) {
+                                    FileUtil.deleteFile(file);
+                                }
+
                                 notifyLocalImageChange();
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                LogHelper.d("wangzixu", "clipimg onActivityResult Exception = " + e.getMessage());
                             }
 
                             worker.unsubscribe();
@@ -762,6 +771,11 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
             try {
                 daoLocalImg = MyDatabaseHelper.getInstance(ActivityLockSetting.this).getDaoQuickly(BeanLocalImage.class);
                 daoLocalImg.delete(beanOld);
+
+                File file = new File(beanOld.imgUrl);
+                if (file.exists()) {
+                    FileUtil.deleteFile(file);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

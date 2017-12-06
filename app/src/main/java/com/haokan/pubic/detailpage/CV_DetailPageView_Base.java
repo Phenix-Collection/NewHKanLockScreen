@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -77,8 +76,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected View mLayoutMainBottom;
     protected TextView mTvTitlle;
     protected TextView mTvLink;
-    //外链需要随机的背景色, 所以new个背景, 随机设置颜色
-    protected GradientDrawable mTvLinkBg;
     protected View mBottomBar;
     protected View mTvBottomDownloadParent;
     protected TextView mTvBottomDownload;
@@ -147,10 +144,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mLayoutTitleLink = mLayoutMainBottom.findViewById(R.id.layout_title);
         mTvTitlle = (TextView) mLayoutTitleLink.findViewById(R.id.tv_title);
         mTvLink = (TextView) mLayoutTitleLink.findViewById(R.id.tv_link);
-        mTvLinkBg = new GradientDrawable();
-        mTvLinkBg.setCornerRadius(DisplayUtil.dip2px(mContext, 2));
-        mTvLinkBg.setColor(getLinkBgColor());
-        mTvLink.setBackground(mTvLinkBg);
 
         //底部功能按钮条, 返回, 分享...等
         mBottomBar = findViewById(R.id.bottom_bar);
@@ -643,9 +636,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
         mTvTitlle.setText(mCurrentImgBean.imgTitle);
 
-        if (mTvCount.getVisibility() == VISIBLE) {
-            mTvCount.setText((mCurrentPosition+1) + "/" + (mData.size()));
-        }
+//        if (mTvCount.getVisibility() == VISIBLE) {
+//            mTvCount.setText((mCurrentPosition+1) + "/" + (mData.size()));
+//        }
 
         if (mCurrentImgBean.myType == 3) {
             mLayoutCaption.setOnClickListener(null);
@@ -654,8 +647,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     //        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
     //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
             mLayoutCaption.setOnClickListener(this);
-            mTvLinkBg.setColor(getLinkBgColor());
-            mTvLink.setBackground(mTvLinkBg);
+            mTvLink.setBackgroundResource(getLinkBgColor());
             mTvLink.setText("查看更多");
             mTvLink.setVisibility(View.VISIBLE);
         }
@@ -1054,7 +1046,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         });
     }
 
-    private int[] mLinkBgColors={0xccF8546B,0xccF6A623,0xcc7ED321,0xcc417505,0xcc50E3C2,0xcc0986CD};
+    private int[] mLinkBgColors={R.drawable.icon_linkbg1,R.drawable.icon_linkbg2,R.drawable.icon_linkbg3
+            ,R.drawable.icon_linkbg4,R.drawable.icon_linkbg5,R.drawable.icon_linkbg6};
     private int mLingBgColorIndex = 0;
     //获取链接背景的随机颜色值
     public int getLinkBgColor(){
