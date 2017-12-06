@@ -104,10 +104,14 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected View mTvBottomShare;
     protected TextView mTvBottomShareTitle;
     protected View mBottomBack;
-    protected int mLinkBgPaddingLight, mLinkBgPaddingRight;
-    protected Paint mMeasurePaint = new Paint(); //测量文字宽高用的画笔, 动态设置标题和link宽度用的
-    protected int mTitleLayoutWidth; //标题布局的可用总宽度
-    protected int mTitleMinWidth; //当标题字数大于5个字时, 标题的最小宽度是5个字, 当标题小于5个字时, 标题最小宽度时实际宽度
+
+    //关于标题和链接布局相关begin****
+    protected int mLinkBgPaddingLeft, mLinkBgPaddingRight;
+    protected Paint mPaintMeasureTitle; //测量文字宽高用的画笔, 动态设置标题和link宽度用的
+    protected Paint mPaintMeasureLink; //测量文字宽高用的画笔, 动态设置标题和link宽度用的
+    protected int mTitleLayoutMaxWidth; //标题布局的可用总宽度
+    protected int mTitleMaxWidth; //Title五个字的宽度
+    //关于标题和链接布局相关end****
 
     public CV_DetailPageView_Base(@NonNull Context context) {
         this(context, null);
@@ -132,10 +136,15 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mContext = context;
         LayoutInflater.from(mContext).inflate(R.layout.cv_detailpage_base, this, true);
 
-        mLinkBgPaddingLight = DisplayUtil.dip2px(mContext, 9);
+        mPaintMeasureTitle = new Paint();
+        mPaintMeasureLink = new Paint();
+        mPaintMeasureTitle.setTextSize(DisplayUtil.dip2px(mContext, 18));
+        mPaintMeasureLink.setTextSize(DisplayUtil.dip2px(mContext, 12));
+        mLinkBgPaddingLeft = DisplayUtil.dip2px(mContext, 9);
         mLinkBgPaddingRight = DisplayUtil.dip2px(mContext, 4);
-        mTitleLayoutWidth = mContext.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(mContext, 20);
-        mTitleMinWidth = (int) mMeasurePaint.measureText("标题五个字");
+        //屏幕宽度-左边距(15)-右边距(10)-标题和title之间的空隙(3) - 余量(2)
+        mTitleLayoutMaxWidth = mContext.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(mContext, 30);
+        mTitleMaxWidth = (int) mPaintMeasureTitle.measureText("一二三四五六");
 
         //页面上部的导航条背景，如果没有背景，会看不清状态栏上的文字
         mLayoutMainTop = findViewById(R.id.layout_top);
@@ -650,6 +659,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 //            mTvCount.setText((mCurrentPosition+1) + "/" + (mData.size()));
 //        }
 
+        mTvTitlle.setMaxWidth(mTitleLayoutMaxWidth);
         if (mCurrentImgBean.myType == 3) {
             mLayoutCaption.setOnClickListener(null);
             mTvLink.setVisibility(View.GONE);
@@ -661,9 +671,20 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 mTvLink.setBackgroundResource(getLinkBgColor());
                 String s = TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle;
                 mTvLink.setText(s);
-                mTvLink.setPadding(mLinkBgPaddingLight, 0, mLinkBgPaddingRight, 0);
-                int sWidth = (int) mMeasurePaint.measureText(s);
+                mTvLink.setPadding(mLinkBgPaddingLeft, 0, mLinkBgPaddingRight, 0);
+                int linkWidth = (int) mPaintMeasureLink.measureText(s) + mLinkBgPaddingLeft + mLinkBgPaddingRight;
+                int titleWidth = (int) mPaintMeasureTitle.measureText(TextUtils.isEmpty(mCurrentImgBean.imgTitle) ? "" : mCurrentImgBean.imgTitle);
+                if (linkWidth + titleWidth > mTitleLayoutMaxWidth) { //标题和link的总宽度大于可用宽度, 必须有个被省略
+                    if (titleWidth > mTitleMaxWidth) { //如果标题大于5个字, 省略标题, 否则不用处理
+                        int titleMax = mTitleLayoutMaxWidth - linkWidth;
+                        if (titleMax > mTitleMaxWidth) { //如果总宽度减去link宽度, 剩余的空间大于五个字宽度
+                            mTvTitlle.setMaxWidth(titleMax);
+                        } else {
+                            mTvTitlle.setMaxWidth(mTitleMaxWidth);
+                        }
 
+                    }
+                }
                 //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
                 mTvLink.setVisibility(View.VISIBLE);
             }
