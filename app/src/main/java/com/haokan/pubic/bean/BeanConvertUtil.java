@@ -29,8 +29,10 @@ public class BeanConvertUtil {
         collectionBean.commentNum = imageBean.commentNum;
         collectionBean.cpId = imageBean.cpId;
         collectionBean.cpName = imageBean.cpName;
-        collectionBean.create_time = System.currentTimeMillis();
+        collectionBean.collect_num = imageBean.collect_num;
+        collectionBean.share_num = imageBean.share_num;
 
+        collectionBean.create_time = System.currentTimeMillis();
         return collectionBean;
     }
 
@@ -50,6 +52,8 @@ public class BeanConvertUtil {
         imgBean.commentNum = collectionBean.commentNum;
         imgBean.cpId = collectionBean.cpId;
         imgBean.cpName = collectionBean.cpName;
+        imgBean.collect_num = collectionBean.collect_num;
+        imgBean.share_num = collectionBean.share_num;
         imgBean.isCollect = 1;
         if (TextUtils.isEmpty(collectionBean.imgId) || collectionBean.imgId.startsWith(ModelLocalImage.sLocalImgIdPreffix)) {
             imgBean.myType = 3;
@@ -77,10 +81,12 @@ public class BeanConvertUtil {
         imgBean.isCollect = fromBean.isCollect;
         imgBean.myType = fromBean.myType;
         imgBean.jump_id = fromBean.imgId;
+        imgBean.collect_num = 0;
+        imgBean.share_num = 0;
         return imgBean;
     }
 
-    public static BigImageBean recommendLandBeanBean2MainImageBean(BeanRecommendPageLand fromBean) {
+    public static BigImageBean recommendLandBean2MainImageBean(BeanRecommendPageLand fromBean) {
         BigImageBean imgBean = new BigImageBean();
         imgBean.imgId = fromBean.imgId;
         imgBean.imgSmallUrl = fromBean.sUrl;
@@ -97,6 +103,8 @@ public class BeanConvertUtil {
         imgBean.cpId = fromBean.cpId;
         imgBean.cpName = fromBean.cpName;
         imgBean.isCollect = 0;
+        imgBean.collect_num = 0;
+        imgBean.share_num = 0;
         if (TextUtils.isEmpty(fromBean.imgId) || fromBean.imgId.startsWith(ModelLocalImage.sLocalImgIdPreffix)) {
             imgBean.myType = 3;
         }

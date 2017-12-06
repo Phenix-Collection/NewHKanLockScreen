@@ -103,6 +103,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     private void initViews(View rootView) {
+        mBottomBack.setVisibility(GONE);
+
         View layoutTop = rootView.findViewById(R.id.lockscreen_layouttop); //换一换
         mLayoutMainTop.setVisibility(GONE);
         mLayoutMainTop = layoutTop;//把base中的顶部view替换掉, 切面编程思想, 这样利用baseview中关于顶部view的

@@ -54,7 +54,7 @@ public class ActivityDetailPageRecommend extends ActivityBase{
         for (int i = 0; i < mData.size(); i++) {
             BeanRecommendPageLand beanRecommendPageLand = mData.get(i);
             if (beanRecommendPageLand.myType == 0) {
-                BigImageBean mainImageBean = BeanConvertUtil.recommendLandBeanBean2MainImageBean(beanRecommendPageLand);
+                BigImageBean mainImageBean = BeanConvertUtil.recommendLandBean2MainImageBean(beanRecommendPageLand);
                 mainList.add(mainImageBean);
             }
         }

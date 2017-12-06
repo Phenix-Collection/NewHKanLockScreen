@@ -61,6 +61,18 @@ public class BeanCollection implements Parcelable {
 
     public boolean isSelected;
 
+    @DatabaseField
+    public int collect_num;
+
+    @DatabaseField
+    public int share_num;
+
+    /**
+     * 收藏类型, 0代表单图, 1代表收藏的是推荐页点进去的详情
+     */
+    @DatabaseField
+    public int collectType;
+
     @Override
     public int describeContents() {
         return 0;
@@ -84,6 +96,9 @@ public class BeanCollection implements Parcelable {
         dest.writeString(this.cpName);
         dest.writeLong(this.create_time);
         dest.writeByte(this.isSelected ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.collect_num);
+        dest.writeInt(this.share_num);
+        dest.writeInt(this.collectType);
     }
 
     public BeanCollection() {
@@ -106,6 +121,9 @@ public class BeanCollection implements Parcelable {
         this.cpName = in.readString();
         this.create_time = in.readLong();
         this.isSelected = in.readByte() != 0;
+        this.collect_num = in.readInt();
+        this.share_num = in.readInt();
+        this.collectType = in.readInt();
     }
 
     public static final Parcelable.Creator<BeanCollection> CREATOR = new Parcelable.Creator<BeanCollection>() {

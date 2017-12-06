@@ -15,6 +15,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.ToastManager;
 
@@ -207,6 +208,9 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
 
             @Override
             public void onDataSucess(List<BeanCollection> list) {
+                for (int i = 0; i < list.size(); i++) {
+                    LogHelper.d("wangzixu", "collectionmy collnum = " + list.get(i).collect_num);
+                }
                 mIsLoading = false;
                 mAdapter.addDataBeans(list);
                 dismissAllPromptLayout();

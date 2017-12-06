@@ -8,7 +8,6 @@ import android.support.v4.widget.EdgeEffectCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.haokan.hklockscreen.R;
 import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
@@ -42,8 +41,6 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
     }
 
     private void initViews(View rootView) {
-        View view = mLayoutMainBottom.findViewById(R.id.divider4);
-        view.setVisibility(GONE);
         mBottomSettingView.setVisibility(GONE);
 
         initViewPagerRightEdge();
@@ -64,9 +61,9 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
     public void onPageSelected(int position) {
         super.onPageSelected(position);
 
-        if (mCurrentPosition >= mData.size() - 10 && mHasMoreData && !mIsLoading) {
-            loadData();
-        }
+//        if (mCurrentPosition >= mData.size() - 10 && mHasMoreData && !mIsLoading) {
+//            loadData();
+//        }
     }
 
     public void loadData() {

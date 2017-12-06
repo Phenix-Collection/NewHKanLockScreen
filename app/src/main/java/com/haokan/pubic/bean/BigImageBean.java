@@ -26,6 +26,8 @@ public class BigImageBean implements Serializable{
     public String cpId; //cpid
     public String cpName; //cpName
     public String jump_id; //本地详情页组图id
+    public int collect_num;
+    public int share_num;
 
     /**
      * 自己定义的类型, 0代表离线图片, 1预留字段, 2代表读取的asset中的默认图片, 3代表添加的本地相册图片

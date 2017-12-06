@@ -24,7 +24,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
     /**
      * 数据库版本
      */
-    private static final int DB_VERSION = 2;
+    private static final int DB_VERSION = 3;
 
     /**
      * DAO对象的缓存
@@ -112,15 +112,17 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
         }
 
-//        try{
-//            if(oldVersion<
-//                    2){
-//                getUserDao().executeRawNoArgs("ALTER TABLE user_db ADD COLUMN address VARCHAR(60)");
-//            }
-//        }catch
-//                (SQLExceptione){
-//            e.printStackTrace();
-//        }
+        try{
+            if(version < 3){ //版本3时, 改动了bigImageBean, 增加了collect_num, share_num, 所以BeanCollection表也要增加这两个字段
+                //并且增加收藏推荐详情页的需求, 所以需要区分收藏的单图和详情页, 添加了collectType字段
+                getDaoQuickly(BeanCollection.class).executeRawNoArgs("ALTER TABLE table_collect ADD COLUMN collect_num INTEGER DEFAULT 0");
+                getDaoQuickly(BeanCollection.class).executeRawNoArgs("ALTER TABLE table_collect ADD COLUMN share_num INTEGER DEFAULT 0");
+                getDaoQuickly(BeanCollection.class).executeRawNoArgs("ALTER TABLE table_collect ADD COLUMN collectType INTEGER DEFAULT 0");
+                version = 3;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 //        删除字段
 //        getUserDao().executeRawNoArgs("ALTER TABLE user_db DROP COLUMN age")

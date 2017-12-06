@@ -24,6 +24,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -101,6 +103,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected static final long sAinmDuration = 150; //一些动画的时长, 如显示隐藏图说等
     protected View mBottomSettingView;
     protected TextView mTvCount;
+    protected View mTvBottomShare;
+    protected TextView mTvBottomShareTitle;
+    protected View mBottomBack;
 
     public CV_DetailPageView_Base(@NonNull Context context) {
         this(context, null);
@@ -149,7 +154,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
         //底部功能按钮条, 返回, 分享...等
         mBottomBar = findViewById(R.id.bottom_bar);
-        mLayoutMainBottom.findViewById(R.id.bottom_back).setOnClickListener(this);//返回
+        mBottomBack = mLayoutMainBottom.findViewById(R.id.bottom_back);
+        mBottomBack.setOnClickListener(this);//返回
         mBottomSettingView = mLayoutMainBottom.findViewById(R.id.setting);
         mBottomSettingView.setOnClickListener(this);//设置
 
@@ -159,7 +165,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         mTvBottomCollect = mLayoutMainBottom.findViewById(R.id.bottom_collect);
         mTvBottomCollectTitle = (TextView) mLayoutMainBottom.findViewById(R.id.bottom_collect_title);
         mTvBottomCollect.setOnClickListener(this);
-        mLayoutMainBottom.findViewById(R.id.bottom_share).setOnClickListener(this);//分享
+        mTvBottomShare = mLayoutMainBottom.findViewById(R.id.bottom_share);
+        mTvBottomShareTitle = (TextView) mTvBottomShare.findViewById(R.id.bottom_share_title);
+        mTvBottomShare.setOnClickListener(this);//分享
 
         //************底部下载layout相关 begin *****************
         mDownloadLayout = findViewById(R.id.download_img_layout);
@@ -276,6 +284,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 onClickBack();
                 break;
             case R.id.bottom_download:
+                clickAnimation(v);
+
                 if (Build.VERSION.SDK_INT >= 23 && mActivity != null) {
                     //需要用权限的地方之前，检查是否有某个权限
                     int checkCallPhonePermission = ContextCompat.checkSelfPermission(mActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -290,12 +300,15 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 }
                 break;
             case R.id.bottom_collect:
+                clickAnimation(v);
                 onClickCollect(v);
                 break;
             case R.id.setting:
+                clickAnimation(v);
                 onClickSetting();
                 break;
             case R.id.bottom_share:
+                clickAnimation(v);
                 showShareLayout();
                 break;
             case R.id.save_img:
@@ -489,8 +502,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                     if (mActivity != null) {
                         mActivity.dismissLoadingDialog();
                     }
-                    view.setSelected(false);
                     mCurrentImgBean.isCollect = 0;
+                    mCurrentImgBean.collect_num--;
+                    refreshCollectNum(mCurrentImgBean);
 
                     EventCollectionChange change = new EventCollectionChange();
                     change.mIsAdd = false;
@@ -524,6 +538,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             });
         } else {
             BeanCollection bean = BeanConvertUtil.bigImageBean2CollectionBean(mCurrentImgBean);
+            bean.collectType = 0;
+            bean.collect_num++;
             new ModelCollection().addCollection(mContext, bean, new onDataResponseListener<BeanCollection>() {
                 @Override
                 public void onStart() {
@@ -537,8 +553,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                     if (mActivity != null) {
                         mActivity.dismissLoadingDialog();
                     }
-                    view.setSelected(true);
                     mCurrentImgBean.isCollect = 1;
+                    mCurrentImgBean.collect_num++;
+                    refreshCollectNum(mCurrentImgBean);
 
                     EventCollectionChange change = new EventCollectionChange();
                     change.mIsAdd = true;
@@ -609,6 +626,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
         //处理点赞和收藏了
         refreshCollectNum(mCurrentImgBean);
+        refreshShareNum(mCurrentImgBean);
 
         String desc = mCurrentImgBean.imgDesc;
         String cp_name = mCurrentImgBean.cpName;
@@ -896,8 +914,39 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             return;
         }
         mTvBottomCollect.setSelected(bean.isCollect != 0);
+        if (bean.collect_num > 0) {
+            if (bean.collect_num > 9999) {
+                mTvBottomCollectTitle.setText("9999");
+            } else {
+                mTvBottomCollectTitle.setText(bean.collect_num+"");
+            }
+            mTvBottomCollectTitle.setVisibility(VISIBLE);
+        } else {
+            if (bean.collect_num < 0) {
+                bean.collect_num = 0;
+            }
+            mTvBottomCollectTitle.setVisibility(GONE);
+        }
     }
 
+    public void refreshShareNum(BigImageBean bean) {
+        if (bean == null) {
+            return;
+        }
+        if (bean.share_num > 0) {
+            if (bean.share_num > 9999) {
+                mTvBottomShareTitle.setText("9999");
+            } else {
+                mTvBottomShareTitle.setText(bean.share_num + "");
+            }
+            mTvBottomShareTitle.setVisibility(VISIBLE);
+        } else {
+            if (bean.share_num < 0) {
+                bean.share_num = 0;
+            }
+            mTvBottomShareTitle.setVisibility(GONE);
+        }
+    }
 
     public void downloadImage(@NonNull BigImageBean bean) {
         if (mCurrentImgBean == null) {
@@ -1050,5 +1099,39 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
     public void onDestory() {
         EventBus.getDefault().unregister(this);
+    }
+
+    protected void clickAnimation(final View view) {
+        final ValueAnimator anim1 = ValueAnimator.ofFloat(0, 1.0f);
+        anim1.setDuration(160);
+        anim1.setInterpolator(new LinearInterpolator());
+        anim1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float f = (float) animation.getAnimatedValue();
+                float scale = 1.0f + f*0.2f;
+                view.setScaleX(scale);
+                view.setScaleY(scale);
+            }
+        });
+        anim1.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                ValueAnimator anim2 = ValueAnimator.ofFloat(0, 1.0f);
+                anim2.setDuration(300);
+                anim2.setInterpolator(new OvershootInterpolator(3));
+                anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        float f = (float) animation.getAnimatedValue();
+                        float scale = 1.2f - f*0.2f;
+                        view.setScaleX(scale);
+                        view.setScaleY(scale);
+                    }
+                });
+                anim2.start();
+            }
+        });
+        anim1.start();
     }
 }
