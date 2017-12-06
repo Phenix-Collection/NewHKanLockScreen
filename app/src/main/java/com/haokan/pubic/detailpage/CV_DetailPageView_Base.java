@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -103,6 +104,10 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected View mTvBottomShare;
     protected TextView mTvBottomShareTitle;
     protected View mBottomBack;
+    protected int mLinkBgPaddingLight, mLinkBgPaddingRight;
+    protected Paint mMeasurePaint = new Paint(); //测量文字宽高用的画笔, 动态设置标题和link宽度用的
+    protected int mTitleLayoutWidth; //标题布局的可用总宽度
+    protected int mTitleMinWidth; //当标题字数大于5个字时, 标题的最小宽度是5个字, 当标题小于5个字时, 标题最小宽度时实际宽度
 
     public CV_DetailPageView_Base(@NonNull Context context) {
         this(context, null);
@@ -126,6 +131,11 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
         mContext = context;
         LayoutInflater.from(mContext).inflate(R.layout.cv_detailpage_base, this, true);
+
+        mLinkBgPaddingLight = DisplayUtil.dip2px(mContext, 9);
+        mLinkBgPaddingRight = DisplayUtil.dip2px(mContext, 4);
+        mTitleLayoutWidth = mContext.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(mContext, 20);
+        mTitleMinWidth = (int) mMeasurePaint.measureText("标题五个字");
 
         //页面上部的导航条背景，如果没有背景，会看不清状态栏上的文字
         mLayoutMainTop = findViewById(R.id.layout_top);
@@ -644,12 +654,19 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             mLayoutCaption.setOnClickListener(null);
             mTvLink.setVisibility(View.GONE);
         } else {
-    //        mTvLink.setText(TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle);
-    //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
             mLayoutCaption.setOnClickListener(this);
-            mTvLink.setBackgroundResource(getLinkBgColor());
-            mTvLink.setText("查看更多");
-            mTvLink.setVisibility(View.VISIBLE);
+            if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+                mTvLink.setVisibility(GONE);
+            } else {
+                mTvLink.setBackgroundResource(getLinkBgColor());
+                String s = TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle;
+                mTvLink.setText(s);
+                mTvLink.setPadding(mLinkBgPaddingLight, 0, mLinkBgPaddingRight, 0);
+                int sWidth = (int) mMeasurePaint.measureText(s);
+
+                //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
+                mTvLink.setVisibility(View.VISIBLE);
+            }
         }
 
 

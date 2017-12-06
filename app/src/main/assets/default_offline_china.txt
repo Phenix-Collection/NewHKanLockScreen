@@ -21,12 +21,13 @@
     },
     {
         "imgId": "2375236",
-        "imgTitle": "全国唯一没有树的城市！",
+        "imgTitle": "全国唯一没有树的城市！全国唯一没有树的城市！全国唯一没有树的城市！全国唯一没有树的城市！",
         "typeName": "资讯",
         "imgDesc": "在这里种活一棵树，能获得三等功！",
         "imgBigUrl": "file:///android_asset/hk_def_imgs/default3.jpg",
         "imgSmallUrl": "file:///android_asset/hk_def_imgs/default3.jpg",
         "shareUrl": "https://redirect.levect.com/10000/0/2375236",
-        "linkUrl": "https://redirect.levect.com/10000/0/2375236"
+        "linkUrl": "https://redirect.levect.com/10000/0/2375236",
+        "linkTitle": "躲进古堡成一统躲进古堡成一统躲进古堡成一统躲进古堡成一统"
     }
 ]
