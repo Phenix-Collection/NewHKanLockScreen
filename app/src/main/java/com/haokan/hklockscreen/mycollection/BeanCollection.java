@@ -68,7 +68,7 @@ public class BeanCollection implements Parcelable {
     public int share_num;
 
     /**
-     * 收藏类型, 0代表单图, 1代表收藏的是推荐页点进去的详情
+     *收藏类型, 0代表单图, 1代表收藏的是推荐页点进去的详情
      */
     @DatabaseField
     public int collectType;
