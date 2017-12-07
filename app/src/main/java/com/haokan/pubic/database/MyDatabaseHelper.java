@@ -17,7 +17,6 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -91,9 +90,8 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
         LogHelper.d("wangzixu", "database onCreate is called");
         try {
             TableUtils.createTable(connectionSource, BeanCollection.class);
-            //版本4时, 去掉本地表, 增加了锁屏表, 集合本地数据和网络数据, 数据库迭代的历史信息注释, 不能删除
             TableUtils.createTable(connectionSource, BeanLocalImage.class);
-            TableUtils.createTable(connectionSource, BeanLsImage.class);
+            TableUtils.createTable(connectionSource, BeanNetImage.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,44 +132,23 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
 
-        if (version < 4) { //4增加了BeanLsImage表, 包含了本地的和网络的图片信息, 不在用序列化形式存储数据
+        if (version < 4) { //4增加了BeanNetImage表, 不在用序列化形式存储数据
             try {
-                TableUtils.createTable(connectionSource, BeanLsImage.class);
-
-                Dao daoLs = getDaoQuickly(BeanLsImage.class);
-                //本地图片表中的数据信息导入
-                Dao daoLocalImage = getDaoQuickly(BeanLocalImage.class);
-                List<BeanLocalImage> listLocal = daoLocalImage.queryForAll();
-                if (listLocal != null && listLocal.size() > 0) {
-                    for (int i = 0; i < listLocal.size(); i++) {
-                        BeanLocalImage beanLocalImage = listLocal.get(i);
-                        BeanLsImage lsImage = new BeanLsImage();
-                        lsImage.imgId = beanLocalImage.imgId;
-                        lsImage.myType = 1;
-                        lsImage.imgSmallUrl = beanLocalImage.imgUrl;
-                        lsImage.imgBigUrl = beanLocalImage.imgUrl;
-                        lsImage.imgTitle = beanLocalImage.imgTitle;
-                        lsImage.imgDesc = beanLocalImage.imgDesc;
-                        lsImage.create_time = beanLocalImage.create_time;
-
-                        daoLs.create(lsImage);
-                    }
-                }
-                TableUtils.dropTable(daoLocalImage, true);
-                mDaos.remove(BeanLocalImage.class.getSimpleName());
+                TableUtils.createTable(connectionSource, BeanNetImage.class);
 
                 //导入网络图片数据, 以前是序列化存的对象
+                Dao daoNet = getDaoQuickly(BeanNetImage.class);
                 ArrayList<BigImageBean> listNet = new ArrayList<>();
                 ACache aCache = ACache.get(mContext);
                 Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
-                LogHelper.d("wangzixu", "getLsData asObject = " + asObject);
+                LogHelper.d("wangzixu", "getOfflineNetData asObject = " + asObject);
                 if (asObject != null && asObject instanceof ArrayList) {
                     try {
                         ArrayList<BigImageBean> tempList = (ArrayList<BigImageBean>) asObject;
                         BigImageBean bigImageBean = tempList.get(0); //验证是否会强转失败, 因为4.0.1之前老版本的数据存储的是mainImageBean
                         listNet.addAll(tempList);
                     } catch (Exception e) {
-                        LogHelper.d("wangzixu", "getLsData 强转失败, 老数据强转成mainimageBean");
+                        LogHelper.d("wangzixu", "getOfflineNetData 强转失败, 老数据强转成mainimageBean");
                         ArrayList<MainImageBean> oldList = (ArrayList<MainImageBean>) asObject;
                         for (int i = 0; i < oldList.size(); i++) {
                             MainImageBean imageBean = oldList.get(i);
@@ -179,13 +156,15 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
                             listNet.add(bigImageBean);
                         }
                     }
-                    LogHelper.d("wangzixu", "getLsData list = " + listNet.size());
+                    LogHelper.d("wangzixu", "getOfflineNetData list = " + listNet.size());
 
                     if (listNet.size() > 0) {
+                        long batchNum = System.currentTimeMillis();
                         for (int i = 0; i < listNet.size(); i++) {
                             BigImageBean bigImageBean = listNet.get(i);
-                            BeanLsImage lsImage = BeanConvertUtil.BigImg2LsImageBean(bigImageBean);
-                            daoLs.create(lsImage);
+                            BeanNetImage lsImage = BeanConvertUtil.BigImg2NetImageBean(bigImageBean);
+                            lsImage.batchNum = batchNum;
+                            daoNet.create(lsImage);
                         }
                     }
                 }

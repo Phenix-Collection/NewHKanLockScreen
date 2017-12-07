@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.pubic.database.BeanCollection;
 import com.haokan.hklockscreen.recommendpageland.BeanRecommendPageLand;
-import com.haokan.pubic.database.BeanLsImage;
+import com.haokan.pubic.database.BeanNetImage;
 
 /**
  * Created by wangzixu on 2017/10/26.
@@ -57,7 +57,7 @@ public class BeanConvertUtil {
         imgBean.share_num = collectionBean.share_num;
         imgBean.isCollect = 1;
         if (TextUtils.isEmpty(collectionBean.imgId) || collectionBean.imgId.startsWith(ModelLocalImage.sLocalImgIdPreffix)) {
-            imgBean.myType = 3;
+            imgBean.myType = 1;
         }
 
         return imgBean;
@@ -107,12 +107,12 @@ public class BeanConvertUtil {
         imgBean.collect_num = 0;
         imgBean.share_num = 0;
         if (TextUtils.isEmpty(fromBean.imgId) || fromBean.imgId.startsWith(ModelLocalImage.sLocalImgIdPreffix)) {
-            imgBean.myType = 3;
+            imgBean.myType = 1;
         }
         return imgBean;
     }
 
-    public static BigImageBean lsImg2BigImageBean(BeanLsImage fromBean) {
+    public static BigImageBean lsImg2BigImageBean(BeanNetImage fromBean) {
         BigImageBean imgBean = new BigImageBean();
         imgBean.imgId = fromBean.imgId;
         imgBean.myType = fromBean.myType;
@@ -135,8 +135,8 @@ public class BeanConvertUtil {
         return imgBean;
     }
 
-    public static BeanLsImage BigImg2LsImageBean(BigImageBean fromBean) {
-        BeanLsImage imgBean = new BeanLsImage();
+    public static BeanNetImage BigImg2NetImageBean(BigImageBean fromBean) {
+        BeanNetImage imgBean = new BeanNetImage();
         imgBean.imgId = fromBean.imgId;
         imgBean.myType = fromBean.myType;
         imgBean.imgSmallUrl = fromBean.imgSmallUrl;

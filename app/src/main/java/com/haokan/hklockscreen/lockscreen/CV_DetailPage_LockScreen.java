@@ -145,7 +145,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                         map.put("action", "亮屏");
                         if (mCurrentImgBean.mBeanAdRes != null) {
                             map.put("from", "广告图片");
-                        } else if (mCurrentImgBean.myType == 3){
+                        } else if (mCurrentImgBean.myType == 1){
                             map.put("from", "我的相册图片");
                         } else {
                             map.put("from", "离线图片");
@@ -498,7 +498,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             }
             mTvLockTitle.setText(mCurrentImgBean.imgTitle);
 
-            if (mCurrentImgBean.myType == 3) {
+            if (mCurrentImgBean.myType == 1) {
                 mTvLockLink.setVisibility(GONE);
             } else {
                 mTvLockLink.setBackgroundResource(getLinkBgColor());
@@ -536,7 +536,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             }
             //广告展示上报
             ModelHaoKanAd.adShowUpLoad(mCurrentImgBean.mBeanAdRes.showUpUrl);
-        } else if (mCurrentImgBean.myType == 3) {
+        } else if (mCurrentImgBean.myType == 1) {
             mLocalLockIndex = position;
         } else {
             mNoLocalLockIndex = position;
@@ -555,7 +555,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             map.put("action", "滑动");
             if (mCurrentImgBean.mBeanAdRes != null) {
                 map.put("from", "广告图片");
-            } else if (mCurrentImgBean.myType == 3){
+            } else if (mCurrentImgBean.myType == 1){
                 map.put("from", "我的相册图片");
             } else {
                 map.put("from", "离线图片");
@@ -742,7 +742,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     public void loadSwitchOfflineData(final boolean showOfflineImage) {
-        ModelLockScreen.getLsData(mContext, new onDataResponseListener<List<BigImageBean>>() {
+        ModelLockScreen.getOfflineNetData(mContext, new onDataResponseListener<List<BigImageBean>>() {
             @Override
             public void onStart() {
             }

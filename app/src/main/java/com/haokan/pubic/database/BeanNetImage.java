@@ -5,15 +5,15 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by wangzixu on 2017/10/26.
- * 锁屏图片表
+ * 锁屏网络图片表
  */
 @DatabaseTable(tableName = "table_lsimg")
-public class BeanLsImage {
+public class BeanNetImage {
     @DatabaseField(id = true)
     public String imgId; //id
 
     /**
-     * 锁屏图片的类型, 0代表通过网络图, 1本地相册图, 2代表读取的asset中的默认图片, 3视频
+     * 网络锁屏图片的类型, 0代表通过网络图, 1本地相册图, 2代表读取的asset中的默认图片, 3视频
      */
     public int myType;
 
@@ -67,4 +67,10 @@ public class BeanLsImage {
 
     @DatabaseField
     public long create_time;
+
+    /**
+     * 更新批次号, 每次更新有唯一的批次号, 一次更新中的数据批次号相同
+     */
+    @DatabaseField
+    public long batchNum;
 }

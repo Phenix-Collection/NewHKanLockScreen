@@ -660,7 +660,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 //        }
 
         mTvTitlle.setMaxWidth(mTitleLayoutMaxWidth);
-        if (mCurrentImgBean.myType == 3) {
+        if (mCurrentImgBean.myType == 1) {
             mLayoutCaption.setOnClickListener(null);
             mTvLink.setVisibility(View.GONE);
         } else {

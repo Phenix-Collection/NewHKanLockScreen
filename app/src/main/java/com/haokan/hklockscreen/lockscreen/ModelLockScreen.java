@@ -12,10 +12,9 @@ import com.google.gson.reflect.TypeToken;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.BigImageBean;
-import com.haokan.pubic.cachesys.ACache;
 import com.haokan.pubic.database.BeanCollection;
 import com.haokan.pubic.database.BeanLocalImage;
-import com.haokan.pubic.database.BeanLsImage;
+import com.haokan.pubic.database.BeanNetImage;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.HttpRetrofitManager;
 import com.haokan.pubic.http.HttpStatusManager;
@@ -27,8 +26,8 @@ import com.haokan.pubic.http.response.ResponseEntity;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.JsonUtil;
-import com.haokan.pubic.util.Values;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.Where;
 
 import java.io.File;
 import java.io.InputStream;
@@ -45,7 +44,7 @@ import rx.schedulers.Schedulers;
  * Created by wangzixu on 2017/10/16.
  */
 public class ModelLockScreen {
-    public static File getOfflineDir(Context context) {
+    public static File getNetImageDir(Context context) {
         File filesDir = context.getFilesDir();
         File dir = new File(filesDir, "offline/");
         if (!dir.exists()) {
@@ -68,7 +67,7 @@ public class ModelLockScreen {
      * @param context
      * @param listener
      */
-    public static void getLsData(final Context context, final onDataResponseListener<List<BigImageBean>> listener) {
+    public static void getOfflineNetData(final Context context, final onDataResponseListener<List<BigImageBean>> listener) {
         if (listener == null) {
             return;
         }
@@ -78,21 +77,21 @@ public class ModelLockScreen {
                 //4.0.4改成数据库存储
                 ArrayList<BigImageBean> list = new ArrayList<>();
                 try {
-                    Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanLsImage.class);
-                    List<BeanLsImage> listLs = dao.queryForAll();
+                    Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanNetImage.class);
+                    List<BeanNetImage> listLs = dao.queryForAll();
                     if (listLs != null) {
-                        LogHelper.d("wangzixu", "getLsData listLs = " + list.size());
+                        LogHelper.d("wangzixu", "getOfflineNetData listLs = " + list.size());
                         for (int i = 0; i < listLs.size(); i++) {
                             BigImageBean bigImageBean = BeanConvertUtil.lsImg2BigImageBean(listLs.get(i));
                             list.add(bigImageBean);
                         }
                     } else {
-                        LogHelper.d("wangzixu", "getLsData listLs = null");
+                        LogHelper.d("wangzixu", "getOfflineNetData listLs = null");
                     }
 
 //                    ACache aCache = ACache.get(context);
 //                    Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
-//                    LogHelper.d("wangzixu", "getLsData asObject = " + asObject);
+//                    LogHelper.d("wangzixu", "getOfflineNetData asObject = " + asObject);
 //                    if (asObject != null && asObject instanceof ArrayList) {
 //                        try {
 //                            ArrayList<BigImageBean> tempList = (ArrayList<BigImageBean>) asObject;
@@ -100,7 +99,7 @@ public class ModelLockScreen {
 //                            list.addAll(tempList);
 //                        } catch (Exception e) {
 //                            e.printStackTrace();
-//                            LogHelper.d("wangzixu", "getLsData 强转失败, 老数据强转成mainimageBean");
+//                            LogHelper.d("wangzixu", "getOfflineNetData 强转失败, 老数据强转成mainimageBean");
 //                            ArrayList<MainImageBean> oldList = (ArrayList<MainImageBean>) asObject;
 //                            for (int i = 0; i < oldList.size(); i++) {
 //                                MainImageBean imageBean = oldList.get(i);
@@ -108,7 +107,7 @@ public class ModelLockScreen {
 //                                list.add(bigImageBean);
 //                            }
 //                        }
-//                        LogHelper.d("wangzixu", "getLsData list = " + list.size());
+//                        LogHelper.d("wangzixu", "getOfflineNetData list = " + list.size());
 //                    }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -123,7 +122,7 @@ public class ModelLockScreen {
                                 list.get(i).myType = 2;
                             }
                         }
-                        LogHelper.d("wangzixu", "getLsData 取默认图 list = " + list.size());
+                        LogHelper.d("wangzixu", "getOfflineNetData 取默认图 list = " + list.size());
                     }
 
                     //处理收藏的状态
@@ -205,7 +204,7 @@ public class ModelLockScreen {
                             BeanLocalImage beanLocalImage = list1.get(i);
 
                             BigImageBean imageBean = new BigImageBean();
-                            imageBean.myType = 3;
+                            imageBean.myType = 1;
                             imageBean.imgBigUrl = imageBean.imgSmallUrl = beanLocalImage.imgUrl;
                             imageBean.imgId = beanLocalImage.imgId;
                             imageBean.imgTitle = beanLocalImage.imgTitle;
@@ -245,7 +244,12 @@ public class ModelLockScreen {
                 });
     }
 
-
+    /**
+     * 获取换一换数据
+     * @param context
+     * @param page
+     * @param listener
+     */
     public static void getSwitchData(final Context context, final int page, final onDataResponseListener<List<BigImageBean>> listener) {
         if (listener == null || context == null) {
             return;
@@ -276,8 +280,13 @@ public class ModelLockScreen {
                         if (responseEntity != null && responseEntity.getHeader().resCode == 0) {
                             ResponseBody_Switch body1 = responseEntity.getBody();
                             if (body1.list != null && body1.list.size() > 0) {
-                                processCollect(context, body1.list);
-                                saveSwitchDataSync(context, body1.list);
+                                boolean success = saveSwitchDataSync(context, body1.list);
+                                if (success) {
+                                    processCollect(context, body1.list);
+                                } else {
+                                    responseEntity.getHeader().resCode = -1;
+                                    responseEntity.getHeader().resMsg = "下载图片时全部下载失败";
+                                }
                             }
                         }
                         return responseEntity;
@@ -357,7 +366,7 @@ public class ModelLockScreen {
 //            public void call(Subscriber<? super ArrayList<MainImageBean>> subscriber) {
 //                try {
 //
-//                    File offlineDir = getOfflineDir(context);
+//                    File offlineDir = getNetImageDir(context);
 //                    File[] files = offlineDir.listFiles();
 //                    for (int i = 0; i < files.length; i++) {
 //                        File file = files[i];
@@ -404,12 +413,18 @@ public class ModelLockScreen {
 //                });
 //    }
 
-    private static synchronized void saveSwitchDataSync(Context context, ArrayList<BigImageBean> list) {
+    /**
+     * 换一换的数据存下来
+     * @param context
+     * @param list
+     */
+    private static synchronized boolean saveSwitchDataSync(Context context, ArrayList<BigImageBean> list) {
+        boolean success = false;
         if (list != null && list.size() > 0) {
             ArrayList<BigImageBean> failList = new ArrayList<>();
 
             //存储图片文件
-            File offlineDir = getOfflineDir(context);
+            File offlineDir = getNetImageDir(context);
             for (int i = 0; i < list.size(); i++) {
                 BigImageBean imageBean = list.get(i);
                 String url = imageBean.imgBigUrl;
@@ -445,31 +460,56 @@ public class ModelLockScreen {
             list.removeAll(failList);
 
             //存储数据json
-            ACache aCache = ACache.get(context);
-            aCache.put(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME, list);
+//            ACache aCache = ACache.get(context);
+//            aCache.put(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME, list);
+            //4.0.4改为数据库
+            if (list.size() > 0) {
+                try {
+                    Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanNetImage.class);
+                    long batchNum = System.currentTimeMillis();
 
-            File[] files = offlineDir.listFiles();
-            for (int i = 0; i < files.length; i++) {
-                File file = files[i];
-                boolean delete = true;
+                    for (int i = 0; i < list.size(); i++) {
+                        BigImageBean bigImageBean = list.get(i);
+                        BeanNetImage beanNetImage = BeanConvertUtil.BigImg2NetImageBean(bigImageBean);
+                        beanNetImage.batchNum = batchNum;
 
-                for (int j = 0; j < list.size(); j++) {
-                    BigImageBean imageBean = list.get(j);
-                    if (file.getAbsolutePath().equals(imageBean.imgBigUrl)) {
-                        delete = false;
-                        break;
+                        dao.createOrUpdate(beanNetImage);
                     }
-                }
 
-                if (delete) {
-                    FileUtil.deleteFile(file);
+                    success = true;
+
+                    //清理老的数据
+                    Where where = dao.queryBuilder().where().ne("batchNum", batchNum); //不是本批次的都删除掉
+                    List<BeanNetImage> oldData = where.query();
+
+                    LogHelper.e("wangzixu", "saveSwitchData ----oldData = " + oldData);
+                    if (oldData != null && oldData.size() > 0) {
+                        for (int i = 0; i < oldData.size(); i++) {
+                            BeanNetImage beanNetImage = oldData.get(i);
+                            try { //一个一个的删除, 防止有某个失败了影响下一个
+                                dao.delete(beanNetImage);
+                                File file = new File(beanNetImage.imgBigUrl);
+                                FileUtil.deleteFile(file);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
+
+        return success;
     }
 
 
-
+    /**
+     * 自动更新的数据
+     * @param context
+     * @param listener
+     */
     public static void getAutoUpdateData(final Context context, final onDataResponseListener<List<BigImageBean>> listener) {
         if (listener == null || context == null) {
             return;
@@ -498,7 +538,13 @@ public class ModelLockScreen {
                         if (responseEntity != null && responseEntity.getHeader().resCode == 0) {
                             ResponseBody_Switch body1 = responseEntity.getBody();
                             if (body1.list != null && body1.list.size() > 0) {
-                                saveSwitchDataSync(context, body1.list);
+                                boolean success = saveSwitchDataSync(context, body1.list);
+                                if (success) {
+                                    processCollect(context, body1.list);
+                                } else {
+                                    responseEntity.getHeader().resCode = -1;
+                                    responseEntity.getHeader().resMsg = "下载图片时全部下载失败";
+                                }
                             }
                         }
                         return responseEntity;
