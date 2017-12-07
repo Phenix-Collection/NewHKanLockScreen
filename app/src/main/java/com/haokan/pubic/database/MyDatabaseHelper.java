@@ -141,14 +141,14 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
                 ArrayList<BigImageBean> listNet = new ArrayList<>();
                 ACache aCache = ACache.get(mContext);
                 Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
-                LogHelper.d("wangzixu", "getOfflineNetData asObject = " + asObject);
+                LogHelper.d("wangzixu", "getOfflineNetData onUpgrade asObject = " + asObject);
                 if (asObject != null && asObject instanceof ArrayList) {
                     try {
                         ArrayList<BigImageBean> tempList = (ArrayList<BigImageBean>) asObject;
                         BigImageBean bigImageBean = tempList.get(0); //验证是否会强转失败, 因为4.0.1之前老版本的数据存储的是mainImageBean
                         listNet.addAll(tempList);
                     } catch (Exception e) {
-                        LogHelper.d("wangzixu", "getOfflineNetData 强转失败, 老数据强转成mainimageBean");
+                        LogHelper.d("wangzixu", "getOfflineNetData onUpgrade 强转失败, 老数据强转成mainimageBean");
                         ArrayList<MainImageBean> oldList = (ArrayList<MainImageBean>) asObject;
                         for (int i = 0; i < oldList.size(); i++) {
                             MainImageBean imageBean = oldList.get(i);
@@ -156,7 +156,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper {
                             listNet.add(bigImageBean);
                         }
                     }
-                    LogHelper.d("wangzixu", "getOfflineNetData list = " + listNet.size());
+                    LogHelper.d("wangzixu", "getOfflineNetData onUpgrade listOld = " + listNet.size());
 
                     if (listNet.size() > 0) {
                         long batchNum = System.currentTimeMillis();

@@ -49,6 +49,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Michael Yang（www.yangfuhai.com） update at 2013.08.07
+ * 不同的sdk和java版本, 打包出来的apk, 可能不能相互序列化和反序列化, 所以慎用, 能用数据库的不要用序列化
  */
 public class ACache {
 	public static final int TIME_HOUR = 60 * 60;

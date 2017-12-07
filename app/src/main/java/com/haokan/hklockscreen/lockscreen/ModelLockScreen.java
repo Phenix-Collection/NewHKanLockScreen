@@ -78,11 +78,11 @@ public class ModelLockScreen {
                 ArrayList<BigImageBean> list = new ArrayList<>();
                 try {
                     Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanNetImage.class);
-                    List<BeanNetImage> listLs = dao.queryForAll();
-                    if (listLs != null) {
-                        LogHelper.d("wangzixu", "getOfflineNetData listLs = " + list.size());
-                        for (int i = 0; i < listLs.size(); i++) {
-                            BigImageBean bigImageBean = BeanConvertUtil.lsImg2BigImageBean(listLs.get(i));
+                    List<BeanNetImage> listNet = dao.queryForAll();
+                    if (listNet != null) {
+                        LogHelper.d("wangzixu", "getOfflineNetData listNet = " + listNet.size());
+                        for (int i = 0; i < listNet.size(); i++) {
+                            BigImageBean bigImageBean = BeanConvertUtil.lsImg2BigImageBean(listNet.get(i));
                             list.add(bigImageBean);
                         }
                     } else {
@@ -255,6 +255,7 @@ public class ModelLockScreen {
             return;
         }
 
+        LogHelper.d("wangzixu", "更新图片 getSwitchData 开始");
         listener.onStart();
 
         final RequestEntity<RequestBody_Switch> requestEntity = new RequestEntity<>();
@@ -446,7 +447,7 @@ public class ModelLockScreen {
                         imageBean.imgSmallUrl = imageBean.imgBigUrl;
                     } catch (Exception e) {
                         if (LogHelper.DEBUG) {
-                            LogHelper.e("wangzixu", "saveSwitchData ----下载失败了一张 Glide load i = " + i + " , url = " + url);
+                            LogHelper.d("wangzixu", "saveSwitchData ----下载失败了一张 Glide load i = " + i + " , url = " + url);
                         }
                         failList.add(imageBean);
                         e.printStackTrace();
@@ -482,7 +483,7 @@ public class ModelLockScreen {
                     Where where = dao.queryBuilder().where().ne("batchNum", batchNum); //不是本批次的都删除掉
                     List<BeanNetImage> oldData = where.query();
 
-                    LogHelper.e("wangzixu", "saveSwitchData ----oldData = " + oldData);
+                    LogHelper.d("wangzixu", "saveSwitchData ----oldData = " + oldData);
                     if (oldData != null && oldData.size() > 0) {
                         for (int i = 0; i < oldData.size(); i++) {
                             BeanNetImage beanNetImage = oldData.get(i);
@@ -514,7 +515,7 @@ public class ModelLockScreen {
         if (listener == null || context == null) {
             return;
         }
-
+        LogHelper.d("wangzixu", "更新图片 getAutoUpdateData 开始");
         listener.onStart();
 
         final RequestEntity<RequestBody_Switch> requestEntity = new RequestEntity<>();
