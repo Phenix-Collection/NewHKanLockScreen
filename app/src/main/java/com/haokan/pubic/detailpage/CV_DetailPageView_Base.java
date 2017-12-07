@@ -504,16 +504,16 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             new ModelCollection().delCollection(mContext, mCurrentImgBean, new onDataResponseListener<Integer>() {
                 @Override
                 public void onStart() {
-                    if (mActivity != null) {
-                        mActivity.showLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.showLoadingDialog();
+//                    }
                 }
 
                 @Override
                 public void onDataSucess(Integer integer) {
-                    if (mActivity != null) {
-                        mActivity.dismissLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.dismissLoadingDialog();
+//                    }
                     mCurrentImgBean.isCollect = 0;
                     mCurrentImgBean.collect_num--;
                     refreshCollectNum(mCurrentImgBean);
@@ -527,24 +527,24 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
                 @Override
                 public void onDataEmpty() {
-                    if (mActivity != null) {
-                        mActivity.dismissLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.dismissLoadingDialog();
+//                    }
                 }
 
                 @Override
                 public void onDataFailed(String errmsg) {
-                    if (mActivity != null) {
-                        mActivity.dismissLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.dismissLoadingDialog();
+//                    }
                     ToastManager.showShort(mContext, "取消收藏失败: " + errmsg);
                 }
 
                 @Override
                 public void onNetError() {
-                    if (mActivity != null) {
-                        mActivity.dismissLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.dismissLoadingDialog();
+//                    }
                     ToastManager.showNetErrorToast(mContext);
                 }
             });
@@ -555,9 +555,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             new ModelCollection().addCollection(mContext, bean, new onDataResponseListener<BeanCollection>() {
                 @Override
                 public void onStart() {
-                    if (mActivity != null) {
-                        mActivity.showLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.showLoadingDialog();
+//                    }
                 }
 
                 @Override
@@ -579,24 +579,24 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
                 @Override
                 public void onDataEmpty() {
-                    if (mActivity != null) {
-                        mActivity.dismissLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.dismissLoadingDialog();
+//                    }
                 }
 
                 @Override
                 public void onDataFailed(String errmsg) {
-                    if (mActivity != null) {
-                        mActivity.dismissLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.dismissLoadingDialog();
+//                    }
                     ToastManager.showShort(mContext, "收藏失败: " + errmsg);
                 }
 
                 @Override
                 public void onNetError() {
-                    if (mActivity != null) {
-                        mActivity.dismissLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.dismissLoadingDialog();
+//                    }
                     ToastManager.showNetErrorToast(mContext);
                 }
             });
@@ -989,49 +989,45 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         ModelDownLoadImage.downLoadImg(mContext, bean, new onDataResponseListener<File>() {
             @Override
             public void onStart() {
-                if (mActivity != null) {
-                    mActivity.showLoadingDialog();
-//                    if (mActivity instanceof ActivityLockScreen) {
-//                        //隐藏导航栏
-//                        ((ActivityLockScreen)mActivity).hideNavigation();
-//                    }
-                }
+//                if (mActivity != null) {
+//                    mActivity.showLoadingDialog();
+//                }
             }
 
             @Override
             public void onDataSucess(File file) {
                 LogHelper.d("wangzixu", "downloadImage file = " + file.getAbsolutePath() + ", filelength = " + file.length());
-                App.sMainHanlder.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mActivity != null) {
-                            mActivity.dismissLoadingDialog();
-                        }
-                        ToastManager.showShort(mContext, "下载成功");
-                    }
-                }, 1000);
+//                App.sMainHanlder.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (mActivity != null) {
+//                            mActivity.dismissLoadingDialog();
+//                        }
+//                    }
+//                }, 1000);
+                ToastManager.showShort(mContext, "下载成功");
             }
 
             @Override
             public void onDataEmpty() {
-                if (mActivity != null) {
-                    mActivity.dismissLoadingDialog();
-                }
+//                if (mActivity != null) {
+//                    mActivity.dismissLoadingDialog();
+//                }
             }
 
             @Override
             public void onDataFailed(String errmsg) {
-                if (mActivity != null) {
-                    mActivity.dismissLoadingDialog();
-                }
+//                if (mActivity != null) {
+//                    mActivity.dismissLoadingDialog();
+//                }
                 ToastManager.showShort(mContext, "下载失败 : " + errmsg);
             }
 
             @Override
             public void onNetError() {
-                if (mActivity != null) {
-                    mActivity.dismissLoadingDialog();
-                }
+//                if (mActivity != null) {
+//                    mActivity.dismissLoadingDialog();
+//                }
                 ToastManager.showNetErrorToast(mContext);
             }
         });
