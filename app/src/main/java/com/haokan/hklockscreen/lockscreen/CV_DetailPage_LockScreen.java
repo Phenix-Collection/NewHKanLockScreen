@@ -30,6 +30,7 @@ import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
+import com.haokan.hklockscreen.lockscreenautoupdateimage.ServiceAutoUpdateImage;
 import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
@@ -40,6 +41,7 @@ import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
+import com.haokan.pubic.util.MyDateTimeUtil;
 import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.util.Values;
@@ -84,6 +86,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     //需要把date分成2份, [lockindex, lockindex+5]和[lockindex+6~~因为要往11位置~~lockindex]
     private ArrayList<BigImageBean> mImgDataForAd5 = new ArrayList<>();
     private View mLayoutSwitch;
+    private TextView mAutoUpdateSignView;
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
         this(context, null);
@@ -99,11 +102,21 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         View view = LayoutInflater.from(mContext).inflate(R.layout.cv_detailpage_lockscreen, this, true);
 //        addView(view);
         initViews(view);
-        loadData(false);
+        loadData();
     }
 
     private void initViews(View rootView) {
         mBottomBack.setVisibility(GONE);
+
+        mAutoUpdateSignView = (TextView) rootView.findViewById(R.id.autoupdatesign);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String time = preferences.getString(ServiceAutoUpdateImage.KEY_AUTOUPDATA_TIME, "----");
+        String curTime = MyDateTimeUtil.getCurrentSimpleData();
+        if (time.equals(curTime)) {
+            setUpdateSign(0);
+        } else {
+            setUpdateSign(1);
+        }
 
         View layoutTop = rootView.findViewById(R.id.lockscreen_layouttop); //换一换
         mLayoutMainTop.setVisibility(GONE);
@@ -135,10 +148,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 } else if ("com.haokan.receiver.autoupdateimage".equals(action)) { //自动更新了图片
                     LogHelper.d("wangzixu", "autoupdate 收到了更新广播");
                     LogHelper.writeLog(mContext, "autoupdate 收到了更新广播");
-                    loadSwitchOfflineData(true);
+                    loadOfflineNetData(true);
                 } else if ("com.haokan.receiver.localimagechange".equals(action)) { //本地相册变化了
                     LogHelper.d("wangzixu", "localimagechange 本地相册变化");
-                    loadData(true);
+                    loadLocalImgDate(true);
                 } else if (Intent.ACTION_SCREEN_ON.equals(action)) {
                     if (mIsLocked && mCurrentImgBean != null) {
                         HashMap<String, String> map = new HashMap<>();
@@ -163,6 +176,20 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         mContext.registerReceiver(mReceiver, filter);
 
         AlarmUtil.setOfflineAlarm(mContext);
+    }
+
+    public void setUpdateSign(int state) {
+        if (state == 0) {
+            mAutoUpdateSignView.setText("当天更新完了  = " + MyDateTimeUtil.getCurrentSimpleData());
+        } else if (state == 1) {
+            mAutoUpdateSignView.setText("当天还没更新  = " + MyDateTimeUtil.getCurrentSimpleData());
+        } else if (state == 2) {
+            mAutoUpdateSignView.setText("当天开始更新...  = " + MyDateTimeUtil.getCurrentSimpleData());
+        } else if (state == 3) {
+            mAutoUpdateSignView.setText("当天更新失败  = " + MyDateTimeUtil.getCurrentSimpleData());
+        } else if (state == 4) {
+            mAutoUpdateSignView.setText("当天触发了闹铃  = " + MyDateTimeUtil.getCurrentSimpleData());
+        }
     }
 
     private OnClickListener mLockClickListener = new OnClickListener() {
@@ -432,7 +459,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
      */
     public void intoLockScreenState(boolean scrollNext) {
         if (mData.size() == 0) {
-            loadData(false);
+            loadData();
             return;
         }
 
@@ -741,7 +768,11 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         }
     }
 
-    public void loadSwitchOfflineData(final boolean showOfflineImage) {
+    /**
+     * 刷新完后是显示本地的数据, 还是显示网络图片
+     * @param showOfflineImage
+     */
+    public void loadOfflineNetData(final boolean showOfflineImage) {
         ModelLockScreen.getOfflineNetData(mContext, new onDataResponseListener<List<BigImageBean>>() {
             @Override
             public void onStart() {
@@ -764,20 +795,21 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
             @Override
             public void onDataFailed(String errmsg) {
-                LogHelper.d("wangzixu", "loadSwitchOfflineData onDataFailed errmsg = " + errmsg);
+                LogHelper.d("wangzixu", "loadOfflineNetData onDataFailed errmsg = " + errmsg);
             }
 
             @Override
             public void onNetError() {
-                LogHelper.d("wangzixu", "loadSwitchOfflineData onNetError");
+                LogHelper.d("wangzixu", "loadOfflineNetData onNetError");
             }
         });
     }
 
     /**
-     * @param onlyLocalImage  是否只加载本地图片
+     * 本地相册, 是否只加载本地图片
+     * @param onlyLocalImage
      */
-    public void loadData(final boolean onlyLocalImage) {
+    public void loadLocalImgDate(final boolean onlyLocalImage) {
         ModelLockScreen.getLocalImg(mContext, new onDataResponseListener<List<BigImageBean>>() {
             @Override
             public void onStart() {
@@ -791,7 +823,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 if (onlyLocalImage) {
                     refreshData(false);
                 } else {
-                    loadSwitchOfflineData(false);
+                    loadOfflineNetData(false);
                 }
             }
 
@@ -801,7 +833,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 if (onlyLocalImage) {
                     refreshData(false);
                 } else {
-                    loadSwitchOfflineData(false);
+                    loadOfflineNetData(false);
                 }
             }
 
@@ -811,7 +843,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 if (onlyLocalImage) {
                     //nothing
                 } else {
-                    loadSwitchOfflineData(false);
+                    loadOfflineNetData(false);
                 }
             }
 
@@ -821,10 +853,17 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 if (onlyLocalImage) {
                     //nothing
                 } else {
-                    loadSwitchOfflineData(false);
+                    loadOfflineNetData(false);
                 }
             }
         });
+    }
+
+    /**
+     * 加载数据, 包括本地的和网络的
+     */
+    public void loadData() {
+        loadLocalImgDate(false);
     }
 
     @Override

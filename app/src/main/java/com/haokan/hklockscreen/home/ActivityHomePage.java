@@ -66,6 +66,9 @@ public class ActivityHomePage extends ActivityBase {
 
             String curTime = MyDateTimeUtil.getCurrentSimpleData();
             preferences.edit().putString(ServiceAutoUpdateImage.KEY_AUTOUPDATA_TIME, curTime).apply();
+            if (App.sHaokanLockView != null) {
+                App.sHaokanLockView.setUpdateSign(0);
+            }
         } else {
             App.sMainHanlder.postDelayed(mPermissionRun, 600);
         }

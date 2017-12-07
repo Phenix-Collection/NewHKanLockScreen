@@ -777,8 +777,12 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
 
     protected void notifyLocalImageChange() {
         //通知锁屏更新图片
-        Intent intent = new Intent("com.haokan.receiver.localimagechange");
-        sendBroadcast(intent);
+//        Intent intent = new Intent("com.haokan.receiver.localimagechange");
+//        sendBroadcast(intent);
+
+        if (App.sHaokanLockView != null) {
+            App.sHaokanLockView.loadLocalImgDate(true);
+        }
     }
 
     //权限相关begin*****

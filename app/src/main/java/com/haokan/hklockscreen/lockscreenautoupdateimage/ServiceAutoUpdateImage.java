@@ -36,6 +36,10 @@ public class ServiceAutoUpdateImage extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (App.sHaokanLockView != null) {
+            App.sHaokanLockView.setUpdateSign(4);
+        }
+
         if (mIsSwitching) {
             LogHelper.d("wangzixu", "WiFiChangeReceiver autoupdate mIsSwitching return");
             return super.onStartCommand(intent, flags, startId);
@@ -54,7 +58,9 @@ public class ServiceAutoUpdateImage extends Service {
         String curTime = MyDateTimeUtil.getCurrentSimpleData();
         if (time.equals(curTime)) {
             LogHelper.d("wangzixu", "autoupdate onStartCommand 当天已经更新");
-
+            if (App.sHaokanLockView != null) {
+                App.sHaokanLockView.setUpdateSign(0);
+            }
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
@@ -107,6 +113,9 @@ public class ServiceAutoUpdateImage extends Service {
             @Override
             public void onStart() {
                 mIsSwitching = true;
+                if (App.sHaokanLockView != null) {
+                    App.sHaokanLockView.setUpdateSign(2);
+                }
 
                 Intent maidianIntent = new Intent(ServiceAutoUpdateImage.this, UmengMaiDianActivity.class);
                 maidianIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -114,6 +123,7 @@ public class ServiceAutoUpdateImage extends Service {
                 //maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_ARGS, new String[]{"remarks"});
                 //maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_VALUES, new String[]{"关闭自动更新"});
                 startActivity(maidianIntent);
+
             }
 
             @Override
@@ -129,7 +139,8 @@ public class ServiceAutoUpdateImage extends Service {
                     App.sHaokanLockView = new CV_DetailPage_LockScreen(getApplicationContext());
                 }
 
-                App.sHaokanLockView.loadSwitchOfflineData(true); //自动更新, 不通过广播出发, 直接调用即可
+                App.sHaokanLockView.loadOfflineNetData(true); //自动更新, 不通过广播出发, 直接调用即可
+                App.sHaokanLockView.setUpdateSign(0);
 //                Intent intent = new Intent("com.haokan.receiver.autoupdateimage");
 //                sendBroadcast(intent);
 
@@ -150,6 +161,10 @@ public class ServiceAutoUpdateImage extends Service {
             @Override
             public void onDataEmpty() {
                 mIsSwitching = false;
+                if (App.sHaokanLockView != null) {
+                    App.sHaokanLockView.setUpdateSign(3);
+                }
+
                 LogHelper.d("wangzixu", "autoupdate autoUpdateData onDataEmpty");
                 LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData onDataEmpty");
                 App.sMainHanlder.post(new Runnable() {
@@ -163,6 +178,11 @@ public class ServiceAutoUpdateImage extends Service {
             @Override
             public void onDataFailed(String errmsg) {
                 mIsSwitching = false;
+
+                if (App.sHaokanLockView != null) {
+                    App.sHaokanLockView.setUpdateSign(3);
+                }
+
                 LogHelper.d("wangzixu", "autoupdate autoUpdateData errmsg = " + errmsg);
                 LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData errmsg = " + errmsg);
                 App.sMainHanlder.post(new Runnable() {
@@ -176,6 +196,10 @@ public class ServiceAutoUpdateImage extends Service {
             @Override
             public void onNetError() {
                 mIsSwitching = false;
+                if (App.sHaokanLockView != null) {
+                    App.sHaokanLockView.setUpdateSign(3);
+                }
+
                 LogHelper.d("wangzixu", "autoupdate autoUpdateData onNetError");
                 LogHelper.writeLog(getApplicationContext(), "autoupdate autoUpdateData onNetError");
                 App.sMainHanlder.post(new Runnable() {
