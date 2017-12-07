@@ -16,7 +16,7 @@ import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
-import com.haokan.hklockscreen.mycollection.BeanCollection;
+import com.haokan.pubic.database.BeanCollection;
 import com.haokan.hklockscreen.recommendpagedetail.ActivityDetailPageRecommend;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.pubic.base.ActivityBase;

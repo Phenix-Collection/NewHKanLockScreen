@@ -3,8 +3,9 @@ package com.haokan.pubic.bean;
 import android.text.TextUtils;
 
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
-import com.haokan.hklockscreen.mycollection.BeanCollection;
+import com.haokan.pubic.database.BeanCollection;
 import com.haokan.hklockscreen.recommendpageland.BeanRecommendPageLand;
+import com.haokan.pubic.database.BeanLsImage;
 
 /**
  * Created by wangzixu on 2017/10/26.
@@ -108,6 +109,53 @@ public class BeanConvertUtil {
         if (TextUtils.isEmpty(fromBean.imgId) || fromBean.imgId.startsWith(ModelLocalImage.sLocalImgIdPreffix)) {
             imgBean.myType = 3;
         }
+        return imgBean;
+    }
+
+    public static BigImageBean lsImg2BigImageBean(BeanLsImage fromBean) {
+        BigImageBean imgBean = new BigImageBean();
+        imgBean.imgId = fromBean.imgId;
+        imgBean.myType = fromBean.myType;
+        imgBean.imgSmallUrl = fromBean.imgSmallUrl;
+        imgBean.imgBigUrl = fromBean.imgBigUrl;
+        imgBean.imgDesc = fromBean.imgDesc;
+        imgBean.imgTitle = fromBean.imgTitle;
+        imgBean.linkTitle = fromBean.linkTitle;
+        imgBean.linkUrl = fromBean.linkUrl;
+        imgBean.typeId = fromBean.typeId;
+        imgBean.typeName = fromBean.typeName;
+        imgBean.shareUrl = fromBean.shareUrl;
+        imgBean.cpId = fromBean.cpId;
+        imgBean.cpName = fromBean.cpName;
+        imgBean.jump_id = fromBean.imgId;
+        imgBean.collect_num = fromBean.collect_num;
+        imgBean.share_num = fromBean.share_num;
+        imgBean.commentNum = fromBean.commentNum;
+        imgBean.jump_id = fromBean.jump_id;
+        return imgBean;
+    }
+
+    public static BeanLsImage BigImg2LsImageBean(BigImageBean fromBean) {
+        BeanLsImage imgBean = new BeanLsImage();
+        imgBean.imgId = fromBean.imgId;
+        imgBean.myType = fromBean.myType;
+        imgBean.imgSmallUrl = fromBean.imgSmallUrl;
+        imgBean.imgBigUrl = fromBean.imgBigUrl;
+        imgBean.imgDesc = fromBean.imgDesc;
+        imgBean.imgTitle = fromBean.imgTitle;
+        imgBean.linkTitle = fromBean.linkTitle;
+        imgBean.linkUrl = fromBean.linkUrl;
+        imgBean.typeId = fromBean.typeId;
+        imgBean.typeName = fromBean.typeName;
+        imgBean.shareUrl = fromBean.shareUrl;
+        imgBean.cpId = fromBean.cpId;
+        imgBean.cpName = fromBean.cpName;
+        imgBean.jump_id = fromBean.imgId;
+        imgBean.collect_num = fromBean.collect_num;
+        imgBean.share_num = fromBean.share_num;
+        imgBean.commentNum = fromBean.commentNum;
+        imgBean.jump_id = fromBean.jump_id;
+        imgBean.create_time = System.currentTimeMillis();
         return imgBean;
     }
 }

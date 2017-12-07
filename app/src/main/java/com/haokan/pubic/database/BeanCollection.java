@@ -1,4 +1,4 @@
-package com.haokan.hklockscreen.mycollection;
+package com.haokan.pubic.database;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,6 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by wangzixu on 2017/10/26.
+ * 收藏表
  */
 @DatabaseTable(tableName = "table_collect")
 public class BeanCollection implements Parcelable {

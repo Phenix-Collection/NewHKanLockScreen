@@ -1,10 +1,11 @@
-package com.haokan.hklockscreen.localDICM;
+package com.haokan.pubic.database;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * Created by wangzixu on 2017/10/26.
+ * 本地图片表
  */
 @DatabaseTable(tableName = "table_localimg")
 public class BeanLocalImage{

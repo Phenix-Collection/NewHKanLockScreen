@@ -10,6 +10,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.BigImageBean;
+import com.haokan.pubic.database.BeanCollection;
 import com.haokan.pubic.util.StatusBarUtil;
 
 import java.util.ArrayList;

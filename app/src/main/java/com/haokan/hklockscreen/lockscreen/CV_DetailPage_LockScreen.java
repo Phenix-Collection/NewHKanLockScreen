@@ -742,7 +742,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     public void loadSwitchOfflineData(final boolean showOfflineImage) {
-        ModelLockScreen.getOffineSwitchData(mContext, new onDataResponseListener<List<BigImageBean>>() {
+        ModelLockScreen.getLsData(mContext, new onDataResponseListener<List<BigImageBean>>() {
             @Override
             public void onStart() {
             }

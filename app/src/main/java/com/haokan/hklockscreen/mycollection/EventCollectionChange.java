@@ -1,5 +1,7 @@
 package com.haokan.hklockscreen.mycollection;
 
+import com.haokan.pubic.database.BeanCollection;
+
 /**
  * Created by wangzixu on 2017/10/26.
  */

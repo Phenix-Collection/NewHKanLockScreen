@@ -3,6 +3,7 @@ package com.haokan.hklockscreen.localDICM;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.haokan.pubic.database.BeanLocalImage;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.j256.ormlite.dao.Dao;

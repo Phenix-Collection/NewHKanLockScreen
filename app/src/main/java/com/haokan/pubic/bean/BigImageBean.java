@@ -30,10 +30,9 @@ public class BigImageBean implements Serializable{
     public int share_num;
 
     /**
-     * 自己定义的类型, 0代表离线图片, 1预留字段, 2代表读取的asset中的默认图片, 3代表添加的本地相册图片
+     * 锁屏图片的类型, 0代表通过网络图, 1本地相册图, 2代表读取的asset中的默认图片, 3视频
      */
     public int myType;
-    public int removeFromLock; //是否已经从锁屏上换掉的大图, 0否, 1是
 
     public BeanAdRes mBeanAdRes; //广告数据
  }

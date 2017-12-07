@@ -8,6 +8,7 @@ import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.pubic.bean.BigImageBean;
+import com.haokan.pubic.database.BeanCollection;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;

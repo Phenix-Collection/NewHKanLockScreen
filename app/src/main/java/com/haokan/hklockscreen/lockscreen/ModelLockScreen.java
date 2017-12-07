@@ -9,13 +9,13 @@ import android.text.TextUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.reflect.TypeToken;
-import com.haokan.hklockscreen.localDICM.BeanLocalImage;
-import com.haokan.hklockscreen.mycollection.BeanCollection;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.BigImageBean;
-import com.haokan.pubic.bean.MainImageBean;
 import com.haokan.pubic.cachesys.ACache;
+import com.haokan.pubic.database.BeanCollection;
+import com.haokan.pubic.database.BeanLocalImage;
+import com.haokan.pubic.database.BeanLsImage;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.HttpRetrofitManager;
 import com.haokan.pubic.http.HttpStatusManager;
@@ -63,51 +63,56 @@ public class ModelLockScreen {
         return dir;
     }
 
-    public static void getOffineSwitchData(final Context context, final onDataResponseListener<List<BigImageBean>> listener) {
+    /**
+     * 获取锁屏上的图片数据
+     * @param context
+     * @param listener
+     */
+    public static void getLsData(final Context context, final onDataResponseListener<List<BigImageBean>> listener) {
         if (listener == null) {
             return;
         }
         Observable.create(new Observable.OnSubscribe<ArrayList<BigImageBean>>() {
             @Override
             public void call(Subscriber<? super ArrayList<BigImageBean>> subscriber) {
+                //4.0.4改成数据库存储
                 ArrayList<BigImageBean> list = new ArrayList<>();
                 try {
-                    ACache aCache = ACache.get(context);
-                    Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
-                    LogHelper.d("wangzixu", "getOffineSwitchData asObject = " + asObject);
-                    if (asObject != null && asObject instanceof ArrayList) {
-                        try {
-                            ArrayList<BigImageBean> tempList = (ArrayList<BigImageBean>) asObject;
-                            BigImageBean bigImageBean = tempList.get(0); //验证是否会强转失败, 因为老的数据存储的是mainImageBean
-                            list.addAll(tempList);
-                        } catch (Exception e) {
-//                            e.printStackTrace();
-                            LogHelper.d("wangzixu", "getOffineSwitchData 强转失败, 老数据强转成mainimageBean");
-                            ArrayList<MainImageBean> oldList = (ArrayList<MainImageBean>) asObject;
-                            for (int i = 0; i < oldList.size(); i++) {
-                                MainImageBean imageBean = oldList.get(i);
-                                BigImageBean bigImageBean = BeanConvertUtil.mainImageBean2BigImageBean(imageBean);
-                                list.add(bigImageBean);
-                            }
+                    Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanLsImage.class);
+                    List<BeanLsImage> listLs = dao.queryForAll();
+                    if (listLs != null) {
+                        LogHelper.d("wangzixu", "getLsData listLs = " + list.size());
+                        for (int i = 0; i < listLs.size(); i++) {
+                            BigImageBean bigImageBean = BeanConvertUtil.lsImg2BigImageBean(listLs.get(i));
+                            list.add(bigImageBean);
                         }
-                        LogHelper.d("wangzixu", "getOffineSwitchData list = " + list.size());
+                    } else {
+                        LogHelper.d("wangzixu", "getLsData listLs = null");
                     }
+
+//                    ACache aCache = ACache.get(context);
+//                    Object asObject = aCache.getAsObject(Values.AcacheKey.KEY_ACACHE_OFFLINE_JSONNAME);
+//                    LogHelper.d("wangzixu", "getLsData asObject = " + asObject);
+//                    if (asObject != null && asObject instanceof ArrayList) {
+//                        try {
+//                            ArrayList<BigImageBean> tempList = (ArrayList<BigImageBean>) asObject;
+//                            BigImageBean bigImageBean = tempList.get(0); //验证是否会强转失败, 因为4.0.1之前老版本的数据存储的是mainImageBean
+//                            list.addAll(tempList);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            LogHelper.d("wangzixu", "getLsData 强转失败, 老数据强转成mainimageBean");
+//                            ArrayList<MainImageBean> oldList = (ArrayList<MainImageBean>) asObject;
+//                            for (int i = 0; i < oldList.size(); i++) {
+//                                MainImageBean imageBean = oldList.get(i);
+//                                BigImageBean bigImageBean = BeanConvertUtil.mainImageBean2BigImageBean(imageBean);
+//                                list.add(bigImageBean);
+//                            }
+//                        }
+//                        LogHelper.d("wangzixu", "getLsData list = " + list.size());
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-//                if (list != null && list.size() > 0) {
-//                    for (int i = 0; i < list.size(); i++) {
-//                        BigImageBean bean = list.get(i);
-//                        bean.myType = 0;
-//                        if (!TextUtils.isEmpty(bean.localUrl)) {
-//                            File file = new File(bean.localUrl);
-//                            if (file.exists()) {
-//                                bean.myType = 1;
-//                            }
-//                        }
-//                    }
-//                }
 
                 try {
                     if (list == null || list.size() == 0) {
@@ -118,8 +123,9 @@ public class ModelLockScreen {
                                 list.get(i).myType = 2;
                             }
                         }
-                        LogHelper.d("wangzixu", "getOffineSwitchData 取默认图 list = " + list.size());
+                        LogHelper.d("wangzixu", "getLsData 取默认图 list = " + list.size());
                     }
+
                     //处理收藏的状态
                     processCollect(context, list);
 

@@ -33,7 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.mycollection.BeanCollection;
+import com.haokan.pubic.database.BeanCollection;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
 import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
