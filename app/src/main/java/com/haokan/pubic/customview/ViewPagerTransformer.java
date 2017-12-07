@@ -2,6 +2,7 @@ package com.haokan.pubic.customview;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by wangzixu on 2017/1/17.
@@ -91,7 +92,8 @@ public class ViewPagerTransformer {
      * 图片视差滚动
      */
     public static class ParallaxTransformer implements ViewPager.PageTransformer {
-        private float PARALLAX_COEFFICIENT = -0.5f;
+        private float PARALLAX_COEFFICIENT = 0.75f;
+        private float mScrollXOffset = 0;
         //视差滚动其中的内容
         private int mContentViewId;
 
@@ -101,11 +103,15 @@ public class ViewPagerTransformer {
 
         @Override
         public void transformPage(View view, float position) {
-            float scrollXOffset = view.getWidth() * PARALLAX_COEFFICIENT;
-            View page = view.findViewById(mContentViewId);
+            if (mScrollXOffset == 0) {
+                mScrollXOffset = view.getWidth() * PARALLAX_COEFFICIENT;
+            }
+
+//            View page = view.findViewById(mContentViewId);
+            View page = ((ViewGroup)view).getChildAt(0);
 
             if (page != null && position >= -1 && position <= 1) { // [-1,1]
-                page.setTranslationX(scrollXOffset * position);
+                page.setTranslationX(-mScrollXOffset * position);
             }
         }
     }
