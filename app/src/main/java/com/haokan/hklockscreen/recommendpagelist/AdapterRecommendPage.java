@@ -12,8 +12,13 @@ import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.haokanAd.BeanAdRes;
 import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
+import com.haokan.hklockscreen.mycollection.EventRecommendCollectionChange;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
+import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -25,6 +30,7 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     private Context mContext;
     private CV_RecommendPage mRecommendPage;
     private int mTopHide1, mTopHide2; //滑动到接近顶部时, view的图说要隐藏, 这俩值就是隐藏的范围
+    private ArrayList<ViewHolder> mHolders = new ArrayList<>(); //当前所有可见的条目
 
     public AdapterRecommendPage(Context context, ArrayList<BeanRecommendItem> data, CV_RecommendPage recommendPage) {
         mContext = context;
@@ -32,6 +38,45 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
         mRecommendPage = recommendPage;
         mTopHide1 = DisplayUtil.dip2px(context, 115);
         mTopHide2 = DisplayUtil.dip2px(context, 170);
+
+        EventBus.getDefault().register(this);
+    }
+
+    public void onDestory() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(EventRecommendCollectionChange event) {
+        try {
+            if (event != null) {
+                BeanRecommendItem beanRecommendItem = null;
+                for (int i = 0; i < mData.size(); i++) {
+                    BeanRecommendItem item = mData.get(i);
+                    if (item.GroupId.equals(event.imgId)) {
+                        if (event.mIsAdd) {
+                            item.favNum++;
+                        } else {
+                            item.favNum--;
+                        }
+                        beanRecommendItem = item;
+                        break;
+                    }
+                }
+                if (beanRecommendItem != null) { //说明有个item被改变了, 需要查看这个item是否正在显示着
+                    for (int i = 0; i < mHolders.size(); i++) {
+                        ViewHolder holder = mHolders.get(i);
+                        if (holder.mBean == beanRecommendItem && holder instanceof Item0ViewHolder) {
+                            Item0ViewHolder itemHolder = (Item0ViewHolder) holder;
+                            itemHolder.mTvCollectNum.setText(beanRecommendItem.favNum+"");
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogHelper.e("wangzixu", "EventRecommendCollectionChange Exception e = " + e.getMessage());
+        }
     }
 
     //-------content begin---------------------
@@ -95,6 +140,7 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     //holder begin------------------------------
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View bottomLayout;
+        public BeanRecommendItem mBean;
         public ViewHolder(View itemView) {
             super(itemView);
         }
@@ -104,7 +150,6 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     }
 
     class Item0ViewHolder extends ViewHolder implements View.OnClickListener {
-        private BeanRecommendItem mBean;
         public ImageView mImageView;
         public TextView mTvTitle;
         public TextView mTvCollectNum;
@@ -176,7 +221,6 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     }
 
     class Item1ViewHolder extends ViewHolder implements View.OnClickListener {
-        private BeanRecommendItem mBean;
         ImageView imageView;
         TextView tvTitle;
 
@@ -227,10 +271,10 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     }
 
     //-----
-    private ArrayList<ViewHolder> mHolders = new ArrayList<>();
     public void clearHolder() {
         mHolders.clear();
     }
+
     public void onScroll() {
 //        LogHelper.d("wangzixu", "adapterRecom onScroll holdesize = " + mHolders.size());
         for (int i = 0; i < mHolders.size(); i++) {

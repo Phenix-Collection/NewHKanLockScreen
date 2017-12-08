@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.recommendpageland.BeanRecommendPageLand;
+import com.haokan.hklockscreen.recommendpageland.BeanRecommendLandPage;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.BigImageBean;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class ActivityDetailPageRecommend extends ActivityBase{
     public static final String KEY_INTENT_GROUDDATE = "groupdate";
     public static final String KEY_INTENT_POSITION = "initpos";
-    protected ArrayList<BeanRecommendPageLand> mData = new ArrayList<>();
+    protected ArrayList<BeanRecommendLandPage> mData = new ArrayList<>();
     private CV_DetailPage_Recommend mCv;
 
     @Override
@@ -52,9 +52,9 @@ public class ActivityDetailPageRecommend extends ActivityBase{
 
         ArrayList<BigImageBean> mainList = new ArrayList<>();
         for (int i = 0; i < mData.size(); i++) {
-            BeanRecommendPageLand beanRecommendPageLand = mData.get(i);
+            BeanRecommendLandPage beanRecommendPageLand = mData.get(i);
             if (beanRecommendPageLand.myType == 0) {
-                BigImageBean mainImageBean = BeanConvertUtil.recommendLandBean2MainImageBean(beanRecommendPageLand);
+                BigImageBean mainImageBean = BeanConvertUtil.recommendLandBean2BigImageBean(beanRecommendPageLand);
                 mainList.add(mainImageBean);
             }
         }

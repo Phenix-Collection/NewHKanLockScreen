@@ -14,5 +14,5 @@ public class ResponseBody_ImgGroupList {
      * 是否收藏 0没有收藏，1已经收藏
      */
     public int isCollect;
-    public ArrayList<BeanRecommendPageLand> list;
+    public ArrayList<BeanRecommendLandPage> list;
 }

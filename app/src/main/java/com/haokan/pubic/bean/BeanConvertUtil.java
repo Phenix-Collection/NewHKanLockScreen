@@ -3,8 +3,9 @@ package com.haokan.pubic.bean;
 import android.text.TextUtils;
 
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
+import com.haokan.hklockscreen.recommendpageland.BeanRecommendLandPage;
+import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.pubic.database.BeanCollection;
-import com.haokan.hklockscreen.recommendpageland.BeanRecommendPageLand;
 import com.haokan.pubic.database.BeanNetImage;
 
 /**
@@ -87,7 +88,7 @@ public class BeanConvertUtil {
         return imgBean;
     }
 
-    public static BigImageBean recommendLandBean2MainImageBean(BeanRecommendPageLand fromBean) {
+    public static BigImageBean recommendLandBean2BigImageBean(BeanRecommendLandPage fromBean) {
         BigImageBean imgBean = new BigImageBean();
         imgBean.imgId = fromBean.imgId;
         imgBean.imgSmallUrl = fromBean.sUrl;
@@ -157,5 +158,41 @@ public class BeanConvertUtil {
         imgBean.jump_id = fromBean.jump_id;
         imgBean.create_time = System.currentTimeMillis();
         return imgBean;
+    }
+
+    public static BeanCollection recommendItem2CollectionBean(BeanRecommendItem imageBean) {
+        BeanCollection collectionBean = new BeanCollection();
+        collectionBean.imgId = imageBean.GroupId;
+        collectionBean.imgSmallUrl = imageBean.cover;
+        collectionBean.imgBigUrl = imageBean.cover;
+        collectionBean.imgDesc = imageBean.imgDesc;
+        collectionBean.imgTitle = imageBean.imgTitle;
+        collectionBean.linkTitle = "";
+        collectionBean.linkUrl = imageBean.urlClick;
+        collectionBean.typeId = "";
+        collectionBean.typeName = imageBean.typeName;
+        collectionBean.shareUrl = imageBean.urlClick;
+        collectionBean.commentNum = 0;
+        collectionBean.cpId = "";
+        collectionBean.cpName = "";
+        collectionBean.collect_num = imageBean.favNum;
+        collectionBean.share_num = imageBean.shareNum;
+
+        collectionBean.create_time = System.currentTimeMillis();
+        return collectionBean;
+    }
+
+    public static BeanRecommendItem collectionBean2RecommendItem(BeanCollection fromBean) {
+        BeanRecommendItem bean = new BeanRecommendItem();
+        bean.GroupId = fromBean.imgId;
+        bean.cover = fromBean.imgBigUrl;
+        bean.imgDesc = fromBean.imgDesc;
+        bean.imgTitle = fromBean.imgTitle;
+        bean.typeName = fromBean.typeName;
+        bean.urlClick = fromBean.shareUrl;
+        bean.favNum = fromBean.collect_num;
+        bean.shareNum = fromBean.share_num;
+
+        return bean;
     }
 }

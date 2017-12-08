@@ -18,11 +18,11 @@ import java.util.ArrayList;
  * Created by wangzixu on 2016/8/18.
  */
 public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAdapter<AdapterLandPageRecommend.ViewHolder> {
-    private ArrayList<BeanRecommendPageLand> mData = new ArrayList<>();
+    private ArrayList<BeanRecommendLandPage> mData = new ArrayList<>();
     private ActivityLandPageRecommend mContext;
     private int mItemW;
 
-    public AdapterLandPageRecommend(ActivityLandPageRecommend context, ArrayList<BeanRecommendPageLand> data) {
+    public AdapterLandPageRecommend(ActivityLandPageRecommend context, ArrayList<BeanRecommendLandPage> data) {
         mContext = context;
         mData = data;
         mItemW = context.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(context,38);
@@ -110,7 +110,7 @@ public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAda
     }
 
     class Item0ViewHolder extends ViewHolder implements View.OnClickListener {
-        private BeanRecommendPageLand mBean;
+        private BeanRecommendLandPage mBean;
         ImageView imageView;
         TextView tvTitle;
         TextView tvDesc;
@@ -158,7 +158,7 @@ public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAda
     }
 
     public class ItemHeaderViewHolder extends ViewHolder{
-        private BeanRecommendPageLand mBean;
+        private BeanRecommendLandPage mBean;
         public TextView mTvTitle;
         public ItemHeaderViewHolder(View itemView) {
             super(itemView);
@@ -180,7 +180,7 @@ public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAda
     }
 
     public class Item1ViewHolder extends ViewHolder implements View.OnClickListener {
-        private BeanRecommendPageLand mBean;
+        private BeanRecommendLandPage mBean;
         public Item1ViewHolder(View itemView) {
             super(itemView);
             itemView.findViewById(R.id.iv_image).setOnClickListener(this);
@@ -198,7 +198,7 @@ public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAda
     }
 
     public class Item2ViewHolder extends ViewHolder implements View.OnClickListener {
-        private BeanRecommendPageLand mBean;
+        private BeanRecommendLandPage mBean;
         private ImageView mImageView;
         public Item2ViewHolder(View itemView) {
             super(itemView);

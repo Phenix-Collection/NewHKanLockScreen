@@ -136,6 +136,15 @@ public class CV_RecommendPage extends FrameLayout{
         });
     }
 
+    /**
+     * 使用此view的activity, 务必在合适的时机调用此方法, 否则将有资源无法释放
+     */
+    public void onDestory() {
+        if (mAdapter != null) {
+            mAdapter.onDestory();
+        }
+    }
+
     //activity调用, 用来调用广告的曝光上报
     public void onResume() {
         if (mAdapter != null) {

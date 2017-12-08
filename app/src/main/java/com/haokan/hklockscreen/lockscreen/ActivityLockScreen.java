@@ -814,6 +814,9 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
+        if (mLockRecommendPage != null) {
+            mLockRecommendPage.onDestory();
+        }
         if (App.sHaokanLockView != null && App.sHaokanLockView.getParent() != null && App.sHaokanLockView.getParent() == mLockScreenLayout) {
 //            App.sHaokanLockView.setActivity(null);
 //            App.sHaokanLockView.setOnLockScreenStateListener(null);

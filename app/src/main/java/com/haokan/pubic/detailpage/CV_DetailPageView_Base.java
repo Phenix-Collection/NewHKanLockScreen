@@ -501,7 +501,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 3, mCurrentImgBean.isCollect != 0 ? "0" : "1", System.currentTimeMillis());
 
         if (mCurrentImgBean.isCollect != 0) {
-            new ModelCollection().delCollection(mContext, mCurrentImgBean, new onDataResponseListener<Integer>() {
+            new ModelCollection().delCollection(mContext, mCurrentImgBean.imgId, new onDataResponseListener<Integer>() {
                 @Override
                 public void onStart() {
 //                    if (mActivity != null) {
@@ -562,9 +562,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
                 @Override
                 public void onDataSucess(BeanCollection collectionBean) {
-                    if (mActivity != null) {
-                        mActivity.dismissLoadingDialog();
-                    }
+//                    if (mActivity != null) {
+//                        mActivity.dismissLoadingDialog();
+//                    }
                     mCurrentImgBean.isCollect = 1;
                     mCurrentImgBean.collect_num++;
                     refreshCollectNum(mCurrentImgBean);

@@ -7,7 +7,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
-import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.database.BeanCollection;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
@@ -122,7 +121,7 @@ public class ModelCollection {
                 });
     }
 
-    public void delCollection(final Context context, final BigImageBean bean, final onDataResponseListener<Integer> listener) {
+    public void delCollection(final Context context, final String imgId, final onDataResponseListener<Integer> listener) {
         if (listener == null || context == null) {
             return;
         }
@@ -133,14 +132,14 @@ public class ModelCollection {
             public void call(Subscriber<? super Integer> subscriber) {
                 try {
                     Dao dao = MyDatabaseHelper.getInstance(context).getDaoQuickly(BeanCollection.class);
-                    Object o = dao.queryForId(bean.imgId);
+                    Object o = dao.queryForId(imgId);
                     int delete = 0;
                     if (o != null) {
                         BeanCollection collection = (BeanCollection) o;
                         File file = new File(collection.imgBigUrl);
                         FileUtil.deleteFile(file);
 
-                        delete = dao.deleteById(bean.imgId);
+                        delete = dao.deleteById(imgId);
                     }
                     subscriber.onNext(delete);
                     subscriber.onCompleted();

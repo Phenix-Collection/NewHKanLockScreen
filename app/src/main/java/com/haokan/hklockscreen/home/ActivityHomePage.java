@@ -200,4 +200,12 @@ public class ActivityHomePage extends ActivityBase {
             super.onBackPressed();
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        if (mCvHomePage != null) {
+            mCvHomePage.onDestory();
+        }
+        super.onDestroy();
+    }
 }

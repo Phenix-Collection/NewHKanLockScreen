@@ -8,7 +8,7 @@ import com.haokan.hklockscreen.haokanAd.BeanAdRes;
 /**
  * Created by wangzixu on 2017/5/31.
  */
-public class BeanRecommendPageLand implements Parcelable {
+public class BeanRecommendLandPage implements Parcelable {
     public String imgId;
     public String imgGId;
     public String imgUrl;
@@ -64,10 +64,10 @@ public class BeanRecommendPageLand implements Parcelable {
         dest.writeParcelable(this.mBeanAdRes, flags);
     }
 
-    public BeanRecommendPageLand() {
+    public BeanRecommendLandPage() {
     }
 
-    protected BeanRecommendPageLand(Parcel in) {
+    protected BeanRecommendLandPage(Parcel in) {
         this.imgId = in.readString();
         this.imgGId = in.readString();
         this.imgUrl = in.readString();
@@ -86,15 +86,15 @@ public class BeanRecommendPageLand implements Parcelable {
         this.mBeanAdRes = in.readParcelable(BeanAdRes.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<BeanRecommendPageLand> CREATOR = new Parcelable.Creator<BeanRecommendPageLand>() {
+    public static final Parcelable.Creator<BeanRecommendLandPage> CREATOR = new Parcelable.Creator<BeanRecommendLandPage>() {
         @Override
-        public BeanRecommendPageLand createFromParcel(Parcel source) {
-            return new BeanRecommendPageLand(source);
+        public BeanRecommendLandPage createFromParcel(Parcel source) {
+            return new BeanRecommendLandPage(source);
         }
 
         @Override
-        public BeanRecommendPageLand[] newArray(int size) {
-            return new BeanRecommendPageLand[size];
+        public BeanRecommendLandPage[] newArray(int size) {
+            return new BeanRecommendLandPage[size];
         }
     };
 }

@@ -2,7 +2,6 @@ package com.haokan.pubic.customview;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 
 /**
  * Created by wangzixu on 2017/1/17.
@@ -107,8 +106,8 @@ public class ViewPagerTransformer {
                 mScrollXOffset = view.getWidth() * PARALLAX_COEFFICIENT;
             }
 
-//            View page = view.findViewById(mContentViewId);
-            View page = ((ViewGroup)view).getChildAt(0);
+            View page = view.findViewById(mContentViewId);
+//            View page = ((ViewGroup)view).getChildAt(0);
 
             if (page != null && position >= -1 && position <= 1) { // [-1,1]
                 page.setTranslationX(-mScrollXOffset * position);
