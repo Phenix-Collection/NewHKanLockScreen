@@ -11,6 +11,8 @@ public class EventCollectionChange {
      */
     public String imgIds = "";
 
+    public int collectionType;//收藏类型 0是锁屏页大图, 1是推荐落地页
+
     public boolean mIsAdd;
 
     public BeanCollection mBean;

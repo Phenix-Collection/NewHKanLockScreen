@@ -10,16 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
-import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
+import com.haokan.hklockscreen.recommendpagelist.CV_RecommendListPage;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.webview.ActivityWebview;
 
 /**
  * Created by wangzixu on 2017/10/20.
  */
-public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements View.OnClickListener {
+public class CV_RecommendPage_LockScreen extends CV_RecommendListPage implements View.OnClickListener {
     public CV_RecommendPage_LockScreen(@NonNull Context context) {
         this(context, null);
     }
@@ -131,8 +131,8 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendPage implements Vie
         UmengMaiDianManager.onEvent(mContext, "event_079");
 
         if (beanRecommendItem.mBeanAdRes == null) {
-            Intent intent = new Intent(mContext, ActivityLandPageRecommend.class);
-            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
+            Intent intent = new Intent(mContext, ActivityRecommendLandPage.class);
+            intent.putExtra(ActivityRecommendLandPage.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
             if (mActivityBase != null) {
                 mActivityBase.startActivity(intent);
                 mActivityBase.startActivityAnim();

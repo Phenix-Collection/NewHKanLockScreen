@@ -1,7 +1,7 @@
 package com.haokan.hklockscreen.mycollection;
 
-import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
 import com.haokan.pubic.base.ActivityBase;
+import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.database.BeanCollection;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
 import com.haokan.pubic.logsys.LogHelper;
@@ -24,10 +26,10 @@ import java.util.List;
  */
 public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<AdapterMyCollection.ViewHolder> {
     private ArrayList<BeanCollection> mData = new ArrayList<>();
-    private Context mContext;
+    private ActivityBase mContext;
     private int mItemH;
 
-    public AdapterMyCollection(Context context) {
+    public AdapterMyCollection(ActivityBase context) {
         mContext = context;
         int sw = mContext.getResources().getDisplayMetrics().widthPixels;
         int iw = (sw - DisplayUtil.dip2px(mContext, 30f)) / 3;
@@ -118,12 +120,14 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
         public ImageView mImg;
         public ImageView mImgChoiceMark;
         public BeanCollection mImageBean;
+        public View mRecommendItemMark;
         public int pos;
 
         public Item0ViewHolder(View itemView) {
             super(itemView);
             mImg = (ImageView) itemView.findViewById(R.id.iv_image);
             mImgChoiceMark = (ImageView) itemView.findViewById(R.id.choice_mark);
+            mRecommendItemMark = itemView.findViewById(R.id.recommendmark);
             View view = itemView.findViewById(R.id.content);
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             if (layoutParams == null) {
@@ -151,18 +155,30 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
                 mImgChoiceMark.setVisibility(View.GONE);
                 mImgChoiceMark.setSelected(false);
             }
+
+            if (mImageBean.collectType == 1) {
+                mRecommendItemMark.setVisibility(View.VISIBLE);
+            } else {
+                mRecommendItemMark.setVisibility(View.GONE);
+            }
         }
 
         @Override
         public void onClick(View v) {
             if (!mEditMode) { //正常态，跳转到大图页
-                if (mContext instanceof ActivityBase) {
-                    ActivityBase activity = (ActivityBase) mContext;
+                if (mImageBean.collectType == 1) {
+                    Intent intent = new Intent(mContext, ActivityRecommendLandPage.class);
+                    intent.putExtra(ActivityRecommendLandPage.KEY_INTENT_RECOMMENDBEAN, BeanConvertUtil.collectionBean2RecommendItem(mImageBean));
+                    mContext.startActivity(intent);
+                    mContext.startActivityAnim();
+                } else {
                     Intent intent = new Intent(mContext, ActivityDetailPageMyCollection.class);
-                    intent.putParcelableArrayListExtra("initdata", mData);
+                    ArrayList<Parcelable> list = new ArrayList<>();
+                    list.add(mImageBean);
+                    intent.putParcelableArrayListExtra("initdata", list);
                     intent.putExtra("initpos", pos);
-                    activity.startActivity(intent);
-                    activity.startActivityAnim();
+                    mContext.startActivity(intent);
+                    mContext.startActivityAnim();
                 }
             } else { //编辑态，选中框选中
                 if (mSelectedBeans.contains(mImageBean)) {

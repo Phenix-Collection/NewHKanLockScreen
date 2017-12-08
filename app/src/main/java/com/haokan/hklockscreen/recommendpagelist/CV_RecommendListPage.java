@@ -21,7 +21,7 @@ import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.haokanAd.request.NativeReq;
-import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Created by wangzixu on 2017/10/18.
  */
-public class CV_RecommendPage extends FrameLayout{
+public class CV_RecommendListPage extends FrameLayout{
     protected Context mContext;
     protected RecyclerView mRecyclerView;
     protected GridLayoutManager mManager;
@@ -60,15 +60,15 @@ public class CV_RecommendPage extends FrameLayout{
         }
     }
 
-    public CV_RecommendPage(@NonNull Context context) {
+    public CV_RecommendListPage(@NonNull Context context) {
         this(context, null);
     }
 
-    public CV_RecommendPage(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CV_RecommendListPage(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CV_RecommendPage(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public CV_RecommendListPage(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         init();
@@ -389,8 +389,8 @@ public class CV_RecommendPage extends FrameLayout{
         }
 
         if (beanRecommendItem.mBeanAdRes == null) {
-            Intent intent = new Intent(mContext, ActivityLandPageRecommend.class);
-            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
+            Intent intent = new Intent(mContext, ActivityRecommendLandPage.class);
+            intent.putExtra(ActivityRecommendLandPage.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
             if (mActivityBase != null) {
                 mActivityBase.startActivityForResult(intent, 101);
                 mActivityBase.startActivityAnim();

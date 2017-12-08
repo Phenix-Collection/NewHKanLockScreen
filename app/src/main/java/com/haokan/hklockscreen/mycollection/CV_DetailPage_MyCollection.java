@@ -11,7 +11,7 @@ import android.view.View;
 import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.database.BeanCollection;
-import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
+import com.haokan.hklockscreen.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.ToastManager;
@@ -44,7 +44,7 @@ public class CV_DetailPage_MyCollection extends CV_DetailPageView_Base {
     private void initViews(View rootView) {
         mBottomSettingView.setVisibility(GONE);
 
-        initViewPagerRightEdge();
+        //initViewPagerRightEdge();
     }
 
     public void initData(ArrayList<BigImageBean> mainList, int position) {

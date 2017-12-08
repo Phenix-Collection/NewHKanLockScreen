@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Created by wangzixu on 2017/5/25.
  * 带高斯模糊, 可放大缩小的详情页
  */
-public class ActivityDetailPageRecommend extends ActivityBase{
+public class ActivityRecommendDetailPage extends ActivityBase{
     public static final String KEY_INTENT_GROUDDATE = "groupdate";
     public static final String KEY_INTENT_POSITION = "initpos";
     protected ArrayList<BeanRecommendLandPage> mData = new ArrayList<>();

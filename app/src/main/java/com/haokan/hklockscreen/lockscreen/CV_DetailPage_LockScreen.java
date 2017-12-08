@@ -31,12 +31,12 @@ import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.ServiceAutoUpdateImage;
-import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.BigImageBean;
-import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
+import com.haokan.hklockscreen.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
@@ -383,7 +383,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
         if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
 //            Intent intent = new Intent(mContext, ActivityLandPageForLockPage.class);
-            Intent intent = new Intent(mContext, ActivityLandPageRecommend.class);
+            Intent intent = new Intent(mContext, ActivityRecommendLandPage.class);
             BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
             beanRecommendItem.GroupId = mCurrentImgBean.jump_id;
             if (TextUtils.isEmpty(beanRecommendItem.GroupId)) {
@@ -393,7 +393,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
             beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
             beanRecommendItem.imgDesc = mCurrentImgBean.imgDesc;
-            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
+            intent.putExtra(ActivityRecommendLandPage.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
             if (mActivity != null) {
                 mActivity.startActivity(intent);
                 mActivity.startActivityAnim();

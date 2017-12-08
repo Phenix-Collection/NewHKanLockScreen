@@ -19,10 +19,10 @@ import java.util.ArrayList;
  */
 public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAdapter<AdapterLandPageRecommend.ViewHolder> {
     private ArrayList<BeanRecommendLandPage> mData = new ArrayList<>();
-    private ActivityLandPageRecommend mContext;
+    private ActivityRecommendLandPage mContext;
     private int mItemW;
 
-    public AdapterLandPageRecommend(ActivityLandPageRecommend context, ArrayList<BeanRecommendLandPage> data) {
+    public AdapterLandPageRecommend(ActivityRecommendLandPage context, ArrayList<BeanRecommendLandPage> data) {
         mContext = context;
         mData = data;
         mItemW = context.getResources().getDisplayMetrics().widthPixels - DisplayUtil.dip2px(context,38);

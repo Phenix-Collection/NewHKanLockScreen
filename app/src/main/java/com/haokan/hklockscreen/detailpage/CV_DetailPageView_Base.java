@@ -1,4 +1,4 @@
-package com.haokan.pubic.detailpage;
+package com.haokan.hklockscreen.detailpage;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -36,7 +36,7 @@ import com.haokan.hklockscreen.R;
 import com.haokan.pubic.database.BeanCollection;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
-import com.haokan.hklockscreen.recommendpageland.ActivityLandPageRecommend;
+import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
@@ -378,14 +378,14 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             return;
         }
         if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
-            Intent intent = new Intent(mContext, ActivityLandPageRecommend.class);
+            Intent intent = new Intent(mContext, ActivityRecommendLandPage.class);
             BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
             beanRecommendItem.GroupId = mCurrentImgBean.jump_id;
             beanRecommendItem.cover = mCurrentImgBean.imgSmallUrl;
             beanRecommendItem.urlClick = mCurrentImgBean.shareUrl;
             beanRecommendItem.imgTitle = mCurrentImgBean.imgTitle;
             beanRecommendItem.imgDesc = mCurrentImgBean.imgDesc;
-            intent.putExtra(ActivityLandPageRecommend.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
+            intent.putExtra(ActivityRecommendLandPage.KEY_INTENT_RECOMMENDBEAN, beanRecommendItem);
             if (mActivity != null) {
                 mActivity.startActivity(intent);
                 mActivity.startActivityAnim();
@@ -520,6 +520,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
                     EventCollectionChange change = new EventCollectionChange();
                     change.mIsAdd = false;
+                    change.collectionType = 0;
                     change.mFrom = CV_DetailPageView_Base.this;
                     change.imgIds = mCurrentImgBean.imgId;
                     EventBus.getDefault().post(change);
@@ -571,6 +572,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
                     EventCollectionChange change = new EventCollectionChange();
                     change.mIsAdd = true;
+                    change.collectionType = 0;
                     change.mFrom = CV_DetailPageView_Base.this;
                     change.imgIds = mCurrentImgBean.imgId;
                     change.mBean = collectionBean;

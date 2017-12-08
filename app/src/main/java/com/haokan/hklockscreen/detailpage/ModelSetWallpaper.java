@@ -1,4 +1,4 @@
-package com.haokan.pubic.detailpage;
+package com.haokan.hklockscreen.detailpage;
 
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;

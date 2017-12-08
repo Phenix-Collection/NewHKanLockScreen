@@ -220,7 +220,7 @@
 
             <!--android:launchMode="singleTask"-->
         <activity
-            android:name=".recommendpagedetail.ActivityDetailPageRecommend"
+            android:name=".recommendpagedetail.ActivityRecommendDetailPage"
             android:theme="@style/MyDetailPage"
             android:screenOrientation="portrait">
         </activity>
@@ -238,7 +238,7 @@
         <activity android:name=".timeline.ActivityTimelines"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".recommendpageland.ActivityLandPageRecommend"
+        <activity android:name=".recommendpageland.ActivityRecommendLandPage"
                   android:screenOrientation="portrait">
         </activity>
 

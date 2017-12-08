@@ -14,7 +14,7 @@ import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.BigImageBean;
-import com.haokan.pubic.detailpage.Adapter_DetailPage_Base;
+import com.haokan.hklockscreen.detailpage.Adapter_DetailPage_Base;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.BlurUtil;
 

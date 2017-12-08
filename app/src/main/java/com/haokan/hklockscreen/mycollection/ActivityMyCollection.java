@@ -1,6 +1,5 @@
 package com.haokan.hklockscreen.mycollection;
 
-import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -27,7 +26,7 @@ import java.util.List;
 
 public class ActivityMyCollection extends ActivityBase implements View.OnClickListener {
     private AdapterMyCollection mAdapter;
-    protected Activity mActivity;
+    protected ActivityBase mActivity;
     private TextView mTvEdit;
     private boolean mIsEditMode = false;
 
@@ -59,7 +58,7 @@ public class ActivityMyCollection extends ActivityBase implements View.OnClickLi
         View noContentView = this.findViewById(R.id.layout_nocontent);
         setPromptLayout(loadingLayout, netErrorView, serveErrorView, noContentView);
 
-        mActivity=this;
+        mActivity = this;
         mTvEdit = (TextView) findViewById(R.id.edit);
         mTvEdit.setOnClickListener(this);
         mBottomDelLayout = findViewById(R.id.bottomdellayout);

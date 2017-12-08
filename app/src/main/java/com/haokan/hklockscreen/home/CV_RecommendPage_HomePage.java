@@ -12,13 +12,13 @@ import android.view.View;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
-import com.haokan.hklockscreen.recommendpagelist.CV_RecommendPage;
+import com.haokan.hklockscreen.recommendpagelist.CV_RecommendListPage;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 
 /**
  * Created by wangzixu on 2017/10/20.
  */
-public class CV_RecommendPage_HomePage extends CV_RecommendPage implements View.OnClickListener {
+public class CV_RecommendPage_HomePage extends CV_RecommendListPage implements View.OnClickListener {
     public CV_RecommendPage_HomePage(@NonNull Context context) {
         this(context, null);
     }

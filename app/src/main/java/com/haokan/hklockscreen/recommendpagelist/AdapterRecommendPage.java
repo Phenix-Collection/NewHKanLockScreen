@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.haokanAd.BeanAdRes;
 import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
-import com.haokan.hklockscreen.mycollection.EventRecommendCollectionChange;
+import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.DisplayUtil;
@@ -28,11 +28,11 @@ import java.util.ArrayList;
 public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter<AdapterRecommendPage.ViewHolder> {
     private ArrayList<BeanRecommendItem> mData = new ArrayList<>();
     private Context mContext;
-    private CV_RecommendPage mRecommendPage;
+    private CV_RecommendListPage mRecommendPage;
     private int mTopHide1, mTopHide2; //滑动到接近顶部时, view的图说要隐藏, 这俩值就是隐藏的范围
     private ArrayList<ViewHolder> mHolders = new ArrayList<>(); //当前所有可见的条目
 
-    public AdapterRecommendPage(Context context, ArrayList<BeanRecommendItem> data, CV_RecommendPage recommendPage) {
+    public AdapterRecommendPage(Context context, ArrayList<BeanRecommendItem> data, CV_RecommendListPage recommendPage) {
         mContext = context;
         mData = data;
         mRecommendPage = recommendPage;
@@ -47,13 +47,13 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     }
 
     @Subscribe
-    public void onEvent(EventRecommendCollectionChange event) {
+    public void onEvent(EventCollectionChange event) {
         try {
-            if (event != null) {
+            if (event != null && event.collectionType == 1) {
                 BeanRecommendItem beanRecommendItem = null;
                 for (int i = 0; i < mData.size(); i++) {
                     BeanRecommendItem item = mData.get(i);
-                    if (item.GroupId.equals(event.imgId)) {
+                    if (item.GroupId.equals(event.imgIds)) {
                         if (event.mIsAdd) {
                             item.favNum++;
                         } else {

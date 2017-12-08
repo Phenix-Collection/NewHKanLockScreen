@@ -14,7 +14,7 @@ import android.view.View;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.BigImageBean;
-import com.haokan.pubic.detailpage.CV_DetailPageView_Base;
+import com.haokan.hklockscreen.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.logsys.LogHelper;
 
 import java.lang.reflect.Field;

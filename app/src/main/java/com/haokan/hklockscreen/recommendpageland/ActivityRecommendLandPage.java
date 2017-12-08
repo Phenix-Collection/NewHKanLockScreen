@@ -16,9 +16,9 @@ import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
-import com.haokan.hklockscreen.mycollection.EventRecommendCollectionChange;
+import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
-import com.haokan.hklockscreen.recommendpagedetail.ActivityDetailPageRecommend;
+import com.haokan.hklockscreen.recommendpagedetail.ActivityRecommendDetailPage;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BeanConvertUtil;
@@ -47,7 +47,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by wangzixu on 2017/11/7.
  */
-public class ActivityLandPageRecommend extends ActivityBase implements View.OnClickListener {
+public class ActivityRecommendLandPage extends ActivityBase implements View.OnClickListener {
     private TextView mTvTitle;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mManager;
@@ -198,7 +198,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
             @Override
             public void call() {
                 try {
-                    Dao dao = MyDatabaseHelper.getInstance(ActivityLandPageRecommend.this).getDaoQuickly(BeanCollection.class);
+                    Dao dao = MyDatabaseHelper.getInstance(ActivityRecommendLandPage.this).getDaoQuickly(BeanCollection.class);
                     Object o = dao.queryForId(mRecommendItemBean.GroupId);
                     if (o != null) {
                         mTvCollect.setSelected(true);
@@ -393,7 +393,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
          */
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            ToastManager.showShort(ActivityLandPageRecommend.this, "已分享");
+            ToastManager.showShort(ActivityRecommendLandPage.this, "已分享");
             hideShareLayout();
         }
 
@@ -404,7 +404,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
          */
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            ToastManager.showShort(ActivityLandPageRecommend.this, "分享失败");
+            ToastManager.showShort(ActivityRecommendLandPage.this, "分享失败");
             LogHelper.d("share","分享失败:"+t);
         }
 
@@ -414,7 +414,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
          */
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            ToastManager.showShort(ActivityLandPageRecommend.this, "分享取消");
+            ToastManager.showShort(ActivityRecommendLandPage.this, "分享取消");
         }
     };
 
@@ -442,9 +442,11 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
 //                    refreshCollectNum(mCurrentImgBean);
                     view.setSelected(false);
 
-                    EventRecommendCollectionChange change = new EventRecommendCollectionChange();
-                    change.imgId = mRecommendItemBean.GroupId;
+                    EventCollectionChange change = new EventCollectionChange();
+                    change.imgIds = mRecommendItemBean.GroupId;
                     change.mIsAdd = false;
+                    change.collectionType = 1;
+                    change.mFrom = ActivityRecommendLandPage.this;
                     EventBus.getDefault().post(change);
                 }
 
@@ -460,7 +462,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
 //                    if (mActivity != null) {
 //                        mActivity.dismissLoadingDialog();
 //                    }
-                    ToastManager.showShort(ActivityLandPageRecommend.this, "取消收藏失败: " + errmsg);
+                    ToastManager.showShort(ActivityRecommendLandPage.this, "取消收藏失败: " + errmsg);
                 }
 
                 @Override
@@ -468,7 +470,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
 //                    if (mActivity != null) {
 //                        mActivity.dismissLoadingDialog();
 //                    }
-                    ToastManager.showNetErrorToast(ActivityLandPageRecommend.this);
+                    ToastManager.showNetErrorToast(ActivityRecommendLandPage.this);
                 }
             });
         } else {
@@ -494,9 +496,11 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
 //                    refreshCollectNum(mCurrentImgBean);
                     view.setSelected(true);
 
-                    EventRecommendCollectionChange change = new EventRecommendCollectionChange();
-                    change.imgId = mRecommendItemBean.GroupId;
+                    EventCollectionChange change = new EventCollectionChange();
+                    change.imgIds = mRecommendItemBean.GroupId;
                     change.mIsAdd = true;
+                    change.collectionType = 1;
+                    change.mFrom = ActivityRecommendLandPage.this;
                     EventBus.getDefault().post(change);
                 }
 
@@ -512,7 +516,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
 //                    if (mActivity != null) {
 //                        mActivity.dismissLoadingDialog();
 //                    }
-                    ToastManager.showShort(ActivityLandPageRecommend.this, "收藏失败: " + errmsg);
+                    ToastManager.showShort(ActivityRecommendLandPage.this, "收藏失败: " + errmsg);
                 }
 
                 @Override
@@ -520,7 +524,7 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
 //                    if (mActivity != null) {
 //                        mActivity.dismissLoadingDialog();
 //                    }
-                    ToastManager.showNetErrorToast(ActivityLandPageRecommend.this);
+                    ToastManager.showNetErrorToast(ActivityRecommendLandPage.this);
                 }
             });
         }
@@ -577,9 +581,9 @@ public class ActivityLandPageRecommend extends ActivityBase implements View.OnCl
         if (data == null || CommonUtil.isQuickClick()) {
             return;
         }
-        Intent intent = new Intent(this, ActivityDetailPageRecommend.class);
-        intent.putParcelableArrayListExtra(ActivityDetailPageRecommend.KEY_INTENT_GROUDDATE, data);
-        intent.putExtra(ActivityDetailPageRecommend.KEY_INTENT_POSITION, Math.max(pos, 0));
+        Intent intent = new Intent(this, ActivityRecommendDetailPage.class);
+        intent.putParcelableArrayListExtra(ActivityRecommendDetailPage.KEY_INTENT_GROUDDATE, data);
+        intent.putExtra(ActivityRecommendDetailPage.KEY_INTENT_POSITION, Math.max(pos, 0));
         startActivity(intent);
         overridePendingTransition(R.anim.activity_fade_bigger_in, R.anim.activity_retain);
     }
