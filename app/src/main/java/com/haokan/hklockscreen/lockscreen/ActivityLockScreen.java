@@ -64,16 +64,19 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private float mLastX;
     private float mLastY;
     private boolean mScrollViewMove; //是够控制scrollview移动过了, 如果移动过了, up事件应该直接返回, 否则会相应点击事件(解决bug:上划显示推荐页后, 再下滑到底, 相应点击事件)
-    private boolean mPullToRefresh;
-    private float mTransLateY;
-    private TextView mPullTvSwitch;
-    private View mPullLayout;
-    private ImageView mPullIvArraw;
-    private int mPullRefreshDistence;
     private View mGustureView;
     private static boolean sLockguideUpDown = true;
     private static boolean sLockguideRL = true;
     private BroadcastReceiver mReceiver;
+
+    //下拉刷新相关
+    private boolean mPullToRefresh;
+    private TextView mPullTvSwitch;
+    private View mPullLayout;
+    private ImageView mPullIvArraw;
+    private int mPullRefreshDistence;
+    private float mTransLateY;
+    private int mPullInitTranY; //下拉刷新布局初始的偏移量
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -228,6 +231,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mPullLayout = findViewById(R.id.pullrefreshlayout);
         mPullTvSwitch = (TextView) findViewById(R.id.tv_switch);
         mPullIvArraw = (ImageView) findViewById(R.id.arrow);
+        mPullInitTranY = -DisplayUtil.dip2px(this, 25);
+        mPullLayout.setTranslationY(mPullInitTranY);
 
         mFlipAnimation = new RotateAnimation(0, -180, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
         mFlipAnimation.setInterpolator(new LinearInterpolator());
@@ -239,7 +244,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mReverseFlipAnimation.setDuration(150);
         mReverseFlipAnimation.setFillAfter(true);
 
-        mPullRefreshDistence = DisplayUtil.dip2px(this, 66);
+        mPullRefreshDistence = DisplayUtil.dip2px(this, 70);
         //下拉刷新相关end
     }
 
@@ -364,10 +369,11 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     }
 
                     if (mPullToRefresh) { //下拉刷新
+                        float oldTransLateY = mTransLateY;
                         mTransLateY = mTransLateY + y - mLastY;
-                        float oldTransLateY = mScrollView.getTranslationY();
-                        if (mTransLateY <= 0) {
-                            mScrollView.setTranslationY(0);
+
+                        if (mTransLateY < 0) {
+                            mTransLateY = 0f;
                         } else {
                             double pow = Math.pow(mTransLateY, 0.85d);
 //                            LogHelper.d("wangzixu", "pullrefresh mTransLateY = " + mTransLateY + ", pow = " + pow);
@@ -377,14 +383,10 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                             } else if (pow <= mPullRefreshDistence && oldTransLateY > mPullRefreshDistence) {
                                 onRefreshState2();
                             }
-                            mScrollView.setTranslationY((float) pow);
+//                            mScrollView.setTranslationY((float) pow);
+                            mPullLayout.setTranslationY(mPullInitTranY + mTransLateY);
                         }
 
-                        if (oldTransLateY < 0) {
-                            mScrollView.setTranslationY(0);
-//                            mScrollViewMove = true;
-//                            mPullToRefresh = false;
-                        }
                         mLastY = y;
                         return true;
                     }
@@ -467,22 +469,21 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     }
                 }
 
-                float translationY = mScrollView.getTranslationY();
-                if (translationY != 0) { //下拉刷新时抬手
-                    if (translationY > mPullRefreshDistence) {
+                float translationY = mPullLayout.getTranslationY();
+                if (translationY != mPullInitTranY) { //下拉刷新时抬手
+                    if (mTransLateY > mPullRefreshDistence) {
                         App.sMainHanlder.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                onRefresh();
+
                             }
-                        }, 300);
+                        }, 0);
                     }
-                    mScrollView.mySetTranslateY(0, 300);
+
                     onRefreshState4();
-                } else if (mPullLayout.getVisibility() == View.VISIBLE) {
+                } else {
                     mPullIvArraw.clearAnimation();
-                    mPullLayout.setVisibility(View.GONE);
-                    mPullTvSwitch.setText("下拉换一波新图");
+                    mPullTvSwitch.setText("下拉换一换");
                 }
 
                 if (mScrollViewMove || mPullToRefresh) {
@@ -508,13 +509,13 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     //开始下拉
     public void onRefreshState1() {
         mPullLayout.setVisibility(View.VISIBLE);
-        mPullTvSwitch.setText("下拉换一波新图");
+        mPullTvSwitch.setText("下拉换一换");
         mPullIvArraw.clearAnimation();
     }
 
     //由松手换一换到下拉换一换
     public void onRefreshState2() {
-        mPullTvSwitch.setText("下拉换一波新图");
+        mPullTvSwitch.setText("下拉换一换");
         mPullIvArraw.clearAnimation();
         mPullIvArraw.startAnimation(mReverseFlipAnimation);
     }
@@ -532,8 +533,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             @Override
             public void run() {
                 mPullIvArraw.clearAnimation();
-                mPullLayout.setVisibility(View.GONE);
-                mPullTvSwitch.setText("下拉换一波新图");
+                mPullTvSwitch.setText("下拉换一换");
             }
         }, 290);
     }
