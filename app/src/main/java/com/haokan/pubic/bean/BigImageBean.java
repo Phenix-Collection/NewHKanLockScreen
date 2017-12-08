@@ -15,7 +15,7 @@ public class BigImageBean implements Serializable{
     public String imgBigUrl; //图片url
     public String imgDesc; //图说
     public String imgTitle; //标题
-    public String linkTitle; //链接名称
+    public String linkTitleZh; //链接名称
     public String linkUrl; //链接地址
     public String typeId; //分类id
     public String typeName; //分类name
@@ -33,6 +33,7 @@ public class BigImageBean implements Serializable{
      * 锁屏图片的类型, 0代表通过网络图, 1本地相册图, 2代表读取的asset中的默认图片, 3视频
      */
     public int myType;
-
+    //4.0.4需求, 需要动态计算title的最大宽度, 不能每次都计算, 所以用此变量记下计算结果
+    public int myTitleMaxWidth;
     public BeanAdRes mBeanAdRes; //广告数据
  }

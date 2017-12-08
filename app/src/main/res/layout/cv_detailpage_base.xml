@@ -168,7 +168,7 @@
             android:layout_marginBottom="8dp">
 
             <!--android:visibility="gone"-->
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/layout_title"
                 android:layout_width="match_parent"
                 android:layout_height="24dp"
@@ -185,7 +185,7 @@
                     android:ellipsize="end"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="@color/bai"
@@ -195,29 +195,17 @@
 
                 <TextView
                     android:id="@+id/tv_link"
-                    android:layout_toRightOf="@id/tv_title"
                     android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="18dp"
-                    android:layout_centerVertical="true"
                     android:ellipsize="end"
+                    android:layout_gravity="center_vertical"
                     android:gravity="center"
                     android:maxLines="1"
                     android:text=""
                     android:textColor="@color/selector_click_bai"
                     android:textSize="12sp"/>
-                <!--<FrameLayout-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_gravity="center_vertical"-->
-                    <!--android:layout_height="18dp">-->
-                <!--</FrameLayout>-->
-
-                <!--<View-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_height="1px"/>-->
-            </RelativeLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_desc_simple"

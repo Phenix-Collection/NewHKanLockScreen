@@ -37,7 +37,7 @@ public class ServiceAutoUpdateImage extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (App.sHaokanLockView != null) {
-            App.sHaokanLockView.setUpdateSign(4);
+            App.sHaokanLockView.setUpdateSign(4, null);
         }
 
         if (mIsSwitching) {
@@ -59,7 +59,7 @@ public class ServiceAutoUpdateImage extends Service {
         if (time.equals(curTime)) {
             LogHelper.d("wangzixu", "autoupdate onStartCommand 当天已经更新");
             if (App.sHaokanLockView != null) {
-                App.sHaokanLockView.setUpdateSign(0);
+                App.sHaokanLockView.setUpdateSign(0, curTime);
             }
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
@@ -114,7 +114,7 @@ public class ServiceAutoUpdateImage extends Service {
             public void onStart() {
                 mIsSwitching = true;
                 if (App.sHaokanLockView != null) {
-                    App.sHaokanLockView.setUpdateSign(2);
+                    App.sHaokanLockView.setUpdateSign(2, MyDateTimeUtil.getCurrentLongTime());
                 }
 
                 Intent maidianIntent = new Intent(ServiceAutoUpdateImage.this, UmengMaiDianActivity.class);
@@ -140,7 +140,7 @@ public class ServiceAutoUpdateImage extends Service {
                 }
 
                 App.sHaokanLockView.loadOfflineNetData(true); //自动更新, 不通过广播出发, 直接调用即可
-                App.sHaokanLockView.setUpdateSign(0);
+                App.sHaokanLockView.setUpdateSign(0, MyDateTimeUtil.getCurrentLongTime());
 //                Intent intent = new Intent("com.haokan.receiver.autoupdateimage");
 //                sendBroadcast(intent);
 
@@ -162,7 +162,7 @@ public class ServiceAutoUpdateImage extends Service {
             public void onDataEmpty() {
                 mIsSwitching = false;
                 if (App.sHaokanLockView != null) {
-                    App.sHaokanLockView.setUpdateSign(3);
+                    App.sHaokanLockView.setUpdateSign(3, MyDateTimeUtil.getCurrentLongTime());
                 }
 
                 LogHelper.d("wangzixu", "autoupdate autoUpdateData onDataEmpty");
@@ -180,7 +180,7 @@ public class ServiceAutoUpdateImage extends Service {
                 mIsSwitching = false;
 
                 if (App.sHaokanLockView != null) {
-                    App.sHaokanLockView.setUpdateSign(3);
+                    App.sHaokanLockView.setUpdateSign(3, MyDateTimeUtil.getCurrentLongTime());
                 }
 
                 LogHelper.d("wangzixu", "autoupdate autoUpdateData errmsg = " + errmsg);
@@ -197,7 +197,7 @@ public class ServiceAutoUpdateImage extends Service {
             public void onNetError() {
                 mIsSwitching = false;
                 if (App.sHaokanLockView != null) {
-                    App.sHaokanLockView.setUpdateSign(3);
+                    App.sHaokanLockView.setUpdateSign(3, MyDateTimeUtil.getCurrentLongTime());
                 }
 
                 LogHelper.d("wangzixu", "autoupdate autoUpdateData onNetError");

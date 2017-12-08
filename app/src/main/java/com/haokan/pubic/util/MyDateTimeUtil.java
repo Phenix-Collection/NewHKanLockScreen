@@ -23,10 +23,10 @@ public class MyDateTimeUtil {
         return formatter.format(new Date());
     }
 
-    public static String getLogTime(long timeMills) {
+    public static String getCurrentLongTime() {
         // HH:mm:ss
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        return formatter.format(new Date(timeMills));
+        return formatter.format(new Date());
     }
 
     /**

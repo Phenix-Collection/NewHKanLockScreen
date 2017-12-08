@@ -113,9 +113,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         String time = preferences.getString(ServiceAutoUpdateImage.KEY_AUTOUPDATA_TIME, "----");
         String curTime = MyDateTimeUtil.getCurrentSimpleData();
         if (time.equals(curTime)) {
-            setUpdateSign(0);
+            setUpdateSign(0, curTime);
         } else {
-            setUpdateSign(1);
+            setUpdateSign(1, curTime);
         }
 
         View layoutTop = rootView.findViewById(R.id.lockscreen_layouttop); //换一换
@@ -178,17 +178,20 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         AlarmUtil.setOfflineAlarm(mContext);
     }
 
-    public void setUpdateSign(int state) {
+    public void setUpdateSign(int state, String date) {
+        if (TextUtils.isEmpty(date)) {
+            date = MyDateTimeUtil.getCurrentSimpleData();
+        }
         if (state == 0) {
-            mAutoUpdateSignView.setText("当天更新完了  = " + MyDateTimeUtil.getCurrentSimpleData());
+            mAutoUpdateSignView.setText("当天更新完了  = " + date);
         } else if (state == 1) {
-            mAutoUpdateSignView.setText("当天还没更新  = " + MyDateTimeUtil.getCurrentSimpleData());
+            mAutoUpdateSignView.setText("当天还没更新  = " + date);
         } else if (state == 2) {
-            mAutoUpdateSignView.setText("当天开始更新...  = " + MyDateTimeUtil.getCurrentSimpleData());
+            mAutoUpdateSignView.setText("当天开始更新...  = " + date);
         } else if (state == 3) {
-            mAutoUpdateSignView.setText("当天更新失败  = " + MyDateTimeUtil.getCurrentSimpleData());
+            mAutoUpdateSignView.setText("当天更新失败  = " + date);
         } else if (state == 4) {
-            mAutoUpdateSignView.setText("当天触发了闹铃  = " + MyDateTimeUtil.getCurrentSimpleData());
+            mAutoUpdateSignView.setText("当天触发了闹铃  = " + date);
         }
     }
 
@@ -524,13 +527,46 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 mCurrentImgBean.imgTitle = "";
             }
             mTvLockTitle.setText(mCurrentImgBean.imgTitle);
-
+            mTvLockTitle.setMaxWidth(mTitleLayoutMaxWidth);
             if (mCurrentImgBean.myType == 1) {
                 mTvLockLink.setVisibility(GONE);
             } else {
-                mTvLockLink.setBackgroundResource(getLinkBgColor());
-                mTvLockLink.setVisibility(VISIBLE);
-                mTvLockLink.setText("查看更多");
+//                mTvLockLink.setBackgroundResource(getLinkBgColor());
+//                mTvLockLink.setVisibility(VISIBLE);
+//                mTvLockLink.setText("查看更多");
+
+                if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+                    mTvLockLink.setVisibility(GONE);
+                } else {
+                    mTvLockLink.setBackgroundResource(getLinkBgColor());
+                    String s = TextUtils.isEmpty(mCurrentImgBean.linkTitleZh) ? "查看更多" : mCurrentImgBean.linkTitleZh;
+                    mTvLockLink.setText(s);
+                    mTvLockLink.setPadding(mLinkBgPaddingLeft, 0, mLinkBgPaddingRight, 0); //每次更换背景后会清空padding, 所以需要重新设置
+                    if (mCurrentImgBean.myTitleMaxWidth > 0) {
+                        mTvLockTitle.setMaxWidth(mCurrentImgBean.myTitleMaxWidth);
+                    } else {
+                        int linkWidth = (int) mPaintMeasureLink.measureText(s) + mLinkBgPaddingLeft + mLinkBgPaddingRight;
+                        int titleWidth = (int) mPaintMeasureTitle.measureText(TextUtils.isEmpty(mCurrentImgBean.imgTitle) ? "" : mCurrentImgBean.imgTitle);
+                        if (linkWidth + titleWidth > mTitleLayoutMaxWidth) { //标题和link的总宽度大于可用宽度, 必须有个被省略
+                            if (titleWidth > mTitleMaxWidth) { //如果标题大于5个字, 省略标题, 否则不用处理
+                                int titleMax = mTitleLayoutMaxWidth - linkWidth;
+                                if (titleMax > mTitleMaxWidth) { //如果总宽度减去link宽度, 剩余的空间大于五个字宽度
+                                    mTvLockTitle.setMaxWidth(titleMax);
+                                    mCurrentImgBean.myTitleMaxWidth = titleMax;
+                                } else {
+                                    mTvLockTitle.setMaxWidth(mTitleMaxWidth);
+                                    mCurrentImgBean.myTitleMaxWidth = mTitleMaxWidth;
+                                }
+                            } else {
+                                mCurrentImgBean.myTitleMaxWidth = mTitleLayoutMaxWidth;
+                            }
+                        } else {
+                            mCurrentImgBean.myTitleMaxWidth = mTitleLayoutMaxWidth;
+                        }
+                    }
+                    //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
+                    mTvLockLink.setVisibility(View.VISIBLE);
+                }
             }
         }
 

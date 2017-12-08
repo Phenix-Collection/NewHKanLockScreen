@@ -54,6 +54,7 @@
         </LinearLayout>
     </RelativeLayout>
 
+        <!--android:visibility="gone"-->
     <TextView
         android:id="@+id/autoupdatesign"
         android:layout_width="wrap_content"
@@ -107,39 +108,78 @@
             android:layout_marginTop="10dp"
             android:background="@color/bai_50" />
 
+        <!--<LinearLayout-->
+            <!--android:id="@+id/time_title_layout"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginBottom="15dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="20dp">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tv_title"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:maxLines="1"-->
+                <!--android:ellipsize="end"-->
+                <!--android:text=""-->
+                <!--android:textColor="@color/bai"-->
+                <!--android:textSize="16sp" />-->
+
+            <!--&lt;!&ndash;&ndash;&gt;-->
+            <!--<TextView-->
+                <!--android:id="@+id/tv_link"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="18dp"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:maxLines="1"-->
+                <!--android:ellipsize="end"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:text="查看详情"-->
+                <!--android:textColor="@color/selector_click_bai"-->
+                <!--android:textSize="12sp" />-->
+        <!--</LinearLayout>-->
+
         <LinearLayout
             android:id="@+id/time_title_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp">
+            android:layout_marginRight="10dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
+                android:clickable="false"
                 android:ellipsize="end"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:layout_gravity="center_vertical"
+                android:maxLines="1"
                 android:text=""
                 android:textColor="@color/bai"
-                android:textSize="16sp" />
+                android:textSize="18sp"
+                android:layout_marginRight="3dp"
+                />
 
-            <!---->
             <TextView
                 android:id="@+id/tv_link"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="18dp"
-                android:layout_marginLeft="10dp"
-                android:maxLines="1"
                 android:ellipsize="end"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="查看详情"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="xxxxx"
                 android:textColor="@color/selector_click_bai"
-                android:textSize="12sp" />
+                android:textSize="12sp"/>
         </LinearLayout>
     </LinearLayout>
 </merge>

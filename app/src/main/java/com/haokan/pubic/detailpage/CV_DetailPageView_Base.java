@@ -75,8 +75,8 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     protected View mLayoutCaption;
     protected TextView mTvDescSimple;
     protected View mLayoutMainBottom;
-    protected TextView mTvTitlle;
-    protected TextView mTvLink;
+    private TextView mTvTitlle;
+    private TextView mTvLink;
     protected View mBottomBar;
     protected View mTvBottomDownloadParent;
     protected TextView mTvBottomDownload;
@@ -669,23 +669,32 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 mTvLink.setVisibility(GONE);
             } else {
                 mTvLink.setBackgroundResource(getLinkBgColor());
-                String s = TextUtils.isEmpty(mCurrentImgBean.linkTitle) ? "查看更多" : mCurrentImgBean.linkTitle;
+                String s = TextUtils.isEmpty(mCurrentImgBean.linkTitleZh) ? "查看更多" : mCurrentImgBean.linkTitleZh;
                 mTvLink.setText(s);
-                mTvLink.setPadding(mLinkBgPaddingLeft, 0, mLinkBgPaddingRight, 0);
-                int linkWidth = (int) mPaintMeasureLink.measureText(s) + mLinkBgPaddingLeft + mLinkBgPaddingRight;
-                int titleWidth = (int) mPaintMeasureTitle.measureText(TextUtils.isEmpty(mCurrentImgBean.imgTitle) ? "" : mCurrentImgBean.imgTitle);
-                if (linkWidth + titleWidth > mTitleLayoutMaxWidth) { //标题和link的总宽度大于可用宽度, 必须有个被省略
-                    if (titleWidth > mTitleMaxWidth) { //如果标题大于5个字, 省略标题, 否则不用处理
-                        int titleMax = mTitleLayoutMaxWidth - linkWidth;
-                        if (titleMax > mTitleMaxWidth) { //如果总宽度减去link宽度, 剩余的空间大于五个字宽度
-                            mTvTitlle.setMaxWidth(titleMax);
-                        } else {
-                            mTvTitlle.setMaxWidth(mTitleMaxWidth);
-                        }
+                mTvLink.setPadding(mLinkBgPaddingLeft, 0, mLinkBgPaddingRight, 0);//每次更换背景后会清空padding, 所以需要重新设置
 
+                if (mCurrentImgBean.myTitleMaxWidth > 0) {
+                    mTvTitlle.setMaxWidth(mCurrentImgBean.myTitleMaxWidth);
+                } else {
+                    int linkWidth = (int) mPaintMeasureLink.measureText(s) + mLinkBgPaddingLeft + mLinkBgPaddingRight;
+                    int titleWidth = (int) mPaintMeasureTitle.measureText(TextUtils.isEmpty(mCurrentImgBean.imgTitle) ? "" : mCurrentImgBean.imgTitle);
+                    if (linkWidth + titleWidth > mTitleLayoutMaxWidth) { //标题和link的总宽度大于可用宽度, 必须有个被省略
+                        if (titleWidth > mTitleMaxWidth) { //如果标题大于5个字, 省略标题, 否则不用处理
+                            int titleMax = mTitleLayoutMaxWidth - linkWidth;
+                            if (titleMax > mTitleMaxWidth) { //如果总宽度减去link宽度, 剩余的空间大于五个字宽度
+                                mTvTitlle.setMaxWidth(titleMax);
+                                mCurrentImgBean.myTitleMaxWidth = titleMax;
+                            } else {
+                                mTvTitlle.setMaxWidth(mTitleMaxWidth);
+                                mCurrentImgBean.myTitleMaxWidth = mTitleMaxWidth;
+                            }
+                        } else {
+                            mCurrentImgBean.myTitleMaxWidth = mTitleLayoutMaxWidth;
+                        }
+                    } else {
+                        mCurrentImgBean.myTitleMaxWidth = mTitleLayoutMaxWidth;
                     }
                 }
-                //        mTvTitlle.setMaxWidth(mLayoutTitleLink.getWidth() - mTvLink.getMeasuredWidth());
                 mTvLink.setVisibility(View.VISIBLE);
             }
         }

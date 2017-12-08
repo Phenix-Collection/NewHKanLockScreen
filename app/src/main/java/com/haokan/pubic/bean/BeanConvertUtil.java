@@ -21,7 +21,7 @@ public class BeanConvertUtil {
         collectionBean.imgBigUrl = imageBean.imgBigUrl;
         collectionBean.imgDesc = imageBean.imgDesc;
         collectionBean.imgTitle = imageBean.imgTitle;
-        collectionBean.linkTitle = imageBean.linkTitle;
+        collectionBean.linkTitle = imageBean.linkTitleZh;
         collectionBean.linkUrl = imageBean.linkUrl;
         collectionBean.typeId = imageBean.typeId;
         collectionBean.typeName = imageBean.typeName;
@@ -44,7 +44,7 @@ public class BeanConvertUtil {
         imgBean.imgBigUrl = collectionBean.imgBigUrl;
         imgBean.imgDesc = collectionBean.imgDesc;
         imgBean.imgTitle = collectionBean.imgTitle;
-        imgBean.linkTitle = collectionBean.linkTitle;
+        imgBean.linkTitleZh = collectionBean.linkTitle;
         imgBean.linkUrl = collectionBean.linkUrl;
         imgBean.typeId = collectionBean.typeId;
         imgBean.typeName = collectionBean.typeName;
@@ -70,7 +70,7 @@ public class BeanConvertUtil {
         imgBean.imgBigUrl = fromBean.imgBigUrl;
         imgBean.imgDesc = fromBean.imgDesc;
         imgBean.imgTitle = fromBean.imgTitle;
-        imgBean.linkTitle = fromBean.linkTitle;
+        imgBean.linkTitleZh = fromBean.linkTitle;
         imgBean.linkUrl = fromBean.linkUrl;
         imgBean.typeId = fromBean.typeId;
         imgBean.typeName = fromBean.typeName;
@@ -94,7 +94,7 @@ public class BeanConvertUtil {
         imgBean.imgBigUrl = fromBean.imgUrl;
         imgBean.imgDesc = fromBean.imgContent;
         imgBean.imgTitle = fromBean.imgTitle;
-        imgBean.linkTitle = "";
+        imgBean.linkTitleZh = "";
         imgBean.linkUrl = "";
         imgBean.typeId = "";
         imgBean.typeName = "";
@@ -120,7 +120,7 @@ public class BeanConvertUtil {
         imgBean.imgBigUrl = fromBean.imgBigUrl;
         imgBean.imgDesc = fromBean.imgDesc;
         imgBean.imgTitle = fromBean.imgTitle;
-        imgBean.linkTitle = fromBean.linkTitle;
+        imgBean.linkTitleZh = fromBean.linkTitle;
         imgBean.linkUrl = fromBean.linkUrl;
         imgBean.typeId = fromBean.typeId;
         imgBean.typeName = fromBean.typeName;
@@ -143,7 +143,7 @@ public class BeanConvertUtil {
         imgBean.imgBigUrl = fromBean.imgBigUrl;
         imgBean.imgDesc = fromBean.imgDesc;
         imgBean.imgTitle = fromBean.imgTitle;
-        imgBean.linkTitle = fromBean.linkTitle;
+        imgBean.linkTitle = fromBean.linkTitleZh;
         imgBean.linkUrl = fromBean.linkUrl;
         imgBean.typeId = fromBean.typeId;
         imgBean.typeName = fromBean.typeName;

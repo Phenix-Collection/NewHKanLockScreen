@@ -74,8 +74,7 @@ public class LogHelper {
         worker.schedule(new Action0() {
             @Override
             public void call() {
-                long timeMillis = System.currentTimeMillis();
-                String time = MyDateTimeUtil.getLogTime(timeMillis);
+                String time = MyDateTimeUtil.getCurrentLongTime();
                 write(context, time + " @ " + log);
                 worker.unsubscribe();
             }
