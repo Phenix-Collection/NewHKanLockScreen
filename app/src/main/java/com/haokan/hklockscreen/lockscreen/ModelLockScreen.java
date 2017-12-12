@@ -419,11 +419,19 @@ public class ModelLockScreen {
      * @param context
      * @param list
      */
-    private static synchronized boolean saveSwitchDataSync(Context context, ArrayList<BigImageBean> list) {
+    private static synchronized boolean saveSwitchDataSync(Context context, final ArrayList<BigImageBean> list) {
         boolean success = false;
         if (list != null && list.size() > 0) {
-            ArrayList<BigImageBean> failList = new ArrayList<>();
+            if (App.sHaokanLockView != null) {
+                App.sMainHanlder.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        App.sHaokanLockView.updateTvSwitch(0, list.size());
+                    }
+                });
+            }
 
+            ArrayList<BigImageBean> failList = new ArrayList<>();
             //存储图片文件
             File offlineDir = getNetImageDir(context);
             for (int i = 0; i < list.size(); i++) {
@@ -455,6 +463,16 @@ public class ModelLockScreen {
                 } else {//图片文件已经存在, 无需下载
                     imageBean.imgBigUrl = file.getAbsolutePath();
                     imageBean.imgSmallUrl = imageBean.imgBigUrl;
+                }
+
+                final int tempi = i + 1;
+                if (App.sHaokanLockView != null) {
+                    App.sMainHanlder.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            App.sHaokanLockView.updateTvSwitch(tempi, list.size());
+                        }
+                    });
                 }
             }
 

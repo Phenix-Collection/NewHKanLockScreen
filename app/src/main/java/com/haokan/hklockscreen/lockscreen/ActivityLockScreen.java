@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.FrameLayout;
@@ -65,7 +66,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private float mLastY;
     private boolean mScrollViewMove; //是够控制scrollview移动过了, 如果移动过了, up事件应该直接返回, 否则会相应点击事件(解决bug:上划显示推荐页后, 再下滑到底, 相应点击事件)
     private View mGustureView;
-    private static boolean sLockguideUpDown = true;
+    private static boolean sLockguideDown = true;
+    private static boolean sLockguideUp = true;
     private static boolean sLockguideRL = true;
     private BroadcastReceiver mReceiver;
 
@@ -75,7 +77,8 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
     private View mPullLayout;
     private ImageView mPullIvArraw;
     private int mPullRefreshDistence;
-    private float mTransLateY;
+    private float mDownY;
+    private double mOldPowY;
     private int mPullInitTranY; //下拉刷新布局初始的偏移量
 
     @Override
@@ -92,7 +95,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         Point point = DisplayUtil.getRealScreenPoint(this);
         mScreenW = point.x;
         mScreenH = point.y;
-
 
         initView();
         initRecommendPageView();
@@ -160,26 +162,26 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
             }
         } else {
             App.sHaokanLockView.onResume();
-        }
 
-        if (sLockguideRL) {
-            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            sLockguideRL = preferences.getBoolean("lockguiderl", true);
             if (sLockguideRL) {
-                mGustureView = findViewById(R.id.gusture_rl);
-                mGustureView.setVisibility(View.GONE);
-                mGustureView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mGustureView.setOnClickListener(null);
-                        mGustureView.setVisibility(View.GONE);
-                        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this).edit();
-                        edit.putBoolean("lockguiderl", false).apply();
-                        sLockguideRL = false;
-                        mGustureView = null;
-                    }
-                });
-                App.sMainHanlder.postDelayed(mShowGestureRun, 700);
+                final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                sLockguideRL = preferences.getBoolean("lockguiderl", true);
+                if (sLockguideRL) {
+                    mGustureView = findViewById(R.id.gusture_rl);
+                    mGustureView.setVisibility(View.GONE);
+                    mGustureView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mGustureView.setOnClickListener(null);
+                            mGustureView.setVisibility(View.GONE);
+                            SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this).edit();
+                            edit.putBoolean("lockguiderl", false).apply();
+                            sLockguideRL = false;
+                            mGustureView = null;
+                        }
+                    });
+                    App.sMainHanlder.postDelayed(mShowGestureRun, 700);
+                }
             }
         }
     }
@@ -313,7 +315,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                 return super.dispatchTouchEvent(event);
             }
         }
-        if (mIsAnimingPrompt || mScrollView.isScrolling()) {
+        if (mIsAniming || mScrollView.isScrolling()) {
             return true;
         }
 
@@ -330,7 +332,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
                 mScrollViewMove = false;
                 mPullToRefresh = false;
-                mTransLateY = 0f;
+                mDownY = mLastY;
 
                 if (mVelocityTracker == null) {
                     mVelocityTracker = VelocityTracker.obtain();
@@ -369,22 +371,20 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     }
 
                     if (mPullToRefresh) { //下拉刷新
-                        float oldTransLateY = mTransLateY;
-                        mTransLateY = mTransLateY + y - mLastY;
+                        float deltaY = y - mDownY;
 
-                        if (mTransLateY < 0) {
-                            mTransLateY = 0f;
-                        } else {
-                            double pow = Math.pow(mTransLateY, 0.85d);
+                        if (deltaY > 0) {
+                            double pow = Math.pow(deltaY, 0.85d);
 //                            LogHelper.d("wangzixu", "pullrefresh mTransLateY = " + mTransLateY + ", pow = " + pow);
 
-                            if (pow > mPullRefreshDistence && oldTransLateY <= mPullRefreshDistence) {
+                            if (pow > mPullRefreshDistence && mOldPowY <= mPullRefreshDistence) {
                                 onRefreshState3();
-                            } else if (pow <= mPullRefreshDistence && oldTransLateY > mPullRefreshDistence) {
+                            } else if (pow <= mPullRefreshDistence && mOldPowY > mPullRefreshDistence) {
                                 onRefreshState2();
                             }
 //                            mScrollView.setTranslationY((float) pow);
-                            mPullLayout.setTranslationY(mPullInitTranY + mTransLateY);
+                            mPullLayout.setTranslationY((float) (mPullInitTranY + pow));
+                            mOldPowY = pow;
                         }
 
                         mLastY = y;
@@ -469,21 +469,40 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     }
                 }
 
-                float translationY = mPullLayout.getTranslationY();
+                final float translationY = mPullLayout.getTranslationY();
                 if (translationY != mPullInitTranY) { //下拉刷新时抬手
-                    if (mTransLateY > mPullRefreshDistence) {
-                        App.sMainHanlder.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
+                    final float v = translationY - mPullInitTranY;
+                    mIsAniming = true;
 
+                    ValueAnimator animator = ValueAnimator.ofFloat(0, 1.0f);
+                    animator.setDuration(300);
+                    animator.setInterpolator(new DecelerateInterpolator());
+                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            float f = (float) animation.getAnimatedValue();
+                            mPullLayout.setAlpha(1.0f - f);
+                            mPullLayout.setTranslationY(translationY-v*f);
+                        }
+                    });
+
+                    animator.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            if (translationY-mPullInitTranY > mPullRefreshDistence) {
+                                onRefresh();
                             }
-                        }, 0);
-                    }
-
-                    onRefreshState4();
+                            mPullLayout.setAlpha(1.0f);
+                            mPullIvArraw.clearAnimation();
+                            mPullTvSwitch.setText("下拉换一换");
+                            mIsAniming = false;
+                        }
+                    });
+                    animator.start();
                 } else {
-                    mPullIvArraw.clearAnimation();
-                    mPullTvSwitch.setText("下拉换一换");
+//                    mPullIvArraw.clearAnimation();
+//                    mPullTvSwitch.setText("下拉换一换");
+//                    mPullLayout.setAlpha(1.0f);
                 }
 
                 if (mScrollViewMove || mPullToRefresh) {
@@ -527,17 +546,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         mPullIvArraw.startAnimation(mFlipAnimation);
     }
 
-    //松手
-    public void onRefreshState4() {
-        App.sMainHanlder.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mPullIvArraw.clearAnimation();
-                mPullTvSwitch.setText("下拉换一换");
-            }
-        }, 290);
-    }
-
     //刷新
     public void onRefresh() {
         App.sHaokanLockView.pullToSwitch();
@@ -560,28 +568,44 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         }
     }
 
-    public void showGustureGuideUpDown() {
+    public void showGustureGuideDown() {
+        if (sLockguideDown) {
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this);
+            sLockguideDown = preferences.getBoolean("lockguidedown", true);
+//            sLockguideDown = true;
+            if (sLockguideDown) {
+                App.sMainHanlder.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mGustureView = findViewById(R.id.gusture_down);
+                        mGustureView.setVisibility(View.VISIBLE);
+                        mGustureView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mGustureView.setVisibility(View.GONE);
+                                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this).edit();
+                                edit.putBoolean("lockguidedown", false).apply();
+                                sLockguideDown = false;
+                                mGustureView = null;
+                            }
+                        });
+                    }
+                }, 200);
+            }
+        }
+    }
+
+    public void showGustureGuideUP() {
         mGustureView = findViewById(R.id.gusture_up);
         mGustureView.setVisibility(View.VISIBLE);
         mGustureView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                View viewup = findViewById(R.id.gusture_down);
-                viewup.setVisibility(View.VISIBLE);
                 mGustureView.setVisibility(View.GONE);
-                mGustureView = viewup;
-
-                mGustureView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mGustureView.setOnClickListener(null);
-                        mGustureView.setVisibility(View.GONE);
-                        mGustureView = null;
-                        sLockguideUpDown = false;
-                        SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this).edit();
-                        edit.putBoolean("lockguideup", false).apply();
-                    }
-                });
+                SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this).edit();
+                edit.putBoolean("lockguideup", false).apply();
+                sLockguideUp = false;
+                mGustureView = null;
             }
         });
     }
@@ -616,7 +640,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         backToDetailPage();
     }
 
-    private boolean mIsAnimingPrompt;
+    private boolean mIsAniming;
     public void promptRecommenAnim() {
         final ValueAnimator animator = ValueAnimator.ofInt(0, DisplayUtil.dip2px(this, 40));
         animator.setDuration(300);
@@ -634,16 +658,16 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mIsAnimingPrompt = false;
+                mIsAniming = false;
 
-                if (sLockguideUpDown) {
+                if (sLockguideUp) {
                     final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ActivityLockScreen.this);
-                    sLockguideUpDown = preferences.getBoolean("lockguideup", true);
-                    if (sLockguideUpDown) {
+                    sLockguideUp = preferences.getBoolean("lockguideup", true);
+                    if (sLockguideUp) {
                         App.sMainHanlder.post(new Runnable() {
                             @Override
                             public void run() {
-                                showGustureGuideUpDown();
+                                showGustureGuideUP();
                             }
                         });
                     }
@@ -654,7 +678,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         App.sMainHanlder.post(new Runnable() {
             @Override
             public void run() {
-                mIsAnimingPrompt = true;
+                mIsAniming = true;
                 animator.start();
             }
         });

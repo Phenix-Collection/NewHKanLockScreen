@@ -87,6 +87,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     private ArrayList<BigImageBean> mImgDataForAd5 = new ArrayList<>();
     private View mLayoutSwitch;
     private TextView mAutoUpdateSignView;
+    /**
+     * 进入锁屏时的图片bean, 用来确定是否是循环完了一组, 以显示下拉提示
+     */
+    private BigImageBean mLockImgBean;
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
         this(context, null);
@@ -572,6 +576,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
         ((Adapter_DetailPage_LockScreen)mAdapterVpMain).setCanUnLock(true);
         mLockPosition = mCurrentPosition; //记录下锁屏的位置, 滑动解锁使用到, 来判断是否是滑动解锁
+        mLockImgBean = mCurrentImgBean;
         if (mOnLockScreenStateChangeListener != null) {
             mOnLockScreenStateChangeListener.onLockScreenStateChange(mIsLocked);
         }
@@ -614,6 +619,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         }
 
         if (mCurrentImgBean != null && !mIsLocked) {
+            //显示下拉提示
+            if (mLockImgBean != null && mLockPosition != mCurrentPosition && mLockImgBean == mCurrentImgBean
+                    && mActivity != null && mActivity instanceof ActivityLockScreen) {
+                ActivityLockScreen activityLockScreen = (ActivityLockScreen) mActivity;
+                activityLockScreen.showGustureGuideDown();
+            }
+
+            //友盟埋点
             HashMap<String, String> map = new HashMap<>();
             map.put("action", "滑动");
             if (mCurrentImgBean.mBeanAdRes != null) {
@@ -715,6 +728,15 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             mLayoutSwitch.setVisibility(GONE);
             mTvSwitch.setText("换一换");
             mIvSwitch.clearAnimation();
+        }
+    }
+
+    /**
+     * 刷新换一换当前的进度
+     */
+    public void updateTvSwitch(int cur, int total) {
+        if (mIvSwitch != null && sIsSwitching) {
+            mTvSwitch.setText("正在更新图片 " + cur +"/" + total);
         }
     }
 
