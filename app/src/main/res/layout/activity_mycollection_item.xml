@@ -27,8 +27,8 @@
         android:layout_alignParentBottom="true"
         android:src="@drawable/icon_collectionzutu"
         android:scaleType="centerInside"
-        android:layout_marginRight="18dp"
-        android:layout_marginBottom="18dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </RelativeLayout>

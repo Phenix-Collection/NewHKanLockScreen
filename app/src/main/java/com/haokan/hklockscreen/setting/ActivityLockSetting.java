@@ -82,16 +82,15 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private RelativeLayout mLayoutCheckupdate;
     private RelativeLayout mLayoutAboutus;
     private RelativeLayout mLayoutCloseSysLock;
+    private RelativeLayout mLayoutCollect;
     private ImageView mIvImage1;
     private ImageView mIvImage2;
     private ImageView mIvImage3;
     private FrameLayout mHeader;
     private ImageView mBack;
-    private TextView mSettingCollect;
     private FrameLayout mHeader1;
     private ImageView mBack1;
     private int mHeaderChangeHeigh;
-    private TextView mSettingCollect1;
     private TextView mTvLocalImageEdit;
     private ImageView mCurrentImage;
     private ClipImgManager mClipImgManager;
@@ -132,6 +131,8 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mLayoutCheckupdate = (RelativeLayout) findViewById(R.id.layout_checkupdate);
         mLayoutAboutus = (RelativeLayout) findViewById(R.id.layout_aboutus);
         mLayoutCloseSysLock = (RelativeLayout) findViewById(R.id.closesyslock);
+        mLayoutCollect = (RelativeLayout) findViewById(R.id.setting_collect);
+
         mIvImage1 = (ImageView) findViewById(R.id.iv_image1);
         mIvImage2 = (ImageView) findViewById(R.id.iv_image2);
         mIvImage3 = (ImageView) findViewById(R.id.iv_image3);
@@ -140,8 +141,6 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         mIvDelte3 = findViewById(R.id.iv_close3);
         mHeader = (FrameLayout) findViewById(R.id.header);
         mBack = (ImageView) findViewById(R.id.back);
-        mSettingCollect = (TextView) findViewById(R.id.setting_collect);
-        mSettingCollect1 = (TextView) findViewById(R.id.setting_collect1);
         mHeader1 = (FrameLayout) findViewById(R.id.header1);
         mBack1 = (ImageView) findViewById(R.id.back1);
         mTvLocalImageEdit = (TextView) findViewById(R.id.edit);
@@ -165,8 +164,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
 
         mBack.setOnClickListener(this);
         mBack1.setOnClickListener(this);
-        mSettingCollect.setOnClickListener(this);
-        mSettingCollect1.setOnClickListener(this);
+        mLayoutCollect.setOnClickListener(this);
         mLayoutlockscreen.setOnClickListener(this);
         mLayoutCheckupdate.setOnClickListener(this);
         mLayoutAboutus.setOnClickListener(this);
@@ -438,7 +436,6 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
                 break;
             case R.id.setting_collect:
-            case R.id.setting_collect1:
                 {
                     Intent intent = new Intent(this, ActivityMyCollection.class);
                     startActivityForResult(intent, 304);

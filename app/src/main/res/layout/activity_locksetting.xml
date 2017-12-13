@@ -73,6 +73,30 @@
                 android:layout_height="1dp"/>
 
             <RelativeLayout
+                android:id="@+id/setting_collect"
+                android:background="@drawable/selector_bai"
+                android:layout_width="match_parent"
+                android:layout_height="56dp">
+                <TextView
+                    android:text="我的收藏"
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_seting_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/layoutlockscreen"
                 android:background="@drawable/selector_bai"
                 android:layout_width="match_parent"
@@ -480,20 +504,6 @@
                 android:textColor="@color/bai"
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/setting_collect"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingRight="15dp"
-                android:drawablePadding="5dp"
-                android:drawableLeft="@drawable/icon_seting_store"
-                android:background="@drawable/selector_touming_borderless"
-                android:text="收藏"
-                android:textColor="@color/bai"
-                android:textSize="14sp" />
         </RelativeLayout>
     </FrameLayout>
 
@@ -529,21 +539,6 @@
                 android:text="设置"
                 android:textColor="#333333"
                 android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/setting_collect1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingRight="15dp"
-                android:drawablePadding="5dp"
-                android:drawableLeft="@drawable/icon_collect_hei"
-                android:background="@drawable/selector_touming_borderless"
-                android:text="收藏"
-                android:textColor="#666666"
-                android:textSize="14sp" />
 
             <View
                 android:layout_alignParentBottom="true"

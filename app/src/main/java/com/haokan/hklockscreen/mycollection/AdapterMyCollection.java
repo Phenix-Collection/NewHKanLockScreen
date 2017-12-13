@@ -1,7 +1,6 @@
 package com.haokan.hklockscreen.mycollection;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -173,10 +172,10 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
                     mContext.startActivityAnim();
                 } else {
                     Intent intent = new Intent(mContext, ActivityDetailPageMyCollection.class);
-                    ArrayList<Parcelable> list = new ArrayList<>();
+                    ArrayList<BeanCollection> list = new ArrayList<>();
                     list.add(mImageBean);
                     intent.putParcelableArrayListExtra("initdata", list);
-                    intent.putExtra("initpos", pos);
+                    intent.putExtra("initpos", 0);
                     mContext.startActivity(intent);
                     mContext.startActivityAnim();
                 }
