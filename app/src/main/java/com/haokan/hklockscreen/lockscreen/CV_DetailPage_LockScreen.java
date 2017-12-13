@@ -91,7 +91,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
      * 进入锁屏时的图片bean, 用来确定是否是循环完了一组, 以显示下拉提示
      */
     private BigImageBean mLockImgBean;
-
+    private View mIvBackLockScreen;
     //广告布局
     private View mAdLayout;
     private TextView mTvAdTitle;
@@ -116,6 +116,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
     private void initViews(View rootView) {
         mBottomBack.setVisibility(GONE);
+
+        mIvBackLockScreen = rootView.findViewById(R.id.iv_lockscreenback);
+        mIvBackLockScreen.setOnClickListener(mLockClickListener);
 
         mAdLayout = rootView.findViewById(R.id.adlayout);
         mTvAdTitle = (TextView) mAdLayout.findViewById(R.id.tv_adtitle);
@@ -204,6 +207,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     onClickLink();
                     break;
                 case R.id.backlockscreen:
+                case R.id.iv_lockscreenback:
                     intoLockScreenState(false);
                     UmengMaiDianManager.onEvent(mContext, "event_069");
                     break;
@@ -465,6 +469,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         } else {
             showCaption();
         }
+        mIvBackLockScreen.setVisibility(VISIBLE);
         hideTimeLayout();
         ((Adapter_DetailPage_LockScreen)mAdapterVpMain).setCanUnLock(false);
         mIsLocked = false;
@@ -500,6 +505,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         showTimeLayout();
         hideCaption();
 
+        mIvBackLockScreen.setVisibility(GONE);
         mIsLocked = true;
 
         //自动换下一张的逻辑
