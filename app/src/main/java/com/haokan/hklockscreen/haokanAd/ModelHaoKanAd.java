@@ -108,7 +108,8 @@ public class ModelHaoKanAd {
             return;
         }
 
-        Observable<BidResponse> haoKanAd = HttpRetrofitManager.getInstance().getRetrofitService().getHaoKanAd("http://203.levect.com/bidRequest/hk", request);
+//        Observable<BidResponse> haoKanAd = HttpRetrofitManager.getInstance().getRetrofitService().getHaoKanAd("http://203.levect.com/bidRequest/hk", request);
+        Observable<BidResponse> haoKanAd = HttpRetrofitManager.getInstance().getRetrofitService().getHaoKanAd("http://203.ad-dev.levect.com/bidRequest/hk", request);
         haoKanAd
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

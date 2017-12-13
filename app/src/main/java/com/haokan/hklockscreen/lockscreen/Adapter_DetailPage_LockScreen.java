@@ -11,8 +11,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.haokan.hklockscreen.R;
-import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.hklockscreen.detailpage.Adapter_DetailPage_Base;
+import com.haokan.pubic.bean.BigImageBean;
 
 import java.util.ArrayList;
 
@@ -45,8 +45,8 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
         } else {
             view = View.inflate(mContext, R.layout.cv_detailpage_lockscreen_item, null);
         }
-
         final ViewHolder holder = new ViewHolder(view);
+
         CV_UnLockImageView unLockImageView = (CV_UnLockImageView) holder.image;
         unLockImageView.setCanUnLock(mCanUnLock);
         unLockImageView.setOnLongClickListener(null);//暂时不响应长按, 所以设置为null
@@ -91,4 +91,14 @@ public class Adapter_DetailPage_LockScreen extends Adapter_DetailPage_Base {
         }).into(holder.image);
         return holder.itemView;
     }
+
+//    public class AdViewHolder extends ViewHolder {
+//        public TextView tvAdTitle;
+//        public TextView tvAdDesc;
+//        public AdViewHolder(View view) {
+//            super(view);
+//            tvAdTitle = (TextView) itemView.findViewById(R.id.tv_adtitle);
+//            tvAdDesc = (TextView) itemView.findViewById(R.id.tv_addesc);
+//        }
+//    }
 }

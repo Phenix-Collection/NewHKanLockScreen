@@ -24,11 +24,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.detailpage.CV_DetailPageView_Base;
 import com.haokan.hklockscreen.haokanAd.BeanAdRes;
 import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
-import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
+import com.haokan.hklockscreen.haokanAd.request.NativeReq;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.AlarmUtil;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.ServiceAutoUpdateImage;
 import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
@@ -36,7 +37,6 @@ import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.setting.ActivityLockSetting;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.BigImageBean;
-import com.haokan.hklockscreen.detailpage.CV_DetailPageView_Base;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
@@ -86,11 +86,16 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     //需要把date分成2份, [lockindex, lockindex+5]和[lockindex+6~~因为要往11位置~~lockindex]
     private ArrayList<BigImageBean> mImgDataForAd5 = new ArrayList<>();
     private View mLayoutSwitch;
-    private TextView mAutoUpdateSignView;
+    private View mAutoUpdateSignView;
     /**
      * 进入锁屏时的图片bean, 用来确定是否是循环完了一组, 以显示下拉提示
      */
     private BigImageBean mLockImgBean;
+
+    //广告布局
+    private View mAdLayout;
+    private TextView mTvAdTitle;
+    private TextView mTvAdDesc;
 
     public CV_DetailPage_LockScreen(@NonNull Context context) {
         this(context, null);
@@ -112,15 +117,12 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     private void initViews(View rootView) {
         mBottomBack.setVisibility(GONE);
 
-        mAutoUpdateSignView = (TextView) rootView.findViewById(R.id.autoupdatesign);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String time = preferences.getString(ServiceAutoUpdateImage.KEY_AUTOUPDATA_TIME, "----");
-        String curTime = MyDateTimeUtil.getCurrentSimpleData();
-        if (time.equals(curTime)) {
-            setUpdateSign(0, curTime);
-        } else {
-            setUpdateSign(1, curTime);
-        }
+        mAdLayout = rootView.findViewById(R.id.adlayout);
+        mTvAdTitle = (TextView) mAdLayout.findViewById(R.id.tv_adtitle);
+        mTvAdDesc = (TextView) mAdLayout.findViewById(R.id.tv_addesc);
+
+        mAutoUpdateSignView = rootView.findViewById(R.id.autoupdatesign);
+        mAutoUpdateSignView.setOnClickListener(mLockClickListener);
 
         View layoutTop = rootView.findViewById(R.id.lockscreen_layouttop); //换一换
         mLayoutMainTop.setVisibility(GONE);
@@ -182,20 +184,15 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         AlarmUtil.setOfflineAlarm(mContext);
     }
 
-    public void setUpdateSign(int state, String date) {
-        if (TextUtils.isEmpty(date)) {
-            date = MyDateTimeUtil.getCurrentSimpleData();
-        }
+    /**
+     * 0, 当天更新了<br/>
+     * 1, 当天还没更新<br/>
+     */
+    public void setUpdateSign(int state) {
         if (state == 0) {
-            mAutoUpdateSignView.setText("当天更新完了  = " + date);
+            mAutoUpdateSignView.setVisibility(GONE);
         } else if (state == 1) {
-            mAutoUpdateSignView.setText("当天还没更新  = " + date);
-        } else if (state == 2) {
-            mAutoUpdateSignView.setText("当天开始更新...  = " + date);
-        } else if (state == 3) {
-            mAutoUpdateSignView.setText("当天更新失败  = " + date);
-        } else if (state == 4) {
-            mAutoUpdateSignView.setText("当天触发了闹铃  = " + date);
+            mAutoUpdateSignView.setVisibility(VISIBLE);
         }
     }
 
@@ -210,8 +207,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     intoLockScreenState(false);
                     UmengMaiDianManager.onEvent(mContext, "event_069");
                     break;
-                case R.id.ll_switch:
-                    pullToSwitch();
+                case R.id.autoupdatesign:
+                    pullToSwitch(true);
                     break;
                 default:
                     break;
@@ -219,7 +216,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         }
     };
 
-    public void pullToSwitch() {
+    public void pullToSwitch(final boolean isAutoUpdate) {
         if (sIsSwitching) {
             return;
         }
@@ -232,7 +229,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         boolean wifi = HttpStatusManager.isWifi(mContext);
         //如果是wifi, 或者允许在非wifi下换一换
         if (wifi || PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, false)) {
-            loadSwitchData();
+            setUpdateSign(0);
+            if (isAutoUpdate) {
+                Intent i = new Intent(mContext, ServiceAutoUpdateImage.class);
+                mContext.startService(i);
+            } else {
+                loadSwitchData();
+            }
         } else {
             if (mActivity == null) {
                 ToastManager.showCenter(mContext, "未设置Activity, 无法弹窗");
@@ -252,7 +255,14 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                                 SharedPreferences.Editor edit = preferences.edit();
                                 edit.putBoolean(Values.PreferenceKey.KEY_SP_SWITCH_NOWIFI, true).apply();
                             }
-                            loadSwitchData();
+                            setUpdateSign(0);
+                            if (isAutoUpdate) {
+                                Intent i = new Intent(mContext, ServiceAutoUpdateImage.class);
+                                mContext.startService(i);
+                            } else {
+                                loadSwitchData();
+                            }
+
                         }
                     });
 
@@ -446,6 +456,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             mIsCaptionShow = true;
             mLayoutMainTop.setVisibility(View.VISIBLE);
 
+            mAdLayout.setVisibility(VISIBLE);
+
             int flags = 0;
             flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             flags = flags | View.SYSTEM_UI_FLAG_VISIBLE;
@@ -527,6 +539,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
         //处理时间界面上的一些标题等信息
         if (mCurrentImgBean != null) {
+            if (mCurrentImgBean.mBeanAdRes != null) { //是广告, 需要特殊处理
+                mAdLayout.setVisibility(GONE);
+            }
+
             if (mCurrentImgBean.imgTitle == null) {
                 mCurrentImgBean.imgTitle = "";
             }
@@ -535,10 +551,6 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             if (mCurrentImgBean.myType == 1) {
                 mTvLockLink.setVisibility(GONE);
             } else {
-//                mTvLockLink.setBackgroundResource(getLinkBgColor());
-//                mTvLockLink.setVisibility(VISIBLE);
-//                mTvLockLink.setText("查看更多");
-
                 if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
                     mTvLockLink.setVisibility(GONE);
                 } else {
@@ -602,9 +614,29 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             if (mLayoutMainBottom.getVisibility() == VISIBLE) {
                 mLayoutMainBottom.setVisibility(INVISIBLE);
             }
+            mAdLayout.setVisibility(VISIBLE);
+
+            if (TextUtils.isEmpty(mCurrentImgBean.mBeanAdRes.adTitle)) {
+                mTvAdTitle.setVisibility(View.GONE);
+            } else {
+                mTvAdTitle.setVisibility(View.VISIBLE);
+                mTvAdTitle.setText(mCurrentImgBean.mBeanAdRes.adTitle);
+            }
+
+            if (TextUtils.isEmpty(mCurrentImgBean.mBeanAdRes.adDesc)) {
+                mTvAdDesc.setVisibility(View.GONE);
+            } else {
+                mTvAdDesc.setVisibility(View.VISIBLE);
+                mTvAdDesc.setText(mCurrentImgBean.mBeanAdRes.adDesc);
+            }
+
             //广告展示上报
             ModelHaoKanAd.adShowUpLoad(mCurrentImgBean.mBeanAdRes.showUpUrl);
-        } else if (mCurrentImgBean.myType == 1) {
+        } else {
+            mAdLayout.setVisibility(GONE);
+        }
+
+        if (mCurrentImgBean.myType == 1) {
             mLocalLockIndex = position;
         } else {
             mNoLocalLockIndex = position;
@@ -653,10 +685,18 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         //第5个位置的广告
         mHasLoadAd5 = true;
 
-        BannerReq bannerReq = new BannerReq();
-        bannerReq.w = 1080;
-        bannerReq.h = 1920;
-        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 5, null, bannerReq);
+//        BannerReq bannerReq = new BannerReq();
+//        bannerReq.w = 1080;
+//        bannerReq.h = 1920;
+
+        NativeReq nativeReq = new NativeReq();
+        nativeReq.w = 1080;
+        nativeReq.h = 1920;
+        nativeReq.style = 2;
+
+
+//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest("4-110-159", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
@@ -685,10 +725,16 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     protected void loadHaoKanAdDate11(final int position) {
         //第11个位置的广告
         mHasLoadAd11 = true;
-        BannerReq bannerReq = new BannerReq();
-        bannerReq.w = 1080;
-        bannerReq.h = 1920;
-        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-207", 5, null, bannerReq);
+//        BannerReq bannerReq = new BannerReq();
+//        bannerReq.w = 1080;
+//        bannerReq.h = 1920;
+
+        NativeReq nativeReq = new NativeReq();
+        nativeReq.w = 1080;
+        nativeReq.h = 1920;
+        nativeReq.style = 2;
+//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-207", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest("4-110-159", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
@@ -763,6 +809,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
                 setIvSwitching(false);
                 mSwitchDataPage++;
+
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+                String curTime = MyDateTimeUtil.getCurrentSimpleData();
+                preferences.edit().putString(ServiceAutoUpdateImage.KEY_AUTOUPDATA_TIME, curTime).apply();
 //                modelLockScreen.saveSwitchData(mContext, mSwitchImgData);
             }
 

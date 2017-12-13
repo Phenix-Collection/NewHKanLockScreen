@@ -39,12 +39,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.lockscreenautoupdateimage.ServiceAutoUpdateImage;
 import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
+import com.haokan.pubic.util.MyDateTimeUtil;
 import com.haokan.pubic.util.StatusBarUtil;
 
 /**
@@ -163,8 +165,16 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         } else {
             App.sHaokanLockView.onResume();
 
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String time = preferences.getString(ServiceAutoUpdateImage.KEY_AUTOUPDATA_TIME, "----");
+            String curTime = MyDateTimeUtil.getCurrentSimpleData();
+            if (time.equals(curTime)) {
+                App.sHaokanLockView.setUpdateSign(0);
+            } else {
+                App.sHaokanLockView.setUpdateSign(1);
+            }
+
             if (sLockguideRL) {
-                final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
                 sLockguideRL = preferences.getBoolean("lockguiderl", true);
                 if (sLockguideRL) {
                     mGustureView = findViewById(R.id.gusture_rl);
@@ -548,7 +558,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
 
     //刷新
     public void onRefresh() {
-        App.sHaokanLockView.pullToSwitch();
+        App.sHaokanLockView.pullToSwitch(false);
 
         UmengMaiDianManager.onEvent(this, "event_102");
     }
