@@ -207,9 +207,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     onClickLink();
                     break;
                 case R.id.backlockscreen:
+                    onClickBack();
+                    break;
                 case R.id.iv_lockscreenback:
-                    intoLockScreenState(false);
-                    UmengMaiDianManager.onEvent(mContext, "event_069");
+                    if (!mIsLocked) {
+                        intoLockScreenState(false);
+                        UmengMaiDianManager.onEvent(mContext, "event_069");
+                    }
                     break;
                 case R.id.autoupdatesign:
                     pullToSwitch(true);
@@ -716,6 +720,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 imageBean.imgBigUrl = adRes.imgUrl;
                 imageBean.imgSmallUrl = adRes.imgUrl;
                 imageBean.shareUrl = adRes.landPageUrl;
+                imageBean.imgTitle = adRes.adTitle;
+                imageBean.imgDesc = adRes.adDesc;
+                imageBean.linkUrl = adRes.landPageUrl;
+
                 mAdData5 = imageBean;
                 mData.add(position+4, imageBean);
                 mAdapterVpMain.notifyDataSetChanged();
@@ -755,6 +763,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 imageBean.imgBigUrl = adRes.imgUrl;
                 imageBean.imgSmallUrl = adRes.imgUrl;
                 imageBean.shareUrl = adRes.landPageUrl;
+                imageBean.imgTitle = adRes.adTitle;
+                imageBean.imgDesc = adRes.adDesc;
+                imageBean.linkUrl = adRes.landPageUrl;
                 mAdData11 = imageBean;
                 mData.add(position+5, imageBean);
                 mAdapterVpMain.notifyDataSetChanged();

@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
-import com.haokan.hklockscreen.lockscreen.CV_DetailPage_LockScreen;
 import com.haokan.hklockscreen.lockscreen.ModelLockScreen;
 import com.haokan.pubic.App;
 import com.haokan.pubic.bean.BigImageBean;
@@ -56,6 +55,7 @@ public class ServiceAutoUpdateImage extends Service {
             LogHelper.d("wangzixu", "autoupdate onStartCommand 当天已经更新");
             if (App.sHaokanLockView != null) {
                 App.sHaokanLockView.setUpdateSign(0);
+                App.sHaokanLockView.setIvSwitching(false);
             }
             stopSelf();
             return super.onStartCommand(intent, flags, startId);
@@ -133,7 +133,6 @@ public class ServiceAutoUpdateImage extends Service {
                 preferences.edit().putString(KEY_AUTOUPDATA_TIME, curTime).apply();
 
                 if (App.sHaokanLockView != null) {
-                    App.sHaokanLockView = new CV_DetailPage_LockScreen(getApplicationContext());
                     App.sHaokanLockView.loadOfflineNetData(true); //自动更新, 不通过广播出发, 直接调用即可
                     App.sHaokanLockView.setUpdateSign(0);
                     App.sHaokanLockView.setIvSwitching(false);
