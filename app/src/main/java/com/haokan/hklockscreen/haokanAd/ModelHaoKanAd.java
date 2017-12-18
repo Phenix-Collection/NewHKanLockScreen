@@ -35,6 +35,8 @@ public class ModelHaoKanAd {
      (overlay)9.播放器外的广告(companion);10.信息流
      (feeds);11.无线墙。1~5 为 banner 形式;6~9 为视频
      形式;10~11 为移动 原生形式
+
+     只有图的传5, 图文的传10
      */
     public static BidRequest getBidRequest(String adid, int adType, NativeReq nativeReq, BannerReq bannerReq) {
         BidRequest bidRequest = new BidRequest();
@@ -100,7 +102,6 @@ public class ModelHaoKanAd {
 
                     }
                 });
-
     }
 
     public static void getAd(Context context, BidRequest request, final onAdResListener<BeanAdRes> listener) {

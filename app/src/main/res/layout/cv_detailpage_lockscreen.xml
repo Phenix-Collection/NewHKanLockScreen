@@ -10,40 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="74dp">
 
-        <RelativeLayout
-            android:id="@+id/autoupdatesign"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="31dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/tvupdate"
-                android:background="@drawable/bg_updatebg"
-                android:gravity="center"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:text="更新"
-                android:textColor="@color/selector_click_bai"
-                android:textSize="12sp"/>
-
-            <TextView
-                android:layout_toRightOf="@id/tvupdate"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:textSize="13sp"
-                android:text="更新图片拉!"
-                android:textColor="@color/bai"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <ImageView
-                android:layout_marginLeft="26dp"
-                android:src="@drawable/red_dot"
-                android:scaleType="centerInside"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </RelativeLayout>
-
         <TextView
             android:id="@+id/backlockscreen"
             android:layout_width="wrap_content"
@@ -86,6 +52,40 @@
                 android:textColor="@color/selector_click_bai"
                 android:textSize="13sp"/>
         </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/autoupdatesign"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="31dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvupdate"
+            android:background="@drawable/bg_updatebg"
+            android:gravity="center"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:text="更新"
+            android:textColor="@color/selector_click_bai"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:layout_toRightOf="@id/tvupdate"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:textSize="13sp"
+            android:text="有新图了!"
+            android:textColor="@color/bai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_marginLeft="26dp"
+            android:src="@drawable/red_dot"
+            android:scaleType="centerInside"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
 
     <!--底部显示时间的区域-->
