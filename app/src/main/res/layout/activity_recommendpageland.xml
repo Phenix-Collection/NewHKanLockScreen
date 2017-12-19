@@ -45,9 +45,9 @@
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:background="@drawable/selector_touming_borderless"
             android:scaleType="center"
             android:src="@drawable/selector_landpage_collect" />
+            <!--android:background="@drawable/selector_touming_borderless"-->
 
         <View
             android:id="@+id/divider"

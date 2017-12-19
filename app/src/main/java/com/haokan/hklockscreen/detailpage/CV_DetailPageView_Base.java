@@ -24,8 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -33,7 +31,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.haokan.hklockscreen.R;
-import com.haokan.pubic.database.BeanCollection;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
 import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
@@ -44,12 +41,14 @@ import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BeanConvertUtil;
 import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.customview.ViewPagerTransformer;
+import com.haokan.pubic.database.BeanCollection;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.BlurUtil;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
+import com.haokan.pubic.util.MyAnimationUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.umeng.socialize.ShareAction;
@@ -296,7 +295,7 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 onClickBack();
                 break;
             case R.id.bottom_download:
-                clickAnimation(v);
+                MyAnimationUtil.clickBigSmallAnimation(v);
 
                 if (Build.VERSION.SDK_INT >= 23 && mActivity != null) {
                     //需要用权限的地方之前，检查是否有某个权限
@@ -312,15 +311,15 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
                 }
                 break;
             case R.id.bottom_collect:
-                clickAnimation(v);
+                MyAnimationUtil.clickBigSmallAnimation(v);
                 onClickCollect(v);
                 break;
             case R.id.setting:
-                clickAnimation(v);
+                MyAnimationUtil.clickBigSmallAnimation(v);
                 onClickSetting();
                 break;
             case R.id.bottom_share:
-                clickAnimation(v);
+                MyAnimationUtil.clickBigSmallAnimation(v);
                 showShareLayout();
                 break;
             case R.id.save_img:
@@ -1137,39 +1136,5 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
 
     public void onDestory() {
         EventBus.getDefault().unregister(this);
-    }
-
-    protected void clickAnimation(final View view) {
-        final ValueAnimator anim1 = ValueAnimator.ofFloat(0, 1.0f);
-        anim1.setDuration(160);
-        anim1.setInterpolator(new LinearInterpolator());
-        anim1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float f = (float) animation.getAnimatedValue();
-                float scale = 1.0f + f*0.2f;
-                view.setScaleX(scale);
-                view.setScaleY(scale);
-            }
-        });
-        anim1.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                ValueAnimator anim2 = ValueAnimator.ofFloat(0, 1.0f);
-                anim2.setDuration(300);
-                anim2.setInterpolator(new OvershootInterpolator(3));
-                anim2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        float f = (float) animation.getAnimatedValue();
-                        float scale = 1.2f - f*0.2f;
-                        view.setScaleX(scale);
-                        view.setScaleY(scale);
-                    }
-                });
-                anim2.start();
-            }
-        });
-        anim1.start();
     }
 }

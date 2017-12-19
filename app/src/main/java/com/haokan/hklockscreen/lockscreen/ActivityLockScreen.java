@@ -351,7 +351,6 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                 mVelocityTracker.addMovement(event);
                 break;
             case MotionEvent.ACTION_MOVE:
-
                 if (App.sHaokanLockView.isShowLongClickLayout()) { //如果当前显示出了长按的对话框, 不响应事件
                     return true;
                 }

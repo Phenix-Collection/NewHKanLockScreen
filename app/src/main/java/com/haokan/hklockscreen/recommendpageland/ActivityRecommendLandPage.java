@@ -27,6 +27,7 @@ import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.util.CommonUtil;
+import com.haokan.pubic.util.MyAnimationUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
 import com.j256.ormlite.dao.Dao;
@@ -354,6 +355,7 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
                 showShareLayout();
                 break;
             case R.id.collect:
+                MyAnimationUtil.clickBigSmallAnimation(v);
                 onClickCollect(v);
                 break;
             default:
