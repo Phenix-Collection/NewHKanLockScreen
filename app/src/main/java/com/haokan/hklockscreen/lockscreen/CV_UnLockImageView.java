@@ -75,7 +75,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
     /**
      * 手指落点
      */
-    private int mDownY;
+    private int mDownX, mDownY;
 
     /**
      * 手指滑动的最高点，如果抬手的点比最高点小于一定值，就认为用户并不想解锁
@@ -179,6 +179,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
         int action = event.getAction();
+        int x = (int) event.getX();
         int y = (int) event.getY();
         if (y < mMinY) {
             mMinY = y;
@@ -189,6 +190,7 @@ public class CV_UnLockImageView extends AppCompatImageView {
                 mIsUnLonking = false;
                 mMinY  = y;
                 mDownY = y;
+                mDownX = x;
 //                LogHelper.d("wangzixu", "unlockview dispatchTouchEvent ACTION_DOWN = " + y);
 
                 mCancelLongClick = false;
@@ -247,6 +249,12 @@ public class CV_UnLockImageView extends AppCompatImageView {
                     mHasLongClicked = false;
                     return true;
                 }
+                if (mOnClickListener != null
+                        && Math.abs(x-mDownX) < mTouchSlop && Math.abs(y - mDownY) < mTouchSlop
+                        ) {
+                    mOnClickListener.onClick(this);
+                    return true;
+                }
                 break;
             default:
                 break;
@@ -255,9 +263,19 @@ public class CV_UnLockImageView extends AppCompatImageView {
     }
 
     OnLongClickListener mOnLongClickListener;
+    OnClickListener mOnClickListener;
     @Override
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
         mOnLongClickListener = l;
+    }
+
+    @Override
+    public void setOnClickListener(OnClickListener onClickListener) {
+//        super.setOnClickListener(onClickListener);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+        setClickable(true);
+        mOnClickListener = onClickListener;
     }
 
     /**

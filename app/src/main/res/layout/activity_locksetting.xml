@@ -73,30 +73,6 @@
                 android:layout_height="1dp"/>
 
             <RelativeLayout
-                android:id="@+id/setting_collect"
-                android:background="@drawable/selector_bai"
-                android:layout_width="match_parent"
-                android:layout_height="56dp">
-                <TextView
-                    android:text="我的收藏"
-                    android:textColor="#666666"
-                    android:textSize="14sp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
-
-                <ImageView
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/icon_seting_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/layoutlockscreen"
                 android:background="@drawable/selector_bai"
                 android:layout_width="match_parent"
@@ -156,6 +132,30 @@
                     android:layout_marginRight="15dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/selector_switchimage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/setting_collect"
+                android:background="@drawable/selector_bai"
+                android:layout_width="match_parent"
+                android:layout_height="56dp">
+                <TextView
+                    android:text="我的收藏"
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/icon_seting_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>

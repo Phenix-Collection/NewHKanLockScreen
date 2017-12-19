@@ -91,8 +91,7 @@ public class ViewPagerTransformer {
      * 图片视差滚动
      */
     public static class ParallaxTransformer implements ViewPager.PageTransformer {
-        private float PARALLAX_COEFFICIENT = 0.75f;
-        private float mScrollXOffset = 0;
+        private float PARALLAX_COEFFICIENT = -0.75f;
         //视差滚动其中的内容
         private int mContentViewId;
 
@@ -102,15 +101,11 @@ public class ViewPagerTransformer {
 
         @Override
         public void transformPage(View view, float position) {
-            if (mScrollXOffset == 0) {
-                mScrollXOffset = view.getWidth() * PARALLAX_COEFFICIENT;
-            }
-
+            float scrollXOffset = view.getWidth() * PARALLAX_COEFFICIENT;
             View page = view.findViewById(mContentViewId);
-//            View page = ((ViewGroup)view).getChildAt(0);
 
             if (page != null && position >= -1 && position <= 1) { // [-1,1]
-                page.setTranslationX(-mScrollXOffset * position);
+                page.setTranslationX(scrollXOffset * position);
             }
         }
     }

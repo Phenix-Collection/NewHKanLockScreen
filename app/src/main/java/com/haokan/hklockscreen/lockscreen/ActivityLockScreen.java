@@ -405,7 +405,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
                     float absX = Math.abs(mLastX - x);
                     float absY = Math.abs(mLastY - y);
                     float deltaY = mLastY - y; //只有向上划, 才相应滑动scrollview的事件, 其他的事件都交由viewpager去处理
-                    if (absY > absX && absY > mTouchSlop) {
+                    if (absY > 2*absX && absY > mTouchSlop) {
                         if (deltaY > 0) {
                             mScrollView.scrollBy(0, 1);
                             mScrollViewMove = true;

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
 import com.haokan.pubic.base.ActivityBase;
@@ -145,7 +146,7 @@ public class AdapterMyCollection extends DefaultHeaderFooterRecyclerViewAdapter<
             mImageBean = mData.get(position);
             final String url = mImageBean.imgSmallUrl;
 
-            Glide.with(mContext).load(url).dontAnimate().into(mImg);
+            Glide.with(mContext).load(url).diskCacheStrategy(DiskCacheStrategy.SOURCE).dontAnimate().into(mImg);
 
             if (mEditMode) {
                 mImgChoiceMark.setVisibility(View.VISIBLE);
