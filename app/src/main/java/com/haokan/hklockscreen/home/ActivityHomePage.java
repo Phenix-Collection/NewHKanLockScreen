@@ -64,13 +64,19 @@ public class ActivityHomePage extends ActivityBase {
             intent.putExtra(ActivityLockScreenInitSet.KEY_INTENT_FROMHOME, true);
             startActivity(intent);
 
+        } else {
+            App.sMainHanlder.postDelayed(mPermissionRun, 600);
+        }
+
+        boolean mFirstUpdateFunction = preferences.getBoolean(Values.PreferenceKey.KEY_SP_FIRSTUPDATEFUNCTION, true);
+        if (mFirstUpdateFunction) {
+            preferences.edit().putBoolean(Values.PreferenceKey.KEY_SP_FIRSTUPDATEFUNCTION, false).apply();
+
             String curTime = MyDateTimeUtil.getCurrentSimpleData();
             preferences.edit().putString(ServiceAutoUpdateImage.KEY_AUTOUPDATA_TIME, curTime).apply();
             if (App.sHaokanLockView != null) {
                 App.sHaokanLockView.setUpdateSign(0);
             }
-        } else {
-            App.sMainHanlder.postDelayed(mPermissionRun, 600);
         }
     }
 

@@ -62,8 +62,8 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendListPage implements
     }
 
     protected void showHeader() {
-        mHeaderView.setVisibility(VISIBLE);
-        mHeaderViewCopy.setVisibility(GONE);
+//        mHeaderView.setVisibility(VISIBLE);
+//        mHeaderViewCopy.setVisibility(GONE);
 //        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
 //        valueAnimator.setDuration(200);
 //        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -79,8 +79,8 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendListPage implements
     }
 
     protected void hideHeader() {
-        mHeaderView.setVisibility(GONE);
-        mHeaderViewCopy.setVisibility(VISIBLE);
+//        mHeaderView.setVisibility(GONE);
+//        mHeaderViewCopy.setVisibility(VISIBLE);
 
 //        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1.0f);
 //        valueAnimator.setDuration(200);

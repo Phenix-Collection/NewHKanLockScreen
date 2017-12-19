@@ -61,5 +61,12 @@ public class Values {
          * 是否是第一次安装
          */
         public static final String KEY_SP_FIRSTINSTALL = "firstin";
+
+        /**
+         *
+         * 4.0.4增加了在左上角显示当天图片没更新的功能, 低版本升上来肯定找不到更新时间
+         * 所以会认为没有更新而显示, 所以需要价格标志位改掉这个问题
+         */
+        public static final String KEY_SP_FIRSTUPDATEFUNCTION = "updatefun";
     }
 }

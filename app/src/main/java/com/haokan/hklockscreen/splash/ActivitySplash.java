@@ -34,7 +34,7 @@ import rx.schedulers.Schedulers;
 
 
 public class ActivitySplash extends ActivityBase implements View.OnClickListener {
-    private long mStayTime = 2000; //倒计时
+    private long mStayTime = 3000; //倒计时
     private ImageView mIvAdView;
     private TextView mTvJumpAd;
 
