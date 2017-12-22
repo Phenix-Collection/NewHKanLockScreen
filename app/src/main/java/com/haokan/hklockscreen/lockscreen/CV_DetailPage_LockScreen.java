@@ -705,8 +705,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         nativeReq.style = 2;
 
 
-//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 10, nativeReq, null);
-        BidRequest request = ModelHaoKanAd.getBidRequest("4-110-159", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 10, nativeReq, null);
+//        BidRequest request = ModelHaoKanAd.getBidRequest("4-110-159", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
@@ -747,8 +747,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         nativeReq.w = 1080;
         nativeReq.h = 1920;
         nativeReq.style = 2;
-//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-207", 10, nativeReq, null);
-        BidRequest request = ModelHaoKanAd.getBidRequest("4-110-159", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-207", 10, nativeReq, null);
+//        BidRequest request = ModelHaoKanAd.getBidRequest("4-110-159", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
