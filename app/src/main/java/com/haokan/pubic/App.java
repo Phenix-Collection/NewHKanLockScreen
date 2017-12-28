@@ -181,11 +181,16 @@ public class App extends Application {
             if (sApp == null) {
                 return;
             }
-            int networkType = HttpStatusManager.getNetworkType(sApp);
-            LogHelper.d("wangzixu", "WiFiChangeReceiver autoupdate networkType = " + networkType);
-            if (networkType == 1) {
-                Intent i = new Intent(sApp, ServiceAutoUpdateImage.class);
-                sApp.startService(i);
+
+            try {
+                int networkType = HttpStatusManager.getNetworkType(sApp);
+                LogHelper.d("wangzixu", "WiFiChangeReceiver autoupdate networkType = " + networkType);
+                if (networkType == 1) {
+                    Intent i = new Intent(sApp, ServiceAutoUpdateImage.class);
+                    sApp.startService(i); //有可能报 app是一个DeadObject的错误, app可能是被冻结进程了, 不能开启服务
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     };

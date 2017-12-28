@@ -503,9 +503,14 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     }
 
                     mIvBigImage.setVisibility(View.VISIBLE);
-                    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
-                    decorView.addView(mIvBigImage);
-                    Glide.with(this).load(mLocalImage1.imgUrl).into(mIvBigImage);
+                    final ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+                    App.sMainHanlder.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            decorView.addView(mIvBigImage);
+                            Glide.with(ActivityLockSetting.this).load(mLocalImage1.imgUrl).into(mIvBigImage);
+                        }
+                    });
 
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_095");
                 }
@@ -537,9 +542,15 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     }
 
                     mIvBigImage.setVisibility(View.VISIBLE);
-                    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
-                    decorView.addView(mIvBigImage);
-                    Glide.with(this).load(mLocalImage2.imgUrl).into(mIvBigImage);
+                    final ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+
+                    App.sMainHanlder.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            decorView.addView(mIvBigImage);
+                            Glide.with(ActivityLockSetting.this).load(mLocalImage2.imgUrl).into(mIvBigImage);
+                        }
+                    });
                     LogHelper.d("wangzixu", "clipimg clickimage2 mLocalImage2.imgUrl = " + mLocalImage2.imgUrl);
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_095");
                 }
@@ -571,9 +582,15 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     }
 
                     mIvBigImage.setVisibility(View.VISIBLE);
-                    ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
-                    decorView.addView(mIvBigImage);
-                    Glide.with(this).load(mLocalImage3.imgUrl).into(mIvBigImage);
+                    final ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+
+                    App.sMainHanlder.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            decorView.addView(mIvBigImage);
+                            Glide.with(ActivityLockSetting.this).load(mLocalImage3.imgUrl).into(mIvBigImage);
+                        }
+                    });
 
                     UmengMaiDianManager.onEvent(ActivityLockSetting.this, "event_095");
                 }
