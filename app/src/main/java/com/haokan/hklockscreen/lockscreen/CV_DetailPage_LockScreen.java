@@ -327,7 +327,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         String time = fTime.format(curDate);
         mTvLockTime.setText("" + time);
 
-        SimpleDateFormat fData = new SimpleDateFormat("E  MM月dd日");
+        SimpleDateFormat fData = new SimpleDateFormat("E  M月d日");
         String data = fData.format(curDate);
         mTvLockData.setText(data);
     }

@@ -507,8 +507,12 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     App.sMainHanlder.post(new Runnable() {
                         @Override
                         public void run() {
-                            decorView.addView(mIvBigImage);
-                            Glide.with(ActivityLockSetting.this).load(mLocalImage1.imgUrl).into(mIvBigImage);
+                            try {
+                                decorView.addView(mIvBigImage);
+                                Glide.with(ActivityLockSetting.this).load(mLocalImage1.imgUrl).into(mIvBigImage);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -547,8 +551,12 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     App.sMainHanlder.post(new Runnable() {
                         @Override
                         public void run() {
-                            decorView.addView(mIvBigImage);
-                            Glide.with(ActivityLockSetting.this).load(mLocalImage2.imgUrl).into(mIvBigImage);
+                            try {
+                                decorView.addView(mIvBigImage);
+                                Glide.with(ActivityLockSetting.this).load(mLocalImage2.imgUrl).into(mIvBigImage);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     LogHelper.d("wangzixu", "clipimg clickimage2 mLocalImage2.imgUrl = " + mLocalImage2.imgUrl);
@@ -587,8 +595,12 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                     App.sMainHanlder.post(new Runnable() {
                         @Override
                         public void run() {
-                            decorView.addView(mIvBigImage);
-                            Glide.with(ActivityLockSetting.this).load(mLocalImage3.imgUrl).into(mIvBigImage);
+                            try {
+                                decorView.addView(mIvBigImage);
+                                Glide.with(ActivityLockSetting.this).load(mLocalImage3.imgUrl).into(mIvBigImage);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
