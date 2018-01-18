@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:replace="android:allowBackup"
         android:name="com.haokan.pubic.App"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"

@@ -44,6 +44,7 @@ import com.haokan.pubic.App;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.MyDateTimeUtil;
