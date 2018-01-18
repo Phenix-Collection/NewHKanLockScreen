@@ -40,6 +40,7 @@ import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
 import com.haokan.pubic.util.MyDateTimeUtil;
 import com.haokan.pubic.util.MyDialogUtil;
@@ -173,6 +174,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                             map.put("from", "离线图片");
                         }
                         UmengMaiDianManager.onEvent(mContext, "event_074", map);
+
+                        MaidianManager.setAction(mContext, mCurrentImgBean.imgId, 1, "1");
+                        mPreImageId = mCurrentImgBean.imgId;
+                        mPreImageShowTime = System.currentTimeMillis();
                     }
                 }
             }
@@ -365,6 +370,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                         HashMap<String, String> map = new HashMap<>();
                         map.put("type", mCurrentImgBean.typeName);
                         UmengMaiDianManager.onEvent(mContext, "event_072", map);
+
+                        MaidianManager.setAction(mContext, mCurrentImgBean.imgId, 7, mIsCaptionShow ? "0" : "1");
                     }
                 }
             }
@@ -402,6 +409,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         HashMap<String, String> map = new HashMap<>();
         map.put("type", mCurrentImgBean.typeName);
         UmengMaiDianManager.onEvent(mContext, "event_064", map);
+        MaidianManager.setAction(mContext, mCurrentImgBean.imgId, 5, "0");
 
         if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
 //            Intent intent = new Intent(mContext, ActivityLandPageForLockPage.class);
@@ -427,6 +435,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             Intent intent = new Intent(mContext, ActivityWebview.class);
             intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.linkUrl);
             intent.putExtra(ActivityWebview.KEY_INTENT_WEB_TITLE, mCurrentImgBean.imgTitle);
+            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_STADYTIME, true);
             if (mActivity != null) {
                 mActivity.startActivity(intent);
                 mActivity.overridePendingTransition(R.anim.activity_in_right2left, R.anim.activity_out_right2left);
@@ -442,6 +451,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             HashMap<String, String> map = new HashMap<>();
             map.put("type", mCurrentImgBean.typeName);
             UmengMaiDianManager.onEvent(mContext, "event_070", map);
+
+            //好看埋点
+            MaidianManager.setAction(mContext, mCurrentImgBean.imgId, 3, mCurrentImgBean.isCollect != 0 ? "0" : "1");
         }
     }
 
@@ -452,6 +464,9 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             HashMap<String, String> map = new HashMap<>();
             map.put("type", mCurrentImgBean.typeName);
             UmengMaiDianManager.onEvent(mContext, "event_071", map);
+
+            //好看埋点
+            MaidianManager.setAction(mContext, mCurrentImgBean.imgId, 6, "0");
         }
     }
 
@@ -604,6 +619,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         }
     }
 
+    //用来测量图片停留时长的两个变量
+    protected long mPreImageShowTime;
+    protected String mPreImageId;
+
     @Override
     public void onPageSelected(int position) {
         mCurrentPosition = position;
@@ -679,6 +698,15 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                 map.put("from", "离线图片");
             }
             UmengMaiDianManager.onEvent(mContext, "event_074", map);
+            MaidianManager.setAction(mContext, mCurrentImgBean.imgId, 1, "1");
+
+            if (!TextUtils.isEmpty(mPreImageId)) {
+                long currentTimeMillis = System.currentTimeMillis();
+
+                MaidianManager.setAction(mContext, mPreImageId, 10, String.valueOf(currentTimeMillis-mPreImageShowTime));
+                mPreImageShowTime = currentTimeMillis;
+                mPreImageId = mCurrentImgBean.imgId;
+            }
         }
     }
 
@@ -1002,6 +1030,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             mContext.startActivity(i);
         }
         UmengMaiDianManager.onEvent(mContext, "event_066");
+        MaidianManager.setAction(mContext, "0", 17, "0");
     }
 
     @Override
@@ -1012,6 +1041,25 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             HashMap<String, String> map = new HashMap<>();
             map.put("type", mCurrentImgBean.typeName);
             UmengMaiDianManager.onEvent(mContext, "event_067", map);
+
+            String related = "0";
+            //好看埋点
+            switch (platfrom) {
+                case WEIXIN:
+                case WEIXIN_CIRCLE:
+                    related = "1";
+                    break;
+                case QQ:
+                case QZONE:
+                    related = "2";
+                    break;
+                case SINA:
+                    related = "3";
+                    break;
+                default:
+                    break;
+            }
+            MaidianManager.setAction(mContext, mCurrentImgBean.imgId, 4, related);
         }
     }
 

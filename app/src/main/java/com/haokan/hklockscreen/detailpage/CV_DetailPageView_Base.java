@@ -249,16 +249,9 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         }
     };
 
-    protected long mPreImageShowTime;
+
     @Override
     public void onPageSelected(int position) {
-        long currentTimeMillis = System.currentTimeMillis();
-        if (mCurrentImgBean != null) {
-            //好看埋点
-            MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 9, String.valueOf(currentTimeMillis-mPreImageShowTime), currentTimeMillis);
-        }
-        mPreImageShowTime = currentTimeMillis;
-
         App.sMainHanlder.removeCallbacks(mPageSelectedDelayRunnable);
         mCurrentPosition = position;
         mCurrentImgBean = mData.get(mCurrentPosition);
@@ -415,9 +408,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
             return;
         }
 
-        //好看埋点
-        MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 4, "", System.currentTimeMillis());
-
         if (TextUtils.isEmpty(mCurrentImgBean.shareUrl)) {
 //            LogHelper.d("wangzixu", "shareTo mActivity  mCurrentImgBean.imgBigUrl = " + mCurrentImgBean.imgBigUrl);
             Glide.with(mContext).load(mCurrentImgBean.imgBigUrl)
@@ -495,9 +485,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (mCurrentImgBean == null) {
             return;
         }
-
-        //好看埋点
-        MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 3, mCurrentImgBean.isCollect != 0 ? "0" : "1", System.currentTimeMillis());
 
         if (mCurrentImgBean.isCollect != 0) {
             new ModelCollection().delCollection(mContext, mCurrentImgBean.imgId, new onDataResponseListener<Integer>() {
@@ -621,10 +608,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
     }
 
     protected void onClickBigImage() {
-        if (mCurrentImgBean != null) {
-            MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 7, mIsCaptionShow ? "0" : "1", System.currentTimeMillis());
-        }
-
         if (mIsCaptionShow) {
             hideCaption();
         } else {
@@ -992,9 +975,6 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (mCurrentImgBean == null) {
             return;
         }
-
-        //好看埋点
-        MaidianManager.setAction(mCurrentImgBean.imgId, App.sDID, 6, "", System.currentTimeMillis());
 
         ModelDownLoadImage.downLoadImg(mContext, bean, new onDataResponseListener<File>() {
             @Override

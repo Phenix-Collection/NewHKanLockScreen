@@ -560,6 +560,7 @@ public class ActivityLockScreen extends ActivityBase implements View.OnClickList
         App.sHaokanLockView.pullToSwitch(false);
 
         UmengMaiDianManager.onEvent(this, "event_102");
+        MaidianManager.setAction(this, "0", 15, "2");
     }
 
     CV_UnLockImageView mUnLockImageView;

@@ -16,6 +16,7 @@ import com.haokan.pubic.bean.BigImageBean;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.maidian.UmengMaiDianActivity;
 import com.haokan.pubic.util.MyDateTimeUtil;
 import com.haokan.pubic.util.Values;
@@ -120,6 +121,8 @@ public class ServiceAutoUpdateImage extends Service {
                 //maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_ARGS, new String[]{"remarks"});
                 //maidianIntent.putExtra(UmengMaiDianActivity.KEY_INTENT_VALUES, new String[]{"关闭自动更新"});
                 startActivity(maidianIntent);
+
+                MaidianManager.setAction(ServiceAutoUpdateImage.this, "0", 15, "1");
 
             }
 

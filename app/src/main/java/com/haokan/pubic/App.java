@@ -16,7 +16,6 @@ import com.haokan.hklockscreen.lockscreen.CV_DetailPage_LockScreen;
 import com.haokan.hklockscreen.lockscreen.ReceiverLockScreen;
 import com.haokan.hklockscreen.lockscreenautoupdateimage.ServiceAutoUpdateImage;
 import com.haokan.pubic.http.HttpStatusManager;
-import com.haokan.pubic.http.UrlsUtil;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.CommonUtil;
@@ -25,10 +24,6 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
-import rx.functions.Action0;
-import rx.schedulers.Schedulers;
 
 public class App extends Application {
     public static String APP_VERSION_NAME = "";
@@ -105,24 +100,24 @@ public class App extends Application {
 //            LeakCanary.install(this);
 //        }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(App.sDID).append(",")
-                .append(UrlsUtil.COMPANYID).append(",")
-                .append(App.sEID).append(",")
-                .append(App.sPID).append(",")
-                .append(App.APP_VERSION_CODE).append(",")
-                .append(HttpStatusManager.getIPAddress(this)).append(",")
-                .append(App.sPhoneModel).append(",")
-                .append(HttpStatusManager.getNetworkType(this)).append(",")
-                .append(System.currentTimeMillis());
-        MaidianManager.initUser(builder.toString());
+        MaidianManager.initUser(this);
 
-        Schedulers.io().createWorker().schedulePeriodically(new Action0() {
-            @Override
-            public void call() {
-                MaidianManager.actionUpdate();
-            }
-        }, 0, 20, TimeUnit.SECONDS);
+//        StringBuilder builder = new StringBuilder();
+//        builder.append(App.sDID).append(",")
+//                .append(UrlsUtil.COMPANYID).append(",")
+//                .append(App.sEID).append(",")
+//                .append(App.sPID).append(",")
+//                .append(App.APP_VERSION_CODE).append(",")
+//                .append(HttpStatusManager.getIPAddress(this)).append(",")
+//                .append(App.sPhoneModel).append(",")
+//                .append(HttpStatusManager.getNetworkType(this)).append(",")
+//                .append(System.currentTimeMillis());
+//        Schedulers.io().createWorker().schedulePeriodically(new Action0() {
+//            @Override
+//            public void call() {
+//                MaidianManager.actionUpdate();
+//            }
+//        }, 0, 20, TimeUnit.SECONDS);
 
         //控制接听电话的状态, 需要2步, 先注册这个, 有的rom注册了这个会一直生效, 有的rom会只生效一次,
         //需要ACTION_NEW_OUTGOING_CALL和android.intent.action.PHONE_STATE广播, 靠广告中获取状态

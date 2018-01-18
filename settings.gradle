@@ -1,7 +1,7 @@
 include ':app'
 include ':WzxLibrary'
 project(':WzxLibrary').projectDir = new File('../WzxLibrary/')
-//include ':WzxLibrary:ClipImage'
-//include ':WzxLibrary:HeaderFooterRecyview'
-//include ':WzxLibrary:PtrLayout'
 include ':WzxLibrary:UmShareLibrary'
+include ':Hk-public-library'
+project(':Hk-public-library').projectDir = new File('../Hk-public-library/')
+include ':Hk-public-library:statistics'

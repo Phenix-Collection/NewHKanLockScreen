@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.haokan.hklockscreen.R;
 import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.ToastManager;
 
@@ -42,6 +43,7 @@ import com.haokan.pubic.util.ToastManager;
 public class ActivityWebview extends ActivityBase implements View.OnClickListener {
     public static final String KEY_INTENT_WEB_URL = "url";
     public static final String KEY_INTENT_WEB_TITLE = "title";
+    public static final String KEY_INTENT_WEB_STADYTIME = "times"; //是否计时停留时长, 有个埋点是统计落地页市时长
     private boolean mHasFixedTitle;
     private TextView mTvTitle;
     private String mTitleText = "";
@@ -54,6 +56,10 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
     private View mTvClose;
     private ViewGroup mBigViedioParent;
     private BroadcastReceiver mReceiver;
+
+    //计量停留时长埋点用的变量
+    private long mStartTime;
+    private String mInitWebUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +88,13 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
     }
 
     private void assignViews() {
+        boolean extra = getIntent().getBooleanExtra(KEY_INTENT_WEB_STADYTIME, false);
+        if (extra) {
+            mStartTime = System.currentTimeMillis();
+        } else {
+            mStartTime = 0;
+        }
+
         ImageView back = (ImageView) findViewById(R.id.back);
         back.setOnClickListener(this);
 
@@ -141,6 +154,9 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
         if (mWeb_Url.startsWith("www")) {
             mWeb_Url = "http://" + mWeb_Url;
         }
+
+        mInitWebUrl = mWeb_Url;
+
         if (mWeb_Url.startsWith("http") || mWeb_Url.startsWith("https")) {
             mProgressHorizontal.setVisibility(View.VISIBLE);
             mHandler.postDelayed(new Runnable() {
@@ -150,6 +166,7 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
                 }
             }, 200);
         } else {
+            mStartTime = 0;
             loadLocalApp();
         }
     }
@@ -354,22 +371,31 @@ public class ActivityWebview extends ActivityBase implements View.OnClickListene
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
-        if(mWebView!=null){
-            // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，
-            // 需要先onDetachedFromWindow()，再destory()
-            ViewParent parent = mWebView.getParent();
-            if (parent != null) {
-                ((ViewGroup) parent).removeView(mWebView);
-            }
 
-            mWebView.stopLoading();
-            // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
-            mWebView.getSettings().setJavaScriptEnabled(false);
-            mWebView.clearHistory();
-            mWebView.clearView();
-            mWebView.removeAllViews();
-            mWebView.destroy();
-            mWebView = null;
+        if (mStartTime != 0) {
+            MaidianManager.setAction(this, mInitWebUrl, 11, String.valueOf(System.currentTimeMillis() - mStartTime));
+        }
+
+        try {
+            if(mWebView!=null){
+                // 如果先调用destroy()方法，则会命中if (isDestroyed()) return;这一行代码，
+                // 需要先onDetachedFromWindow()，再destory()
+                ViewParent parent = mWebView.getParent();
+                if (parent != null) {
+                    ((ViewGroup) parent).removeView(mWebView);
+                }
+
+                mWebView.stopLoading();
+                // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
+                mWebView.getSettings().setJavaScriptEnabled(false);
+                mWebView.clearHistory();
+                mWebView.clearView();
+                mWebView.removeAllViews();
+                mWebView.destroy();
+                mWebView = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         super.onDestroy();
     }
