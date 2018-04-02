@@ -33,7 +33,7 @@ public class Bid {
 
     public String id;
     public String impid;
-    public int price;
+    public String price;
     public String adm;
     /**
      * 1.banner;2.video;3.native;

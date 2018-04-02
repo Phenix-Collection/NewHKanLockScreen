@@ -728,13 +728,13 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 //        bannerReq.h = 1920;
 
         NativeReq nativeReq = new NativeReq();
-        nativeReq.w = 1080;
-        nativeReq.h = 1920;
+        nativeReq.w = 1440;
+        nativeReq.h = 2560;
         nativeReq.style = 2;
 
 
-        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 10, nativeReq, null);
-//        BidRequest request = ModelHaoKanAd.getBidRequest("4-110-159", 10, nativeReq, null);
+//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest("288-170-191", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
@@ -759,7 +759,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
             @Override
             public void onAdResFail(String errmsg) {
-                LogHelper.d("wangzixu", "HaokanADManager loadAdData 28-53-206 onADError errmsg = " + errmsg);
+                LogHelper.d("wangzixu", "ModelHaoKanAd loadAdData 28-53-206 onADError errmsg = " + errmsg);
             }
         });
     }

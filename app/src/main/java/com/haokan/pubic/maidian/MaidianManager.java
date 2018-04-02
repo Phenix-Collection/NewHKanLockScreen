@@ -1,15 +1,9 @@
 package com.haokan.pubic.maidian;
 
 import android.content.Context;
-import android.os.Build;
 
 import com.haokan.pubic.App;
-import com.haokan.pubic.http.HttpStatusManager;
-import com.haokan.pubic.http.UrlsUtil;
 import com.haokan.statistics.HaokanStatistics;
-import com.haokan.statistics.bean.UserBaseLogBean;
-
-import java.util.Locale;
 
 /**
  * Created by wangzixu on 2017/7/7.
@@ -26,20 +20,20 @@ public class MaidianManager {
         HaokanStatistics instance = HaokanStatistics.getInstance(context);
         instance.init(App.sDID, App.sPID, App.sEID, "0");
 
-        UserBaseLogBean logBean = new UserBaseLogBean();
-        logBean.setUserid(App.sDID);
-        logBean.setProid(UrlsUtil.COMPANYID);
-        logBean.setEid(App.sEID);
-        logBean.setPid(App.sPID);
-        logBean.setSdkver(App.APP_VERSION_NAME);
-        logBean.setOsver(String.valueOf(Build.VERSION.SDK_INT));
-        logBean.setIp(HttpStatusManager.getIPAddress(context));
-        logBean.setModels(App.sPhoneModel);
-        logBean.setNet(HttpStatusManager.getNetworkType(context));
-        Locale aDefault = Locale.getDefault();
-        logBean.setSyscountry(aDefault.getCountry());
-        logBean.setSyslanguage(aDefault.getLanguage());
-        instance.setBaseDataLog(logBean);
+//        UserBaseLogBean logBean = new UserBaseLogBean();
+//        logBean.setUserid(App.sDID);
+//        logBean.setProid(UrlsUtil.COMPANYID);
+//        logBean.setEid(App.sEID);
+//        logBean.setPid(App.sPID);
+//        logBean.setSdkver(App.APP_VERSION_NAME);
+//        logBean.setOsver(String.valueOf(Build.VERSION.SDK_INT));
+//        logBean.setIp(HttpStatusManager.getIPAddress(context));
+//        logBean.setModels(App.sPhoneModel);
+//        logBean.setNet(HttpStatusManager.getNetworkType(context));
+//        Locale aDefault = Locale.getDefault();
+//        logBean.setSyscountry(aDefault.getCountry());
+//        logBean.setSyslanguage(aDefault.getLanguage());
+//        instance.setBaseDataLog(logBean);
 
 //        final MaidianUpBean requestEntity = new MaidianUpBean();
 //        requestEntity.data = userInfo;
@@ -81,7 +75,7 @@ public class MaidianManager {
      */
     public synchronized static void setAction(Context context, String itemId, int actype, String related) {
         HaokanStatistics instance = HaokanStatistics.getInstance(context);
-        instance.setActionLog(itemId, actype, related);
+//        instance.setActionLog(itemId, actype, related);
 
 //        StringBuilder builder;
 //        if (TextUtils.isEmpty(mActionInfo)) {

@@ -14,8 +14,8 @@ import com.haokan.hklockscreen.R;
 import com.haokan.hklockscreen.haokanAd.BeanAdRes;
 import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
-import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
+import com.haokan.hklockscreen.haokanAd.request.NativeReq;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.hklockscreen.mycollection.ModelCollection;
 import com.haokan.hklockscreen.recommendpagedetail.ActivityRecommendDetailPage;
@@ -288,10 +288,13 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
     public void loadHaoKanAd() {
         showLoadingLayout();
 
-        BannerReq bannerReq = new BannerReq();
-        bannerReq.w = 1080;
-        bannerReq.h = 586;
-        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-205", 5, null, bannerReq);
+        NativeReq nativeReq = new NativeReq();
+        nativeReq.w = 1080;
+        nativeReq.h = 586;
+        nativeReq.style = 2;
+
+//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-205", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest("288-170-192", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
             @Override
@@ -299,9 +302,8 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
                 LogHelper.d("wangzixu", "ModelHaoKanAd landpage onAdResSuccess");
                 //广告
                 mAdItem = new BeanRecommendLandPage();
-                mAdItem.myType = 2;
+                mAdItem.myType = 4;
                 mAdItem.mBeanAdRes = adRes;
-
                 loadData();
             }
 
@@ -311,6 +313,31 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
                 loadData();
             }
         });
+
+
+
+//        BannerReq bannerReq = new BannerReq();
+//        bannerReq.w = 1080;
+//        bannerReq.h = 586;
+//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-205", 5, null, bannerReq);
+//
+//        ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
+//            @Override
+//            public void onAdResSuccess(final BeanAdRes adRes) {
+//                LogHelper.d("wangzixu", "ModelHaoKanAd landpage onAdResSuccess");
+//                //广告
+//                mAdItem = new BeanRecommendLandPage();
+//                mAdItem.myType = 2;
+//                mAdItem.mBeanAdRes = adRes;
+//                loadData();
+//            }
+//
+//            @Override
+//            public void onAdResFail(String errmsg) {
+//                LogHelper.d("wangzixu", "ModelHaoKanAd landpage onAdResFail errmsg = " + errmsg);
+//                loadData();
+//            }
+//        });
     }
 
     //加载评论

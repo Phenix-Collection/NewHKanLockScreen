@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="30dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="10dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <!--为刘祝龙加的广告位-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/iv_image"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="213dp"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_below="@id/iv_image"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:text=""
+            android:textSize="13sp"
+            android:textColor="#666666"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_below="@id/tv_title"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:text=""
+            android:textSize="13sp"
+            android:textColor="#333333"
+            android:lineSpacingExtra="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/adsgin"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentRight="true"
+            android:textSize="11sp"
+            android:text="广告"
+            android:textColor="@color/bai"
+            android:background="@drawable/selector_splash_jumpbtn"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingBottom="1dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

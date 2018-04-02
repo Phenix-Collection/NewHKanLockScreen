@@ -24,6 +24,7 @@ public class WiFiChangeReceiver extends BroadcastReceiver {
         if(WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action)){//wifi连接上与否
             NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
             NetworkInfo.State state = info.getState();
+
             LogHelper.d("wangzixu", "WiFiChangeReceiver autoupdate onReceive state = " + state.toString());
             if(NetworkInfo.State.CONNECTED.equals(state)){
                 App.startAutoUpdate();

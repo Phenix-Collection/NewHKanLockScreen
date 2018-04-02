@@ -1,6 +1,7 @@
 package com.haokan.hklockscreen.recommendpageland;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,10 @@ public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAda
             View view = LayoutInflater.from(mContext).inflate(R.layout.activity_recommendpageland_item2, parent, false);
             holder = new Item2ViewHolder(view);
         } else if (contentViewType == 3) {
+
+        } else if (contentViewType == 4) {
+            View view = LayoutInflater.from(mContext).inflate(R.layout.activity_recommendpageland_item4, parent, false);
+            holder = new Item4ViewHolder(view);
         }
         return holder;
     }
@@ -215,6 +220,49 @@ public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAda
             Glide.with(mContext).load(mBean.mBeanAdRes.imgUrl).into(mImageView);
             //上报广告展示
 //            ModelHaoKanAd.adShowUpLoad(mBean.mBeanAdRes.showUpUrl);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mContext.startAdDetailPage(mBean);
+        }
+    }
+
+    public class Item4ViewHolder extends ViewHolder implements View.OnClickListener {
+        private BeanRecommendLandPage mBean;
+        private ImageView mImageView;
+        private TextView mTitle;
+        private TextView mDesc;
+        public Item4ViewHolder(View itemView) {
+            super(itemView);
+            mImageView = (ImageView) itemView.findViewById(R.id.iv_image);
+            mTitle = itemView.findViewById(R.id.tv_title);
+            mDesc = itemView.findViewById(R.id.tv_desc);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void renderView(final int position) {
+            mBean = mData.get(position);
+            if (mBean.mBeanAdRes == null) {
+                return;
+            }
+            Glide.with(mContext).load(mBean.mBeanAdRes.imgUrl).into(mImageView);
+            //上报广告展示
+//            ModelHaoKanAd.adShowUpLoad(mBean.mBeanAdRes.showUpUrl);
+            if (TextUtils.isEmpty(mBean.mBeanAdRes.adTitle)) {
+                mTitle.setVisibility(View.GONE);
+            } else {
+                mTitle.setVisibility(View.VISIBLE);
+                mTitle.setText(mBean.mBeanAdRes.adTitle);
+            }
+
+            if (TextUtils.isEmpty(mBean.mBeanAdRes.adDesc)) {
+                mDesc.setVisibility(View.GONE);
+            } else {
+                mDesc.setVisibility(View.VISIBLE);
+                mDesc.setText(mBean.mBeanAdRes.adDesc);
+            }
         }
 
         @Override
