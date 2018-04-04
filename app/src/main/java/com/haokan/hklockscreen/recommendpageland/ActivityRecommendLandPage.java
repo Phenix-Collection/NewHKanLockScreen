@@ -144,7 +144,7 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
                     int lastpos = mManager.findLastVisibleItemPosition();
                     if (lastpos != mLastVisablePos) {
                         if (lastpos == mData.size()) {
-                            ModelHaoKanAd.adShowUpLoad(mAdItem.mBeanAdRes.showUpUrl);
+                            ModelHaoKanAd.onAdShow(mAdItem.mBeanAdRes.onShowUrls);
                         }
                         mLastVisablePos = lastpos;
                     }
@@ -167,14 +167,14 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
     @Override
     protected void onResume() {
         super.onResume();
-        if (mAdItem != null && mAdapter != null && mData.size() > 0) {
-            int i = mManager.findLastVisibleItemPosition();
-            LogHelper.d("wangzixu", "activityRecommend onResume i = " + i + ", mData.size() = " + mData.size());
-            if (i == mData.size()) { //因为有一个header,不在mData中, 所以不是mData.size()-1
-                //上报广告展示
-                ModelHaoKanAd.adShowUpLoad(mAdItem.mBeanAdRes.showUpUrl);
-            }
-        }
+//        if (mAdItem != null && mAdapter != null && mData.size() > 0) {
+//            int i = mManager.findLastVisibleItemPosition();
+//            LogHelper.d("wangzixu", "activityRecommend onResume i = " + i + ", mData.size() = " + mData.size());
+//            if (i == mData.size()) { //因为有一个header,不在mData中, 所以不是mData.size()-1
+//                //上报广告展示
+//                ModelHaoKanAd.onAdShow(mAdItem.mBeanAdRes);
+//            }
+//        }
     }
 
     public void getBlurBg() {
@@ -294,7 +294,7 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
         nativeReq.style = 2;
 
 //        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-205", 10, nativeReq, null);
-        BidRequest request = ModelHaoKanAd.getBidRequest("288-170-192", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest(this, "288-170-192", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
             @Override
@@ -625,5 +625,10 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
         intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBean.mBeanAdRes.landPageUrl);
         startActivity(intent);
         startActivityAnim();
+
+        //广告点击上报
+        if (mBean.mBeanAdRes.onClickUrls != null && mBean.mBeanAdRes.onClickUrls.size() > 0) {
+            ModelHaoKanAd.onAdClick(mBean.mBeanAdRes.onClickUrls);
+        }
     }
 }

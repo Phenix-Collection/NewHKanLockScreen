@@ -50,10 +50,11 @@
 
     <ImageView
         android:id="@+id/adview"
-        android:scaleType="fitXY"
-        android:layout_above="@id/rl_bottom"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitXY">
     </ImageView>
 
     <TextView

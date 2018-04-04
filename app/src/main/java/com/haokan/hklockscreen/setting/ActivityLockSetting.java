@@ -103,7 +103,6 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     private BeanLocalImage mLocalImage3;
     private ImageView mIvBigImage;
     private View mAdSignView;
-    private String mAdLandPageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,7 +197,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                         mHeader.setVisibility(View.VISIBLE);
                         if (mBeanAdRes != null) {
                             //广告展示上报
-                            ModelHaoKanAd.adShowUpLoad(mBeanAdRes.showUpUrl);
+                            ModelHaoKanAd.onAdShow(mBeanAdRes.onShowUrls);
                         }
                     }
                 }
@@ -235,10 +234,10 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        if (mBeanAdRes != null && mHeader.getVisibility() == View.VISIBLE) {
-            //广告展示上报
-            ModelHaoKanAd.adShowUpLoad(mBeanAdRes.showUpUrl);
-        }
+//        if (mBeanAdRes != null && mHeader.getVisibility() == View.VISIBLE) {
+//            //广告展示上报
+//            ModelHaoKanAd.onAdShow(mBeanAdRes);
+//        }
     }
 
     @Override
@@ -297,11 +296,16 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 }
                 break;
             case R.id.adview:
-                if (!TextUtils.isEmpty(mAdLandPageUrl)) {
+                if (mBeanAdRes != null) {
                     Intent intent = new Intent(ActivityLockSetting.this, ActivityWebview.class);
-                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mAdLandPageUrl);
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
                     startActivityForResult(intent, 306);
                     startActivityAnim();
+
+                    //广告点击上报
+                    if (mBeanAdRes.onClickUrls != null && mBeanAdRes.onClickUrls.size() > 0) {
+                        ModelHaoKanAd.onAdClick(mBeanAdRes.onClickUrls);
+                    }
                 }
                 break;
             case R.id.back:
@@ -617,7 +621,7 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
         BannerReq bannerReq = new BannerReq();
         bannerReq.w = 1080;
         bannerReq.h = 630;
-        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-208", 5, null, bannerReq);
+        BidRequest request = ModelHaoKanAd.getBidRequest(this, "28-53-208", 5, null, bannerReq);
 
         ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
             @Override
@@ -628,11 +632,10 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 Glide.with(ActivityLockSetting.this).load(adRes.imgUrl).into(mIvAdView);
                 mAdSignView.setVisibility(View.VISIBLE);
 
-                mAdLandPageUrl = adRes.landPageUrl;
                 mIvAdView.setOnClickListener(ActivityLockSetting.this);
 
                 //广告展示上报
-                ModelHaoKanAd.adShowUpLoad(adRes.showUpUrl);
+                ModelHaoKanAd.onAdShow(adRes.onShowUrls);
             }
 
             @Override

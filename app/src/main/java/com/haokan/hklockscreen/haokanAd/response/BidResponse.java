@@ -11,5 +11,5 @@ import java.util.List;
 public class BidResponse {
     public String id;
     public List<Seat> seatbid;
-
+    public String bidid;
 }

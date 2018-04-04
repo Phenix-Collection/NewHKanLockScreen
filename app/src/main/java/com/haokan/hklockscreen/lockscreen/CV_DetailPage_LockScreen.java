@@ -352,7 +352,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         if (mIsLocked) {//点击解锁
             intoDetialPageState();
         } else {
-            if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) {
+            if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) { //是广告
                 Intent intent = new Intent(mContext, ActivityWebview.class);
 //                Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
                 intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
@@ -361,6 +361,11 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
                     mActivity.startActivityAnim();
                 } else {
                     mContext.startActivity(intent);
+                }
+
+                //广告点击上报
+                if (mCurrentImgBean.mBeanAdRes.onClickUrls != null && mCurrentImgBean.mBeanAdRes.onClickUrls.size() > 0) {
+                    ModelHaoKanAd.onAdClick(mCurrentImgBean.mBeanAdRes.onClickUrls);
                 }
             } else {
                 super.onClickBigImage();
@@ -660,7 +665,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             }
 
             //广告展示上报
-            ModelHaoKanAd.adShowUpLoad(mCurrentImgBean.mBeanAdRes.showUpUrl);
+            ModelHaoKanAd.onAdShow(mCurrentImgBean.mBeanAdRes.onShowUrls);
         } else {
             mAdLayout.setVisibility(GONE);
         }
@@ -711,10 +716,10 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
     }
 
     public void onResume() {
-        if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) {
-            //广告展示上报
-            ModelHaoKanAd.adShowUpLoad(mCurrentImgBean.mBeanAdRes.showUpUrl);
-        }
+//        if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) {
+//            //广告展示上报
+//            ModelHaoKanAd.onAdShow(mCurrentImgBean.mBeanAdRes.showUpUrl);
+//        }
     }
 
     private boolean mHasLoadAd5;
@@ -734,7 +739,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 
 
 //        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 10, nativeReq, null);
-        BidRequest request = ModelHaoKanAd.getBidRequest("288-170-191", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest(mContext, "288-170-191", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
@@ -775,7 +780,7 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         nativeReq.w = 1080;
         nativeReq.h = 1920;
         nativeReq.style = 2;
-        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-207", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest(mContext, "28-53-207", 10, nativeReq, null);
 //        BidRequest request = ModelHaoKanAd.getBidRequest("4-110-159", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {

@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -40,19 +41,58 @@ public class HttpStatusManager {
      * 获取网络类型
      *
      * @param mContext
-     * @return 0没网 1Wi-Fi 2mobile
+     * @return 0没网/未知 1Wi-Fi 2-2G; 3-3G; 4-4G; 5-5G
      */
     public static int getNetworkType(Context mContext) {
         int type = 0;
         try {
             ConnectivityManager connectMgr = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo info = connectMgr.getActiveNetworkInfo();
-            if (info != null && info.isConnected()) {
+            if (info != null) {
+                //&& info.isConnected()
                 if (info.getType() == ConnectivityManager.TYPE_WIFI) {
                     type = 1;
                 } else if (info.getType() == ConnectivityManager.TYPE_MOBILE) {
-                    type = 2;
+                    int networkType = info.getSubtype();
+                    switch (networkType) {
+                        case TelephonyManager.NETWORK_TYPE_GPRS:
+                        case TelephonyManager.NETWORK_TYPE_GSM:
+                        case TelephonyManager.NETWORK_TYPE_EDGE:
+                        case TelephonyManager.NETWORK_TYPE_CDMA:
+                        case TelephonyManager.NETWORK_TYPE_1xRTT:
+                        case TelephonyManager.NETWORK_TYPE_IDEN: //api<8 : replace by 11
+                            type = 2;
+                            break;
+                        case TelephonyManager.NETWORK_TYPE_UMTS:
+                        case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                        case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                        case TelephonyManager.NETWORK_TYPE_HSDPA:
+                        case TelephonyManager.NETWORK_TYPE_HSUPA:
+                        case TelephonyManager.NETWORK_TYPE_HSPA:
+                        case TelephonyManager.NETWORK_TYPE_EVDO_B:
+                        case TelephonyManager.NETWORK_TYPE_EHRPD:
+                        case TelephonyManager.NETWORK_TYPE_HSPAP:
+                        case TelephonyManager.NETWORK_TYPE_TD_SCDMA:
+                            type = 3;
+                            break;
+                        case TelephonyManager.NETWORK_TYPE_LTE:
+                        case TelephonyManager.NETWORK_TYPE_IWLAN:
+                        //case TelephonyManager.NETWORK_TYPE_LTE_CA:
+                            type = 4;
+                            break;
+                        default:
+                            // http://baike.baidu.com/item/TD-SCDMA 中国移动 联通 电信 三种3G制式
+//                            if (_strSubTypeName.equalsIgnoreCase("TD-SCDMA") || _strSubTypeName.equalsIgnoreCase("WCDMA") || _strSubTypeName.equalsIgnoreCase("CDMA2000")) {
+//                                strNetworkType = "3G";
+//                            } else {
+//                                strNetworkType = _strSubTypeName;
+//                            }
+                            type = 0;
+                            break;
+                    }
                 }
+            } else {
+                type = 0;
             }
         } catch (Exception e) {
             e.printStackTrace();

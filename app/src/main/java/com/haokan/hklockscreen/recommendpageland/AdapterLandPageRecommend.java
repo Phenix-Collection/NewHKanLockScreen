@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
 import com.haokan.pubic.util.DisplayUtil;
 
@@ -219,7 +220,7 @@ public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAda
             }
             Glide.with(mContext).load(mBean.mBeanAdRes.imgUrl).into(mImageView);
             //上报广告展示
-//            ModelHaoKanAd.adShowUpLoad(mBean.mBeanAdRes.showUpUrl);
+            ModelHaoKanAd.onAdShow(mBean.mBeanAdRes.onShowUrls);
         }
 
         @Override
@@ -249,7 +250,7 @@ public class AdapterLandPageRecommend extends DefaultHeaderFooterRecyclerViewAda
             }
             Glide.with(mContext).load(mBean.mBeanAdRes.imgUrl).into(mImageView);
             //上报广告展示
-//            ModelHaoKanAd.adShowUpLoad(mBean.mBeanAdRes.showUpUrl);
+//            ModelHaoKanAd.onAdShow(mBean.mBeanAdRes.showUpUrl);
             if (TextUtils.isEmpty(mBean.mBeanAdRes.adTitle)) {
                 mTitle.setVisibility(View.GONE);
             } else {

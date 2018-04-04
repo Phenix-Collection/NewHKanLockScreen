@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.haokan.hklockscreen.R;
-import com.haokan.hklockscreen.haokanAd.BeanAdRes;
 import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.mycollection.EventCollectionChange;
 import com.haokan.pubic.headerfooterrecyview.DefaultHeaderFooterRecyclerViewAdapter;
@@ -244,7 +243,7 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
                 tvTitle.setText(mBean.mBeanAdRes.adTitle);
                 imageView.setOnClickListener(this);
                 //上报广告展示
-                ModelHaoKanAd.adShowUpLoad(mBean.mBeanAdRes.showUpUrl);
+                ModelHaoKanAd.onAdShow(mBean.mBeanAdRes.onShowUrls);
             } else {
                 imageView.setOnClickListener(null);
             }
@@ -257,17 +256,17 @@ public class AdapterRecommendPage extends DefaultHeaderFooterRecyclerViewAdapter
     }
 
     public void onResume(int first, int last) {
-        try {
-            for (int i = first; i < last; i++) {
-                BeanAdRes beanAdRes = mData.get(i).mBeanAdRes;
-                if (beanAdRes != null) {
-                    //上报广告展示
-                    ModelHaoKanAd.adShowUpLoad(beanAdRes.showUpUrl);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            for (int i = first; i < last; i++) {
+//                BeanAdRes beanAdRes = mData.get(i).mBeanAdRes;
+//                if (beanAdRes != null) {
+//                    //上报广告展示
+//                    ModelHaoKanAd.onAdShow(beanAdRes.showUpUrl);
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     //-----

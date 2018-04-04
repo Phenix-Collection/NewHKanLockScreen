@@ -47,6 +47,7 @@ public class App extends Application {
 
     private ReceiverLockScreen mReceiver;
     public static CV_DetailPage_LockScreen sHaokanLockView;
+    public static String sUserAgent = "";
 
     /**
      * 是否是已经适配了的手机, 0代表未适配<br/>
@@ -155,6 +156,7 @@ public class App extends Application {
         Locale locale = Locale.getDefault();
         sLanguageCode = locale.getLanguage();
         sCountryCode = locale.getCountry();
+
 //        LogHelper.d("wangzixu", "app init = " + CommonUtil.getDevice());
 //        String string = BuildProperties.getSystemProperty("ro.build.display.id");
 //        LogHelper.d("wangzixu", "app init = " + string);

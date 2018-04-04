@@ -280,7 +280,7 @@ public class CV_RecommendListPage extends FrameLayout{
             nativeReq.w = 540;
             nativeReq.h = 960;
             nativeReq.style = 2;
-            BidRequest request = ModelHaoKanAd.getBidRequest("28-53-202", 10, nativeReq, null);
+            BidRequest request = ModelHaoKanAd.getBidRequest(mContext, "28-53-202", 10, nativeReq, null);
 
             ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
                 @Override
@@ -312,7 +312,7 @@ public class CV_RecommendListPage extends FrameLayout{
             nativeReq.w = 540;
             nativeReq.h = 960;
             nativeReq.style = 2;
-            BidRequest request = ModelHaoKanAd.getBidRequest("28-53-203", 10, nativeReq, null);
+            BidRequest request = ModelHaoKanAd.getBidRequest(mContext, "28-53-203", 10, nativeReq, null);
 
             ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
                 @Override
@@ -406,7 +406,7 @@ public class CV_RecommendListPage extends FrameLayout{
 //            } else {
 //                mContext.startActivity(intent);
 //            }
-        } else {
+        } else { //广告
             //跳转webview
             Intent intent = new Intent(mContext, ActivityWebview.class);
             intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
@@ -415,6 +415,11 @@ public class CV_RecommendListPage extends FrameLayout{
                 mActivityBase.startActivityAnim();
             } else {
                 mContext.startActivity(intent);
+            }
+
+            //广告点击上报
+            if (beanRecommendItem.mBeanAdRes.onClickUrls != null && beanRecommendItem.mBeanAdRes.onClickUrls.size() > 0) {
+                ModelHaoKanAd.onAdClick(beanRecommendItem.mBeanAdRes.onClickUrls);
             }
         }
     }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.haokan.hklockscreen.R;
+import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.recommendpageland.ActivityRecommendLandPage;
 import com.haokan.hklockscreen.recommendpagelist.BeanRecommendItem;
 import com.haokan.hklockscreen.recommendpagelist.CV_RecommendListPage;
@@ -149,6 +150,11 @@ public class CV_RecommendPage_LockScreen extends CV_RecommendListPage implements
                 mActivityBase.startActivityAnim();
             } else {
                 mContext.startActivity(intent);
+            }
+
+            //广告点击上报
+            if (beanRecommendItem.mBeanAdRes.onClickUrls != null && beanRecommendItem.mBeanAdRes.onClickUrls.size() > 0) {
+                ModelHaoKanAd.onAdClick(beanRecommendItem.mBeanAdRes.onClickUrls);
             }
         }
     }

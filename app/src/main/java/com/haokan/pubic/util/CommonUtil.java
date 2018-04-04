@@ -6,12 +6,11 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,8 +18,11 @@ import android.view.ViewGroup;
 
 import com.haokan.pubic.logsys.LogHelper;
 
+import java.net.NetworkInterface;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class CommonUtil {
@@ -32,14 +34,14 @@ public class CommonUtil {
      * 传入参数:map
      * 返回值:String 形如 username'chenziwen^password'1234
      */
-    public static String transMapToString(Map map){
+    public static String transMapToString(Map map) {
         Map.Entry entry;
         StringBuffer sb = new StringBuffer("{");
-        for(Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
-            entry = (Map.Entry)iterator.next();
-            sb.append(entry.getKey().toString()).append( ":" )
-                    .append(null==entry.getValue()?"null": entry.getValue().toString())
-                    .append (iterator.hasNext() ? " , " : "");
+        for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext(); ) {
+            entry = (Map.Entry) iterator.next();
+            sb.append(entry.getKey().toString()).append(":")
+                    .append(null == entry.getValue() ? "null" : entry.getValue().toString())
+                    .append(iterator.hasNext() ? " , " : "");
         }
         sb.append("}");
         return sb.toString();
@@ -210,22 +212,49 @@ public class CommonUtil {
     /**
      * 获取MAC地址android.os.Build.VERSION.SDK_INT
      * 需权限android.Manifest.permission.ACCESS_WIFI_STATE
-     *
      * @return
      */
     public static String getMAC(Context context) {
-        if (checkPermission(context, Manifest.permission.ACCESS_WIFI_STATE)) {
-            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo info = wifi.getConnectionInfo();
-            String macAddress = info.getMacAddress();
-            if (macAddress == null) {
-                return "";
-            } else {
-                return macAddress;
+//        if (checkPermission(context, Manifest.permission.ACCESS_WIFI_STATE)) {
+//            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+//            WifiInfo info = wifi.getConnectionInfo();
+//            String macAddress = info.getMacAddress();
+//            if (macAddress == null) {
+//                return "";
+//            } else {
+//                return macAddress;
+//            }
+//        } else {
+//            return "";
+//        }
+        //以上方法在6.0以上不能用了
+        String macString = "02:00:00:00:00:xx";
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) {
+                    continue;
+                }
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                    continue;
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(String.format("%02X:",b)); //转换成16进制, 宽度为2位, 不够的补零
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+                return res1.toString();
             }
-        } else {
-            return "";
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return macString;
     }
 
     /**
@@ -268,25 +297,50 @@ public class CommonUtil {
         return permission;
     }
 
-    public static String getDevice(){
+    public static String getDevice() {
         HashMap map = new HashMap();
 
         map.put("Build.MANUFACTURER", Build.MANUFACTURER);
-//        map.put("Build.MODEL", Build.MODEL);
-//        map.put("Build.VERSION.SDK_INT", Build.VERSION.SDK_INT);
-//        map.put("Build.BOARD", Build.BOARD);
-//        map.put("Build.BOOTLOADER", Build.BOOTLOADER);
-//        map.put("Build.PRODUCT", Build.PRODUCT);
-//        map.put("Build.DISPLAY", Build.DISPLAY);
+        map.put("Build.MODEL", Build.MODEL);
+        map.put("Build.VERSION.SDK_INT", Build.VERSION.SDK_INT);
+        map.put("Build.BOARD", Build.BOARD);
+        map.put("Build.BOOTLOADER", Build.BOOTLOADER);
+        map.put("Build.PRODUCT", Build.PRODUCT);
+        map.put("Build.DISPLAY", Build.DISPLAY);
         map.put("Build.FINGERPRINT", Build.FINGERPRINT);
-//        map.put("Build.getRadioVersion", Build.getRadioVersion());
-//        map.put("Build.SERIAL", Build.SERIAL);
-//        map.put("Build.ID", Build.ID);
+        map.put("Build.getRadioVersion", Build.getRadioVersion());
+        map.put("Build.SERIAL", Build.SERIAL);
+        map.put("Build.ID", Build.ID);
         map.put("Build.VERSION.INCREMENTAL", Build.VERSION.INCREMENTAL);
-//        map.put("Build..VERSION.BASE_OS", Build.VERSION.BASE_OS);
-//        map.put("Build..VERSION.CODENAME", Build.VERSION.CODENAME);
-//        map.put("Build..VERSION.RELEASE", Build.VERSION.RELEASE);
-//        map.put("Build..VERSION.SECURITY_PATCH", Build.VERSION.SECURITY_PATCH);
+        map.put("Build..VERSION.BASE_OS", Build.VERSION.BASE_OS);
+        map.put("Build..VERSION.CODENAME", Build.VERSION.CODENAME);
+        map.put("Build..VERSION.RELEASE", Build.VERSION.RELEASE);
+        map.put("Build..VERSION.SECURITY_PATCH", Build.VERSION.SECURITY_PATCH);
         return transMapToString(map);
+    }
+
+    /**
+     * 返回手机运营商名称，在调用支付前调用作判断
+     * @return 0, 未授权或者没有 1 移动 2 联通 3 电信
+     */
+    public static int getProvidersName(Context context) {
+        int ProvidersName = 0;
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return 0;
+        }
+        String IMSI = telephonyManager.getSubscriberId();
+        if( IMSI == null){
+            return 0;
+        }
+
+        if(IMSI.startsWith("46000") || IMSI.startsWith("46002") || IMSI.startsWith("46007")){
+            ProvidersName = 1;
+        }else if(IMSI.startsWith("46001")){
+            ProvidersName = 2;
+        }else if (IMSI.startsWith("46003")) {
+            ProvidersName = 3;
+        }
+        return ProvidersName;
     }
 }

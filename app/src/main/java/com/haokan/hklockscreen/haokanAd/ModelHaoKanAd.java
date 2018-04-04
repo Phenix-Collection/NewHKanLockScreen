@@ -1,6 +1,8 @@
 package com.haokan.hklockscreen.haokanAd;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.haokan.hklockscreen.haokanAd.request.AdApp;
@@ -13,8 +15,12 @@ import com.haokan.hklockscreen.haokanAd.request.NativeReq;
 import com.haokan.hklockscreen.haokanAd.response.Bid;
 import com.haokan.hklockscreen.haokanAd.response.BidResponse;
 import com.haokan.hklockscreen.haokanAd.response.Seat;
+import com.haokan.pubic.App;
 import com.haokan.pubic.http.HttpRetrofitManager;
+import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.logsys.LogHelper;
+import com.haokan.pubic.util.CommonUtil;
+import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.Values;
 
 import java.util.ArrayList;
@@ -23,6 +29,7 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -38,7 +45,7 @@ public class ModelHaoKanAd {
 
      只有图的传5, 图文的传10
      */
-    public static BidRequest getBidRequest(String adid, int adType, NativeReq nativeReq, BannerReq bannerReq) {
+    public static BidRequest getBidRequest(Context context, String adid, int adType, NativeReq nativeReq, BannerReq bannerReq) {
         BidRequest bidRequest = new BidRequest();
         bidRequest.id = String.valueOf(System.currentTimeMillis());
 
@@ -53,6 +60,19 @@ public class ModelHaoKanAd {
         Device device = new Device();
         device.devicetype = 3;
         device.os = "Android";
+        device.ua = App.sUserAgent;
+        device.model = Build.MODEL;
+        device.osv = Build.VERSION.RELEASE;
+        device.carrier = CommonUtil.getProvidersName(context);
+        device.connectiontype = HttpStatusManager.getNetworkType(context);
+        device.density = context.getResources().getDisplayMetrics().densityDpi;
+        device.macplain = CommonUtil.getMAC(context);
+        Point point = DisplayUtil.getRealScreenPoint(context);
+        device.w = point.x;
+        device.h = point.y;
+        device.aidplain = CommonUtil.getAndroid_ID(context);
+        device.make = Build.BRAND;
+        device.imeiplain = CommonUtil.getIMEI(context);
         bidRequest.device = device;
 
         Imp imp = new Imp();
@@ -75,33 +95,75 @@ public class ModelHaoKanAd {
     /**
      * 广告展示上报
      */
-    public static void adShowUpLoad(final String url) {
-        LogHelper.d("wangzixu", "ModelHaoKanAd adShowUpLoad begin url = " + url);
-        if (TextUtils.isEmpty(url)) {
+    public static void onAdShow(List<String> onShowUrls) {
+        LogHelper.d("wangzixu", "ModelHaoKanAd onAdShow called onShowUrls = " + onShowUrls);
+
+        if (onShowUrls == null || onShowUrls.size() == 0) {
             return;
         }
 
-        Observable<Object> haoKanAd = HttpRetrofitManager.getInstance().getRetrofitService().get(url);
-        haoKanAd
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Object>() {
-                    @Override
-                    public void onCompleted() {
-                        LogHelper.d("wangzixu", "ModelHaoKanAd adShowUpLoad end success url = " + url);
-                    }
+        for (int i = 0; i < onShowUrls.size(); i++) {
+            final String url = onShowUrls.get(i);
+            LogHelper.d("wangzixu", "ModelHaoKanAd onAdShow begin url = " + url);
+            Observable<Object> haoKanAd = HttpRetrofitManager.getInstance().getRetrofitService().get(url);
+            haoKanAd
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Object>() {
+                        @Override
+                        public void onCompleted() {
+                            LogHelper.d("wangzixu", "ModelHaoKanAd onAdShow end success url = " + url);
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        LogHelper.d("wangzixu", "ModelHaoKanAd adShowUpLoad end success url = " + url);
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            LogHelper.d("wangzixu", "ModelHaoKanAd onAdShow end success url = " + url);
+                        }
 
-                    @Override
-                    public void onNext(Object o) {
+                        @Override
+                        public void onNext(Object o) {
 
-                    }
-                });
+                        }
+                    });
+        }
+    }
+
+    /**
+     * 广告点击上报
+     */
+    public static void onAdClick(List<String> onClickUrls) {
+        LogHelper.d("wangzixu", "ModelHaoKanAd onAdClick called onClickUrls = " + onClickUrls);
+
+        if (onClickUrls == null || onClickUrls.size() == 0) {
+            return;
+        }
+
+        for (int i = 0; i < onClickUrls.size(); i++) {
+            final String url = onClickUrls.get(i);
+            LogHelper.d("wangzixu", "ModelHaoKanAd onAdClick begin url = " + url);
+            Observable<Object> haoKanAd = HttpRetrofitManager.getInstance().getRetrofitService().get(url);
+            haoKanAd
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Object>() {
+                        @Override
+                        public void onCompleted() {
+                            LogHelper.d("wangzixu", "ModelHaoKanAd onAdClick end success url = " + url);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            LogHelper.d("wangzixu", "ModelHaoKanAd onAdClick end success url = " + url);
+                        }
+
+                        @Override
+                        public void onNext(Object o) {
+
+                        }
+                    });
+        }
     }
 
     public static void getAd(Context context, BidRequest request, final onAdResListener<BeanAdRes> listener) {
@@ -112,21 +174,9 @@ public class ModelHaoKanAd {
 //        Observable<BidResponse> haoKanAd = HttpRetrofitManager.getInstance().getRetrofitService().getHaoKanAd("http://203.levect.com/bidRequest/hk", request);
         Observable<BidResponse> haoKanAd = HttpRetrofitManager.getInstance().getRetrofitService().getHaoKanAd("http://203.ad-dev.levect.com/bidRequest/hk", request);
         haoKanAd
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<BidResponse>() {
+                .map(new Func1<BidResponse, BeanAdRes>() {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        listener.onAdResFail(e.getMessage());
-                    }
-
-                    @Override
-                    public void onNext(BidResponse bidResponse) {
+                    public BeanAdRes call(BidResponse bidResponse) {
                         BeanAdRes adRes = new BeanAdRes();
                         if (bidResponse != null) {
                             adRes.id = bidResponse.id;
@@ -139,12 +189,17 @@ public class ModelHaoKanAd {
                                     Bid bid = bids.get(0);
                                     List<String> trackurls = bid.trackurls;
                                     if (trackurls != null && trackurls.size() > 0) {
-                                        adRes.showUpUrl = trackurls.get(0);
+                                        LogHelper.d("wangzixu", "ModelHaoKanAd getAd trackurls.size = " + trackurls.size());
+                                        adRes.onShowUrls.addAll(trackurls);
                                     }
 
                                     List<String> clickthrough = bid.clickthrough;
                                     if (clickthrough != null && clickthrough.size() > 0) {
                                         adRes.landPageUrl = clickthrough.get(0);
+                                        LogHelper.d("wangzixu", "ModelHaoKanAd getAd clickthrough.size = " + clickthrough.size());
+                                        if (clickthrough.size() > 1) {
+                                            adRes.onClickUrls.addAll(clickthrough.subList(1, clickthrough.size()));
+                                        }
                                     }
 
                                     adRes.type = bid.type;
@@ -188,6 +243,8 @@ public class ModelHaoKanAd {
                                                             adRes.adTitle = textRes.value;
                                                         } else if (textRes.type == 2) { //描述
                                                             adRes.adDesc = textRes.value;
+                                                        } else if (textRes.type == 3) { //点击提示语
+                                                            adRes.clickHint = textRes.value;
                                                         }
                                                     }
                                                 }
@@ -197,11 +254,28 @@ public class ModelHaoKanAd {
                                 }
                             }
                         }
+                        return adRes;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<BeanAdRes>() {
+                    @Override
+                    public void onCompleted() {
 
-                        if (TextUtils.isEmpty(adRes.imgUrl)) {
-                            listener.onAdResFail("No Ad imgUrl 空");
-                        } else {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        listener.onAdResFail(e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(BeanAdRes adRes) {
+                        if (adRes != null && !TextUtils.isEmpty(adRes.imgUrl)) {
                             listener.onAdResSuccess(adRes);
+                        } else {
+                            listener.onAdResFail("No Ad imgUrl 空");
                         }
                     }
                 });

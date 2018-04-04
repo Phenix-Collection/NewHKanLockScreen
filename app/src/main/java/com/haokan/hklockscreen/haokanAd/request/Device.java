@@ -39,4 +39,26 @@ public class Device {
 
     public String os;
 
+    public String ua; // 浏览器 user-agent 信息(web 流量必填)
+
+    public String model; //设备型号
+
+    public String osv; //设备操作系统版本
+
+    public int carrier; //运营商。1.中国移动;2.中国联通;3.中国电信
+
+    public int connectiontype; //网络连接类型。0.未知 1-WIFI; 2-2G; 3-3G; 4-4G; 5-5G
+
+    public int density; // 屏幕密度
+
+    public String macplain; //终端网卡 MAC 地址,明文串
+
+    public int w;
+    public int h;
+
+    public String aidplain; //android id
+
+    public String make; //设备制造商
+
+    public String imeiplain; //imei
 }

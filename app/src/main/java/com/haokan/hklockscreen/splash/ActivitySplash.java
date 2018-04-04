@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
     private long mStayTime = 3000; //倒计时
     private ImageView mIvAdView;
     private TextView mTvJumpAd;
+    private BeanAdRes mBeanAdRes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,13 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
         startService(i);
 
         checkIsAdapter();
+
+        try {
+            WebView webView = new WebView(this);
+            App.sUserAgent = webView.getSettings().getUserAgentString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initView() {
@@ -58,16 +67,18 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
         mTvJumpAd.setOnClickListener(this);
 
         mIvAdView = (ImageView) findViewById(R.id.adview);
+        mIvAdView.setOnClickListener(this);
 
         BannerReq bannerReq = new BannerReq();
         bannerReq.w = 1080;
         bannerReq.h = 1560;
-        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-209", 5, null, bannerReq);
+        BidRequest request = ModelHaoKanAd.getBidRequest(this, "28-53-209", 5, null, bannerReq);
 
         ModelHaoKanAd.getAd(this.getApplicationContext(), request, new onAdResListener<BeanAdRes>() {
             @Override
             public void onAdResSuccess(final BeanAdRes adRes) {
                 LogHelper.d("wangzixu", "ModelHaoKanAd splash onAdResSuccess");
+                mBeanAdRes = adRes;
                 Glide.with(ActivitySplash.this).load(adRes.imgUrl).into(mIvAdView);
                 App.sMainHanlder.removeCallbacks(mLaunchHomeRunnable);
                 App.sMainHanlder.postDelayed(mLaunchHomeRunnable, 3000);
@@ -75,7 +86,7 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                 mTvJumpAd.setText("广告3");
 
                 //广告展示上报
-                ModelHaoKanAd.adShowUpLoad(adRes.showUpUrl);
+                ModelHaoKanAd.onAdShow(adRes.onShowUrls);
 
                 App.sMainHanlder.postDelayed(new Runnable() {
                     @Override
@@ -191,6 +202,25 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
             case R.id.jumpad:
                 App.sMainHanlder.removeCallbacks(mLaunchHomeRunnable);
                 App.sMainHanlder.post(mLaunchHomeRunnable);
+                break;
+            case R.id.adview:
+                if (mBeanAdRes != null) {
+                    App.sMainHanlder.removeCallbacks(mLaunchHomeRunnable);
+
+                    Intent i = new Intent(ActivitySplash.this, ActivityHomePage.class);
+                    startActivity(i);
+
+                    Intent intent = new Intent(this, ActivityWebview.class);
+                    //Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+                    startActivity(intent);
+                    //广告点击上报
+                    if (mBeanAdRes.onClickUrls != null && mBeanAdRes.onClickUrls.size() > 0) {
+                        ModelHaoKanAd.onAdClick(mBeanAdRes.onClickUrls);
+                    }
+                    startActivityAnim();
+                    finish();
+                }
                 break;
             default:
                 break;
