@@ -1,6 +1,7 @@
 package com.haokan.hklockscreen.splash;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -111,8 +112,21 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                             Intent i = new Intent(ActivitySplash.this, ActivityHomePage.class);
                             startActivity(i);
 
+//                            Intent intent = new Intent(ActivitySplash.this, ActivityWebview.class);
+//                            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, adRes.landPageUrl);
+
                             Intent intent = new Intent(ActivitySplash.this, ActivityWebview.class);
-                            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, adRes.landPageUrl);
+                            //查询是否有deeplink的app
+                            if (!TextUtils.isEmpty(mBeanAdRes.deeplink)) {
+                                Intent qi = new Intent(Intent.ACTION_VIEW, Uri.parse(mBeanAdRes.deeplink));
+                                if (CommonUtil.deviceCanHandleIntent(ActivitySplash.this, qi)) { //是否可以支持deeplink
+                                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.deeplink);
+                                } else {
+                                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+                                }
+                            }else {
+                                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+                            }
                             startActivity(intent);
 
                             finish();
@@ -210,9 +224,18 @@ public class ActivitySplash extends ActivityBase implements View.OnClickListener
                     Intent i = new Intent(ActivitySplash.this, ActivityHomePage.class);
                     startActivity(i);
 
-                    Intent intent = new Intent(this, ActivityWebview.class);
-                    //Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
-                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+                    Intent intent = new Intent(ActivitySplash.this, ActivityWebview.class);
+                    //查询是否有deeplink的app
+                    if (!TextUtils.isEmpty(mBeanAdRes.deeplink)) {
+                        Intent qi = new Intent(Intent.ACTION_VIEW, Uri.parse(mBeanAdRes.deeplink));
+                        if (CommonUtil.deviceCanHandleIntent(ActivitySplash.this, qi)) { //是否可以支持deeplink
+                            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.deeplink);
+                        } else {
+                            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+                        }
+                    }else {
+                        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+                    }
                     startActivity(intent);
                     //广告点击上报
                     if (mBeanAdRes.onClickUrls != null && mBeanAdRes.onClickUrls.size() > 0) {

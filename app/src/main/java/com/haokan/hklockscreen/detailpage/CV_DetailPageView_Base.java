@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -44,7 +45,6 @@ import com.haokan.pubic.customview.ViewPagerTransformer;
 import com.haokan.pubic.database.BeanCollection;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
-import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.util.BlurUtil;
 import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
@@ -369,7 +369,28 @@ public class CV_DetailPageView_Base extends FrameLayout implements ViewPager.OnP
         if (mCurrentImgBean == null) {
             return;
         }
-        if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
+
+        if (mCurrentImgBean.mBeanAdRes != null) { //是广告
+            Intent intent = new Intent(mContext, ActivityWebview.class);
+//                Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+            //查询是否有deeplink的app
+            if (!TextUtils.isEmpty(mCurrentImgBean.mBeanAdRes.deeplink)) {
+                Intent qi = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentImgBean.mBeanAdRes.deeplink));
+                if (CommonUtil.deviceCanHandleIntent(mContext, qi)) { //是否可以支持deeplink
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.deeplink);
+                } else {
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
+                }
+            }else {
+                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
+            }
+            if (mActivity != null) {
+                mActivity.startActivity(intent);
+                mActivity.startActivityAnim();
+            } else {
+                mContext.startActivity(intent);
+            }
+        } else if (TextUtils.isEmpty(mCurrentImgBean.linkUrl)) {
             Intent intent = new Intent(mContext, ActivityRecommendLandPage.class);
             BeanRecommendItem beanRecommendItem = new BeanRecommendItem();
             beanRecommendItem.GroupId = mCurrentImgBean.jump_id;

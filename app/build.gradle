@@ -85,14 +85,16 @@ dependencies {
     api 'com.umeng.analytics:analytics:latest.integration'
     //
     api 'org.greenrobot:eventbus:3.0.0'
-    api 'in.srain.cube:ptr-load-more:1.0.6'
     //myptrlyout包用的下拉刷新库
+    api 'in.srain.cube:ptr-load-more:1.0.6'
     //阿里反馈begin
     api 'com.aliyun.ams:alicloud-android-feedback:3.1.0@aar'
     api 'com.aliyun.ams:alicloud-android-utdid:1.1.5.3'
     api 'com.aliyun.ams:alicloud-android-ut:5.1.0'
     api 'com.aliyun.ams:alicloud-android-utils:1.0.3'
     //阿里反馈end
+    //阿里云oss
+    compile 'com.aliyun.dpa:oss-android-sdk:2.4.2'
 
 //    compile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 //    compile 'com.squareup.leakcanary:leakcanary-android:1.5.4'

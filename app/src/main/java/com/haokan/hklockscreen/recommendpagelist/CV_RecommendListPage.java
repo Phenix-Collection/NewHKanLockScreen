@@ -3,6 +3,7 @@ package com.haokan.hklockscreen.recommendpagelist;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
+import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.ToastManager;
 import com.haokan.pubic.webview.ActivityWebview;
@@ -408,8 +410,23 @@ public class CV_RecommendListPage extends FrameLayout{
 //            }
         } else { //广告
             //跳转webview
+//            Intent intent = new Intent(mContext, ActivityWebview.class);
+//            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
+
             Intent intent = new Intent(mContext, ActivityWebview.class);
-            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
+//                Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+            //查询是否有deeplink的app
+            if (!TextUtils.isEmpty(beanRecommendItem.mBeanAdRes.deeplink)) {
+                Intent qi = new Intent(Intent.ACTION_VIEW, Uri.parse(beanRecommendItem.mBeanAdRes.deeplink));
+                if (CommonUtil.deviceCanHandleIntent(mContext, qi)) { //是否可以支持deeplink
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.deeplink);
+                } else {
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
+                }
+            }else {
+                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, beanRecommendItem.mBeanAdRes.landPageUrl);
+            }
+
             if (mActivityBase != null) {
                 mActivityBase.startActivity(intent);
                 mActivityBase.startActivityAnim();

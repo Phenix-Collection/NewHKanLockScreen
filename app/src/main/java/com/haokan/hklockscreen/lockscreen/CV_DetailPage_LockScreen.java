@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
@@ -42,6 +43,7 @@ import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.MaidianManager;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
+import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.MyDateTimeUtil;
 import com.haokan.pubic.util.MyDialogUtil;
 import com.haokan.pubic.util.ToastManager;
@@ -355,7 +357,18 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
             if (mCurrentImgBean != null && mCurrentImgBean.mBeanAdRes != null) { //是广告
                 Intent intent = new Intent(mContext, ActivityWebview.class);
 //                Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
-                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
+                //查询是否有deeplink的app
+                if (!TextUtils.isEmpty(mCurrentImgBean.mBeanAdRes.deeplink)) {
+                    Intent qi = new Intent(Intent.ACTION_VIEW, Uri.parse(mCurrentImgBean.mBeanAdRes.deeplink));
+                    if (CommonUtil.deviceCanHandleIntent(mContext, qi)) { //是否可以支持deeplink
+                        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.deeplink);
+                    } else {
+                        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
+                    }
+                }else {
+                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mCurrentImgBean.mBeanAdRes.landPageUrl);
+                }
+
                 if (mActivity != null) {
                     mActivity.startActivity(intent);
                     mActivity.startActivityAnim();

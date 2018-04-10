@@ -2,10 +2,12 @@ package com.haokan.pubic.util;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -342,5 +344,22 @@ public class CommonUtil {
             ProvidersName = 3;
         }
         return ProvidersName;
+    }
+
+    /**
+     * 查询是否有相应的intent的app
+     * @param context
+     * @param intent
+     * @return
+     */
+    public static boolean deviceCanHandleIntent(final Context context, final Intent intent) {
+        try {
+            final PackageManager packageManager = context.getPackageManager();
+            final List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+            return activities != null && !activities.isEmpty();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -1,10 +1,12 @@
 package com.haokan.hklockscreen.recommendpageland;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -622,7 +624,19 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
             return;
         }
         Intent intent = new Intent(this, ActivityWebview.class);
-        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBean.mBeanAdRes.landPageUrl);
+//                Intent intent = new Intent(mContext, ActivityWebviewForLockPage.class);
+        //查询是否有deeplink的app
+        if (!TextUtils.isEmpty(mBean.mBeanAdRes.deeplink)) {
+            Intent qi = new Intent(Intent.ACTION_VIEW, Uri.parse(mBean.mBeanAdRes.deeplink));
+            if (CommonUtil.deviceCanHandleIntent(this, qi)) { //是否可以支持deeplink
+                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBean.mBeanAdRes.deeplink);
+            } else {
+                intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBean.mBeanAdRes.landPageUrl);
+            }
+        }else {
+            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBean.mBeanAdRes.landPageUrl);
+        }
+
         startActivity(intent);
         startActivityAnim();
 

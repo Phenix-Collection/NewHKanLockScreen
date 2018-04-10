@@ -51,6 +51,7 @@ public class Bid {
     @SerializedName("native")
     public NativeRes nativeX;
     public VideoRes video;
+    public String deep_link;
 
     public static class BannerRes {
         public List<String> curl;

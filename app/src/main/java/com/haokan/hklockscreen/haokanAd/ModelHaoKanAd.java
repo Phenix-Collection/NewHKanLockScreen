@@ -202,6 +202,8 @@ public class ModelHaoKanAd {
                                         }
                                     }
 
+                                    adRes.deeplink = bid.deep_link;
+
                                     adRes.type = bid.type;
                                     if (bid.type == 1) { //banner
                                         Bid.BannerRes banner = bid.banner;

@@ -32,7 +32,6 @@ import com.haokan.hklockscreen.haokanAd.ModelHaoKanAd;
 import com.haokan.hklockscreen.haokanAd.onAdResListener;
 import com.haokan.hklockscreen.haokanAd.request.BannerReq;
 import com.haokan.hklockscreen.haokanAd.request.BidRequest;
-import com.haokan.pubic.database.BeanLocalImage;
 import com.haokan.hklockscreen.localDICM.ModelLocalImage;
 import com.haokan.hklockscreen.lockscreen.CV_ScrollView;
 import com.haokan.hklockscreen.lockscreeninitset.ActivityLockScreenInitSet;
@@ -45,11 +44,13 @@ import com.haokan.pubic.base.ActivityBase;
 import com.haokan.pubic.checkupdate.UpdateManager;
 import com.haokan.pubic.clipimage.ActivityClipImage;
 import com.haokan.pubic.clipimage.ClipImgManager;
+import com.haokan.pubic.database.BeanLocalImage;
 import com.haokan.pubic.database.MyDatabaseHelper;
 import com.haokan.pubic.http.HttpStatusManager;
 import com.haokan.pubic.http.onDataResponseListener;
 import com.haokan.pubic.logsys.LogHelper;
 import com.haokan.pubic.maidian.UmengMaiDianManager;
+import com.haokan.pubic.util.CommonUtil;
 import com.haokan.pubic.util.DisplayUtil;
 import com.haokan.pubic.util.FileUtil;
 import com.haokan.pubic.util.MyDialogUtil;
@@ -297,8 +298,23 @@ public class ActivityLockSetting extends ActivityBase implements View.OnClickLis
                 break;
             case R.id.adview:
                 if (mBeanAdRes != null) {
+//                    Intent intent = new Intent(ActivityLockSetting.this, ActivityWebview.class);
+//                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+
                     Intent intent = new Intent(ActivityLockSetting.this, ActivityWebview.class);
-                    intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+//                Intent intent = new Intent(ActivityLockSetting.this, ActivityWebviewForLockPage.class);
+                    //查询是否有deeplink的app
+                    if (!TextUtils.isEmpty(mBeanAdRes.deeplink)) {
+                        Intent qi = new Intent(Intent.ACTION_VIEW, Uri.parse(mBeanAdRes.deeplink));
+                        if (CommonUtil.deviceCanHandleIntent(ActivityLockSetting.this, qi)) { //是否可以支持deeplink
+                            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.deeplink);
+                        } else {
+                            intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+                        }
+                    }else {
+                        intent.putExtra(ActivityWebview.KEY_INTENT_WEB_URL, mBeanAdRes.landPageUrl);
+                    }
+
                     startActivityForResult(intent, 306);
                     startActivityAnim();
 

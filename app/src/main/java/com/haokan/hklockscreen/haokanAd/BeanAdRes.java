@@ -19,6 +19,7 @@ public class BeanAdRes implements Parcelable {
     public String adIconUrl; //图标地址
     public int  type; //返回广告类型:1.banner;2.video;3.native;
     public String landPageUrl; //落地页
+    public String deeplink; //跳转app的链接, 有并且有相应app 则跳这个 ,没有, 则跳转landpage
     public List<String> onClickUrls = new ArrayList<>(); //点击上报地址
     public List<String> onShowUrls = new ArrayList<>(); //曝光检测地址
 
