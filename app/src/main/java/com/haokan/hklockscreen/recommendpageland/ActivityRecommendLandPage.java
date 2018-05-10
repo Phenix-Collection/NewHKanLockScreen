@@ -295,8 +295,8 @@ public class ActivityRecommendLandPage extends ActivityBase implements View.OnCl
         nativeReq.h = 586;
         nativeReq.style = 2;
 
-//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-205", 10, nativeReq, null);
-        BidRequest request = ModelHaoKanAd.getBidRequest(this, "288-170-192", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest(this, "28-53-205", 10, nativeReq, null);
+//        BidRequest request = ModelHaoKanAd.getBidRequest(this, "288-170-192", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(this, request, new onAdResListener<BeanAdRes>() {
             @Override

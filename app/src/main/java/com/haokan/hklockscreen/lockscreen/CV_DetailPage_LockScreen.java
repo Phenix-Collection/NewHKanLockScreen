@@ -751,8 +751,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
         nativeReq.style = 2;
 
 
-//        BidRequest request = ModelHaoKanAd.getBidRequest("28-53-206", 10, nativeReq, null);
-        BidRequest request = ModelHaoKanAd.getBidRequest(mContext, "288-170-191", 10, nativeReq, null);
+        BidRequest request = ModelHaoKanAd.getBidRequest(mContext, "28-53-206", 10, nativeReq, null);
+//        BidRequest request = ModelHaoKanAd.getBidRequest(mContext, "288-170-191", 10, nativeReq, null);
 
         ModelHaoKanAd.getAd(mContext, request, new onAdResListener<BeanAdRes>() {
             @Override
