@@ -746,8 +746,8 @@ public class CV_DetailPage_LockScreen extends CV_DetailPageView_Base implements 
 //        bannerReq.h = 1920;
 
         NativeReq nativeReq = new NativeReq();
-        nativeReq.w = 1440;
-        nativeReq.h = 2560;
+        nativeReq.w = 1080;
+        nativeReq.h = 1920;
         nativeReq.style = 2;
 
 
